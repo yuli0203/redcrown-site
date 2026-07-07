@@ -3,315 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Red Crown Interactive — XR, Mobile & PC Application Development</title>
-<meta name="description" content="Red Crown Interactive is a Unity development studio building XR, mobile, and PC applications — from first prototype to fleet deployment.">
+<title>Red Crown Interactive — Graphical Application Development · XR, Mobile & PC</title>
+<meta name="description" content="Red Crown Interactive builds immersive, high-performance graphical applications in Unity — XR, mobile, and PC.">
 <link rel="icon" type="image/svg+xml" href="assets/redcrown-solid.svg">
 <style>
-/* ------------------------------------------------------------------ fonts */
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-Bold.woff2')format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-SemiBold.woff2')format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:'IBM Plex Sans';src:url('fonts/IBMPlexSans-var.woff2')format('woff2');font-weight:100 700;font-display:swap}
 @font-face{font-family:'Michroma';src:url('fonts/Michroma-Regular.woff2')format('woff2');font-weight:400;font-display:swap}
-
-/* ------------------------------------------------------------------ tokens */
 :root{
-  --carbon:#150A0C;        /* base dark                                 */
-  --ink:#17131F;           /* mock: deep ink side                       */
-  --ink-2:#1E1929;         /* raised ink surface                        */
-  --plum:#3A1F2A;          /* mock: maroon side                         */
-  --frame:rgba(212,3,9,.55);/* the mock's red tile frames               */
-  --garnet:#241013;        /* raised surface                            */
-  --garnet-2:#2E1418;      /* hover surface                             */
-  --bone:#F0EAE4;          /* primary text                              */
-  --bone-dim:#B8ACA6;      /* secondary text                            */
-  --crown:#D40309;         /* brand red                                 */
-  --crown-hot:#F5222A;     /* red hover / glow                          */
-  --seam:rgba(240,234,228,.10);
-  --blade:12deg;           /* the crown blade angle, used everywhere    */
-  --display:'Chakra Petch',sans-serif;
-  --body:'IBM Plex Sans',system-ui,sans-serif;
-  --brand:'Michroma',sans-serif;
+  --black:#0A0708; --panel:#151013; --panel-2:#1B1417;
+  --line:rgba(240,234,228,.08); --red:#D40309; --hot:#F5222A;
+  --bone:#F0EAE4; --dim:#A89DA0;
+  --display:'Chakra Petch',sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --brand:'Michroma',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{animation:none!important;transition:none!important}
-}
-body{background:var(--ink);color:var(--bone);font-family:var(--body);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
-::selection{background:var(--crown);color:var(--bone)}
-a{color:inherit}
-:focus-visible{outline:2px solid var(--crown-hot);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+body{background:var(--black);color:var(--bone);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+::selection{background:var(--red);color:var(--bone)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px}
+.k{font-family:var(--brand);letter-spacing:.3em;text-transform:uppercase}
+.icon{width:1em;height:1em;fill:none;stroke:var(--hot);stroke-width:1.7;vertical-align:-.15em}
 
-.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-.eyebrow{font-family:var(--brand);font-size:.66rem;letter-spacing:.42em;color:var(--crown-hot);text-transform:uppercase}
+/* ---------------- nav ---------------- */
+nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:34px;padding:16px 24px;max-width:1180px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:12px}
+.logo img{height:40px}
+.logo b{font-family:var(--brand);font-weight:400;font-size:.85rem;letter-spacing:.22em;display:block}
+.logo i{font-family:var(--brand);font-style:normal;font-size:.5rem;letter-spacing:.42em;color:var(--hot);display:block;margin-top:3px}
+.nav-links{display:flex;gap:28px;margin-left:auto;list-style:none}
+.nav-links a{font-size:.74rem;font-weight:600;letter-spacing:.14em;color:var(--dim);transition:color .2s}
+.nav-links a:hover,.nav-links a.on{color:var(--hot)}
+.btn{display:inline-block;font-family:var(--display);font-weight:600;font-size:.86rem;letter-spacing:.08em;padding:13px 26px;border-radius:10px;transition:all .2s}
+.btn-line{border:1px solid var(--red);color:var(--hot)}
+.btn-line:hover{background:var(--red);color:var(--bone)}
+.btn-red{background:var(--red);color:var(--bone)}
+.btn-red:hover{background:var(--hot)}
+@media(max-width:900px){.nav-links{display:none}}
 
-/* ------------------------------------------------------------------ nav */
-nav{position:fixed;top:0;left:0;right:0;z-index:50;background:linear-gradient(var(--carbon) 60%,transparent);padding:18px 0}
-.nav-inner{display:flex;align-items:center;justify-content:space-between}
-.nav-mark{display:flex;align-items:center;gap:12px;text-decoration:none}
-.nav-mark img{height:34px;width:34px}
-.nav-mark span{font-family:var(--brand);font-size:.72rem;letter-spacing:.28em}
-.nav-links{display:flex;gap:34px;list-style:none}
-.nav-links a{text-decoration:none;font-size:.85rem;font-weight:500;color:var(--bone-dim);transition:color .2s}
-.nav-links a:hover{color:var(--bone)}
-@media(max-width:720px){.nav-links{display:none}}
+/* ---------------- hero ---------------- */
+.hero{margin-top:26px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;min-height:520px}
+.hero-txt{padding:64px 20px 64px 48px;align-self:center}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.06;letter-spacing:.02em}
+.hero h1 em{font-style:normal;color:var(--hot)}
+.hero .plat{margin:22px 0 18px;font-family:var(--brand);font-size:.8rem;letter-spacing:.32em}
+.hero .plat s{text-decoration:none;color:var(--hot);padding:0 .35em}
+.hero p{color:var(--dim);max-width:38ch}
+.hero-cta{margin-top:36px;display:flex;align-items:center;gap:30px;flex-wrap:wrap}
+.arrow-link{font-size:.78rem;font-weight:600;letter-spacing:.16em;color:var(--bone)}
+.arrow-link:hover{color:var(--hot)}
+.hero-img{background:url('assets/hero.jpg') center right/cover no-repeat;min-height:340px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero-txt{padding:44px 28px}}
 
-/* ------------------------------------------------------------------ hero */
-header{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;
-  /* the card's diagonal duotone: maroon upper-left, deep ink lower-right */
-  background:
-    linear-gradient(115deg,var(--plum) 0%,var(--plum) 46%,var(--crown) 46.05%,var(--crown) 46.18%,var(--ink) 46.23%,var(--ink) 100%);}
-/* ambient geometry from the card: thin circles + dots */
-.orbit{position:absolute;border:1px solid rgba(212,3,9,.35);border-radius:50%;pointer-events:none}
-.dot{position:absolute;width:7px;height:7px;border-radius:50%;background:rgba(212,3,9,.5);pointer-events:none}
-.hero-watermark{position:absolute;right:4vw;top:50%;transform:translateY(-54%);width:34vw;max-width:520px;opacity:1;pointer-events:none;user-select:none;filter:drop-shadow(0 0 60px rgba(212,3,9,.25))}
-@media(max-width:900px){.hero-watermark{opacity:.16;width:70vw;right:-15vw}}
-.hero-inner{position:relative;padding:140px 0 110px}
-.hero-inner .eyebrow{display:block;margin-bottom:26px}
-h1{font-family:var(--display);font-weight:700;font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.04;letter-spacing:-.01em;max-width:15ch}
-h1 em{font-style:normal;color:var(--crown-hot)}
-.hero-sub{margin-top:28px;max-width:52ch;font-size:1.08rem;color:var(--bone-dim)}
-.hero-cta{margin-top:44px;display:flex;gap:18px;flex-wrap:wrap}
-.btn{font-family:var(--display);font-weight:600;font-size:.95rem;letter-spacing:.04em;text-decoration:none;padding:15px 32px;
-  border-radius:12px;transition:background .2s,color .2s,box-shadow .2s}
-.btn-red{box-shadow:0 0 0 1px var(--frame),0 8px 30px rgba(212,3,9,.25)}
-.btn-red{background:var(--crown);color:var(--bone)}
-.btn-red:hover{background:var(--crown-hot)}
-.btn-ghost{background:transparent;color:var(--bone);box-shadow:inset 0 0 0 1px var(--seam)}
-.btn-ghost:hover{background:var(--garnet)}
-.hero-meta{margin-top:70px;display:flex;gap:34px;flex-wrap:wrap;font-size:.8rem;color:var(--bone-dim);letter-spacing:.06em}
-.hero-meta b{color:var(--bone);font-weight:500}
+/* ---------------- platform cards ---------------- */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
+.pcard{padding:34px 30px;transition:border-color .25s,transform .25s}
+.pcard:hover{border-color:rgba(212,3,9,.55);transform:translateY(-3px)}
+.pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
+.pcard h3{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
+.pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
+.pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot)}
+@media(max-width:900px){.cards3{grid-template-columns:1fr}}
 
-/* the seam: full-width divider at the crown blade angle */
-.seam{height:84px;background:linear-gradient(var(--blade,12deg),transparent calc(50% - 1px),var(--crown) calc(50% - 1px),var(--crown) calc(50% + 1px),transparent calc(50% + 1px))}
+/* ---------------- what we do ---------------- */
+.wwd{margin-top:26px;padding:56px 40px}
+.sec-k{text-align:center;font-family:var(--brand);font-size:.82rem;letter-spacing:.4em;color:var(--bone);position:relative}
+.sec-k::before,.sec-k::after{content:"";display:inline-block;width:56px;height:1px;background:var(--red);vertical-align:middle;margin:0 18px}
+.wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px;margin-top:44px;text-align:center}
+.wwd-grid .icon{font-size:1.9rem;margin-bottom:14px}
+.wwd-grid h4{font-size:.72rem;font-weight:700;letter-spacing:.16em;margin-bottom:10px}
+.wwd-grid p{font-size:.8rem;color:var(--dim)}
+@media(max-width:900px){.wwd-grid{grid-template-columns:repeat(2,1fr)}}
 
-/* ------------------------------------------------------------------ sections */
-section{padding:110px 0}
-.sec-head{display:grid;grid-template-columns:1fr 2fr;gap:40px;margin-bottom:64px}
-.sec-head h2{font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.1}
-.sec-head p{color:var(--bone-dim);align-self:end;max-width:50ch}
-@media(max-width:840px){.sec-head{grid-template-columns:1fr}}
+/* ---------------- stats ---------------- */
+.stats{margin-top:26px;padding:40px 30px;display:grid;grid-template-columns:repeat(4,1fr);text-align:center;gap:20px}
+.stats b{font-family:var(--display);font-weight:700;font-size:2.4rem;color:var(--hot)}
+.stats span{display:block;font-size:.68rem;font-weight:700;letter-spacing:.18em;margin-top:6px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
 
-/* services: three faceted panels */
-.facets{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.facet{background:linear-gradient(160deg,var(--ink-2),var(--plum));padding:42px 34px 46px;position:relative;
-  border:1px solid var(--seam);border-radius:16px;transition:border-color .25s,transform .25s}
-.facet:hover{border-color:var(--frame);transform:translateY(-3px)}
-.facet .tag{font-family:var(--brand);font-size:.58rem;letter-spacing:.34em;color:var(--crown-hot)}
-.facet h3{font-family:var(--display);font-weight:600;font-size:1.35rem;margin:16px 0 14px}
-.facet p{font-size:.94rem;color:var(--bone-dim)}
-.facet ul{margin-top:20px;list-style:none;font-size:.85rem;color:var(--bone-dim)}
-.facet li{padding:7px 0;border-top:1px solid var(--seam)}
-.facet li b{color:var(--bone);font-weight:500}
-@media(max-width:840px){.facets{grid-template-columns:1fr}}
+/* ---------------- work ---------------- */
+.work-head{display:flex;align-items:center;justify-content:space-between;margin:56px 0 26px}
+.work-head h2{font-family:var(--brand);font-size:1rem;letter-spacing:.32em}
+.work-head h2::after{content:"";display:inline-block;width:120px;height:1px;background:var(--red);vertical-align:middle;margin-left:22px}
+.work-head a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot)}
+.work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.wcard img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;border:1px solid var(--line);transition:border-color .25s}
+.wcard:hover img{border-color:rgba(212,3,9,.55)}
+.wcard h5{font-size:.92rem;font-weight:600;margin-top:14px}
+.wcard span{font-size:.72rem;color:var(--dim)}
+@media(max-width:900px){.work-grid{grid-template-columns:repeat(2,1fr)}}
 
-/* cycle: the full-ownership line */
-.cycle{background:var(--plum);padding:80px 0;
-  border-top:1px solid var(--seam);border-bottom:1px solid var(--seam)}
-.cycle-line{display:flex;align-items:center;flex-wrap:wrap;gap:0 8px;font-family:var(--display);font-weight:600;font-size:clamp(.95rem,2vw,1.25rem)}
-.cycle-line .step{padding:10px 4px;white-space:nowrap}
-.cycle-line .joint{color:var(--crown-hot);font-weight:700}
-.cycle-note{margin-top:26px;color:var(--bone-dim);max-width:62ch}
+/* ---------------- cta ---------------- */
+.cta{margin-top:56px;padding:56px 48px;display:grid;grid-template-columns:1.2fr 1fr auto;gap:36px;align-items:center}
+.cta h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:.04em;line-height:1.2}
+.cta h2 em{font-style:normal;color:var(--hot)}
+.cta p{color:var(--dim);font-size:.95rem}
+@media(max-width:900px){.cta{grid-template-columns:1fr}}
 
-/* stack strip */
-.stack{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-.chip{font-family:var(--display);font-weight:600;font-size:.78rem;letter-spacing:.05em;color:var(--bone-dim);
-  padding:9px 18px;background:rgba(23,19,31,.5);border:1px solid var(--seam);border-radius:999px}
-
-/* about */
-.about-grid{display:grid;grid-template-columns:5fr 4fr;gap:70px;align-items:center}
-.about-grid img{width:100%;max-width:360px;justify-self:center;opacity:.92}
-.about-grid p+p{margin-top:18px}
-.about-grid p{color:var(--bone-dim)}
-.about-grid p b{color:var(--bone);font-weight:500}
-@media(max-width:840px){.about-grid{grid-template-columns:1fr}.about-grid img{max-width:240px}}
-
-/* contact */
-.contact{background:
-  linear-gradient(295deg,var(--plum) 0%,var(--plum) 34%,var(--crown) 34.05%,var(--crown) 34.18%,var(--ink) 34.23%,var(--ink) 100%);text-align:left;position:relative;overflow:hidden}
-.contact .orbit,.contact .dot{z-index:0}
-.contact .wrap{position:relative;z-index:1}
-.cicon{display:inline-block;width:1.05em;height:1.05em;vertical-align:-0.18em;margin-right:.55em;fill:none;stroke:var(--crown-hot);stroke-width:1.8}
-.contact .wrap{max-width:820px}
-.contact h2{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3.4rem);line-height:1.06}
-.contact p{margin-top:22px;color:var(--bone-dim);max-width:52ch}
-.contact .btn{margin-top:40px;display:inline-block}
-.contact .mail{margin-top:26px;font-size:.9rem;color:var(--bone-dim)}
-.contact .mail a{color:var(--bone)}
-
-/* footer */
-footer{border-top:1px solid var(--seam);padding:34px 0;font-size:.78rem;color:var(--bone-dim)}
-.foot{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.foot .fmark{display:flex;align-items:center;gap:10px}
-.foot img{height:26px}
-.foot span{font-family:var(--brand);font-size:.6rem;letter-spacing:.3em}
-
-/* reveal on scroll */
-.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+/* ---------------- footer ---------------- */
+footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap}
+.foot .contact{display:flex;gap:34px;flex-wrap:wrap;font-size:.86rem;color:var(--dim)}
+.foot .contact .icon{margin-right:.5em}
+.socials{display:flex;gap:16px}
+.socials a{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--dim);font-size:.8rem;transition:all .2s}
+.socials a:hover{border-color:var(--red);color:var(--hot)}
+.copy{text-align:center;font-size:.72rem;color:var(--dim);margin-top:26px}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
 .rv.in{opacity:1;transform:none}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="wrap nav-inner">
-    <a class="nav-mark" href="#top" aria-label="Red Crown Interactive — home">
-      <img src="assets/redcrown-knockout-white.svg" alt="">
-      <span>RED CROWN INTERACTIVE</span>
+  <div class="nav-in">
+    <a class="logo" href="#top">
+      <img src="assets/redcrown-primary.svg" alt="">
+      <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
     </a>
     <ul class="nav-links">
-      <li><a href="#work">What we build</a></li>
-      <li><a href="#cycle">How we work</a></li>
-      <li><a href="#about">Studio</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a class="on" href="#top">HOME</a></li>
+      <li><a href="#services">SERVICES</a></li>
+      <li><a href="#work">WORK</a></li>
+      <li><a href="#tech">TECHNOLOGIES</a></li>
+      <li><a href="#about">ABOUT</a></li>
+      <li><a href="#contact">CONTACT</a></li>
     </ul>
+    <a class="btn btn-line" href="#contact" style="margin-left:14px">LET'S BUILD</a>
   </div>
 </nav>
 
-<header id="top">
-  <div class="orbit" style="width:280px;height:280px;top:-90px;left:-70px"></div>
-  <div class="orbit" style="width:150px;height:150px;bottom:12%;right:38%"></div>
-  <div class="dot" style="top:18%;left:44%"></div>
-  <div class="dot" style="bottom:24%;left:8%"></div>
-  <img class="hero-watermark" src="assets/redcrown-primary.svg" alt="" aria-hidden="true">
-  <div class="wrap hero-inner">
-    <span class="eyebrow">Unity Development Studio</span>
-    <h1>Real-time 3D applications, <em>engineered end to end.</em></h1>
-    <p class="hero-sub">Red Crown Interactive builds XR, mobile, and PC software in Unity —
-       from the first playable prototype to production releases running on device fleets.</p>
-    <div class="hero-cta">
-      <a class="btn btn-red" href="#contact">Start a project</a>
-      <a class="btn btn-ghost" href="#work">What we build</a>
-    </div>
-    <div class="hero-meta">
-      <div><b>XR</b> · Meta Quest / OpenXR</div>
-      <div><b>Mobile</b> · Android &amp; iOS</div>
-      <div><b>PC</b> · Windows simulation &amp; tools</div>
-    </div>
-  </div>
-</header>
+<div class="wrap" id="top">
 
-<div class="seam" role="presentation"></div>
-
-<section id="work">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <h2>What we build</h2>
-      <p>Applications where interaction is the product — training, simulation, research
-         instruments, and education. One codebase, engineered for the hardware it ships on.</p>
-    </div>
-    <div class="facets">
-      <div class="facet rv">
-        <span class="tag">XR</span>
-        <h3>Headset &amp; mixed reality</h3>
-        <p>Standalone VR and MR applications for Meta Quest and OpenXR devices —
-           built around natural hand interaction and tested on real hardware.</p>
-        <ul>
-          <li><b>Training simulations</b> for lab, medical &amp; industrial procedures</li>
-          <li><b>Research instruments</b> with experiment logging &amp; analytics</li>
-          <li><b>Fleet deployment</b> — MDM, wireless install, kiosk configuration</li>
-        </ul>
-      </div>
-      <div class="facet rv">
-        <span class="tag">Mobile</span>
-        <h3>Android &amp; iOS</h3>
-        <p>Interactive 3D and AR applications for phones and tablets, sharing
-           architecture with their XR and desktop counterparts.</p>
-        <ul>
-          <li><b>AR experiences</b> anchored to the real world</li>
-          <li><b>Companion apps</b> that pair with headset deployments</li>
-          <li><b>Store-ready builds</b> — signing, review, release management</li>
-        </ul>
-      </div>
-      <div class="facet rv">
-        <span class="tag">PC</span>
-        <h3>Desktop simulation &amp; tools</h3>
-        <p>Windows applications for the workstation: high-fidelity simulation,
-           visualization, and the internal tools that keep a project moving.</p>
-        <ul>
-          <li><b>Simulators</b> &amp; digital twins with accurate domain models</li>
-          <li><b>Data visualization</b> for scientific &amp; engineering workflows</li>
-          <li><b>Editor tooling</b> — pipelines that multiply a team's output</li>
-        </ul>
+  <header class="panel hero">
+    <div class="hero-txt rv in">
+      <h1>GRAPHICAL<br><em>APPLICATION</em><br>DEVELOPMENT</h1>
+      <div class="plat">XR<s>•</s>MOBILE<s>•</s>PC</div>
+      <p>We build immersive and high-performance applications with premium visuals, optimized for every platform.</p>
+      <div class="hero-cta">
+        <a class="btn btn-red" href="#contact">LET'S BUILD TOGETHER</a>
+        <a class="arrow-link" href="#work">VIEW OUR WORK &nbsp;→</a>
       </div>
     </div>
-  </div>
-</section>
+    <div class="hero-img" role="img" aria-label="Developer wearing a VR headset in front of the Red Crown mark"></div>
+  </header>
 
-<section class="cycle" id="cycle">
-  <div class="wrap rv">
-    <span class="eyebrow">Full-cycle ownership</span>
-    <div class="cycle-line" style="margin-top:26px">
-      <span class="step">Concept</span><span class="joint">→</span>
-      <span class="step">Prototype</span><span class="joint">→</span>
-      <span class="step">Production</span><span class="joint">→</span>
-      <span class="step">Deployment</span><span class="joint">→</span>
-      <span class="step">Support</span>
+  <section class="cards3" id="services">
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3l-2-2h-6l-2 2H4a2 2 0 0 1-2-2z"/><circle cx="8" cy="11.5" r="1.6"/><circle cx="16" cy="11.5" r="1.6"/></svg>
+      <h3>XR / VR / AR</h3>
+      <p>Immersive experiences that transport users to new realities.</p>
+      <a href="#contact">EXPLORE XR →</a>
     </div>
-    <p class="cycle-note">One team carries the project through every stage. The engineers who
-       design the architecture are the ones testing it on-device and shipping it to your fleet —
-       nothing is lost in a handoff, and every decision is made by someone who will live with it.</p>
-    <div class="stack" style="margin-top:36px">
-      <span class="chip">Unity 6</span><span class="chip">C#</span><span class="chip">URP</span>
-      <span class="chip">OpenXR</span><span class="chip">Meta Quest</span><span class="chip">UniTask</span>
-      <span class="chip">VContainer</span><span class="chip">CI / CD</span><span class="chip">Analytics pipelines</span>
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M11 18.5h2"/></svg>
+      <h3>MOBILE</h3>
+      <p>Engaging mobile applications with stunning visuals and seamless performance.</p>
+      <a href="#contact">EXPLORE MOBILE →</a>
     </div>
-  </div>
-</section>
-
-<section id="about">
-  <div class="wrap about-grid rv">
-    <div>
-      <span class="eyebrow">The studio</span>
-      <h2 style="font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,3.4vw,2.4rem);margin:18px 0 24px">Built by engineers<br>who ship on hardware.</h2>
-      <p>Red Crown Interactive comes from <b>research and enterprise XR</b> — building
-         applications where correctness matters as much as immersion: academic laboratories,
-         training environments, and scientific tooling.</p>
-      <p>That background shapes how we work: <b>rigorous architecture</b>, measurable
-         behavior, on-device testing from week one, and deployments designed for the people
-         who have to maintain them after we're done.</p>
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.6"/><path d="M9 20.5h6M12 16.5v4"/></svg>
+      <h3>PC</h3>
+      <p>High-quality desktop applications and games built for power and precision.</p>
+      <a href="#contact">EXPLORE PC →</a>
     </div>
-    <img src="assets/redcrown-primary.svg" alt="Red Crown Interactive mark — a crown formed by two lionesses">
-  </div>
-</section>
+  </section>
 
-<div class="seam" style="--blade:-12deg" role="presentation"></div>
-
-<section class="contact" id="contact">
-  <div class="orbit" style="width:220px;height:220px;bottom:-70px;right:-60px"></div>
-  <div class="dot" style="top:22%;right:18%"></div>
-  <div class="wrap rv">
-    <span class="eyebrow">Contact</span>
-    <h2 style="margin-top:20px">Have a project<br>in mind?</h2>
-    <p>Tell us what you're building and which hardware it needs to run on.
-       We'll reply with an honest read on scope, feasibility, and timeline.</p>
-    <p style="margin-top:34px;font-size:1.05rem"><svg class="cicon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>058-576-0550</p>
-    <a class="btn btn-red" style="margin-top:22px" href="mailto:hello@redcrowninteractive.com"><svg class="cicon" viewBox="0 0 24 24" style="stroke:currentColor"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg>hello@redcrowninteractive.com</a>
-    <p class="mail"><svg class="cicon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg>Prefer LinkedIn? Find us at <a href="https://www.linkedin.com/company/red-crown-interactive">linkedin.com/company/red-crown-interactive</a></p>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap foot">
-    <div class="fmark">
-      <img src="assets/redcrown-knockout-white.svg" alt="">
-      <span>RED CROWN INTERACTIVE</span>
+  <section class="panel wwd rv" id="tech">
+    <div class="sec-k">WHAT WE DO</div>
+    <div class="wwd-grid">
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.6 10.8c-.7.55-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.65-1.1-2.2A6 6 0 0 1 12 3z"/></svg><h4>CONCEPT &amp; DESIGN</h4><p>From ideas to compelling concepts and visual storytelling.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.06-.4.1-.8.1-1.2z"/></svg><h4>DEVELOPMENT</h4><p>End-to-end development with clean, scalable architectures.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l2 5 5 .7-3.7 3.5.9 5.1L12 15l-4.2 2.3.9-5.1L5 8.7 10 8z"/></svg><h4>3D ART &amp; ANIMATION</h4><p>High-quality 3D assets, animations, and effects that bring worlds to life.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><h4>OPTIMIZATION</h4><p>Performance-first approach for smooth experiences across all platforms.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h4>SUPPORT &amp; LIVE OPS</h4><p>Ongoing support and live updates to keep your application evolving.</p></div>
     </div>
-    <div>© 2026 Red Crown Interactive. Unity development studio — XR · Mobile · PC.</div>
-  </div>
-</footer>
+  </section>
+
+  <!-- PLACEHOLDER STATS from the mock — replace with real numbers before launch -->
+  <section class="panel stats rv">
+    <div><b>20+</b><span>PROJECTS DELIVERED</span></div>
+    <div><b>10+</b><span>HAPPY CLIENTS</span></div>
+    <div><b>5+</b><span>PLATFORMS</span></div>
+    <div><b>∞</b><span>PASSION FOR QUALITY</span></div>
+  </section>
+
+  <section id="work">
+    <div class="work-head rv">
+      <h2>SELECTED WORK</h2>
+      <a href="#contact">VIEW ALL PROJECTS →</a>
+    </div>
+    <!-- PLACEHOLDER PROJECTS from the mock — swap images/titles for real work -->
+    <div class="work-grid">
+      <a class="wcard rv" href="#contact"><img src="assets/work-vr.jpg" alt="VR training simulation environment"><h5>VR Training Simulation</h5><span>VR / Simulation</span></a>
+      <a class="wcard rv" href="#contact"><img src="assets/work-ar.jpg" alt="AR molecular visualization"><h5>AR Molecular Explorer</h5><span>AR / Education</span></a>
+      <a class="wcard rv" href="#contact"><img src="assets/work-mobile.jpg" alt="Mobile productivity application"><h5>Mobile Productivity App</h5><span>Mobile / Utility</span></a>
+      <a class="wcard rv" href="#contact"><img src="assets/work-pc.jpg" alt="PC adventure game scene"><h5>PC Adventure Game</h5><span>PC / Game Development</span></a>
+    </div>
+  </section>
+
+  <section class="panel cta rv" id="about">
+    <h2>READY TO BUILD<br>SOMETHING <em>AMAZING?</em></h2>
+    <p>Let's collaborate and create the next generation of graphical applications together.</p>
+    <a class="btn btn-red" id="contact" href="mailto:hello@redcrowninteractive.com">GET IN TOUCH</a>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <a class="logo" href="#top">
+        <img src="assets/redcrown-primary.svg" alt="">
+        <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
+      </a>
+      <div class="contact">
+        <span><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></span>
+        <span><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:+972585760550">+972-58-576-0550</a></span>
+      </div>
+      <div class="socials">
+        <a href="https://www.linkedin.com/company/red-crown-interactive" aria-label="LinkedIn">in</a>
+      </div>
+    </div>
+    <div class="copy">© 2026 Red Crown Interactive. All rights reserved.</div>
+  </footer>
+
+</div>
 
 <script>
-// scroll reveal, disabled under reduced motion
 const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (rm) { document.querySelectorAll('.rv').forEach(e => e.classList.add('in')); }
-else {
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-  }), { threshold: 0.12 });
-  document.querySelectorAll('.rv').forEach(e => io.observe(e));
-}
+if (rm) document.querySelectorAll('.rv').forEach(e=>e.classList.add('in'));
+else{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(e=>io.observe(e));}
 </script>
 </body>
 </html>
