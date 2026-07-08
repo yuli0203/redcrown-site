@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Red Crown Interactive — Graphical Application Development · XR, Mobile & PC</title>
 <meta name="description" content="Red Crown Interactive builds immersive, high-performance graphical applications in Unity — XR, mobile, and PC.">
-<link rel="icon" type="image/svg+xml" href="assets/redcrown-solid.svg">
+<link rel="icon" type="image/svg+xml" href="assets/logo-kit/redcrown-solid.svg">
 <style>
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-Bold.woff2')format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-SemiBold.woff2')format('woff2');font-weight:600;font-display:swap}
@@ -34,8 +34,8 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .nav-in{display:flex;align-items:center;gap:34px;padding:16px 24px;max-width:1180px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:12px}
 .logo img{height:40px}
-.logo b{font-family:var(--body);font-weight:300;font-size:.92rem;letter-spacing:.34em;display:block}
-.logo i{font-family:var(--body);font-weight:400;font-style:normal;font-size:.5rem;letter-spacing:.48em;color:var(--hot);display:block;margin-top:4px}
+.logo b{font-family:var(--brand);font-weight:400;font-size:.82rem;letter-spacing:.26em;display:block}
+.logo i{font-family:var(--brand);font-style:normal;font-size:.5rem;letter-spacing:.44em;color:var(--red);display:block;margin-top:3px}
 .nav-links{display:flex;gap:28px;margin-inline-start:auto;list-style:none}
 .nav-links a{font-size:.74rem;font-weight:600;letter-spacing:.14em;color:var(--dim);transition:color .2s}
 .nav-links a:hover,.nav-links a.on{color:var(--hot)}
@@ -121,11 +121,9 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .brandband .bl{position:absolute;top:-16%;bottom:-16%;width:2px;background:linear-gradient(180deg,transparent,rgba(212,3,9,.75),transparent);pointer-events:none}
 .brandband .bl-1{left:26%;transform:rotate(11deg)}
 .brandband .bl-2{right:26%;transform:rotate(-11deg)}
-.bb-crown{height:92px;filter:drop-shadow(0 0 26px rgba(212,3,9,.35));position:relative}
-.bb-name{position:relative;margin-top:24px;font-family:var(--body);font-weight:300;font-size:clamp(1.6rem,4vw,2.7rem);letter-spacing:.4em;padding-inline-start:.4em;line-height:1}
-.bb-sub{position:relative;margin-top:10px;font-family:var(--body);font-weight:400;font-size:.78rem;letter-spacing:.58em;color:var(--hot);padding-inline-start:.58em}
-.bb-tag{position:relative;margin-top:20px;font-size:.72rem;letter-spacing:.26em;color:var(--dim)}
-@media(max-width:600px){.brandband{padding:56px 20px}.bb-crown{height:72px}.brandband .bl-1{left:14%}.brandband .bl-2{right:14%}.bb-tag{letter-spacing:.16em}}
+.bb-lockup{position:relative;height:220px;filter:drop-shadow(0 0 30px rgba(212,3,9,.30))}
+.bb-tag{position:relative;margin-top:24px;font-size:.72rem;letter-spacing:.26em;color:var(--dim)}
+@media(max-width:600px){.brandband{padding:56px 20px}.bb-lockup{height:158px}.brandband .bl-1{left:14%}.brandband .bl-2{right:14%}.bb-tag{letter-spacing:.16em}}
 
 /* ---------------- footer ---------------- */
 footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
@@ -150,7 +148,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 <nav>
   <div class="nav-in">
     <a class="logo" href="#top">
-      <img src="assets/redcrown-primary.svg" alt="">
+      <img src="assets/logo-kit/redcrown-primary.svg" alt="">
       <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
     </a>
     <ul class="nav-links">
@@ -235,9 +233,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   <section class="brandband rv" aria-label="Red Crown Interactive">
     <span class="bl bl-1" aria-hidden="true"></span>
     <span class="bl bl-2" aria-hidden="true"></span>
-    <img class="bb-crown" src="assets/redcrown-knockout-white.svg" alt="">
-    <div class="bb-name">RED CROWN</div>
-    <div class="bb-sub">INTERACTIVE</div>
+    <img class="bb-lockup" src="assets/logo-kit/redcrown-lockup-stacked-white.svg" alt="Red Crown Interactive">
     <div class="bb-tag" data-i18n="brand.tag">XR · MOBILE · PC — UNITY DEVELOPMENT STUDIO</div>
   </section>
 
@@ -250,7 +246,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   <footer>
     <div class="foot">
       <a class="logo" href="#top">
-        <img src="assets/redcrown-primary.svg" alt="">
+        <img src="assets/logo-kit/redcrown-primary.svg" alt="">
         <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
       </a>
       <div class="contact">
