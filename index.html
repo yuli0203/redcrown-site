@@ -13,7 +13,7 @@
 @font-face{font-family:'Michroma';src:url('fonts/Michroma-Regular.woff2')format('woff2');font-weight:400;font-display:swap}
 :root{
   --black:#0E080A; --panel:#1A1013; --panel-2:#221519; --maroon:#76232F;
-  --line:rgba(240,234,228,.08); --red:#D40309; --hot:#C8102E;
+  --line:rgba(240,234,228,.08); --red:#C8102E; --hot:#C8102E;
   --bone:#F0EAE4; --dim:#A89DA0;
   --display:'Chakra Petch',sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --brand:'Michroma',sans-serif;
 }
@@ -43,7 +43,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .btn-line{border:1px solid var(--red);color:var(--hot)}
 .btn-line:hover{background:var(--red);color:var(--bone)}
 .btn-red{background:var(--red);color:var(--bone)}
-.btn-red:hover{background:var(--hot)}
+.btn-red:hover{filter:brightness(1.12)}
 .nav-cta{margin-inline-start:14px}
 .lang{display:flex;gap:2px;margin-inline-start:14px;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-shrink:0;direction:ltr}
 .lang button{font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:8px 11px;background:transparent;color:var(--dim);border:0;cursor:pointer;transition:all .2s}
@@ -78,7 +78,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 /* ---------------- platform cards ---------------- */
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
 .pcard{padding:34px 30px;transition:border-color .25s,transform .25s}
-.pcard:hover{border-color:rgba(212,3,9,.55);transform:translateY(-3px)}
+.pcard:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
 .pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
 .pcard h3{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
 .pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
@@ -102,7 +102,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .work-head a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot)}
 .work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .wsoon{width:100%;aspect-ratio:4/3;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);display:grid;place-content:center;justify-items:center;gap:14px;transition:border-color .25s}
-.wcard:hover .wsoon{border-color:rgba(212,3,9,.55)}
+.wcard:hover .wsoon{border-color:rgba(200,16,46,.55)}
 .wsoon .icon{font-size:2.5rem}
 .wsoon b{font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.2em;color:var(--dim)}
 .wcard h5{font-size:.92rem;font-weight:600;margin-top:14px}
@@ -233,7 +233,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   <section class="brandband rv" aria-label="Red Crown Interactive">
     <span class="bl bl-1" aria-hidden="true"></span>
     <span class="bl bl-2" aria-hidden="true"></span>
-    <img class="bb-lockup" src="assets/logo-kit/redcrown-lockup-stacked-white.svg" alt="Red Crown Interactive">
+    <img class="bb-lockup" src="assets/logo-kit/redcrown-lockup-stacked-white-scarlet.svg" alt="Red Crown Interactive">
     <div class="bb-tag" data-i18n="brand.tag">XR · MOBILE · PC — UNITY DEVELOPMENT STUDIO</div>
   </section>
 
