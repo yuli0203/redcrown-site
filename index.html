@@ -258,12 +258,16 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <p class="work-sub rv" data-i18n="work.sub">Concept to launch. Each project built fully by our director.</p>
     <div class="work-grid">
       <button type="button" class="wcard rv" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
-        <img class="wthumb" src="assets/work-ar-enzymatic.jpg" alt="" width="900" height="675" loading="lazy">
+        <img class="wthumb" src="assets/work-ar-enzymatic.jpg" alt="" width="1254" height="940" loading="lazy">
         <h5 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h5>
         <span data-i18n="work.ar.sub">Mixed Reality | Physics-Based Hand Interactions</span>
       </button>
+      <button type="button" class="wcard rv" data-project="vr" aria-expanded="false" aria-controls="wd-vr">
+        <img class="wthumb" src="assets/work-vr-fugacity.jpg" alt="" width="1448" height="1086" loading="lazy">
+        <h5 data-i18n="work.vr.title">Immersive VR Experiment</h5>
+        <span data-i18n="work.vr.sub">Virtual Reality | Gesture-Based Hand Interactions | Controllers</span>
+      </button>
       <!-- PLACEHOLDER PROJECTS - swap in real work when ready -->
-      <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
     </div>
@@ -273,6 +277,13 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
       <h4 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h4>
       <div class="wd-sub" data-i18n="work.ar.sub">Mixed Reality | Physics-Based Hand Interactions</div>
       <div class="wd-body" data-i18n="work.ar.body"><p>This complementary Meta Quest 3 model is used to explain theoretical material in greater depth as part of an enzymatic laboratory experiment at the Technion.</p><p>The model can be overlaid on any existing real table, allowing students to interact with virtual scientific content while maintaining a clear connection to their physical environment.</p><p>We implemented physics-based hand interactions that allow students to pick up molecules, rotate and zoom in on scientific models, and perform various interactive actions. These visualizations and interactions help students in the Wolfson Faculty of Chemical Engineering at the Technion better understand complex concepts related to enzymatic reactions and polarized light.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-vr" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <h4 data-i18n="work.vr.title">Immersive VR Experiment</h4>
+      <div class="wd-sub" data-i18n="work.vr.sub">Virtual Reality | Gesture-Based Hand Interactions | Controllers</div>
+      <div class="wd-body" data-i18n="work.vr.body"><p>This fully immersive Meta Quest 3 VR experiment is used to teach fugacity as part of the Thermodynamics B course at the Technion.</p><p>The experiment is approximately one hour long and is designed to be performed by multiple student groups simultaneously (12 devices). Students are also trained in laboratory safety and fire safety procedures as part of the experience.</p><p>The project includes a virtual instructor who guides students through the full experiment using spoken instructions. The Meta Quest 3 headsets are paired with tablets, allowing lab instructors to monitor each group&rsquo;s progress and receive data files generated during the experiment.</p></div>
     </div>
   </section>
 
@@ -357,6 +368,9 @@ const I18N = {
     "work.ar.title":"Enzymatic Lab Educational Model",
     "work.ar.sub":"Mixed Reality | Physics-Based Hand Interactions",
     "work.ar.body":"<p>This complementary Meta Quest 3 model is used to explain theoretical material in greater depth as part of an enzymatic laboratory experiment at the Technion.</p><p>The model can be overlaid on any existing real table, allowing students to interact with virtual scientific content while maintaining a clear connection to their physical environment.</p><p>We implemented physics-based hand interactions that allow students to pick up molecules, rotate and zoom in on scientific models, and perform various interactive actions. These visualizations and interactions help students in the Wolfson Faculty of Chemical Engineering at the Technion better understand complex concepts related to enzymatic reactions and polarized light.</p>",
+    "work.vr.title":"Immersive VR Experiment",
+    "work.vr.sub":"Virtual Reality | Gesture-Based Hand Interactions | Controllers",
+    "work.vr.body":"<p>This fully immersive Meta Quest 3 VR experiment is used to teach fugacity as part of the Thermodynamics B course at the Technion.</p><p>The experiment is approximately one hour long and is designed to be performed by multiple student groups simultaneously (12 devices). Students are also trained in laboratory safety and fire safety procedures as part of the experience.</p><p>The project includes a virtual instructor who guides students through the full experiment using spoken instructions. The Meta Quest 3 headsets are paired with tablets, allowing lab instructors to monitor each group&rsquo;s progress and receive data files generated during the experiment.</p>",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
     "about.p":"Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
@@ -389,6 +403,9 @@ const I18N = {
     "work.ar.title":"מודל לימודי למעבדה אנזימטית",
     "work.ar.sub":"מציאות מעורבת | אינטראקציות ידיים מבוססות פיזיקה",
     "work.ar.body":"<p>מודל משלים זה ל-Meta Quest 3 משמש להסבר מעמיק של החומר התיאורטי כחלק מניסוי במעבדה אנזימטית בטכניון.</p><p>ניתן להטיל את המודל על כל שולחן אמיתי קיים, ולאפשר לסטודנטים לתקשר עם תוכן מדעי וירטואלי תוך שמירה על קשר ברור לסביבה הפיזית שלהם.</p><p>מימשנו אינטראקציות ידיים מבוססות פיזיקה המאפשרות לסטודנטים להרים מולקולות, לסובב ולהתקרב למודלים מדעיים ולבצע פעולות אינטראקטיביות שונות. ההדמיות והאינטראקציות הללו מסייעות לסטודנטים בפקולטה להנדסה כימית ע\"ש וולפסון בטכניון להבין טוב יותר מושגים מורכבים הקשורים לתגובות אנזימטיות ולאור מקוטב.</p>",
+    "work.vr.title":"ניסוי VR סוחף",
+    "work.vr.sub":"מציאות מדומה | אינטראקציות ידיים מבוססות מחוות | בקרים",
+    "work.vr.body":"<p>ניסוי VR סוחף לחלוטין ל-Meta Quest 3 המשמש להוראת פוגסיביות במסגרת הקורס תרמודינמיקה ב' בטכניון.</p><p>הניסוי אורך כשעה ומיועד לביצוע במקביל על ידי קבוצות סטודנטים רבות (12 מכשירים). הסטודנטים גם עוברים הדרכה בנהלי בטיחות במעבדה ובטיחות אש כחלק מהחוויה.</p><p>הפרויקט כולל מדריך וירטואלי המלווה את הסטודנטים לאורך הניסוי כולו באמצעות הוראות קוליות. אוזניות ה-Meta Quest 3 מקושרות לטאבלטים, המאפשרים למדריכי המעבדה לעקוב אחר התקדמות כל קבוצה ולקבל את קובצי הנתונים הנוצרים במהלך הניסוי.</p>",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
     "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב, עם למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, ותרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
@@ -421,6 +438,9 @@ const I18N = {
     "work.ar.title":"Учебная модель ферментативной лаборатории",
     "work.ar.sub":"Смешанная реальность | Физически достоверные взаимодействия рук",
     "work.ar.body":"<p>Эта дополнительная модель для Meta Quest 3 используется для более глубокого объяснения теоретического материала в рамках лабораторной работы по ферментативным реакциям в Технионе.</p><p>Модель можно наложить на любой реальный стол, что позволяет студентам взаимодействовать с виртуальным научным содержимым, сохраняя при этом чёткую связь с физическим окружением.</p><p>Мы реализовали физически достоверные взаимодействия рук, позволяющие студентам брать молекулы, вращать и приближать научные модели, а также выполнять различные интерактивные действия. Эти визуализации и взаимодействия помогают студентам факультета химической инженерии им. Вольфсона в Технионе лучше понять сложные концепции, связанные с ферментативными реакциями и поляризованным светом.</p>",
+    "work.vr.title":"Иммерсивный VR-эксперимент",
+    "work.vr.sub":"Виртуальная реальность | Взаимодействия жестами рук | Контроллеры",
+    "work.vr.body":"<p>Этот полностью иммерсивный VR-эксперимент для Meta Quest 3 используется для преподавания фугитивности в рамках курса «Термодинамика Б» в Технионе.</p><p>Эксперимент длится около часа и рассчитан на одновременное выполнение несколькими группами студентов (12 устройств). В рамках эксперимента студенты также проходят инструктаж по технике безопасности в лаборатории и пожарной безопасности.</p><p>Проект включает виртуального инструктора, который голосовыми указаниями сопровождает студентов на протяжении всего эксперимента. Гарнитуры Meta Quest 3 связаны с планшетами, что позволяет лаборантам отслеживать прогресс каждой группы и получать файлы данных, созданные в ходе эксперимента.</p>",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
     "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой, с более чем 10-летним опытом разработки 3D реального времени в областях XR, медицины, игр и обороны, включая участие в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
