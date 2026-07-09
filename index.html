@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Red Crown Interactive — Graphical Application Development · XR, Mobile & PC</title>
-<meta name="description" content="Red Crown Interactive builds immersive, high-performance graphical applications in Unity — XR, mobile, and PC.">
+<title>Red Crown Interactive · Graphical Application Development · XR, Mobile & PC</title>
+<meta name="description" content="Red Crown Interactive builds immersive, high-performance graphical applications in Unity for XR, mobile, and PC.">
 <link rel="icon" type="image/svg+xml" href="assets/logo-kit/redcrown-solid-scarlet.svg">
 <style>
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-Bold.woff2')format('woff2');font-weight:700;font-display:swap}
@@ -127,6 +127,14 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .about-in{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;margin-top:40px;align-items:start}
 .about-lead h3{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:.02em;line-height:1.18}
 .about-lead p{color:var(--dim);margin-top:16px;font-size:.95rem}
+.founder{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.founder-img{width:76px;height:76px;border-radius:50%;object-fit:cover;border:1px solid var(--line);background:var(--panel-2);flex-shrink:0}
+.founder-meta{display:flex;flex-direction:column;gap:3px}
+.founder-name{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.02em}
+.founder-role{font-size:.82rem;color:var(--dim)}
+.founder-li{display:inline-flex;align-items:center;gap:6px;margin-top:5px;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--hot);width:fit-content}
+.founder-li svg{width:15px;height:15px;fill:currentColor}
+.founder-li:hover{color:var(--bone)}
 .about-xp-k{display:block;font-family:var(--brand);font-size:.66rem;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
 .logo-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .logo-tile{display:grid;place-items:center;text-align:center;padding:24px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);font-family:var(--display);font-weight:600;font-size:.92rem;letter-spacing:.04em;color:var(--bone);opacity:.82;transition:border-color .2s,opacity .2s}
@@ -215,7 +223,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.6"/><path d="M9 20.5h6M12 16.5v4"/></svg>
       <h3 data-i18n="svc.pc.title">PC</h3>
-      <p data-i18n="svc.pc.desc">High-performance desktop apps and games — plus complex real-time scientific applications, machine learning, and more. Built for power and precision.</p>
+      <p data-i18n="svc.pc.desc">High-performance desktop apps and games, plus complex real-time scientific applications, machine learning, and more. Built for power and precision.</p>
       <a href="#contact" data-i18n="svc.pc.link">EXPLORE PC →</a>
     </div>
   </section>
@@ -233,8 +241,8 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 
   <section id="work">
     <div class="sec-k rv" data-i18n="work.head">SELECTED WORK</div>
-    <p class="work-sub rv" data-i18n="work.sub">A concept-to-launch portfolio — each project built end to end by our founder.</p>
-    <!-- PLACEHOLDER PROJECTS — swap in real work when ready -->
+    <p class="work-sub rv" data-i18n="work.sub">Built end to end by our founder, from concept to launch.</p>
+    <!-- PLACEHOLDER PROJECTS - swap in real work when ready -->
     <div class="work-grid">
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
@@ -247,8 +255,19 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="sec-k" data-i18n="about.kicker">ABOUT</div>
     <div class="about-in">
       <div class="about-lead">
+        <div class="founder">
+          <img class="founder-img" src="assets/founder.jpg" alt="Julia Pavlov">
+          <div class="founder-meta">
+            <b class="founder-name">Julia Pavlov</b>
+            <span class="founder-role" data-i18n="about.role">Founder &amp; Lead Engineer</span>
+            <a class="founder-li" href="https://www.linkedin.com/in/julia-pavlov" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1-.02 4 2 2 0 0 1 .02-4zM3 8.98h4V21H3zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.06 3.76-2.06 4.02 0 4.76 2.65 4.76 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
+              LinkedIn
+            </a>
+          </div>
+        </div>
         <h3 data-i18n="about.h">A decade of shipping real-time 3D</h3>
-        <p data-i18n="about.p">Red Crown Interactive is founded and led by Julia Pavlov — 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.</p>
+        <p data-i18n="about.p">Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.</p>
       </div>
       <div class="about-xp">
         <span class="about-xp-k" data-i18n="about.xpk">Founder's experience</span>
@@ -290,77 +309,80 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 <script>
 const I18N = {
   en: {
-    "doc.title":"Red Crown Interactive — Graphical Application Development · XR, Mobile & PC",
+    "doc.title":"Red Crown Interactive · Graphical Application Development · XR, Mobile & PC",
     "nav.home":"HOME","nav.services":"SERVICES","nav.tech":"TECHNOLOGIES","nav.work":"WORK","nav.about":"ABOUT","nav.contact":"CONTACT","nav.cta":"LET'S BUILD",
     "hero.title":"GRAPHICAL<br><em>APPLICATION</em><br>DEVELOPMENT",
-    "hero.plat":"XR<s>·</s>MOBILE<s>·</s>PC <em>— UNITY DEVELOPMENT STUDIO</em>",
+    "hero.plat":"XR<s>·</s>MOBILE<s>·</s>PC <em>· UNITY DEVELOPMENT STUDIO</em>",
     "hero.lead":"We build immersive and high-performance applications with premium visuals, optimized for every platform.",
     "hero.ctaPrimary":"LET'S BUILD TOGETHER",
     "hero.ctaSecondary":"VIEW OUR WORK &nbsp;→",
     "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Immersive experiences that transport users to new realities.","svc.xr.link":"EXPLORE XR →",
     "svc.mobile.title":"MOBILE","svc.mobile.desc":"Engaging mobile applications with stunning visuals and seamless performance.","svc.mobile.link":"EXPLORE MOBILE →",
-    "svc.pc.title":"PC","svc.pc.desc":"High-performance desktop apps and games — plus complex real-time scientific applications, machine learning, and more. Built for power and precision.","svc.pc.link":"EXPLORE PC →",
+    "svc.pc.title":"PC","svc.pc.desc":"High-performance desktop apps and games, plus complex real-time scientific applications, machine learning, and more. Built for power and precision.","svc.pc.link":"EXPLORE PC →",
     "wwd.kicker":"WHAT WE DO",
     "wwd.1.title":"CONCEPT &amp; DESIGN","wwd.1.desc":"From ideas to compelling concepts and visual storytelling.",
     "wwd.2.title":"DEVELOPMENT","wwd.2.desc":"End-to-end development with clean, scalable architectures.",
     "wwd.3.title":"3D ART &amp; ANIMATION","wwd.3.desc":"High-quality 3D assets, animations, and effects that bring worlds to life.",
     "wwd.4.title":"OPTIMIZATION","wwd.4.desc":"Performance-first approach for smooth experiences across all platforms.",
     "wwd.5.title":"SUPPORT &amp; LIVE OPS","wwd.5.desc":"Ongoing support and live updates to keep your application evolving.",
-    "work.head":"SELECTED WORK","work.sub":"A concept-to-launch portfolio — each project built end to end by our founder.","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
+    "work.head":"SELECTED WORK","work.sub":"Built end to end by our founder, from concept to launch.","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
-    "about.p":"Red Crown Interactive is founded and led by Julia Pavlov — 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
+    "about.p":"Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
     "about.xpk":"Founder's experience",
+    "about.role":"Founder & Lead Engineer",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
   he: {
-    "doc.title":"Red Crown Interactive — פיתוח אפליקציות גרפיות · XR, מובייל ו-PC",
+    "doc.title":"Red Crown Interactive · פיתוח אפליקציות גרפיות · XR, מובייל ו-PC",
     "nav.home":"בית","nav.services":"שירותים","nav.tech":"טכנולוגיות","nav.work":"עבודות","nav.about":"אודות","nav.contact":"צור קשר","nav.cta":"בואו נבנה",
     "hero.title":"פיתוח<br><em>אפליקציות</em><br>גרפיות",
-    "hero.plat":"מציאות מדומה<s>·</s>נייד<s>·</s>מחשב <em>— סטודיו לפיתוח ב-Unity</em>",
+    "hero.plat":"מציאות מדומה<s>·</s>נייד<s>·</s>מחשב <em>· סטודיו לפיתוח ב-Unity</em>",
     "hero.lead":"אנחנו בונים אפליקציות סוחפות ובעלות ביצועים גבוהים, עם ויזואליה ברמה גבוהה, מותאמות לכל פלטפורמה.",
     "hero.ctaPrimary":"בואו נבנה יחד",
     "hero.ctaSecondary":"לצפייה בעבודות &nbsp;←",
     "svc.xr.title":"מציאות מדומה / משולבת","svc.xr.desc":"חוויות סוחפות שלוקחות את המשתמשים למציאויות חדשות.","svc.xr.link":"גלו עוד ←",
     "svc.mobile.title":"אפליקציות לנייד","svc.mobile.desc":"אפליקציות לנייד מרתקות עם ויזואליה מרהיבה וביצועים חלקים.","svc.mobile.link":"גלו עוד ←",
-    "svc.pc.title":"אפליקציות למחשב","svc.pc.desc":"אפליקציות ומשחקים בעלי ביצועים גבוהים — לצד אפליקציות מדעיות מורכבות בזמן אמת, למידת מכונה ועוד. בנויים לעוצמה ולדיוק.","svc.pc.link":"גלו עוד ←",
+    "svc.pc.title":"אפליקציות למחשב","svc.pc.desc":"אפליקציות ומשחקים בעלי ביצועים גבוהים, לצד אפליקציות מדעיות מורכבות בזמן אמת, למידת מכונה ועוד. בנויים לעוצמה ולדיוק.","svc.pc.link":"גלו עוד ←",
     "wwd.kicker":"מה אנחנו עושים",
     "wwd.1.title":"קונספט ועיצוב","wwd.1.desc":"מרעיונות לקונספטים מרתקים ולסיפור ויזואלי.",
     "wwd.2.title":"פיתוח","wwd.2.desc":"פיתוח מקצה לקצה עם ארכיטקטורה נקייה וניתנת להרחבה.",
     "wwd.3.title":"אמנות תלת-ממד ואנימציה","wwd.3.desc":"נכסי תלת-ממד, אנימציות ואפקטים איכותיים שמחיים עולמות.",
     "wwd.4.title":"אופטימיזציה","wwd.4.desc":"גישה שמעמידה את הביצועים בראש סדר העדיפויות לחוויה חלקה בכל הפלטפורמות.",
     "wwd.5.title":"תמיכה ותפעול שוטף","wwd.5.desc":"תמיכה שוטפת ועדכונים חיים כדי שהאפליקציה שלכם תמשיך להתפתח.",
-    "work.head":"עבודות נבחרות","work.sub":"פורטפוליו מהרעיון ועד להשקה — כל פרויקט נבנה במלואו על ידי המייסדת.","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
+    "work.head":"עבודות נבחרות","work.sub":"נבנה מקצה לקצה על ידי המייסדת, מהרעיון ועד להשקה.","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
-    "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב — למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, עם תרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
+    "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב, עם למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, ותרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
     "about.xpk":"הניסיון של המייסדת",
+    "about.role":"מייסדת ומהנדסת ראשית",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
   ru: {
-    "doc.title":"Red Crown Interactive — Разработка графических приложений · XR, мобайл и PC",
+    "doc.title":"Red Crown Interactive · Разработка графических приложений · XR, мобайл и PC",
     "nav.home":"Главная","nav.services":"Услуги","nav.tech":"Технологии","nav.work":"Работы","nav.about":"О нас","nav.contact":"Контакты","nav.cta":"Создать проект",
     "hero.title":"РАЗРАБОТКА<br><em>ГРАФИЧЕСКИХ</em><br>ПРИЛОЖЕНИЙ",
-    "hero.plat":"XR<s>·</s>Мобайл<s>·</s>PC <em>— студия разработки на Unity</em>",
+    "hero.plat":"XR<s>·</s>Мобайл<s>·</s>PC <em>· студия разработки на Unity</em>",
     "hero.lead":"Мы создаём иммерсивные и высокопроизводительные приложения с премиальной графикой, оптимизированные для каждой платформы.",
     "hero.ctaPrimary":"ДАВАЙТЕ СОЗДАДИМ ВМЕСТЕ",
     "hero.ctaSecondary":"СМОТРЕТЬ РАБОТЫ &nbsp;→",
     "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Иммерсивные впечатления, переносящие пользователей в новые реальности.","svc.xr.link":"ПОДРОБНЕЕ О XR →",
     "svc.mobile.title":"МОБАЙЛ","svc.mobile.desc":"Увлекательные мобильные приложения с потрясающей графикой и плавной работой.","svc.mobile.link":"ПОДРОБНЕЕ О МОБАЙЛ →",
-    "svc.pc.title":"PC","svc.pc.desc":"Высокопроизводительные настольные приложения и игры — плюс сложные научные приложения реального времени, машинное обучение и многое другое. Созданы для мощности и точности.","svc.pc.link":"ПОДРОБНЕЕ О PC →",
+    "svc.pc.title":"PC","svc.pc.desc":"Высокопроизводительные настольные приложения и игры, а также сложные научные приложения реального времени, машинное обучение и многое другое. Созданы для мощности и точности.","svc.pc.link":"ПОДРОБНЕЕ О PC →",
     "wwd.kicker":"ЧЕМ МЫ ЗАНИМАЕМСЯ",
     "wwd.1.title":"КОНЦЕПЦИЯ И ДИЗАЙН","wwd.1.desc":"От идей до убедительных концепций и визуального повествования.",
     "wwd.2.title":"РАЗРАБОТКА","wwd.2.desc":"Комплексная разработка с чистой, масштабируемой архитектурой.",
     "wwd.3.title":"3D-ГРАФИКА И АНИМАЦИЯ","wwd.3.desc":"Высококачественные 3D-объекты, анимации и эффекты, оживляющие миры.",
     "wwd.4.title":"ОПТИМИЗАЦИЯ","wwd.4.desc":"Подход, ориентированный на производительность, для плавной работы на всех платформах.",
     "wwd.5.title":"ПОДДЕРЖКА И LIVE OPS","wwd.5.desc":"Постоянная поддержка и обновления в реальном времени для развития вашего приложения.",
-    "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.sub":"Портфолио от концепции до запуска — каждый проект полностью создан основателем.","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
+    "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.sub":"Создано основателем от концепции до запуска.","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
-    "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой — более 10 лет разработки 3D реального времени в областях XR, медицины, игр и обороны, с участием в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
+    "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой, с более чем 10-летним опытом разработки 3D реального времени в областях XR, медицины, игр и обороны, включая участие в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
     "about.xpk":"Опыт основателя",
+    "about.role":"Основатель и ведущий инженер",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
