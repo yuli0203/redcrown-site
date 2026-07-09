@@ -112,8 +112,21 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .wsoon .icon{font-size:2.5rem}
 .wsoon b{font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.2em;color:var(--dim)}
 .wcard h5{font-size:.92rem;font-weight:600;margin-top:14px}
-.wcard span{font-size:.72rem;color:var(--dim)}
+.wcard span{font-size:.72rem;color:var(--dim);display:block}
+button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:inherit;cursor:pointer}
+.wthumb{width:100%;height:auto;aspect-ratio:4/3;border-radius:14px;border:1px solid var(--line);object-fit:cover;display:block;transition:border-color .25s}
+.wcard:hover .wthumb{border-color:rgba(200,16,46,.55)}
+.wcard[aria-expanded="true"] .wthumb{border-color:var(--red)}
+.wdetail{margin-top:24px;padding:28px 30px;border-radius:14px;border:1px solid var(--line);background:var(--panel);position:relative}
+.wdetail[hidden]{display:none}
+.wdetail-close{position:absolute;top:14px;inset-inline-end:14px;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;font-size:1.15rem;line-height:1;display:grid;place-content:center;transition:color .2s,border-color .2s}
+.wdetail-close:hover{color:var(--hot);border-color:rgba(200,16,46,.55)}
+.wdetail h4{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
+.wd-sub{font-family:var(--brand);font-size:.64rem;letter-spacing:.16em;color:var(--hot);margin-top:9px}
+.wd-body{margin-top:16px;display:grid;gap:12px;max-width:78ch}
+.wd-body p{color:var(--dim);font-size:.9rem}
 @media(max-width:900px){.work-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.wdetail{padding:24px 20px}.wd-sub{font-size:.58rem;letter-spacing:.1em}}
 
 /* ---------------- cta ---------------- */
 .cta{margin-top:56px;padding:56px 48px;display:grid;grid-template-columns:1.2fr 1fr auto;gap:36px;align-items:center}
@@ -212,7 +225,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3l-2-2h-6l-2 2H4a2 2 0 0 1-2-2z"/><circle cx="8" cy="11.5" r="1.6"/><circle cx="16" cy="11.5" r="1.6"/></svg>
       <h3 data-i18n="svc.xr.title">XR / VR / AR</h3>
-      <p data-i18n="svc.xr.desc">Immersive experiences that transport users to new realities.</p>
+      <p data-i18n="svc.xr.desc">Built on Meta Quest 3, with controller, hand gesture, and physics-based hand interactions.</p>
       <a href="#contact" data-i18n="svc.xr.link">EXPLORE XR →</a>
     </div>
     <div class="panel pcard rv">
@@ -242,13 +255,24 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 
   <section id="work">
     <div class="sec-k rv" data-i18n="work.head">SELECTED WORK</div>
-    <p class="work-sub rv" data-i18n="work.sub">Built end to end by our founder, from concept to launch.</p>
-    <!-- PLACEHOLDER PROJECTS - swap in real work when ready -->
+    <p class="work-sub rv" data-i18n="work.sub">Concept to launch. Each project built fully by our director.</p>
     <div class="work-grid">
+      <button type="button" class="wcard rv" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
+        <img class="wthumb" src="assets/work-ar-enzymatic.jpg" alt="" width="900" height="675" loading="lazy">
+        <h5 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h5>
+        <span data-i18n="work.ar.sub">Mixed Reality | Physics-Based Hand Interactions</span>
+      </button>
+      <!-- PLACEHOLDER PROJECTS - swap in real work when ready -->
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
-      <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
+    </div>
+
+    <div class="wdetail" id="wd-ar" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <h4 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h4>
+      <div class="wd-sub" data-i18n="work.ar.sub">Mixed Reality | Physics-Based Hand Interactions</div>
+      <div class="wd-body" data-i18n="work.ar.body"><p>This complementary Meta Quest 3 model is used to explain theoretical material in greater depth as part of an enzymatic laboratory experiment at the Technion.</p><p>The model can be overlaid on any existing real table, allowing students to interact with virtual scientific content while maintaining a clear connection to their physical environment.</p><p>We implemented physics-based hand interactions that allow students to pick up molecules, rotate and zoom in on scientific models, and perform various interactive actions. These visualizations and interactions help students in the Wolfson Faculty of Chemical Engineering at the Technion better understand complex concepts related to enzymatic reactions and polarized light.</p></div>
     </div>
   </section>
 
@@ -319,7 +343,7 @@ const I18N = {
     "hero.lead":"We build immersive and high-performance applications with premium visuals, optimized for every platform.",
     "hero.ctaPrimary":"LET'S BUILD TOGETHER",
     "hero.ctaSecondary":"VIEW OUR WORK &nbsp;→",
-    "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Immersive experiences that transport users to new realities.","svc.xr.link":"EXPLORE XR →",
+    "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Built on Meta Quest 3, with controller, hand gesture, and physics-based hand interactions.","svc.xr.link":"EXPLORE XR →",
     "svc.mobile.title":"MOBILE","svc.mobile.desc":"Engaging mobile applications with stunning visuals and seamless performance.","svc.mobile.link":"EXPLORE MOBILE →",
     "svc.pc.title":"PC","svc.pc.desc":"High-performance desktop apps and games, plus complex real-time scientific applications, machine learning, and more. Built for power and precision.","svc.pc.link":"EXPLORE PC →",
     "wwd.kicker":"WHAT WE DO",
@@ -328,7 +352,11 @@ const I18N = {
     "wwd.3.title":"3D ART &amp; ANIMATION","wwd.3.desc":"High-quality 3D assets, animations, and effects that bring worlds to life.",
     "wwd.4.title":"OPTIMIZATION","wwd.4.desc":"Performance-first approach for smooth experiences across all platforms.",
     "wwd.5.title":"SUPPORT &amp; LIVE OPS","wwd.5.desc":"Ongoing support and live updates to keep your application evolving.",
-    "work.head":"SELECTED WORK","work.sub":"Built end to end by our founder, from concept to launch.","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
+    "work.head":"SELECTED WORK","work.sub":"Concept to launch. Each project built fully by our director.","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
+    "work.close":"Close project details",
+    "work.ar.title":"Enzymatic Lab Educational Model",
+    "work.ar.sub":"Mixed Reality | Physics-Based Hand Interactions",
+    "work.ar.body":"<p>This complementary Meta Quest 3 model is used to explain theoretical material in greater depth as part of an enzymatic laboratory experiment at the Technion.</p><p>The model can be overlaid on any existing real table, allowing students to interact with virtual scientific content while maintaining a clear connection to their physical environment.</p><p>We implemented physics-based hand interactions that allow students to pick up molecules, rotate and zoom in on scientific models, and perform various interactive actions. These visualizations and interactions help students in the Wolfson Faculty of Chemical Engineering at the Technion better understand complex concepts related to enzymatic reactions and polarized light.</p>",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
     "about.p":"Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
@@ -347,7 +375,7 @@ const I18N = {
     "hero.lead":"אנחנו בונים אפליקציות סוחפות ובעלות ביצועים גבוהים, עם ויזואליה ברמה גבוהה, מותאמות לכל פלטפורמה.",
     "hero.ctaPrimary":"בואו נבנה יחד",
     "hero.ctaSecondary":"לצפייה בעבודות &nbsp;←",
-    "svc.xr.title":"מציאות מדומה / משולבת","svc.xr.desc":"חוויות סוחפות שלוקחות את המשתמשים למציאויות חדשות.","svc.xr.link":"גלו עוד ←",
+    "svc.xr.title":"מציאות מדומה / משולבת","svc.xr.desc":"נבנה על Meta Quest 3, עם בקרים, מחוות ידיים ואינטראקציות ידיים מבוססות פיזיקה.","svc.xr.link":"גלו עוד ←",
     "svc.mobile.title":"אפליקציות לנייד","svc.mobile.desc":"אפליקציות לנייד מרתקות עם ויזואליה מרהיבה וביצועים חלקים.","svc.mobile.link":"גלו עוד ←",
     "svc.pc.title":"אפליקציות למחשב","svc.pc.desc":"אפליקציות ומשחקים בעלי ביצועים גבוהים, לצד אפליקציות מדעיות מורכבות בזמן אמת, למידת מכונה ועוד. בנויים לעוצמה ולדיוק.","svc.pc.link":"גלו עוד ←",
     "wwd.kicker":"מה אנחנו עושים",
@@ -356,7 +384,11 @@ const I18N = {
     "wwd.3.title":"אמנות תלת-ממד ואנימציה","wwd.3.desc":"נכסי תלת-ממד, אנימציות ואפקטים איכותיים שמחיים עולמות.",
     "wwd.4.title":"אופטימיזציה","wwd.4.desc":"גישה שמעמידה את הביצועים בראש סדר העדיפויות לחוויה חלקה בכל הפלטפורמות.",
     "wwd.5.title":"תמיכה ותפעול שוטף","wwd.5.desc":"תמיכה שוטפת ועדכונים חיים כדי שהאפליקציה שלכם תמשיך להתפתח.",
-    "work.head":"עבודות נבחרות","work.sub":"נבנה מקצה לקצה על ידי המייסדת, מהרעיון ועד להשקה.","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
+    "work.head":"עבודות נבחרות","work.sub":"מהרעיון ועד להשקה. כל פרויקט נבנה במלואו על ידי המנהלת שלנו.","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
+    "work.close":"סגירת פרטי הפרויקט",
+    "work.ar.title":"מודל לימודי למעבדה אנזימטית",
+    "work.ar.sub":"מציאות מעורבת | אינטראקציות ידיים מבוססות פיזיקה",
+    "work.ar.body":"<p>מודל משלים זה ל-Meta Quest 3 משמש להסבר מעמיק של החומר התיאורטי כחלק מניסוי במעבדה אנזימטית בטכניון.</p><p>ניתן להטיל את המודל על כל שולחן אמיתי קיים, ולאפשר לסטודנטים לתקשר עם תוכן מדעי וירטואלי תוך שמירה על קשר ברור לסביבה הפיזית שלהם.</p><p>מימשנו אינטראקציות ידיים מבוססות פיזיקה המאפשרות לסטודנטים להרים מולקולות, לסובב ולהתקרב למודלים מדעיים ולבצע פעולות אינטראקטיביות שונות. ההדמיות והאינטראקציות הללו מסייעות לסטודנטים בפקולטה להנדסה כימית ע\"ש וולפסון בטכניון להבין טוב יותר מושגים מורכבים הקשורים לתגובות אנזימטיות ולאור מקוטב.</p>",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
     "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב, עם למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, ותרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
@@ -375,7 +407,7 @@ const I18N = {
     "hero.lead":"Мы создаём иммерсивные и высокопроизводительные приложения с премиальной графикой, оптимизированные для каждой платформы.",
     "hero.ctaPrimary":"ДАВАЙТЕ СОЗДАДИМ ВМЕСТЕ",
     "hero.ctaSecondary":"СМОТРЕТЬ РАБОТЫ &nbsp;→",
-    "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Иммерсивные впечатления, переносящие пользователей в новые реальности.","svc.xr.link":"ПОДРОБНЕЕ О XR →",
+    "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Создано на Meta Quest 3, с поддержкой контроллеров, жестов рук и физически достоверных взаимодействий.","svc.xr.link":"ПОДРОБНЕЕ О XR →",
     "svc.mobile.title":"МОБАЙЛ","svc.mobile.desc":"Увлекательные мобильные приложения с потрясающей графикой и плавной работой.","svc.mobile.link":"ПОДРОБНЕЕ О МОБАЙЛ →",
     "svc.pc.title":"PC","svc.pc.desc":"Высокопроизводительные настольные приложения и игры, а также сложные научные приложения реального времени, машинное обучение и многое другое. Созданы для мощности и точности.","svc.pc.link":"ПОДРОБНЕЕ О PC →",
     "wwd.kicker":"ЧЕМ МЫ ЗАНИМАЕМСЯ",
@@ -384,7 +416,11 @@ const I18N = {
     "wwd.3.title":"3D-ГРАФИКА И АНИМАЦИЯ","wwd.3.desc":"Высококачественные 3D-объекты, анимации и эффекты, оживляющие миры.",
     "wwd.4.title":"ОПТИМИЗАЦИЯ","wwd.4.desc":"Подход, ориентированный на производительность, для плавной работы на всех платформах.",
     "wwd.5.title":"ПОДДЕРЖКА И LIVE OPS","wwd.5.desc":"Постоянная поддержка и обновления в реальном времени для развития вашего приложения.",
-    "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.sub":"Создано основателем от концепции до запуска.","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
+    "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.sub":"От концепции до запуска. Каждый проект полностью создан нашим директором.","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
+    "work.close":"Закрыть описание проекта",
+    "work.ar.title":"Учебная модель ферментативной лаборатории",
+    "work.ar.sub":"Смешанная реальность | Физически достоверные взаимодействия рук",
+    "work.ar.body":"<p>Эта дополнительная модель для Meta Quest 3 используется для более глубокого объяснения теоретического материала в рамках лабораторной работы по ферментативным реакциям в Технионе.</p><p>Модель можно наложить на любой реальный стол, что позволяет студентам взаимодействовать с виртуальным научным содержимым, сохраняя при этом чёткую связь с физическим окружением.</p><p>Мы реализовали физически достоверные взаимодействия рук, позволяющие студентам брать молекулы, вращать и приближать научные модели, а также выполнять различные интерактивные действия. Эти визуализации и взаимодействия помогают студентам факультета химической инженерии им. Вольфсона в Технионе лучше понять сложные концепции, связанные с ферментативными реакциями и поляризованным светом.</p>",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
     "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой, с более чем 10-летним опытом разработки 3D реального времени в областях XR, медицины, игр и обороны, включая участие в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
@@ -405,6 +441,10 @@ function applyLang(lang, persist){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const v = dict[el.getAttribute('data-i18n')];
     if (v != null) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    const v = dict[el.getAttribute('data-i18n-aria')];
+    if (v != null) el.setAttribute('aria-label', v);
   });
   if (dict['doc.title']) document.title = dict['doc.title'];
   // Show the active language on the toggle; keep only the others in the menu.
@@ -451,6 +491,35 @@ const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (rm) document.querySelectorAll('.rv').forEach(e=>e.classList.add('in'));
 else{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(e=>io.observe(e));}
+
+// selected work: a thumbnail opens its detail panel below the grid; only one open at a time
+const workCards = document.querySelectorAll('.wcard[aria-controls]');
+function setCardOpen(card, open){
+  const panel = document.getElementById(card.getAttribute('aria-controls'));
+  if (!panel) return;
+  card.setAttribute('aria-expanded', String(open));
+  panel.hidden = !open;
+  if (open) panel.scrollIntoView({behavior: rm ? 'auto' : 'smooth', block:'nearest'});
+}
+workCards.forEach(card=>{
+  const panel = document.getElementById(card.getAttribute('aria-controls'));
+  if (!panel) return;
+  card.addEventListener('click', ()=>{
+    const willOpen = card.getAttribute('aria-expanded') !== 'true';
+    workCards.forEach(c=>setCardOpen(c,false));
+    if (willOpen) setCardOpen(card,true);
+  });
+  panel.querySelector('.wdetail-close').addEventListener('click', ()=>{
+    setCardOpen(card,false);
+    card.focus();
+  });
+});
+document.addEventListener('keydown', e=>{
+  if (e.key !== 'Escape') return;
+  workCards.forEach(card=>{
+    if (card.getAttribute('aria-expanded')==='true'){ setCardOpen(card,false); card.focus(); }
+  });
+});
 </script>
 </body>
 </html>
