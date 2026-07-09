@@ -1,0 +1,11 @@
+Immersive Fugacity VR Experiment
+
+Virtual Reality | Gesture-Based Hand Interactions | Controllers
+
+This fully immersive Meta Quest 3 VR experiment is used to teach fugacity as part of the Thermodynamics B course at the Technion.
+
+The experiment is approximately one hour long and is designed to be performed by multiple student groups simultaneously, supporting up to 12 devices. As part of the experience, students are also trained in laboratory safety and fire safety procedures.
+
+The project uses correct VR design practices to reduce unnecessary movement and minimize motion sickness, including teleportation and dedicated navigation controls.
+
+The project includes a virtual instructor who guides students through the full experiment using spoken instructions. The Meta Quest 3 headsets are paired with tablets, allowing lab instructors to monitor each group’s progress and receive data files generated during the experiment.

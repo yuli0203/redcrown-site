@@ -1,0 +1,9 @@
+Enzymatic Lab Educational Model
+
+Mixed Reality | Physics-Based Hand Interactions
+
+This complementary Meta Quest 3 model is used to explain theoretical material in greater depth as part of an enzymatic laboratory experiment at the Technion.
+
+The model can be overlaid on any existing real table, allowing students to interact with virtual scientific content while maintaining a clear connection to their physical environment.
+
+We implemented physics-based hand interactions that allow students to pick up molecules, rotate and zoom in on scientific models, and perform various interactive actions. These visualizations and interactions help students in the Wolfson Faculty of Chemical Engineering at the Technion better understand complex concepts related to enzymatic reactions and polarized light.
