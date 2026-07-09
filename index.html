@@ -132,6 +132,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .founder-meta{display:flex;flex-direction:column;gap:3px}
 .founder-name{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.02em}
 .founder-role{font-size:.82rem;color:var(--dim)}
+.founder-edu{font-size:.74rem;color:var(--dim);opacity:.85;line-height:1.4;margin-top:2px}
 .founder-li{display:inline-flex;align-items:center;gap:6px;margin-top:5px;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--hot);width:fit-content}
 .founder-li svg{width:15px;height:15px;fill:currentColor}
 .founder-li:hover{color:var(--bone)}
@@ -260,6 +261,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
           <div class="founder-meta">
             <b class="founder-name">Julia Pavlov</b>
             <span class="founder-role" data-i18n="about.role">Founder &amp; Lead Engineer</span>
+            <span class="founder-edu" data-i18n="about.edu">MBA, Tel Aviv University · B.Sc Software Engineering, Technion</span>
             <a class="founder-li" href="https://www.linkedin.com/in/julia-pavlov" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1-.02 4 2 2 0 0 1 .02-4zM3 8.98h4V21H3zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.06 3.76-2.06 4.02 0 4.76 2.65 4.76 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
               LinkedIn
@@ -294,6 +296,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
         <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
       </a>
       <div class="contact">
+        <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="foot.loc">Haifa, Israel</span></span>
         <span><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></span>
         <span dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:+972585760550">+972-58-576-0550</a></span>
       </div>
@@ -331,6 +334,8 @@ const I18N = {
     "about.p":"Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
     "about.xpk":"Founder's experience",
     "about.role":"Founder & Lead Engineer",
+    "about.edu":"MBA, Tel Aviv University · B.Sc Software Engineering, Technion",
+    "foot.loc":"Haifa, Israel",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
@@ -357,6 +362,8 @@ const I18N = {
     "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב, עם למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, ותרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
     "about.xpk":"הניסיון של המייסדת",
     "about.role":"מייסדת ומהנדסת ראשית",
+    "about.edu":"MBA, אוניברסיטת תל אביב · B.Sc הנדסת תוכנה, טכניון",
+    "foot.loc":"חיפה, ישראל",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
@@ -383,6 +390,8 @@ const I18N = {
     "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой, с более чем 10-летним опытом разработки 3D реального времени в областях XR, медицины, игр и обороны, включая участие в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
     "about.xpk":"Опыт основателя",
     "about.role":"Основатель и ведущий инженер",
+    "about.edu":"MBA, Тель-Авивский университет · B.Sc, программная инженерия, Технион",
+    "foot.loc":"Хайфа, Израиль",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
