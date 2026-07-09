@@ -114,15 +114,6 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .cta p{color:var(--dim);font-size:.95rem}
 @media(max-width:900px){.cta{grid-template-columns:1fr}}
 
-/* ---------------- brand band ---------------- */
-.brandband{position:relative;overflow:hidden;margin-top:56px;padding:72px 24px;text-align:center;background:radial-gradient(680px 320px at 50% 42%,var(--maroon),transparent 70%),var(--panel);border:1px solid var(--line);border-radius:20px}
-.brandband .bl{position:absolute;top:-16%;bottom:-16%;width:2px;background:linear-gradient(180deg,transparent,rgba(200,16,46,.75),transparent);pointer-events:none}
-.brandband .bl-1{left:26%;transform:rotate(11deg)}
-.brandband .bl-2{right:26%;transform:rotate(-11deg)}
-.bb-lockup{position:relative;height:220px;filter:drop-shadow(0 0 30px rgba(200,16,46,.30))}
-.bb-tag{position:relative;margin-top:24px;font-size:.72rem;letter-spacing:.26em;color:var(--dim)}
-@media(max-width:600px){.brandband{padding:56px 20px}.bb-lockup{height:158px}.brandband .bl-1{left:14%}.brandband .bl-2{right:14%}.bb-tag{letter-spacing:.16em}}
-
 /* ---------------- footer ---------------- */
 footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .foot{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap}
@@ -227,13 +218,6 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     </div>
   </section>
 
-  <section class="brandband rv" aria-label="Red Crown Interactive">
-    <span class="bl bl-1" aria-hidden="true"></span>
-    <span class="bl bl-2" aria-hidden="true"></span>
-    <img class="bb-lockup" src="assets/logo-kit/redcrown-lockup-stacked-white-scarlet.svg" alt="Red Crown Interactive">
-    <div class="bb-tag" data-i18n="brand.tag">XR · MOBILE · PC — UNITY DEVELOPMENT STUDIO</div>
-  </section>
-
   <section class="panel cta rv" id="about">
     <h2 data-i18n="cta.title">READY TO BUILD<br>SOMETHING <em>AMAZING?</em></h2>
     <p data-i18n="cta.lead">Let's collaborate and create the next generation of graphical applications together.</p>
@@ -280,7 +264,6 @@ const I18N = {
     "wwd.5.title":"SUPPORT &amp; LIVE OPS","wwd.5.desc":"Ongoing support and live updates to keep your application evolving.",
     "work.head":"SELECTED WORK","work.viewAll":"VIEW ALL PROJECTS →","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
-    "brand.tag":"XR · MOBILE · PC — UNITY DEVELOPMENT STUDIO",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
   he: {
@@ -302,7 +285,6 @@ const I18N = {
     "wwd.5.title":"תמיכה ותפעול שוטף","wwd.5.desc":"תמיכה שוטפת ועדכונים חיים כדי שהאפליקציה שלכם תמשיך להתפתח.",
     "work.head":"עבודות נבחרות","work.viewAll":"לכל הפרויקטים ←","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
-    "brand.tag":"מציאות מדומה · נייד · מחשב — סטודיו לפיתוח ב-Unity",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
   ru: {
@@ -324,7 +306,6 @@ const I18N = {
     "wwd.5.title":"ПОДДЕРЖКА И LIVE OPS","wwd.5.desc":"Постоянная поддержка и обновления в реальном времени для развития вашего приложения.",
     "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.viewAll":"ВСЕ ПРОЕКТЫ →","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
-    "brand.tag":"XR · Мобайл · PC — студия разработки на Unity",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
 };
