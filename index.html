@@ -126,6 +126,14 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .about-in{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;margin-top:40px;align-items:start}
 .about-lead h3{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:.02em;line-height:1.18}
 .about-lead p{color:var(--dim);margin-top:16px;font-size:.95rem}
+.founder{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.founder-img{width:76px;height:76px;border-radius:50%;object-fit:cover;border:1px solid var(--line);background:var(--panel-2);flex-shrink:0}
+.founder-meta{display:flex;flex-direction:column;gap:3px}
+.founder-name{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.02em}
+.founder-role{font-size:.82rem;color:var(--dim)}
+.founder-li{display:inline-flex;align-items:center;gap:6px;margin-top:5px;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--hot);width:fit-content}
+.founder-li svg{width:15px;height:15px;fill:currentColor}
+.founder-li:hover{color:var(--bone)}
 .about-xp-k{display:block;font-family:var(--brand);font-size:.66rem;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
 .logo-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .logo-tile{display:grid;place-items:center;text-align:center;padding:24px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);font-family:var(--display);font-weight:600;font-size:.92rem;letter-spacing:.04em;color:var(--bone);opacity:.82;transition:border-color .2s,opacity .2s}
@@ -246,6 +254,17 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="sec-k" data-i18n="about.kicker">ABOUT</div>
     <div class="about-in">
       <div class="about-lead">
+        <div class="founder">
+          <img class="founder-img" src="assets/founder.jpg" alt="Julia Pavlov">
+          <div class="founder-meta">
+            <b class="founder-name">Julia Pavlov</b>
+            <span class="founder-role" data-i18n="about.role">Founder &amp; Lead Engineer</span>
+            <a class="founder-li" href="https://www.linkedin.com/in/julia-pavlov" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1-.02 4 2 2 0 0 1 .02-4zM3 8.98h4V21H3zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.06 3.76-2.06 4.02 0 4.76 2.65 4.76 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
+              LinkedIn
+            </a>
+          </div>
+        </div>
         <h3 data-i18n="about.h">A decade of shipping real-time 3D</h3>
         <p data-i18n="about.p">Red Crown Interactive is founded and led by Julia Pavlov — 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.</p>
       </div>
@@ -310,6 +329,7 @@ const I18N = {
     "about.h":"A decade of shipping real-time 3D",
     "about.p":"Red Crown Interactive is founded and led by Julia Pavlov — 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
     "about.xpk":"Founder's experience",
+    "about.role":"Founder & Lead Engineer",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
@@ -335,6 +355,7 @@ const I18N = {
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
     "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב — למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, עם תרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
     "about.xpk":"הניסיון של המייסדת",
+    "about.role":"מייסדת ומהנדסת ראשית",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
@@ -360,6 +381,7 @@ const I18N = {
     "about.h":"Десять лет разработки 3D в реальном времени",
     "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой — более 10 лет разработки 3D реального времени в областях XR, медицины, игр и обороны, с участием в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
     "about.xpk":"Опыт основателя",
+    "about.role":"Основатель и ведущий инженер",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
