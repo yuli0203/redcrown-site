@@ -45,11 +45,19 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .btn-red{background:var(--red);color:var(--bone)}
 .btn-red:hover{filter:brightness(1.12)}
 .nav-cta{margin-inline-start:14px}
-.lang{display:flex;gap:2px;margin-inline-start:14px;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-shrink:0;direction:ltr}
-.lang button{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:8px 10px;background:transparent;color:var(--dim);border:0;cursor:pointer;transition:all .2s}
+.lang{position:relative;margin-inline-start:14px;flex-shrink:0;direction:ltr}
+.lang-toggle{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:8px 11px;background:transparent;color:var(--bone);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s}
+.lang-toggle:hover{border-color:var(--red);color:var(--hot)}
+.lang-cur{display:inline-flex;align-items:center;gap:6px}
+.lang .caret{width:9px;height:6px;color:var(--dim);transition:transform .2s}
+.lang.open .caret{transform:rotate(180deg)}
+.lang-menu{position:absolute;top:calc(100% + 6px);right:0;min-width:100%;display:none;flex-direction:column;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.45);z-index:60}
+.lang.open .lang-menu{display:flex}
+.lang-menu button{display:inline-flex;align-items:center;gap:7px;width:100%;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:9px 16px 9px 11px;background:transparent;color:var(--dim);border:0;cursor:pointer;white-space:nowrap;transition:all .2s}
+.lang-menu button:hover{background:var(--panel);color:var(--hot)}
+.lang-menu button[hidden]{display:none}
 .lang .flag{width:18px;height:12px;border-radius:2px;flex-shrink:0;display:block;box-shadow:0 0 0 .5px rgba(255,255,255,.25)}
-.lang button:hover{color:var(--hot)}
-.lang button.on{background:var(--red);color:var(--bone)}
+[dir="rtl"] .lang-menu{right:auto;left:0}
 @media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}}
 
 /* ---------------- hero ---------------- */
@@ -151,9 +159,15 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     </ul>
     <a class="btn btn-line nav-cta" href="#contact" data-i18n="nav.cta">LET'S BUILD</a>
     <div class="lang" role="group" aria-label="Language / שפה / Язык">
-      <button type="button" data-lang="en"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3.2"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.6"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="2.2"/></svg>EN</button>
-      <button type="button" data-lang="ru" lang="ru"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="5.33" width="24" height="5.34" fill="#0039A6"/><rect y="10.67" width="24" height="5.33" fill="#D52B1E"/></svg>RU</button>
-      <button type="button" data-lang="he" lang="he"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="2.6" width="24" height="1.8" fill="#0038b8"/><rect y="11.6" width="24" height="1.8" fill="#0038b8"/><path d="M12 5L9.4 9.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/><path d="M12 11L9.4 6.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/></svg>עב</button>
+      <button type="button" class="lang-toggle" aria-haspopup="menu" aria-expanded="false" aria-label="Change language">
+        <span class="lang-cur"></span>
+        <svg class="caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="lang-menu" role="menu">
+        <button type="button" data-lang="en" role="menuitem"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3.2"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.6"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="2.2"/></svg>EN</button>
+        <button type="button" data-lang="ru" role="menuitem" lang="ru"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="5.33" width="24" height="5.34" fill="#0039A6"/><rect y="10.67" width="24" height="5.33" fill="#D52B1E"/></svg>RU</button>
+        <button type="button" data-lang="he" role="menuitem" lang="he"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="2.6" width="24" height="1.8" fill="#0038b8"/><rect y="11.6" width="24" height="1.8" fill="#0038b8"/><path d="M12 5L9.4 9.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/><path d="M12 11L9.4 6.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/></svg>עב</button>
+      </div>
     </div>
   </div>
 </nav>
@@ -322,11 +336,11 @@ function applyLang(lang, persist){
     if (v != null) el.innerHTML = v;
   });
   if (dict['doc.title']) document.title = dict['doc.title'];
-  document.querySelectorAll('.lang button').forEach(b=>{
-    const on = b.dataset.lang === lang;
-    b.classList.toggle('on', on);
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
+  // Show the active language on the toggle; keep only the others in the menu.
+  const active = document.querySelector('.lang-menu button[data-lang="'+lang+'"]');
+  const slot = document.querySelector('.lang-cur');
+  if (active && slot) slot.innerHTML = active.innerHTML;
+  document.querySelectorAll('.lang-menu button').forEach(b=>{ b.hidden = (b.dataset.lang === lang); });
   if (persist) { try { localStorage.setItem('rc_lang', lang); } catch(e){} }
 }
 
@@ -341,9 +355,20 @@ function detectLang(){
   return 'en';
 }
 
-document.querySelectorAll('.lang button').forEach(b=>{
-  b.addEventListener('click', ()=>applyLang(b.dataset.lang, true));
+// language dropdown: toggle open, pick a language, close on outside click / Escape
+const langWrap = document.querySelector('.lang');
+const langToggle = document.querySelector('.lang-toggle');
+function closeLang(){ langWrap.classList.remove('open'); langToggle.setAttribute('aria-expanded','false'); }
+langToggle.addEventListener('click', e=>{
+  e.stopPropagation();
+  const open = langWrap.classList.toggle('open');
+  langToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
 });
+document.querySelectorAll('.lang-menu button').forEach(b=>{
+  b.addEventListener('click', ()=>{ applyLang(b.dataset.lang, true); closeLang(); });
+});
+document.addEventListener('click', e=>{ if(!langWrap.contains(e.target)) closeLang(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLang(); });
 
 // A saved choice wins; otherwise fall back to the device language.
 let saved = null;
