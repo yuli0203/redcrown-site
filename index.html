@@ -61,14 +61,10 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 @media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}}
 
 /* ---------------- hero ---------------- */
-.hero{position:relative;margin-top:26px;overflow:hidden;min-height:560px;display:flex;align-items:center;background:var(--black);
-  /* ── crown placement: tweak these ── */
-  --crown-size:52%; --crown-x:56%; --crown-y:46%; --crown-rot:0deg}
-.hero-bg{position:absolute;inset:0;background:url('assets/hero-bg.jpg') center right/cover no-repeat;z-index:0}
-.hero-crown{position:absolute;top:var(--crown-y);left:var(--crown-x);height:var(--crown-size);transform:translate(-50%,-50%) rotate(var(--crown-rot));z-index:1;pointer-events:none;filter:drop-shadow(0 0 44px rgba(200,16,46,.25))}
-.hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.95) 0%,rgba(14,8,10,.86) 30%,rgba(14,8,10,.4) 50%,rgba(14,8,10,0) 68%);z-index:2}
-.hero-fg{position:absolute;inset:0;background:url('assets/hero-fg.webp') center right/cover no-repeat;z-index:3;pointer-events:none}
-.hero-txt{position:relative;z-index:4;padding:64px 48px;max-width:600px}
+.hero{position:relative;margin-top:26px;overflow:hidden;min-height:560px;display:flex;align-items:center;background:var(--black)}
+.hero-bg{position:absolute;inset:0;background:url('assets/hero.jpg') center right/cover no-repeat}
+.hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
+.hero-txt{position:relative;z-index:2;padding:64px 48px;max-width:600px}
 .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.06;letter-spacing:.02em}
 .hero h1 em{font-style:normal;color:var(--hot)}
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
@@ -80,11 +76,10 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .arrow-link:hover{color:var(--hot)}
 @media(max-width:900px){
   .hero{display:block;min-height:0}
-  .hero-bg{inset:0 0 auto 0;height:300px;background-position:66% center}
-  .hero-fg{inset:0 0 auto 0;height:300px;background-position:66% center}
-  .hero-crown{top:150px;left:50%;height:150px}
+  .hero-bg{position:relative;inset:auto;height:280px;background-position:66% center}
+  .hero-bg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(180deg,transparent,var(--black))}
   .hero-scrim{display:none}
-  .hero-txt{margin-top:300px;padding:24px 28px 44px;max-width:none}
+  .hero-txt{padding:28px 28px 44px;max-width:none}
 }
 
 /* ---------------- platform cards ---------------- */
@@ -108,10 +103,8 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 @media(max-width:900px){.wwd-grid{grid-template-columns:repeat(2,1fr)}}
 
 /* ---------------- work ---------------- */
-.work-head{display:flex;align-items:center;justify-content:space-between;margin:56px 0 26px}
-.work-head h2{font-family:var(--brand);font-size:1rem;letter-spacing:.32em}
-.work-head h2::after{content:"";display:inline-block;width:120px;height:1px;background:var(--red);vertical-align:middle;margin-inline-start:22px}
-.work-head a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot)}
+#work{margin-top:56px}
+.work-sub{text-align:center;color:var(--dim);font-size:.9rem;max-width:56ch;margin:14px auto 34px}
 .work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .wsoon{width:100%;aspect-ratio:4/3;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);display:grid;place-content:center;justify-items:center;gap:14px;transition:border-color .25s}
 .wcard:hover .wsoon{border-color:rgba(200,16,46,.55)}
@@ -154,9 +147,8 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .rv.in{opacity:1;transform:none}
 
 /* ---------------- RTL ---------------- */
-[dir="rtl"] .hero-bg,[dir="rtl"] .hero-fg{transform:scaleX(-1)}
-[dir="rtl"] .hero-crown{left:calc(100% - var(--crown-x));transform:translate(-50%,-50%) rotate(var(--crown-rot)) scaleX(-1)}
-[dir="rtl"] .hero-scrim{background:linear-gradient(270deg,rgba(14,8,10,.95) 0%,rgba(14,8,10,.86) 30%,rgba(14,8,10,.4) 50%,rgba(14,8,10,0) 68%)}
+[dir="rtl"] .hero-bg{transform:scaleX(-1)}
+[dir="rtl"] .hero-scrim{background:linear-gradient(270deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
 </style>
 </head>
 <body>
@@ -193,10 +185,8 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 <div class="wrap" id="top">
 
   <header class="panel hero">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <img class="hero-crown" src="assets/logo-kit/redcrown-primary-scarlet.svg" alt="" aria-hidden="true">
+    <div class="hero-bg" role="img" aria-label="Developer wearing a VR headset in front of the Red Crown mark"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
-    <div class="hero-fg" role="img" aria-label="Developer wearing a VR headset"></div>
     <div class="hero-txt rv in">
       <h1 data-i18n="hero.title">GRAPHICAL<br><em>APPLICATION</em><br>DEVELOPMENT</h1>
       <div class="plat" data-i18n="hero.plat">XR<s>•</s>MOBILE<s>•</s>PC</div>
@@ -241,10 +231,8 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   </section>
 
   <section id="work">
-    <div class="work-head rv">
-      <h2 data-i18n="work.head">SELECTED WORK</h2>
-      <a href="#contact" data-i18n="work.viewAll">VIEW ALL PROJECTS →</a>
-    </div>
+    <div class="sec-k rv" data-i18n="work.head">SELECTED WORK</div>
+    <p class="work-sub rv" data-i18n="work.sub">A concept-to-launch portfolio — each project built end to end by our founder.</p>
     <!-- PLACEHOLDER PROJECTS — swap in real work when ready -->
     <div class="work-grid">
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
@@ -317,7 +305,7 @@ const I18N = {
     "wwd.3.title":"3D ART &amp; ANIMATION","wwd.3.desc":"High-quality 3D assets, animations, and effects that bring worlds to life.",
     "wwd.4.title":"OPTIMIZATION","wwd.4.desc":"Performance-first approach for smooth experiences across all platforms.",
     "wwd.5.title":"SUPPORT &amp; LIVE OPS","wwd.5.desc":"Ongoing support and live updates to keep your application evolving.",
-    "work.head":"SELECTED WORK","work.viewAll":"VIEW ALL PROJECTS →","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
+    "work.head":"SELECTED WORK","work.sub":"A concept-to-launch portfolio — each project built end to end by our founder.","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
     "about.p":"Red Crown Interactive is founded and led by Julia Pavlov — 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
@@ -342,7 +330,7 @@ const I18N = {
     "wwd.3.title":"אמנות תלת-ממד ואנימציה","wwd.3.desc":"נכסי תלת-ממד, אנימציות ואפקטים איכותיים שמחיים עולמות.",
     "wwd.4.title":"אופטימיזציה","wwd.4.desc":"גישה שמעמידה את הביצועים בראש סדר העדיפויות לחוויה חלקה בכל הפלטפורמות.",
     "wwd.5.title":"תמיכה ותפעול שוטף","wwd.5.desc":"תמיכה שוטפת ועדכונים חיים כדי שהאפליקציה שלכם תמשיך להתפתח.",
-    "work.head":"עבודות נבחרות","work.viewAll":"לכל הפרויקטים ←","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
+    "work.head":"עבודות נבחרות","work.sub":"פורטפוליו מהרעיון ועד להשקה — כל פרויקט נבנה במלואו על ידי המייסדת.","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
     "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב — למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, עם תרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
@@ -367,7 +355,7 @@ const I18N = {
     "wwd.3.title":"3D-ГРАФИКА И АНИМАЦИЯ","wwd.3.desc":"Высококачественные 3D-объекты, анимации и эффекты, оживляющие миры.",
     "wwd.4.title":"ОПТИМИЗАЦИЯ","wwd.4.desc":"Подход, ориентированный на производительность, для плавной работы на всех платформах.",
     "wwd.5.title":"ПОДДЕРЖКА И LIVE OPS","wwd.5.desc":"Постоянная поддержка и обновления в реальном времени для развития вашего приложения.",
-    "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.viewAll":"ВСЕ ПРОЕКТЫ →","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
+    "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.sub":"Портфолио от концепции до запуска — каждый проект полностью создан основателем.","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
     "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой — более 10 лет разработки 3D реального времени в областях XR, медицины, игр и обороны, с участием в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
