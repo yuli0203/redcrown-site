@@ -61,10 +61,14 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 @media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}}
 
 /* ---------------- hero ---------------- */
-.hero{position:relative;margin-top:26px;overflow:hidden;min-height:560px;display:flex;align-items:center;background:var(--black)}
-.hero-bg{position:absolute;inset:0;background:url('assets/hero.jpg') center right/cover no-repeat}
-.hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
-.hero-txt{position:relative;z-index:2;padding:64px 48px;max-width:600px}
+.hero{position:relative;margin-top:26px;overflow:hidden;min-height:560px;display:flex;align-items:center;background:var(--black);
+  /* ── crown placement: tweak these ── */
+  --crown-size:52%; --crown-x:56%; --crown-y:46%; --crown-rot:0deg}
+.hero-bg{position:absolute;inset:0;background:url('assets/hero-bg.jpg') center right/cover no-repeat;z-index:0}
+.hero-crown{position:absolute;top:var(--crown-y);left:var(--crown-x);height:var(--crown-size);transform:translate(-50%,-50%) rotate(var(--crown-rot));z-index:1;pointer-events:none;filter:drop-shadow(0 0 44px rgba(200,16,46,.25))}
+.hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.95) 0%,rgba(14,8,10,.86) 30%,rgba(14,8,10,.4) 50%,rgba(14,8,10,0) 68%);z-index:2}
+.hero-fg{position:absolute;inset:0;background:url('assets/hero-fg.webp') center right/cover no-repeat;z-index:3;pointer-events:none}
+.hero-txt{position:relative;z-index:4;padding:64px 48px;max-width:600px}
 .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.06;letter-spacing:.02em}
 .hero h1 em{font-style:normal;color:var(--hot)}
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
@@ -76,10 +80,11 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .arrow-link:hover{color:var(--hot)}
 @media(max-width:900px){
   .hero{display:block;min-height:0}
-  .hero-bg{position:relative;inset:auto;height:280px;background-position:66% center}
-  .hero-bg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(180deg,transparent,var(--black))}
+  .hero-bg{inset:0 0 auto 0;height:300px;background-position:66% center}
+  .hero-fg{inset:0 0 auto 0;height:300px;background-position:66% center}
+  .hero-crown{top:150px;left:50%;height:150px}
   .hero-scrim{display:none}
-  .hero-txt{padding:28px 28px 44px;max-width:none}
+  .hero-txt{margin-top:300px;padding:24px 28px 44px;max-width:none}
 }
 
 /* ---------------- platform cards ---------------- */
@@ -128,11 +133,12 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .about-in{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;margin-top:40px;align-items:start}
 .about-lead h3{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:.02em;line-height:1.18}
 .about-lead p{color:var(--dim);margin-top:16px;font-size:.95rem}
-.about-xp{list-style:none;display:flex;flex-direction:column}
-.about-xp li{padding:16px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
-.about-xp li:first-child{border-top:0;padding-top:0}
-.about-xp b{font-family:var(--display);font-weight:600;font-size:.98rem;letter-spacing:.04em}
-.about-xp .role{font-size:.84rem;color:var(--dim)}
+.about-xp-k{display:block;font-family:var(--brand);font-size:.66rem;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
+.logo-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.logo-tile{display:grid;place-items:center;text-align:center;padding:24px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);font-family:var(--display);font-weight:600;font-size:.92rem;letter-spacing:.04em;color:var(--bone);opacity:.82;transition:border-color .2s,opacity .2s}
+.logo-tile:hover{border-color:rgba(200,16,46,.5);opacity:1}
+.logo-tile img{max-height:40px;max-width:82%;object-fit:contain}
+@media(max-width:480px){.logo-row{grid-template-columns:1fr}}
 @media(max-width:900px){.about{padding:44px 28px}.about-in{grid-template-columns:1fr;gap:28px;margin-top:32px}}
 
 /* ---------------- footer ---------------- */
@@ -148,8 +154,9 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .rv.in{opacity:1;transform:none}
 
 /* ---------------- RTL ---------------- */
-[dir="rtl"] .hero-bg{transform:scaleX(-1)}
-[dir="rtl"] .hero-scrim{background:linear-gradient(270deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
+[dir="rtl"] .hero-bg,[dir="rtl"] .hero-fg{transform:scaleX(-1)}
+[dir="rtl"] .hero-crown{left:calc(100% - var(--crown-x));transform:translate(-50%,-50%) rotate(var(--crown-rot)) scaleX(-1)}
+[dir="rtl"] .hero-scrim{background:linear-gradient(270deg,rgba(14,8,10,.95) 0%,rgba(14,8,10,.86) 30%,rgba(14,8,10,.4) 50%,rgba(14,8,10,0) 68%)}
 </style>
 </head>
 <body>
@@ -186,8 +193,10 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 <div class="wrap" id="top">
 
   <header class="panel hero">
-    <div class="hero-bg" role="img" aria-label="Developer wearing a VR headset in front of the Red Crown mark"></div>
+    <div class="hero-bg" aria-hidden="true"></div>
+    <img class="hero-crown" src="assets/logo-kit/redcrown-primary-scarlet.svg" alt="" aria-hidden="true">
     <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-fg" role="img" aria-label="Developer wearing a VR headset"></div>
     <div class="hero-txt rv in">
       <h1 data-i18n="hero.title">GRAPHICAL<br><em>APPLICATION</em><br>DEVELOPMENT</h1>
       <div class="plat" data-i18n="hero.plat">XR<s>•</s>MOBILE<s>•</s>PC</div>
@@ -250,14 +259,17 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="about-in">
       <div class="about-lead">
         <h3 data-i18n="about.h">A decade of shipping real-time 3D</h3>
-        <p data-i18n="about.p">Red Crown Interactive is founded and led by Julia Pavlov — 10+ years taking real-time 3D applications from concept to production across XR, medical, gaming, and defense. The throughline: software where correctness matters as much as immersion.</p>
+        <p data-i18n="about.p">Red Crown Interactive is founded and led by Julia Pavlov — 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.</p>
       </div>
-      <ul class="about-xp">
-        <li><b>Technion</b><span class="role" data-i18n="about.x1">XR Program Director — VR/AR for research &amp; education · 2024–present</span></li>
-        <li><b>Philips</b><span class="role" data-i18n="about.x2">Senior Software Engineer — real-time 3D cardiac imaging · 2020–2021</span></li>
-        <li><b>Playtika</b><span class="role" data-i18n="about.x3">Software Engineer — Unity mobile games, 10M–50M downloads · 2018–2020</span></li>
-        <li><b>Israeli Navy</b><span class="role" data-i18n="about.x4">Software Engineering Officer — real-time defense systems · 2015–2018</span></li>
-      </ul>
+      <div class="about-xp">
+        <span class="about-xp-k" data-i18n="about.xpk">Founder's experience</span>
+        <div class="logo-row">
+          <span class="logo-tile">Technion</span>
+          <span class="logo-tile">Philips</span>
+          <span class="logo-tile">Playtika</span>
+          <span class="logo-tile">Israeli Navy</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -308,11 +320,8 @@ const I18N = {
     "work.head":"SELECTED WORK","work.viewAll":"VIEW ALL PROJECTS →","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
-    "about.p":"Red Crown Interactive is founded and led by Julia Pavlov — 10+ years taking real-time 3D applications from concept to production across XR, medical, gaming, and defense. The throughline: software where correctness matters as much as immersion.",
-    "about.x1":"XR Program Director — VR/AR for research & education · 2024–present",
-    "about.x2":"Senior Software Engineer — real-time 3D cardiac imaging · 2020–2021",
-    "about.x3":"Software Engineer — Unity mobile games, 10M–50M downloads · 2018–2020",
-    "about.x4":"Software Engineering Officer — real-time defense systems · 2015–2018",
+    "about.p":"Red Crown Interactive is founded and led by Julia Pavlov — 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
+    "about.xpk":"Founder's experience",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
@@ -336,11 +345,8 @@ const I18N = {
     "work.head":"עבודות נבחרות","work.viewAll":"לכל הפרויקטים ←","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
-    "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב — למעלה מעשר שנים של בניית אפליקציות תלת-ממד בזמן אמת, מהרעיון ועד לייצור, בתחומי XR, רפואה, גיימינג וביטחון. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
-    "about.x1":"מנהלת תוכנית XR — הובלת VR/AR למחקר וחינוך · 2024–היום",
-    "about.x2":"מהנדסת תוכנה בכירה — שחזור תמונת לב תלת-ממדית בזמן אמת · 2020–2021",
-    "about.x3":"מהנדסת תוכנה — משחקי מובייל ב-Unity, 10–50 מיליון הורדות · 2018–2020",
-    "about.x4":"קצינת הנדסת תוכנה — מערכות הגנה בזמן אמת · 2015–2018",
+    "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב — למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, עם תרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
+    "about.xpk":"הניסיון של המייסדת",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
@@ -364,11 +370,8 @@ const I18N = {
     "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.viewAll":"ВСЕ ПРОЕКТЫ →","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
-    "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой — более 10 лет создания приложений 3D реального времени от концепции до продакшена в областях XR, медицины, игр и обороны. Общая нить: программное обеспечение, где точность важна не меньше погружения.",
-    "about.x1":"Директор программы XR — VR/AR для исследований и образования · 2024–наст.",
-    "about.x2":"Старший инженер-программист — 3D-реконструкция изображений сердца в реальном времени · 2020–2021",
-    "about.x3":"Инженер-программист — мобильные игры на Unity, 10–50 млн загрузок · 2018–2020",
-    "about.x4":"Инженер-программист — системы реального времени, ВМС · 2015–2018",
+    "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой — более 10 лет разработки 3D реального времени в областях XR, медицины, игр и обороны, с участием в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
+    "about.xpk":"Опыт основателя",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
