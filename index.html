@@ -46,7 +46,8 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .btn-red:hover{filter:brightness(1.12)}
 .nav-cta{margin-inline-start:14px}
 .lang{display:flex;gap:2px;margin-inline-start:14px;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-shrink:0;direction:ltr}
-.lang button{font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:8px 11px;background:transparent;color:var(--dim);border:0;cursor:pointer;transition:all .2s}
+.lang button{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:8px 10px;background:transparent;color:var(--dim);border:0;cursor:pointer;transition:all .2s}
+.lang .flag{width:18px;height:12px;border-radius:2px;flex-shrink:0;display:block;box-shadow:0 0 0 .5px rgba(255,255,255,.25)}
 .lang button:hover{color:var(--hot)}
 .lang button.on{background:var(--red);color:var(--bone)}
 @media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}}
@@ -150,9 +151,9 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     </ul>
     <a class="btn btn-line nav-cta" href="#contact" data-i18n="nav.cta">LET'S BUILD</a>
     <div class="lang" role="group" aria-label="Language / שפה / Язык">
-      <button type="button" data-lang="en">EN</button>
-      <button type="button" data-lang="ru" lang="ru">RU</button>
-      <button type="button" data-lang="he" lang="he">עב</button>
+      <button type="button" data-lang="en"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3.2"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.6"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="2.2"/></svg>EN</button>
+      <button type="button" data-lang="ru" lang="ru"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="5.33" width="24" height="5.34" fill="#0039A6"/><rect y="10.67" width="24" height="5.33" fill="#D52B1E"/></svg>RU</button>
+      <button type="button" data-lang="he" lang="he"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="2.6" width="24" height="1.8" fill="#0038b8"/><rect y="11.6" width="24" height="1.8" fill="#0038b8"/><path d="M12 5L9.4 9.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/><path d="M12 11L9.4 6.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/></svg>עב</button>
     </div>
   </div>
 </nav>
@@ -189,7 +190,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.6"/><path d="M9 20.5h6M12 16.5v4"/></svg>
       <h3 data-i18n="svc.pc.title">PC</h3>
-      <p data-i18n="svc.pc.desc">High-quality desktop applications and games built for power and precision.</p>
+      <p data-i18n="svc.pc.desc">High-performance desktop apps and games — plus complex real-time scientific applications, machine learning, and more. Built for power and precision.</p>
       <a href="#contact" data-i18n="svc.pc.link">EXPLORE PC →</a>
     </div>
   </section>
@@ -256,7 +257,7 @@ const I18N = {
     "hero.ctaSecondary":"VIEW OUR WORK &nbsp;→",
     "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Immersive experiences that transport users to new realities.","svc.xr.link":"EXPLORE XR →",
     "svc.mobile.title":"MOBILE","svc.mobile.desc":"Engaging mobile applications with stunning visuals and seamless performance.","svc.mobile.link":"EXPLORE MOBILE →",
-    "svc.pc.title":"PC","svc.pc.desc":"High-quality desktop applications and games built for power and precision.","svc.pc.link":"EXPLORE PC →",
+    "svc.pc.title":"PC","svc.pc.desc":"High-performance desktop apps and games — plus complex real-time scientific applications, machine learning, and more. Built for power and precision.","svc.pc.link":"EXPLORE PC →",
     "wwd.kicker":"WHAT WE DO",
     "wwd.1.title":"CONCEPT &amp; DESIGN","wwd.1.desc":"From ideas to compelling concepts and visual storytelling.",
     "wwd.2.title":"DEVELOPMENT","wwd.2.desc":"End-to-end development with clean, scalable architectures.",
@@ -277,7 +278,7 @@ const I18N = {
     "hero.ctaSecondary":"לצפייה בעבודות &nbsp;←",
     "svc.xr.title":"מציאות מדומה / משולבת","svc.xr.desc":"חוויות סוחפות שלוקחות את המשתמשים למציאויות חדשות.","svc.xr.link":"גלו עוד ←",
     "svc.mobile.title":"אפליקציות לנייד","svc.mobile.desc":"אפליקציות לנייד מרתקות עם ויזואליה מרהיבה וביצועים חלקים.","svc.mobile.link":"גלו עוד ←",
-    "svc.pc.title":"אפליקציות למחשב","svc.pc.desc":"אפליקציות, משחקים וסימולציות איכותיים למחשב, בנויים לעוצמה ולדיוק.","svc.pc.link":"גלו עוד ←",
+    "svc.pc.title":"אפליקציות למחשב","svc.pc.desc":"אפליקציות ומשחקים בעלי ביצועים גבוהים — לצד אפליקציות מדעיות מורכבות בזמן אמת, למידת מכונה ועוד. בנויים לעוצמה ולדיוק.","svc.pc.link":"גלו עוד ←",
     "wwd.kicker":"מה אנחנו עושים",
     "wwd.1.title":"קונספט ועיצוב","wwd.1.desc":"מרעיונות לקונספטים מרתקים ולסיפור ויזואלי.",
     "wwd.2.title":"פיתוח","wwd.2.desc":"פיתוח מקצה לקצה עם ארכיטקטורה נקייה וניתנת להרחבה.",
@@ -298,7 +299,7 @@ const I18N = {
     "hero.ctaSecondary":"СМОТРЕТЬ РАБОТЫ &nbsp;→",
     "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Иммерсивные впечатления, переносящие пользователей в новые реальности.","svc.xr.link":"ПОДРОБНЕЕ О XR →",
     "svc.mobile.title":"МОБАЙЛ","svc.mobile.desc":"Увлекательные мобильные приложения с потрясающей графикой и плавной работой.","svc.mobile.link":"ПОДРОБНЕЕ О МОБАЙЛ →",
-    "svc.pc.title":"PC","svc.pc.desc":"Высококачественные настольные приложения и игры, созданные для мощности и точности.","svc.pc.link":"ПОДРОБНЕЕ О PC →",
+    "svc.pc.title":"PC","svc.pc.desc":"Высокопроизводительные настольные приложения и игры — плюс сложные научные приложения реального времени, машинное обучение и многое другое. Созданы для мощности и точности.","svc.pc.link":"ПОДРОБНЕЕ О PC →",
     "wwd.kicker":"ЧЕМ МЫ ЗАНИМАЕМСЯ",
     "wwd.1.title":"КОНЦЕПЦИЯ И ДИЗАЙН","wwd.1.desc":"От идей до убедительных концепций и визуального повествования.",
     "wwd.2.title":"РАЗРАБОТКА","wwd.2.desc":"Комплексная разработка с чистой, масштабируемой архитектурой.",
