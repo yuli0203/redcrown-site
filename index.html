@@ -267,8 +267,12 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
         <h5 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h5>
         <span data-i18n="work.vr.sub">Virtual Reality | Hand Gestures | Controllers</span>
       </button>
+      <button type="button" class="wcard rv" data-project="ml" aria-expanded="false" aria-controls="wd-ml">
+        <img class="wthumb" src="assets/work-ml-livemol.jpg" alt="" width="1268" height="951" loading="lazy">
+        <h5 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h5>
+        <span data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</span>
+      </button>
       <!-- PLACEHOLDER PROJECTS - swap in real work when ready -->
-      <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
       <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
     </div>
 
@@ -284,6 +288,13 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
       <h4 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h4>
       <div class="wd-sub" data-i18n="work.vr.sub">Virtual Reality | Hand Gestures | Controllers</div>
       <div class="wd-body" data-i18n="work.vr.body"><p>This fully immersive Meta Quest 3 VR experiment is used to teach fugacity as part of the Thermodynamics B course at the Technion.</p><p>The experiment is approximately one hour long and is designed to be performed by multiple student groups simultaneously (up to 12 devices). Students are also trained in laboratory safety and fire safety procedures as part of the experience.</p><p>The project includes a virtual instructor who guides students through the full experiment using spoken instructions. The Meta Quest 3 headsets are paired with tablets, allowing lab instructors to monitor each group&rsquo;s progress and receive data files generated during the experiment.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-ml" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <h4 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h4>
+      <div class="wd-sub" data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</div>
+      <div class="wd-body" data-i18n="work.ml.body"><p>LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.</p><p>Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.</p><p>It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.</p><p>This project is currently in development, first for PC, later stage for AR.</p></div>
     </div>
   </section>
 
@@ -371,6 +382,9 @@ const I18N = {
     "work.vr.title":"Immersive Fugacity VR Experiment",
     "work.vr.sub":"Virtual Reality | Hand Gestures | Controllers",
     "work.vr.body":"<p>This fully immersive Meta Quest 3 VR experiment is used to teach fugacity as part of the Thermodynamics B course at the Technion.</p><p>The experiment is approximately one hour long and is designed to be performed by multiple student groups simultaneously (up to 12 devices). Students are also trained in laboratory safety and fire safety procedures as part of the experience.</p><p>The project includes a virtual instructor who guides students through the full experiment using spoken instructions. The Meta Quest 3 headsets are paired with tablets, allowing lab instructors to monitor each group&rsquo;s progress and receive data files generated during the experiment.</p>",
+    "work.ml.title":"Molecular Scientific ML Research Tool",
+    "work.ml.sub":"PC | Machine-Learning | Python Server",
+    "work.ml.body":"<p>LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.</p><p>Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.</p><p>It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.</p><p>This project is currently in development, first for PC, later stage for AR.</p>",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
     "about.p":"Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
@@ -406,6 +420,9 @@ const I18N = {
     "work.vr.title":"ניסוי VR סוחף בפוגסיביות",
     "work.vr.sub":"מציאות מדומה | מחוות ידיים | בקרים",
     "work.vr.body":"<p>ניסוי VR סוחף לחלוטין ל-Meta Quest 3 המשמש להוראת פוגסיביות במסגרת הקורס תרמודינמיקה ב' בטכניון.</p><p>הניסוי אורך כשעה ומיועד לביצוע במקביל על ידי קבוצות סטודנטים רבות (עד 12 מכשירים). הסטודנטים גם עוברים הדרכה בנהלי בטיחות במעבדה ובטיחות אש כחלק מהחוויה.</p><p>הפרויקט כולל מדריך וירטואלי המלווה את הסטודנטים לאורך הניסוי כולו באמצעות הוראות קוליות. אוזניות ה-Meta Quest 3 מקושרות לטאבלטים, המאפשרים למדריכי המעבדה לעקוב אחר התקדמות כל קבוצה ולקבל את קובצי הנתונים הנוצרים במהלך הניסוי.</p>",
+    "work.ml.title":"כלי מחקר מדעי מולקולרי מבוסס למידת מכונה",
+    "work.ml.sub":"מחשב | למידת מכונה | שרת Python",
+    "work.ml.body":"<p>LiveMol היא פלטפורמת מחקר למידול מולקולרי, שנבנתה עבור הפקולטה להנדסה כימית ע\"ש וולפסון בטכניון. היא משלבת הדמיה תלת-ממדית בזמן אמת עם חישובי כימיה חישובית מדויקים מבחינה מדעית.</p><p>חוקרים בונים ועורכים מולקולות ישירות בתלת-ממד, ואז מריצים חישובי כימיה קוונטית על המבנה שלפניהם וצופים בתוצאות חוזרות אל המודל. החישובים הנתמכים כוללים אנרגיית נקודה בודדת, אופטימיזציית גיאומטריה ואופטימיזציה חיה, ניתוח תדרי רטט ואופטימיזציה של מצב מעבר.</p><p>המערכת פועלת כלקוח Unity המפעיל שרת חישוב ב-Python, מה ששומר על ממשק מגיב בזמן שחישובים כבדים רצים בנפרד. העבודה המדעית מתבצעת באמצעות מנועים מבוססים ובהם ASE, tblite, Open Babel ו-Sella, כאשר רכיבי למידת מכונה מתוכננים לצדם.</p><p>הפרויקט נמצא כיום בפיתוח, תחילה למחשב ובשלב מאוחר יותר ל-AR.</p>",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
     "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב, עם למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, ותרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
@@ -441,6 +458,9 @@ const I18N = {
     "work.vr.title":"Иммерсивный VR-эксперимент по фугитивности",
     "work.vr.sub":"Виртуальная реальность | Жесты рук | Контроллеры",
     "work.vr.body":"<p>Этот полностью иммерсивный VR-эксперимент для Meta Quest 3 используется для преподавания фугитивности в рамках курса «Термодинамика Б» в Технионе.</p><p>Эксперимент длится около часа и рассчитан на одновременное выполнение несколькими группами студентов (до 12 устройств). В рамках эксперимента студенты также проходят инструктаж по технике безопасности в лаборатории и пожарной безопасности.</p><p>Проект включает виртуального инструктора, который голосовыми указаниями сопровождает студентов на протяжении всего эксперимента. Гарнитуры Meta Quest 3 связаны с планшетами, что позволяет лаборантам отслеживать прогресс каждой группы и получать файлы данных, созданные в ходе эксперимента.</p>",
+    "work.ml.title":"Научный инструмент молекулярных исследований с машинным обучением",
+    "work.ml.sub":"PC | Машинное обучение | Сервер Python",
+    "work.ml.body":"<p>LiveMol представляет собой исследовательскую платформу для молекулярного моделирования, созданную для факультета химической инженерии им. Вольфсона в Технионе. Она объединяет трёхмерную визуализацию в реальном времени с научно точными расчётами вычислительной химии.</p><p>Исследователи создают и редактируют молекулы непосредственно в 3D, затем запускают квантово-химические расчёты для структуры перед ними и наблюдают, как результаты возвращаются на модель. Поддерживаемые расчёты включают энергию в одной точке, оптимизацию геометрии и живую оптимизацию, анализ колебательных частот и оптимизацию переходного состояния.</p><p>Приложение работает как клиент на Unity, управляющий вычислительным сервером на Python, что сохраняет отзывчивость интерфейса, пока тяжёлые расчёты выполняются отдельно. Научную часть обеспечивают проверенные движки, включая ASE, tblite, Open Babel и Sella, а компоненты машинного обучения запланированы наряду с ними.</p><p>Проект находится в разработке: сначала для ПК, позднее для AR.</p>",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
     "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой, с более чем 10-летним опытом разработки 3D реального времени в областях XR, медицины, игр и обороны, включая участие в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",

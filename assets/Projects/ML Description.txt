@@ -1,0 +1,11 @@
+Molecular Scientific ML Research Tool
+
+PC | Machine-Learning | Python Server
+
+LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.
+
+Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.
+
+It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.
+
+This project is currently in development, first for PC, later stage for AR.
