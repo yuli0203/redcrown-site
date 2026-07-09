@@ -70,8 +70,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
 .hero .plat s{text-decoration:none;color:var(--hot);padding:0 .4em}
 .hero .plat em{font-style:normal;color:var(--dim);letter-spacing:.2em;white-space:nowrap}
-.hero p{color:var(--dim);max-width:42ch}
-.hero p em{font-style:normal;color:var(--hot);font-weight:600}
+.hero p{color:var(--dim);max-width:38ch}
 .hero-cta{margin-top:36px;display:flex;align-items:center;gap:30px;flex-wrap:wrap}
 .arrow-link{font-size:.78rem;font-weight:600;letter-spacing:.16em;color:var(--bone)}
 .arrow-link:hover{color:var(--hot)}
@@ -123,6 +122,18 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .cta h2 em{font-style:normal;color:var(--hot)}
 .cta p{color:var(--dim);font-size:.95rem}
 @media(max-width:900px){.cta{grid-template-columns:1fr}}
+
+/* ---------------- about ---------------- */
+.about{margin-top:26px;padding:56px 40px}
+.about-in{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;margin-top:40px;align-items:start}
+.about-lead h3{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:.02em;line-height:1.18}
+.about-lead p{color:var(--dim);margin-top:16px;font-size:.95rem}
+.about-xp{list-style:none;display:flex;flex-direction:column}
+.about-xp li{padding:16px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
+.about-xp li:first-child{border-top:0;padding-top:0}
+.about-xp b{font-family:var(--display);font-weight:600;font-size:.98rem;letter-spacing:.04em}
+.about-xp .role{font-size:.84rem;color:var(--dim)}
+@media(max-width:900px){.about{padding:44px 28px}.about-in{grid-template-columns:1fr;gap:28px;margin-top:32px}}
 
 /* ---------------- footer ---------------- */
 footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
@@ -180,7 +191,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="hero-txt rv in">
       <h1 data-i18n="hero.title">GRAPHICAL<br><em>APPLICATION</em><br>DEVELOPMENT</h1>
       <div class="plat" data-i18n="hero.plat">XR<s>•</s>MOBILE<s>•</s>PC</div>
-      <p data-i18n="hero.lead">We ship <em>stunning</em> — a few levels above industry standard. Immersive, high-performance applications with premium visuals, on every platform.</p>
+      <p data-i18n="hero.lead">We build immersive and high-performance applications with premium visuals, optimized for every platform.</p>
       <div class="hero-cta">
         <a class="btn btn-red" href="#contact" data-i18n="hero.ctaPrimary">LET'S BUILD TOGETHER</a>
         <a class="arrow-link" href="#work" data-i18n="hero.ctaSecondary">VIEW OUR WORK &nbsp;→</a>
@@ -234,7 +245,23 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     </div>
   </section>
 
-  <section class="panel cta rv" id="about">
+  <section class="panel about rv" id="about">
+    <div class="sec-k" data-i18n="about.kicker">ABOUT</div>
+    <div class="about-in">
+      <div class="about-lead">
+        <h3 data-i18n="about.h">A decade of shipping real-time 3D</h3>
+        <p data-i18n="about.p">Red Crown Interactive is founded and led by Julia Pavlov — 10+ years taking real-time 3D applications from concept to production across XR, medical, gaming, and defense. The throughline: software where correctness matters as much as immersion.</p>
+      </div>
+      <ul class="about-xp">
+        <li><b>Technion</b><span class="role" data-i18n="about.x1">XR Program Director — VR/AR for research &amp; education · 2024–present</span></li>
+        <li><b>Philips</b><span class="role" data-i18n="about.x2">Senior Software Engineer — real-time 3D cardiac imaging · 2020–2021</span></li>
+        <li><b>Playtika</b><span class="role" data-i18n="about.x3">Software Engineer — Unity mobile games, 10M–50M downloads · 2018–2020</span></li>
+        <li><b>Israeli Navy</b><span class="role" data-i18n="about.x4">Software Engineering Officer — real-time defense systems · 2015–2018</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="panel cta rv">
     <h2 data-i18n="cta.title">READY TO BUILD<br>SOMETHING <em>AMAZING?</em></h2>
     <p data-i18n="cta.lead">Let's collaborate and create the next generation of graphical applications together.</p>
     <a class="btn btn-red" id="contact" href="mailto:hello@redcrowninteractive.com" data-i18n="cta.btn">GET IN TOUCH</a>
@@ -266,7 +293,7 @@ const I18N = {
     "nav.home":"HOME","nav.services":"SERVICES","nav.tech":"TECHNOLOGIES","nav.work":"WORK","nav.about":"ABOUT","nav.contact":"CONTACT","nav.cta":"LET'S BUILD",
     "hero.title":"GRAPHICAL<br><em>APPLICATION</em><br>DEVELOPMENT",
     "hero.plat":"XR<s>·</s>MOBILE<s>·</s>PC <em>— UNITY DEVELOPMENT STUDIO</em>",
-    "hero.lead":"We ship <em>stunning</em> — a few levels above industry standard. Immersive, high-performance applications with premium visuals, on every platform.",
+    "hero.lead":"We build immersive and high-performance applications with premium visuals, optimized for every platform.",
     "hero.ctaPrimary":"LET'S BUILD TOGETHER",
     "hero.ctaSecondary":"VIEW OUR WORK &nbsp;→",
     "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Immersive experiences that transport users to new realities.","svc.xr.link":"EXPLORE XR →",
@@ -279,6 +306,13 @@ const I18N = {
     "wwd.4.title":"OPTIMIZATION","wwd.4.desc":"Performance-first approach for smooth experiences across all platforms.",
     "wwd.5.title":"SUPPORT &amp; LIVE OPS","wwd.5.desc":"Ongoing support and live updates to keep your application evolving.",
     "work.head":"SELECTED WORK","work.viewAll":"VIEW ALL PROJECTS →","work.soonBadge":"COMING SOON","work.soonTitle":"Coming Soon","work.soonDesc":"Updating Soon",
+    "about.kicker":"ABOUT",
+    "about.h":"A decade of shipping real-time 3D",
+    "about.p":"Red Crown Interactive is founded and led by Julia Pavlov — 10+ years taking real-time 3D applications from concept to production across XR, medical, gaming, and defense. The throughline: software where correctness matters as much as immersion.",
+    "about.x1":"XR Program Director — VR/AR for research & education · 2024–present",
+    "about.x2":"Senior Software Engineer — real-time 3D cardiac imaging · 2020–2021",
+    "about.x3":"Software Engineer — Unity mobile games, 10M–50M downloads · 2018–2020",
+    "about.x4":"Software Engineering Officer — real-time defense systems · 2015–2018",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
@@ -287,7 +321,7 @@ const I18N = {
     "nav.home":"בית","nav.services":"שירותים","nav.tech":"טכנולוגיות","nav.work":"עבודות","nav.about":"אודות","nav.contact":"צור קשר","nav.cta":"בואו נבנה",
     "hero.title":"פיתוח<br><em>אפליקציות</em><br>גרפיות",
     "hero.plat":"מציאות מדומה<s>·</s>נייד<s>·</s>מחשב <em>— סטודיו לפיתוח ב-Unity</em>",
-    "hero.lead":"יוצרים <em>מדהים</em> — כמה רמות מעל הסטנדרט בתעשייה. אפליקציות סוחפות ובעלות ביצועים גבוהים עם ויזואליה מוקפדת, בכל פלטפורמה.",
+    "hero.lead":"אנחנו בונים אפליקציות סוחפות ובעלות ביצועים גבוהים, עם ויזואליה ברמה גבוהה, מותאמות לכל פלטפורמה.",
     "hero.ctaPrimary":"בואו נבנה יחד",
     "hero.ctaSecondary":"לצפייה בעבודות &nbsp;←",
     "svc.xr.title":"מציאות מדומה / משולבת","svc.xr.desc":"חוויות סוחפות שלוקחות את המשתמשים למציאויות חדשות.","svc.xr.link":"גלו עוד ←",
@@ -300,6 +334,13 @@ const I18N = {
     "wwd.4.title":"אופטימיזציה","wwd.4.desc":"גישה שמעמידה את הביצועים בראש סדר העדיפויות לחוויה חלקה בכל הפלטפורמות.",
     "wwd.5.title":"תמיכה ותפעול שוטף","wwd.5.desc":"תמיכה שוטפת ועדכונים חיים כדי שהאפליקציה שלכם תמשיך להתפתח.",
     "work.head":"עבודות נבחרות","work.viewAll":"לכל הפרויקטים ←","work.soonBadge":"בקרוב","work.soonTitle":"בקרוב","work.soonDesc":"מתעדכן בקרוב",
+    "about.kicker":"אודות",
+    "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
+    "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב — למעלה מעשר שנים של בניית אפליקציות תלת-ממד בזמן אמת, מהרעיון ועד לייצור, בתחומי XR, רפואה, גיימינג וביטחון. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
+    "about.x1":"מנהלת תוכנית XR — הובלת VR/AR למחקר וחינוך · 2024–היום",
+    "about.x2":"מהנדסת תוכנה בכירה — שחזור תמונת לב תלת-ממדית בזמן אמת · 2020–2021",
+    "about.x3":"מהנדסת תוכנה — משחקי מובייל ב-Unity, 10–50 מיליון הורדות · 2018–2020",
+    "about.x4":"קצינת הנדסת תוכנה — מערכות הגנה בזמן אמת · 2015–2018",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
@@ -308,7 +349,7 @@ const I18N = {
     "nav.home":"Главная","nav.services":"Услуги","nav.tech":"Технологии","nav.work":"Работы","nav.about":"О нас","nav.contact":"Контакты","nav.cta":"Создать проект",
     "hero.title":"РАЗРАБОТКА<br><em>ГРАФИЧЕСКИХ</em><br>ПРИЛОЖЕНИЙ",
     "hero.plat":"XR<s>·</s>Мобайл<s>·</s>PC <em>— студия разработки на Unity</em>",
-    "hero.lead":"Мы создаём <em>потрясающее</em> — на несколько уровней выше индустриального стандарта. Иммерсивные высокопроизводительные приложения с премиальной графикой на любой платформе.",
+    "hero.lead":"Мы создаём иммерсивные и высокопроизводительные приложения с премиальной графикой, оптимизированные для каждой платформы.",
     "hero.ctaPrimary":"ДАВАЙТЕ СОЗДАДИМ ВМЕСТЕ",
     "hero.ctaSecondary":"СМОТРЕТЬ РАБОТЫ &nbsp;→",
     "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Иммерсивные впечатления, переносящие пользователей в новые реальности.","svc.xr.link":"ПОДРОБНЕЕ О XR →",
@@ -321,6 +362,13 @@ const I18N = {
     "wwd.4.title":"ОПТИМИЗАЦИЯ","wwd.4.desc":"Подход, ориентированный на производительность, для плавной работы на всех платформах.",
     "wwd.5.title":"ПОДДЕРЖКА И LIVE OPS","wwd.5.desc":"Постоянная поддержка и обновления в реальном времени для развития вашего приложения.",
     "work.head":"ИЗБРАННЫЕ РАБОТЫ","work.viewAll":"ВСЕ ПРОЕКТЫ →","work.soonBadge":"СКОРО","work.soonTitle":"Скоро","work.soonDesc":"Скоро обновится",
+    "about.kicker":"О НАС",
+    "about.h":"Десять лет разработки 3D в реальном времени",
+    "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой — более 10 лет создания приложений 3D реального времени от концепции до продакшена в областях XR, медицины, игр и обороны. Общая нить: программное обеспечение, где точность важна не меньше погружения.",
+    "about.x1":"Директор программы XR — VR/AR для исследований и образования · 2024–наст.",
+    "about.x2":"Старший инженер-программист — 3D-реконструкция изображений сердца в реальном времени · 2020–2021",
+    "about.x3":"Инженер-программист — мобильные игры на Unity, 10–50 млн загрузок · 2018–2020",
+    "about.x4":"Инженер-программист — системы реального времени, ВМС · 2015–2018",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
