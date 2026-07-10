@@ -129,11 +129,27 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 @media(max-width:600px){.wdetail{padding:24px 20px}.wd-sub{font-size:.78rem}}
 
 /* ---------------- cta ---------------- */
-.cta{margin-top:56px;padding:56px 48px;display:grid;grid-template-columns:1.2fr 1fr auto;gap:36px;align-items:center}
-.cta h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:.04em;line-height:1.2}
-.cta h2 em{font-style:normal;color:var(--hot)}
-.cta p{color:var(--dim);font-size:.95rem}
-@media(max-width:900px){.cta{grid-template-columns:1fr}}
+.contact{margin-top:56px;padding:56px 48px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.contact-intro h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:.04em;line-height:1.2}
+.contact-intro h2 em{font-style:normal;color:var(--hot)}
+.contact-intro p{color:var(--dim);font-size:.95rem;margin-top:16px;max-width:40ch}
+.contact-direct{margin-top:26px;display:flex;flex-direction:column;gap:12px}
+.contact-direct a{display:inline-flex;align-items:center;gap:10px;font-size:.9rem;color:var(--dim);width:fit-content;transition:color .2s}
+.contact-direct a:hover{color:var(--hot)}
+.contact-form{display:flex;flex-direction:column;gap:14px;position:relative}
+.contact-form .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+.field{display:flex;flex-direction:column;gap:6px}
+.field span{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.field input,.field select,.field textarea{font-family:var(--body);font-size:.92rem;color:var(--bone);background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;transition:border-color .2s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--red)}
+.field textarea{resize:vertical;min-height:96px}
+.field select{cursor:pointer}
+.contact-form .btn-red{margin-top:6px;align-self:flex-start;cursor:pointer;border:0}
+.form-msg{font-size:.88rem;margin-top:2px}
+.form-ok{color:#5ec27a}
+.form-err{color:var(--hot)}
+@media(max-width:900px){.contact{padding:44px 28px}.contact-grid{grid-template-columns:1fr;gap:32px}}
 
 /* ---------------- about ---------------- */
 .about{margin-top:26px;padding:56px 40px}
@@ -376,10 +392,35 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     </div>
   </section>
 
-  <section class="panel cta rv">
-    <h2 data-i18n="cta.title">READY TO BUILD<br>SOMETHING <em>AMAZING?</em></h2>
-    <p data-i18n="cta.lead">Let's collaborate and create the next generation of graphical applications together.</p>
-    <a class="btn btn-red" id="contact" href="mailto:hello@redcrowninteractive.com" data-i18n="cta.btn">GET IN TOUCH</a>
+  <section class="panel contact rv" id="contact">
+    <div class="contact-grid">
+      <div class="contact-intro">
+        <h2 data-i18n="cta.title">READY TO BUILD<br>SOMETHING <em>AMAZING?</em></h2>
+        <p data-i18n="cta.lead">Let's collaborate and create the next generation of graphical applications together.</p>
+        <div class="contact-direct">
+          <a href="mailto:hello@redcrowninteractive.com"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg>hello@redcrowninteractive.com</a>
+          <a href="tel:+972585760550" dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>+972-58-576-0550</a>
+        </div>
+      </div>
+      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="field"><span data-i18n="form.name">Name</span><input type="text" name="name" required></label>
+        <label class="field"><span data-i18n="form.email">Email</span><input type="email" name="email" required></label>
+        <label class="field"><span data-i18n="form.company">Company (optional)</span><input type="text" name="company"></label>
+        <label class="field"><span data-i18n="form.project">What are you building?</span>
+          <select name="project">
+            <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>
+            <option value="Mobile" data-i18n="form.opt.mobile">Mobile</option>
+            <option value="PC" data-i18n="form.opt.pc">PC / Desktop</option>
+            <option value="Not sure" data-i18n="form.opt.unsure">Not sure yet</option>
+          </select>
+        </label>
+        <label class="field"><span data-i18n="form.message">Message</span><textarea name="message" rows="4" required></textarea></label>
+        <button type="submit" class="btn btn-red" data-i18n="form.send">Send message</button>
+        <p class="form-msg form-ok" data-i18n="form.success" hidden>Thanks! I'll get back to you soon.</p>
+        <p class="form-msg form-err" data-i18n="form.error" hidden>Something went wrong. Please email hello@redcrowninteractive.com.</p>
+      </form>
+    </div>
   </section>
 
   <footer>
@@ -443,6 +484,10 @@ const I18N = {
     "about.edu":"MBA, Tel Aviv University · B.Sc Software Engineering, Technion",
     "foot.loc":"Haifa, Israel",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
+    "form.name":"Name","form.email":"Email","form.company":"Company (optional)",
+    "form.project":"What are you building?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Mobile","form.opt.pc":"PC / Desktop","form.opt.unsure":"Not sure yet",
+    "form.message":"Message","form.send":"Send message",
+    "form.success":"Thanks! I'll get back to you soon.","form.error":"Something went wrong. Please email hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
   he: {
@@ -484,6 +529,10 @@ const I18N = {
     "about.edu":"MBA, אוניברסיטת תל אביב · B.Sc הנדסת תוכנה, טכניון",
     "foot.loc":"חיפה, ישראל",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
+    "form.name":"שם","form.email":"אימייל","form.company":"חברה (אופציונלי)",
+    "form.project":"מה אתם בונים?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.unsure":"עדיין לא בטוח",
+    "form.message":"הודעה","form.send":"שליחה",
+    "form.success":"תודה! אחזור אליכם בקרוב.","form.error":"משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
   ru: {
@@ -525,6 +574,10 @@ const I18N = {
     "about.edu":"MBA, Тель-Авивский университет · B.Sc, программная инженерия, Технион",
     "foot.loc":"Хайфа, Израиль",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
+    "form.name":"Имя","form.email":"Email","form.company":"Компания (необязательно)",
+    "form.project":"Что вы создаёте?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Мобайл","form.opt.pc":"PC / Десктоп","form.opt.unsure":"Пока не уверен",
+    "form.message":"Сообщение","form.send":"Отправить",
+    "form.success":"Спасибо! Я скоро свяжусь с вами.","form.error":"Что-то пошло не так. Напишите на hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
 };
@@ -587,6 +640,22 @@ const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (rm) document.querySelectorAll('.rv').forEach(e=>e.classList.add('in'));
 else{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(e=>io.observe(e));}
+
+// contact form (AJAX submit to Formspree)
+const cform = document.querySelector('.contact-form');
+if (cform) {
+  cform.addEventListener('submit', async e => {
+    e.preventDefault();
+    const ok = cform.querySelector('.form-ok'), err = cform.querySelector('.form-err');
+    const btn = cform.querySelector('button[type=submit]');
+    ok.hidden = true; err.hidden = true; btn.disabled = true;
+    try {
+      const r = await fetch(cform.action, { method:'POST', body:new FormData(cform), headers:{'Accept':'application/json'} });
+      if (r.ok) { cform.reset(); ok.hidden = false; } else { err.hidden = false; }
+    } catch (_) { err.hidden = false; }
+    btn.disabled = false;
+  });
+}
 
 // selected work: a thumbnail opens its detail panel below the grid; only one open at a time
 const workCards = document.querySelectorAll('.wcard[aria-controls]');
