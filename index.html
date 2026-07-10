@@ -175,9 +175,13 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 
 /* ---------------- footer ---------------- */
 footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
-.foot{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap}
-.foot .contact{display:flex;gap:34px;flex-wrap:wrap;font-size:.86rem;color:var(--dim)}
-.foot .contact .icon{margin-inline-end:.5em}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:22px 40px;flex-wrap:wrap}
+.foot-right{display:flex;align-items:center;gap:22px 30px;flex-wrap:wrap}
+.foot .contact{margin:0;padding:0;display:flex;align-items:center;gap:14px 26px;flex-wrap:wrap;font-size:.86rem;color:var(--dim)}
+.foot .contact span{display:inline-flex;align-items:center;white-space:nowrap}
+.foot .contact a{color:var(--dim);transition:color .2s}
+.foot .contact a:hover{color:var(--hot)}
+.foot .contact .icon{margin-inline-end:.5em;flex:none}
 .socials{display:flex;gap:16px}
 .socials a{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--dim);font-size:.8rem;transition:all .2s}
 .socials a:hover{border-color:var(--red);color:var(--hot)}
@@ -432,13 +436,15 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
         <img src="assets/logo-kit/redcrown-primary-scarlet.svg" alt="">
         <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
       </a>
-      <div class="contact">
-        <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="foot.loc">Haifa, Israel</span></span>
-        <span><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></span>
-        <span dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:+972585760550">+972-58-576-0550</a></span>
-      </div>
-      <div class="socials">
-        <a href="https://www.linkedin.com/company/red-crown-interactive" aria-label="LinkedIn">in</a>
+      <div class="foot-right">
+        <div class="contact">
+          <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="foot.loc">Haifa, Israel</span></span>
+          <span><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></span>
+          <span dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:+972585760550">+972-58-576-0550</a></span>
+        </div>
+        <div class="socials">
+          <a href="https://www.linkedin.com/company/red-crown-interactive" aria-label="LinkedIn">in</a>
+        </div>
       </div>
     </div>
     <div class="copy" data-i18n="foot.copy">© 2026 Red Crown Interactive. All rights reserved.</div>
