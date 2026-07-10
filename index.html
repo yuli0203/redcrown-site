@@ -273,7 +273,11 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
         <span data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</span>
       </button>
       <!-- PLACEHOLDER PROJECTS - swap in real work when ready -->
-      <a class="wcard rv" href="#contact"><div class="wsoon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l6 15H6z"/><path d="M9.4 11h5.2M8.2 14.5h7.6"/><path d="M3 21h18"/></svg><b data-i18n="work.soonBadge">COMING SOON</b></div><h5 data-i18n="work.soonTitle">Coming Soon</h5><span data-i18n="work.soonDesc">Updating Soon</span></a>
+      <button type="button" class="wcard rv" data-project="class" aria-expanded="false" aria-controls="wd-class">
+        <img class="wthumb" src="assets/work-class-setup.jpg" alt="" width="1200" height="900" loading="lazy">
+        <h5 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h5>
+        <span data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 Deployment | Instructor Monitoring</span>
+      </button>
     </div>
 
     <div class="wdetail" id="wd-ar" hidden>
@@ -295,6 +299,13 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
       <h4 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h4>
       <div class="wd-sub" data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</div>
       <div class="wd-body" data-i18n="work.ml.body"><p>LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.</p><p>Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.</p><p>It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.</p><p>This project is currently in development, first for PC, later stage for AR.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-class" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <h4 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h4>
+      <div class="wd-sub" data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 Deployment | Instructor Monitoring</div>
+      <div class="wd-body" data-i18n="work.class.body"><p>An end-to-end physical VR classroom at the Technion, built to reliably support multiple student groups using immersive educational applications at the same time.</p><p>We consulted across the whole implementation, from planning and hardware selection to classroom layout, device configuration, deployment, testing, and instructor workflows, all shaped around the institution's available space, teaching requirements, safety, and technical infrastructure.</p><p>The room runs up to 12 Meta Quest 3 headsets simultaneously, with dedicated seating, spacing, and charging and storage, plus a paired tablet for each headset so instructors can monitor group progress, support students, and collect the data files generated in each session.</p></div>
     </div>
   </section>
 
@@ -385,6 +396,9 @@ const I18N = {
     "work.ml.title":"Molecular Scientific ML Research Tool",
     "work.ml.sub":"PC | Machine-Learning | Python Server",
     "work.ml.body":"<p>LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.</p><p>Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.</p><p>It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.</p><p>This project is currently in development, first for PC, later stage for AR.</p>",
+    "work.class.title":"Physical Meta Quest Classroom Setup",
+    "work.class.sub":"Multi-User VR | Meta Quest 3 Deployment | Instructor Monitoring",
+    "work.class.body":"<p>An end-to-end physical VR classroom at the Technion, built to reliably support multiple student groups using immersive educational applications at the same time.</p><p>We consulted across the whole implementation, from planning and hardware selection to classroom layout, device configuration, deployment, testing, and instructor workflows, all shaped around the institution's available space, teaching requirements, safety, and technical infrastructure.</p><p>The room runs up to 12 Meta Quest 3 headsets simultaneously, with dedicated seating, spacing, and charging and storage, plus a paired tablet for each headset so instructors can monitor group progress, support students, and collect the data files generated in each session.</p>",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
     "about.p":"Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.",
@@ -423,6 +437,9 @@ const I18N = {
     "work.ml.title":"כלי מחקר מדעי מולקולרי מבוסס למידת מכונה",
     "work.ml.sub":"מחשב | למידת מכונה | שרת Python",
     "work.ml.body":"<p>LiveMol היא פלטפורמת מחקר למידול מולקולרי, שנבנתה עבור הפקולטה להנדסה כימית ע\"ש וולפסון בטכניון. היא משלבת הדמיה תלת-ממדית בזמן אמת עם חישובי כימיה חישובית מדויקים מבחינה מדעית.</p><p>חוקרים בונים ועורכים מולקולות ישירות בתלת-ממד, ואז מריצים חישובי כימיה קוונטית על המבנה שלפניהם וצופים בתוצאות חוזרות אל המודל. החישובים הנתמכים כוללים אנרגיית נקודה בודדת, אופטימיזציית גיאומטריה ואופטימיזציה חיה, ניתוח תדרי רטט ואופטימיזציה של מצב מעבר.</p><p>המערכת פועלת כלקוח Unity המפעיל שרת חישוב ב-Python, מה ששומר על ממשק מגיב בזמן שחישובים כבדים רצים בנפרד. העבודה המדעית מתבצעת באמצעות מנועים מבוססים ובהם ASE, tblite, Open Babel ו-Sella, כאשר רכיבי למידת מכונה מתוכננים לצדם.</p><p>הפרויקט נמצא כיום בפיתוח, תחילה למחשב ובשלב מאוחר יותר ל-AR.</p>",
+    "work.class.title":"מערך כיתת VR פיזית עם Meta Quest",
+    "work.class.sub":"VR רב-משתתפים | פריסת Meta Quest 3 | ניטור מדריכים",
+    "work.class.body":"<p>הקמה מקצה לקצה של כיתת VR פיזית בטכניון, שנועדה לתמוך באופן אמין בקבוצות סטודנטים מרובות המשתמשות באפליקציות חינוכיות סוחפות בו-זמנית.</p><p>ליווינו את כל תהליך היישום, מתכנון ובחירת חומרה ועד לפריסת הכיתה, הגדרת המכשירים, התקנה, בדיקות ותהליכי עבודה למדריכים, הכל בהתאמה למרחב, לצורכי ההוראה, לבטיחות ולתשתית הטכנית של המוסד.</p><p>הכיתה מפעילה עד 12 אוזניות Meta Quest 3 בו-זמנית, עם ישיבה ייעודית, מרווחים, טעינה ואחסון, וטאבלט מקושר לכל אוזניה, כך שהמדריכים יכולים לעקוב אחר התקדמות הקבוצות, לסייע לסטודנטים ולאסוף את קובצי הנתונים שנוצרים בכל מפגש.</p>",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
     "about.p":"Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב, עם למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, ותרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.",
@@ -461,6 +478,9 @@ const I18N = {
     "work.ml.title":"Научный инструмент молекулярных исследований с машинным обучением",
     "work.ml.sub":"PC | Машинное обучение | Сервер Python",
     "work.ml.body":"<p>LiveMol представляет собой исследовательскую платформу для молекулярного моделирования, созданную для факультета химической инженерии им. Вольфсона в Технионе. Она объединяет трёхмерную визуализацию в реальном времени с научно точными расчётами вычислительной химии.</p><p>Исследователи создают и редактируют молекулы непосредственно в 3D, затем запускают квантово-химические расчёты для структуры перед ними и наблюдают, как результаты возвращаются на модель. Поддерживаемые расчёты включают энергию в одной точке, оптимизацию геометрии и живую оптимизацию, анализ колебательных частот и оптимизацию переходного состояния.</p><p>Приложение работает как клиент на Unity, управляющий вычислительным сервером на Python, что сохраняет отзывчивость интерфейса, пока тяжёлые расчёты выполняются отдельно. Научную часть обеспечивают проверенные движки, включая ASE, tblite, Open Babel и Sella, а компоненты машинного обучения запланированы наряду с ними.</p><p>Проект находится в разработке: сначала для ПК, позднее для AR.</p>",
+    "work.class.title":"Физический VR-класс на Meta Quest",
+    "work.class.sub":"Многопользовательский VR | Развёртывание Meta Quest 3 | Мониторинг преподавателем",
+    "work.class.body":"<p>Комплексная организация физического VR-класса в Технионе, рассчитанного на надёжную одновременную работу нескольких групп студентов с иммерсивными образовательными приложениями.</p><p>Мы консультировали на всех этапах внедрения: от планирования и выбора оборудования до компоновки класса, настройки устройств, развёртывания, тестирования и рабочих процессов преподавателей, с учётом пространства, учебных задач, безопасности и технической инфраструктуры учреждения.</p><p>Класс поддерживает до 12 гарнитур Meta Quest 3 одновременно, с выделенными местами, расстановкой, зарядкой и хранением, а также планшетом в паре с каждой гарнитурой, чтобы преподаватели могли следить за прогрессом групп, помогать студентам и собирать файлы данных, создаваемые в каждой сессии.</p>",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
     "about.p":"Red Crown Interactive основана и возглавляется Юлией Павловой, с более чем 10-летним опытом разработки 3D реального времени в областях XR, медицины, игр и обороны, включая участие в коммерческих продуктах ведущих компаний. В Технионе она сейчас ведёт XR-проекты от концепции до продакшена. Общая нить: ПО, где точность важна не меньше погружения.",
