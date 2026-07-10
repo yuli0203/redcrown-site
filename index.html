@@ -137,16 +137,15 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 
 /* ---------------- about ---------------- */
 .about{margin-top:26px;padding:56px 40px}
-.about-in{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;margin-top:40px;align-items:start}
+.about-in{display:grid;grid-template-columns:260px 1fr;gap:44px;margin-top:40px;align-items:start}
 .about-lead h3{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:.02em;line-height:1.18}
 .about-lead p{color:var(--dim);margin-top:16px;font-size:.95rem}
-.founder{display:flex;align-items:center;gap:16px;margin-bottom:24px}
-.founder-img{width:76px;height:76px;border-radius:50%;object-fit:cover;border:1px solid var(--line);background:var(--panel-2);flex-shrink:0}
-.founder-meta{display:flex;flex-direction:column;gap:3px}
-.founder-name{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.02em}
-.founder-role{font-size:.82rem;color:var(--dim)}
-.founder-edu{font-size:.74rem;color:var(--dim);opacity:.85;line-height:1.4;margin-top:2px}
-.founder-li{display:inline-flex;align-items:center;gap:6px;margin-top:5px;font-size:.78rem;font-weight:600;letter-spacing:.04em;line-height:1;color:var(--hot);width:fit-content}
+.founder-card{display:flex;flex-direction:column}
+.founder-portrait{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:16px;border:1px solid var(--line);background:var(--panel-2);margin-bottom:16px}
+.founder-name{font-family:var(--display);font-weight:600;font-size:1.1rem;letter-spacing:.02em}
+.founder-role{font-size:.82rem;color:var(--dim);margin-top:2px}
+.founder-edu{font-size:.74rem;color:var(--dim);opacity:.85;line-height:1.4;margin-top:4px}
+.founder-li{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:.78rem;font-weight:600;letter-spacing:.04em;line-height:1;color:var(--hot);width:fit-content}
 .founder-li svg{width:15px;height:15px;flex-shrink:0;fill:currentColor}
 .founder-li:hover{color:var(--bone)}
 .about-xp-k{display:block;font-family:var(--brand);font-size:.66rem;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
@@ -155,7 +154,7 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .logo-tile:hover{border-color:rgba(200,16,46,.5);opacity:1}
 .logo-tile img{max-height:40px;max-width:82%;object-fit:contain}
 @media(max-width:480px){.logo-row{grid-template-columns:1fr}}
-@media(max-width:900px){.about{padding:44px 28px}.about-in{grid-template-columns:1fr;gap:28px;margin-top:32px}}
+@media(max-width:900px){.about{padding:44px 28px}.about-in{grid-template-columns:1fr;gap:28px;margin-top:32px}.founder-card{max-width:280px}}
 
 /* ---------------- footer ---------------- */
 footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
@@ -312,29 +311,27 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   <section class="panel about rv" id="about">
     <div class="sec-k" data-i18n="about.kicker">ABOUT</div>
     <div class="about-in">
+      <div class="founder-card">
+        <img class="founder-portrait" src="assets/founder-portrait.jpg" alt="Julia Pavlov, Founder and Lead Engineer">
+        <b class="founder-name">Julia Pavlov</b>
+        <span class="founder-role" data-i18n="about.role">Founder &amp; Lead Engineer</span>
+        <span class="founder-edu" data-i18n="about.edu">MBA, Tel Aviv University · B.Sc Software Engineering, Technion</span>
+        <a class="founder-li" href="https://www.linkedin.com/in/julia-pavlov" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1-.02 4 2 2 0 0 1 .02-4zM3 8.98h4V21H3zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.06 3.76-2.06 4.02 0 4.76 2.65 4.76 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
+          LinkedIn
+        </a>
+      </div>
       <div class="about-lead">
-        <div class="founder">
-          <img class="founder-img" src="assets/founder.jpg" alt="Julia Pavlov">
-          <div class="founder-meta">
-            <b class="founder-name">Julia Pavlov</b>
-            <span class="founder-role" data-i18n="about.role">Founder &amp; Lead Engineer</span>
-            <span class="founder-edu" data-i18n="about.edu">MBA, Tel Aviv University · B.Sc Software Engineering, Technion</span>
-            <a class="founder-li" href="https://www.linkedin.com/in/julia-pavlov" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1-.02 4 2 2 0 0 1 .02-4zM3 8.98h4V21H3zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.06 3.76-2.06 4.02 0 4.76 2.65 4.76 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
-              LinkedIn
-            </a>
-          </div>
-        </div>
         <h3 data-i18n="about.h">A decade of shipping real-time 3D</h3>
         <p data-i18n="about.p">Red Crown Interactive is founded and led by Julia Pavlov, who brings 10+ years engineering real-time 3D across XR, medical, gaming, and defense, contributing to commercial products at leading companies. At the Technion she now leads XR projects end to end. The throughline: software where correctness matters as much as immersion.</p>
-      </div>
-      <div class="about-xp">
-        <span class="about-xp-k" data-i18n="about.xpk">Founder's experience</span>
-        <div class="logo-row">
-          <span class="logo-tile">Technion</span>
-          <span class="logo-tile">Philips</span>
-          <span class="logo-tile">Playtika</span>
-          <span class="logo-tile">Israeli Navy</span>
+        <div class="about-xp">
+          <span class="about-xp-k" data-i18n="about.xpk">Founder's experience</span>
+          <div class="logo-row">
+            <span class="logo-tile">Technion</span>
+            <span class="logo-tile">Philips</span>
+            <span class="logo-tile">Playtika</span>
+            <span class="logo-tile">Israeli Navy</span>
+          </div>
         </div>
       </div>
     </div>
