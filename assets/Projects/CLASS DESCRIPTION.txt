@@ -1,0 +1,13 @@
+Physical Meta Quest Classroom Setup
+
+Multi-User Virtual Reality | Meta Quest 3 Deployment | Instructor Monitoring
+
+An end-to-end physical VR classroom setup designed to support the reliable and simultaneous use of immersive educational applications by multiple student groups at the Technion.
+
+We consulted throughout the entire implementation process, from early planning and hardware selection to classroom layout, device configuration, deployment, testing, and instructor workflows. The setup was designed around the institution's available space, teaching requirements, safety considerations, and technical infrastructure.
+
+The classroom supports up to 12 Meta Quest 3 headsets operating simultaneously, with dedicated seating, appropriate spacing, charging and storage considerations, and paired tablets for each headset. The physical arrangement was carefully planned to provide students with sufficient interaction space while allowing instructors to supervise the entire classroom effectively.
+
+The paired tablets allow laboratory instructors to monitor group progress, support students when needed, and collect data files generated during each session.
+
+The consultation also covered device management, network readiness, application distribution, classroom preparation, operational procedures, instructor onboarding, and testing under realistic multi-user conditions. This resulted in a practical and scalable setup that can be operated consistently by the laboratory team during regular academic activities.
