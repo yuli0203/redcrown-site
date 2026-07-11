@@ -335,7 +335,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
       <button type="button" class="wcard rv" data-project="class" aria-expanded="false" aria-controls="wd-class">
         <img class="wthumb" src="assets/work-class-setup.jpg" alt="" width="1200" height="900" loading="lazy">
         <h5 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h5>
-        <span data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 Deployment | Instructor Monitoring</span>
+        <span data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 | Instructor Tools</span>
       </button>
     </div>
 
@@ -363,7 +363,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
     <div class="wdetail" id="wd-class" hidden>
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
       <h4 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h4>
-      <div class="wd-sub" data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 Deployment | Instructor Monitoring</div>
+      <div class="wd-sub" data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 | Instructor Tools</div>
       <div class="wd-body" data-i18n="work.class.body"><p>An end-to-end physical VR classroom at the Technion, built to reliably support multiple student groups using immersive educational applications at the same time.</p><p>We consulted across the whole implementation, from planning and hardware selection to classroom layout, device configuration, deployment, testing, and instructor workflows, all shaped around the institution's available space, teaching requirements, safety, and technical infrastructure.</p><p>The room runs up to 12 Meta Quest 3 headsets simultaneously, with dedicated seating, spacing, and charging and storage, plus a paired tablet for each headset so instructors can monitor group progress, support students, and collect the data files generated in each session.</p></div>
     </div>
   </section>
@@ -420,6 +420,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
             <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>
             <option value="Mobile" data-i18n="form.opt.mobile">Mobile</option>
             <option value="PC" data-i18n="form.opt.pc">PC / Desktop</option>
+            <option value="Web" data-i18n="form.opt.web">Web</option>
             <option value="Not sure" data-i18n="form.opt.unsure">Not sure yet</option>
           </select>
         </label>
@@ -484,7 +485,7 @@ const I18N = {
     "work.ml.sub":"PC | Machine-Learning | Python Server",
     "work.ml.body":"<p>LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.</p><p>Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.</p><p>It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.</p><p>This project is currently in development, first for PC, later stage for AR.</p>",
     "work.class.title":"Physical Meta Quest Classroom Setup",
-    "work.class.sub":"Multi-User VR | Meta Quest 3 Deployment | Instructor Monitoring",
+    "work.class.sub":"Multi-User VR | Meta Quest 3 | Instructor Tools",
     "work.class.body":"<p>An end-to-end physical VR classroom at the Technion, built to reliably support multiple student groups using immersive educational applications at the same time.</p><p>We consulted across the whole implementation, from planning and hardware selection to classroom layout, device configuration, deployment, testing, and instructor workflows, all shaped around the institution's available space, teaching requirements, safety, and technical infrastructure.</p><p>The room runs up to 12 Meta Quest 3 headsets simultaneously, with dedicated seating, spacing, and charging and storage, plus a paired tablet for each headset so instructors can monitor group progress, support students, and collect the data files generated in each session.</p>",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
@@ -495,7 +496,7 @@ const I18N = {
     "foot.loc":"Haifa, Israel",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
     "form.name":"Name","form.email":"Email","form.company":"Company (optional)",
-    "form.project":"What are you building?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Mobile","form.opt.pc":"PC / Desktop","form.opt.unsure":"Not sure yet",
+    "form.project":"What are you building?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Mobile","form.opt.pc":"PC / Desktop","form.opt.web":"Web","form.opt.unsure":"Not sure yet",
     "form.message":"Message","form.send":"Send message",
     "form.success":"Thanks! I'll get back to you soon.","form.error":"Something went wrong. Please email hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
@@ -529,7 +530,7 @@ const I18N = {
     "work.ml.sub":"מחשב | למידת מכונה | שרת Python",
     "work.ml.body":"<p>LiveMol היא פלטפורמת מחקר למידול מולקולרי, שנבנתה עבור הפקולטה להנדסה כימית ע\"ש וולפסון בטכניון. היא משלבת הדמיה תלת-ממדית בזמן אמת עם חישובי כימיה חישובית מדויקים מבחינה מדעית.</p><p>חוקרים בונים ועורכים מולקולות ישירות בתלת-ממד, ואז מריצים חישובי כימיה קוונטית על המבנה שלפניהם וצופים בתוצאות חוזרות אל המודל. החישובים הנתמכים כוללים אנרגיית נקודה בודדת, אופטימיזציית גיאומטריה ואופטימיזציה חיה, ניתוח תדרי רטט ואופטימיזציה של מצב מעבר.</p><p>המערכת פועלת כלקוח Unity המפעיל שרת חישוב ב-Python, מה ששומר על ממשק מגיב בזמן שחישובים כבדים רצים בנפרד. העבודה המדעית מתבצעת באמצעות מנועים מבוססים ובהם ASE, tblite, Open Babel ו-Sella, כאשר רכיבי למידת מכונה מתוכננים לצדם.</p><p>הפרויקט נמצא כיום בפיתוח, תחילה למחשב ובשלב מאוחר יותר ל-AR.</p>",
     "work.class.title":"מערך כיתת VR פיזית עם Meta Quest",
-    "work.class.sub":"VR רב-משתתפים | פריסת Meta Quest 3 | ניטור מדריכים",
+    "work.class.sub":"VR רב-משתתפים | Meta Quest 3 | כלי מדריך",
     "work.class.body":"<p>הקמה מקצה לקצה של כיתת VR פיזית בטכניון, שנועדה לתמוך באופן אמין בקבוצות סטודנטים מרובות המשתמשות באפליקציות חינוכיות סוחפות בו-זמנית.</p><p>ליווינו את כל תהליך היישום, מתכנון ובחירת חומרה ועד לפריסת הכיתה, הגדרת המכשירים, התקנה, בדיקות ותהליכי עבודה למדריכים, הכל בהתאמה למרחב, לצורכי ההוראה, לבטיחות ולתשתית הטכנית של המוסד.</p><p>הכיתה מפעילה עד 12 אוזניות Meta Quest 3 בו-זמנית, עם ישיבה ייעודית, מרווחים, טעינה ואחסון, וטאבלט מקושר לכל אוזניה, כך שהמדריכים יכולים לעקוב אחר התקדמות הקבוצות, לסייע לסטודנטים ולאסוף את קובצי הנתונים שנוצרים בכל מפגש.</p>",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
@@ -540,7 +541,7 @@ const I18N = {
     "foot.loc":"חיפה, ישראל",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
     "form.name":"שם","form.email":"אימייל","form.company":"חברה (אופציונלי)",
-    "form.project":"מה אתם בונים?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.unsure":"עדיין לא בטוח",
+    "form.project":"מה אתם בונים?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.web":"אתרים / ווב","form.opt.unsure":"עדיין לא בטוח",
     "form.message":"הודעה","form.send":"שליחה",
     "form.success":"תודה! אחזור אליכם בקרוב.","form.error":"משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
@@ -574,7 +575,7 @@ const I18N = {
     "work.ml.sub":"PC | Машинное обучение | Сервер Python",
     "work.ml.body":"<p>LiveMol представляет собой исследовательскую платформу для молекулярного моделирования, созданную для факультета химической инженерии им. Вольфсона в Технионе. Она объединяет трёхмерную визуализацию в реальном времени с научно точными расчётами вычислительной химии.</p><p>Исследователи создают и редактируют молекулы непосредственно в 3D, затем запускают квантово-химические расчёты для структуры перед ними и наблюдают, как результаты возвращаются на модель. Поддерживаемые расчёты включают энергию в одной точке, оптимизацию геометрии и живую оптимизацию, анализ колебательных частот и оптимизацию переходного состояния.</p><p>Приложение работает как клиент на Unity, управляющий вычислительным сервером на Python, что сохраняет отзывчивость интерфейса, пока тяжёлые расчёты выполняются отдельно. Научную часть обеспечивают проверенные движки, включая ASE, tblite, Open Babel и Sella, а компоненты машинного обучения запланированы наряду с ними.</p><p>Проект находится в разработке: сначала для ПК, позднее для AR.</p>",
     "work.class.title":"Физический VR-класс на Meta Quest",
-    "work.class.sub":"Многопользовательский VR | Развёртывание Meta Quest 3 | Мониторинг преподавателем",
+    "work.class.sub":"Многопользовательский VR | Meta Quest 3 | Мониторинг",
     "work.class.body":"<p>Комплексная организация физического VR-класса в Технионе, рассчитанного на надёжную одновременную работу нескольких групп студентов с иммерсивными образовательными приложениями.</p><p>Мы консультировали на всех этапах внедрения: от планирования и выбора оборудования до компоновки класса, настройки устройств, развёртывания, тестирования и рабочих процессов преподавателей, с учётом пространства, учебных задач, безопасности и технической инфраструктуры учреждения.</p><p>Класс поддерживает до 12 гарнитур Meta Quest 3 одновременно, с выделенными местами, расстановкой, зарядкой и хранением, а также планшетом в паре с каждой гарнитурой, чтобы преподаватели могли следить за прогрессом групп, помогать студентам и собирать файлы данных, создаваемые в каждой сессии.</p>",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
@@ -585,7 +586,7 @@ const I18N = {
     "foot.loc":"Хайфа, Израиль",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
     "form.name":"Имя","form.email":"Email","form.company":"Компания (необязательно)",
-    "form.project":"Что вы создаёте?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Мобайл","form.opt.pc":"PC / Десктоп","form.opt.unsure":"Пока не уверен",
+    "form.project":"Что вы создаёте?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Мобайл","form.opt.pc":"PC / Десктоп","form.opt.web":"Веб","form.opt.unsure":"Пока не уверен",
     "form.message":"Сообщение","form.send":"Отправить",
     "form.success":"Спасибо! Я скоро свяжусь с вами.","form.error":"Что-то пошло не так. Напишите на hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
