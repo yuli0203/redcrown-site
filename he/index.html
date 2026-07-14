@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-page-lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פיתוח VR, XR ואפליקציות גרפיות ב-Unity | Red Crown Interactive</title>
+<meta name="description" content="סטודיו לפיתוח אפליקציות גרפיות ב-Unity: פיתוח VR ו-XR, מציאות מדומה ומשולבת, אפליקציות מובייל ומחשב. למעלה מעשור ניסיון בפיתוח תלת-ממד בזמן אמת עבור הטכניון וחברות מובילות.">
+<meta name="author" content="Julia Pavlov">
+<link rel="icon" type="image/svg+xml" href="../assets/logo-kit/redcrown-solid-scarlet.svg">
+<link rel="stylesheet" href="../site.css">
+<link rel="canonical" href="https://redcrowninteractive.com/he/">
+<link rel="alternate" hreflang="en" href="https://redcrowninteractive.com/">
+<link rel="alternate" hreflang="he" href="https://redcrowninteractive.com/he/">
+<link rel="alternate" hreflang="x-default" href="https://redcrowninteractive.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Red Crown Interactive">
+<meta property="og:locale" content="he_IL">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="פיתוח VR, XR ואפליקציות גרפיות ב-Unity | Red Crown Interactive">
+<meta property="og:description" content="סטודיו לפיתוח אפליקציות סוחפות ב-Unity — פיתוח VR, XR, מובייל ומחשב.">
+<meta property="og:url" content="https://redcrowninteractive.com/he/">
+<meta property="og:image" content="https://redcrowninteractive.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="פיתוח VR ו-XR · אפליקציות גרפיות ב-Unity">
+<meta name="twitter:description" content="סטודיו לפיתוח אפליקציות סוחפות ב-Unity — פיתוח VR, XR, מובייל ומחשב.">
+<meta name="twitter:image" content="https://redcrowninteractive.com/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Red Crown Interactive",
+  "url": "https://redcrowninteractive.com/",
+  "inLanguage": "he",
+  "logo": "https://redcrowninteractive.com/assets/logo-kit/redcrown-solid.png",
+  "description": "סטודיו לפיתוח ב-Unity הבונה אפליקציות גרפיות סוחפות ובעלות ביצועים גבוהים ל-XR, מובייל ומחשב.",
+  "email": "hello@redcrowninteractive.com",
+  "telephone": "+972-58-576-0550",
+  "founder": {
+    "@type": "Person",
+    "name": "Julia Pavlov",
+    "jobTitle": "Founder",
+    "sameAs": "https://www.linkedin.com/in/julia-pavlov"
+  },
+  "address": { "@type": "PostalAddress", "addressCountry": "IL" },
+  "sameAs": [
+    "https://www.linkedin.com/company/red-crown-interactive"
+  ],
+  "knowsAbout": ["מציאות מדומה","מציאות רבודה","Unity","פיתוח VR","פיתוח XR"]
+}
+</script>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="#top">
+      <img src="../assets/logo-kit/redcrown-primary-scarlet.svg" alt="Red Crown Interactive logo">
+      <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
+    </a>
+    <ul class="nav-links">
+      <li><a class="on" href="#top" data-i18n="nav.home">בית</a></li>
+      <li><a href="#services" data-i18n="nav.services">שירותים</a></li>
+      <li><a href="#tech" data-i18n="nav.tech">טכנולוגיות</a></li>
+      <li><a href="#work" data-i18n="nav.work">עבודות</a></li>
+      <li><a href="#about" data-i18n="nav.about">אודות</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">צור קשר</a></li>
+    </ul>
+    <a class="btn btn-line nav-cta" href="#contact" data-i18n="nav.cta">בואו נבנה</a>
+    <div class="lang" role="group" aria-label="Language / שפה / Язык">
+      <button type="button" class="lang-toggle" aria-haspopup="menu" aria-expanded="false" aria-label="Change language">
+        <span class="lang-cur"></span>
+        <svg class="caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="lang-menu" role="menu">
+        <button type="button" data-lang="en" role="menuitem"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3.2"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.6"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="2.2"/></svg>EN</button>
+        <button type="button" data-lang="ru" role="menuitem" lang="ru"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="5.33" width="24" height="5.34" fill="#0039A6"/><rect y="10.67" width="24" height="5.33" fill="#D52B1E"/></svg>RU</button>
+        <button type="button" data-lang="he" role="menuitem" lang="he"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="2.6" width="24" height="1.8" fill="#0038b8"/><rect y="11.6" width="24" height="1.8" fill="#0038b8"/><path d="M12 5L9.4 9.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/><path d="M12 11L9.4 6.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/></svg>עב</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+
+  <header class="panel hero">
+    <div class="hero-bg" role="img" aria-label="Developer wearing a VR headset in front of the Red Crown mark"></div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-txt rv in">
+      <h1 data-i18n="hero.title">פיתוח<br><em>אפליקציות</em><br>גרפיות</h1>
+      <div class="plat" data-i18n="hero.plat">מציאות מדומה<s>·</s>נייד<s>·</s>מחשב <em>· סטודיו לפיתוח ב-Unity</em></div>
+      <p data-i18n="hero.lead">אנחנו בונים אפליקציות סוחפות בקדמת הטכנולוגיה, המשלבות ביצועים גבוהים, ויזואליה ברמה גבוהה והתאמה מדויקת לכל פלטפורמה.</p>
+      <div class="hero-cta">
+        <a class="btn btn-red" href="#contact" data-i18n="hero.ctaPrimary">בואו נבנה יחד</a>
+        <a class="arrow-link" href="#work" data-i18n="hero.ctaSecondary">לצפייה בעבודות &nbsp;←</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="cards3" id="services">
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3l-2-2h-6l-2 2H4a2 2 0 0 1-2-2z"/><circle cx="8" cy="11.5" r="1.6"/><circle cx="16" cy="11.5" r="1.6"/></svg>
+      <h3 data-i18n="svc.xr.title">מציאות מדומה / משולבת</h3>
+      <p data-i18n="svc.xr.desc">חוויות סוחפות שלוקחות את המשתמשים למציאויות חדשות. נבנה על Meta Quest 3, עם שלטים, מחוות ידיים ואינטראקציות ידיים מבוססות פיזיקה.</p>
+      <a href="#work" data-i18n="svc.xr.link">גלו עוד ←</a>
+    </div>
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M11 18.5h2"/></svg>
+      <h3 data-i18n="svc.mobile.title">אפליקציות לנייד</h3>
+      <p data-i18n="svc.mobile.desc">אפליקציות מרתקות לנייד עם ויזואליה מרהיבה וביצועים חלקים. פיתוח חוצה-פלטפורמות ל-iOS ול-Android, עם ניסיון בהשקת משחקים מסחריים למיליוני משתמשים.</p>
+      <a href="#work" data-i18n="svc.mobile.link">גלו עוד ←</a>
+    </div>
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.6"/><path d="M9 20.5h6M12 16.5v4"/></svg>
+      <h3 data-i18n="svc.pc.title">אפליקציות למחשב</h3>
+      <p data-i18n="svc.pc.desc">אפליקציות ומשחקים בעלי ביצועים גבוהים, לצד אפליקציות מדעיות מורכבות בזמן אמת, למידת מכונה ועוד. בנויים לעוצמה ולדיוק.</p>
+      <a href="#work" data-i18n="svc.pc.link">גלו עוד ←</a>
+    </div>
+  </section>
+
+  <section class="panel wwd rv" id="tech">
+    <h2 class="sec-k" data-i18n="wwd.kicker">מה אנחנו עושים</h2>
+    <div class="wwd-grid">
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.6 10.8c-.7.55-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.65-1.1-2.2A6 6 0 0 1 12 3z"/></svg><h4 data-i18n="wwd.1.title">קונספט ועיצוב</h4><p data-i18n="wwd.1.desc">מרעיונות לקונספטים מרתקים ולסיפור ויזואלי.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.06-.4.1-.8.1-1.2z"/></svg><h4 data-i18n="wwd.2.title">פיתוח</h4><p data-i18n="wwd.2.desc">פיתוח מקצה לקצה עם ארכיטקטורה נקייה וניתנת להרחבה.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l2 5 5 .7-3.7 3.5.9 5.1L12 15l-4.2 2.3.9-5.1L5 8.7 10 8z"/></svg><h4 data-i18n="wwd.3.title">אמנות תלת-ממד ואנימציה</h4><p data-i18n="wwd.3.desc">נכסי תלת-ממד, אנימציות ואפקטים איכותיים שמחיים עולמות.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><h4 data-i18n="wwd.4.title">אופטימיזציה</h4><p data-i18n="wwd.4.desc">גישה שמעמידה את הביצועים בראש סדר העדיפויות לחוויה חלקה בכל הפלטפורמות.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h4 data-i18n="wwd.5.title">תמיכה ותפעול שוטף</h4><p data-i18n="wwd.5.desc">תמיכה שוטפת ועדכונים חיים כדי שהאפליקציה שלכם תמשיך להתפתח.</p></div>
+    </div>
+  </section>
+
+  <section id="work">
+    <h2 class="sec-k rv" data-i18n="work.head">עבודות נבחרות</h2>
+    <p class="work-sub rv" data-i18n="work.sub">פרויקטים בהובלת המייסדת, מקצה לקצה מהרעיון ועד ההטמעה.</p>
+    <div class="work-grid">
+      <button type="button" class="wcard rv" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
+        <img class="wthumb" src="../assets/work-ar-enzymatic.jpg" alt="Enzymatic Lab educational simulation in mixed reality with physics-based hand interactions on Meta Quest" width="1200" height="900" loading="lazy">
+        <h5 data-i18n="work.ar.title">מודל לימודי למעבדה אנזימטית</h5>
+        <span data-i18n="work.ar.sub">מציאות מעורבת | אינטראקציות ידיים מבוססות פיזיקה</span>
+      </button>
+      <button type="button" class="wcard rv" data-project="vr" aria-expanded="false" aria-controls="wd-vr">
+        <img class="wthumb" src="../assets/work-vr-fugacity.jpg" alt="Fugacity VR chemistry experiment, an immersive virtual reality simulation built in Unity" width="1448" height="1086" loading="lazy">
+        <h5 data-i18n="work.vr.title">ניסוי VR סוחף בפוגסיות</h5>
+        <span data-i18n="work.vr.sub">מציאות מדומה | מחוות ידיים | שלטים</span>
+      </button>
+      <button type="button" class="wcard rv" data-project="ml" aria-expanded="false" aria-controls="wd-ml">
+        <img class="wthumb" src="../assets/work-ml-livemol.jpg" alt="Molecular visualization and machine learning research tool for PC with Python server backend" width="1268" height="951" loading="lazy">
+        <h5 data-i18n="work.ml.title">כלי מחקר מולקולרי מבוסס למידת מכונה</h5>
+        <span data-i18n="work.ml.sub">מחשב | למידת מכונה | שרת Python</span>
+      </button>
+      <!-- PLACEHOLDER PROJECTS - swap in real work when ready -->
+      <button type="button" class="wcard rv" data-project="class" aria-expanded="false" aria-controls="wd-class">
+        <img class="wthumb" src="../assets/work-class-setup.jpg" alt="Multi-user Meta Quest 3 VR classroom deployment with instructor tools" width="1200" height="900" loading="lazy">
+        <h5 data-i18n="work.class.title">מערך כיתת VR פיזית עם Meta Quest</h5>
+        <span data-i18n="work.class.sub">VR רב-משתתפים | Meta Quest 3 | כלי מדריך</span>
+      </button>
+    </div>
+
+    <div class="wdetail" id="wd-ar" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="סגירת פרטי הפרויקט">&times;</button>
+      <h4 data-i18n="work.ar.title">מודל לימודי למעבדה אנזימטית</h4>
+      <div class="wd-sub" data-i18n="work.ar.sub">מציאות מעורבת | אינטראקציות ידיים מבוססות פיזיקה</div>
+      <div class="wd-body" data-i18n="work.ar.body"><p>מודל משלים זה ל-Meta Quest 3 משמש להסבר מעמיק של החומר התיאורטי כחלק מניסוי במעבדה אנזימטית בטכניון.</p><p>ניתן להטיל את המודל על כל שולחן אמיתי קיים, ולאפשר לסטודנטים לתקשר עם תוכן מדעי וירטואלי תוך שמירה על קשר ברור לסביבה הפיזית שלהם.</p><p>מימשנו אינטראקציות ידיים מבוססות פיזיקה המאפשרות לסטודנטים להרים מולקולות, לסובב ולהתקרב למודלים מדעיים ולבצע פעולות אינטראקטיביות שונות. ההדמיות והאינטראקציות הללו מסייעות לסטודנטים בפקולטה להנדסה כימית ע"ש וולפסון בטכניון להבין טוב יותר מושגים מורכבים הקשורים לתגובות אנזימטיות ולאור מקוטב.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-vr" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="סגירת פרטי הפרויקט">&times;</button>
+      <h4 data-i18n="work.vr.title">ניסוי VR סוחף בפוגסיות</h4>
+      <div class="wd-sub" data-i18n="work.vr.sub">מציאות מדומה | מחוות ידיים | שלטים</div>
+      <div class="wd-body" data-i18n="work.vr.body"><p>ניסוי VR סוחף לחלוטין ל-Meta Quest 3 המשמש להוראת פוגסיות במסגרת הקורס תרמודינמיקה ב' בטכניון.</p><p>הניסוי אורך כשעה ומיועד לביצוע במקביל על ידי קבוצות סטודנטים רבות (עד 12 מכשירים). הסטודנטים גם עוברים הדרכה בנהלי בטיחות במעבדה ובטיחות אש כחלק מהחוויה.</p><p>הפרויקט כולל מדריך וירטואלי המלווה את הסטודנטים לאורך הניסוי כולו באמצעות הוראות קוליות. אוזניות ה-Meta Quest 3 מקושרות לטאבלטים, המאפשרים למדריכי המעבדה לעקוב אחר התקדמות כל קבוצה ולקבל את קובצי הנתונים הנוצרים במהלך הניסוי.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-ml" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="סגירת פרטי הפרויקט">&times;</button>
+      <h4 data-i18n="work.ml.title">כלי מחקר מולקולרי מבוסס למידת מכונה</h4>
+      <div class="wd-sub" data-i18n="work.ml.sub">מחשב | למידת מכונה | שרת Python</div>
+      <div class="wd-body" data-i18n="work.ml.body"><p>LiveMol היא פלטפורמת מחקר למידול מולקולרי, שנבנתה עבור הפקולטה להנדסה כימית ע"ש וולפסון בטכניון. היא משלבת הדמיה תלת-ממדית בזמן אמת עם חישובי כימיה חישובית מדויקים מבחינה מדעית.</p><p>חוקרים בונים ועורכים מולקולות ישירות בתלת-ממד, ואז מריצים חישובי כימיה קוונטית על המבנה שלפניהם וצופים בתוצאות חוזרות אל המודל. החישובים הנתמכים כוללים אנרגיית נקודה בודדת, אופטימיזציית גיאומטריה ואופטימיזציה חיה, ניתוח תדרי רטט ואופטימיזציה של מצב מעבר.</p><p>המערכת פועלת כלקוח Unity המפעיל שרת חישוב ב-Python, מה ששומר על ממשק מגיב בזמן שחישובים כבדים רצים בנפרד. העבודה המדעית מתבצעת באמצעות מנועים מבוססים ובהם ASE, tblite, Open Babel ו-Sella, כאשר רכיבי למידת מכונה מתוכננים לצדם.</p><p>הפרויקט נמצא כיום בפיתוח, תחילה למחשב ובשלב מאוחר יותר ל-AR.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-class" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="סגירת פרטי הפרויקט">&times;</button>
+      <h4 data-i18n="work.class.title">מערך כיתת VR פיזית עם Meta Quest</h4>
+      <div class="wd-sub" data-i18n="work.class.sub">VR רב-משתתפים | Meta Quest 3 | כלי מדריך</div>
+      <div class="wd-body" data-i18n="work.class.body"><p>הקמה מקצה לקצה של כיתת VR פיזית בטכניון, שנועדה לתמוך באופן אמין בקבוצות סטודנטים מרובות המשתמשות באפליקציות חינוכיות סוחפות בו-זמנית.</p><p>ליווינו את כל תהליך היישום, מתכנון ובחירת חומרה ועד לפריסת הכיתה, הגדרת המכשירים, התקנה, בדיקות ותהליכי עבודה למדריכים, הכל בהתאמה למרחב, לצורכי ההוראה, לבטיחות ולתשתית הטכנית של המוסד.</p><p>הכיתה מפעילה עד 12 אוזניות Meta Quest 3 בו-זמנית, עם ישיבה ייעודית, מרווחים, טעינה ואחסון, וטאבלט מקושר לכל אוזניה, כך שהמדריכים יכולים לעקוב אחר התקדמות הקבוצות, לסייע לסטודנטים ולאסוף את קובצי הנתונים שנוצרים בכל מפגש.</p></div>
+    </div>
+  </section>
+
+  <section class="panel about rv" id="about">
+    <h2 class="sec-k" data-i18n="about.kicker">אודות</h2>
+    <div class="about-in">
+      <div class="founder-card">
+        <img class="founder-portrait" src="../assets/founder-portrait.jpg" alt="Julia Pavlov, Founder and Lead Engineer">
+        <b class="founder-name">Julia Pavlov</b>
+        <span class="founder-role" data-i18n="about.role">מייסדת ומהנדסת ראשית</span>
+        <span class="founder-edu" data-i18n="about.edu">MBA, אוניברסיטת תל אביב · B.Sc הנדסת תוכנה, טכניון</span>
+        <a class="founder-li" href="https://www.linkedin.com/in/julia-pavlov" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1-.02 4 2 2 0 0 1 .02-4zM3 8.98h4V21H3zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.06 3.76-2.06 4.02 0 4.76 2.65 4.76 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+      <div class="about-lead">
+        <h3 data-i18n="about.h">עשור של פיתוח תלת-ממד בזמן אמת</h3>
+        <p data-i18n="about.p">Red Crown Interactive נוסדה ומנוהלת על ידי יוליה פבלוב, עם למעלה מעשר שנים של פיתוח תלת-ממד בזמן אמת בתחומי XR, רפואה, גיימינג וביטחון, ותרומה למוצרים מסחריים בחברות מובילות. בטכניון היא מובילה כיום פרויקטי XR מקצה לקצה. החוט המקשר: תוכנה שבה הדיוק חשוב לא פחות מהחוויה.</p>
+        <div class="about-xp">
+          <span class="about-xp-k" data-i18n="about.xpk">הניסיון של המייסדת</span>
+          <div class="logo-row">
+            <span class="logo-tile">Technion</span>
+            <span class="logo-tile">Philips</span>
+            <span class="logo-tile">Playtika</span>
+            <span class="logo-tile">Israeli Navy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contact rv" id="contact">
+    <div class="contact-grid">
+      <div class="contact-intro">
+        <h2 data-i18n="cta.title">מוכנים לבנות<br>משהו <em>מדהים?</em></h2>
+        <p data-i18n="cta.lead">בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.</p>
+        <div class="contact-direct">
+          <a href="mailto:hello@redcrowninteractive.com"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg>hello@redcrowninteractive.com</a>
+          <a href="tel:+972585760550" dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>+972-58-576-0550</a>
+        </div>
+      </div>
+      <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="35f8e692-deb5-4865-86a3-7a4be79eb90b">
+        <input type="hidden" name="subject" value="New inquiry — redcrowninteractive.com">
+        <input type="hidden" name="from_name" value="Red Crown Interactive website">
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="field"><span data-i18n="form.name">שם</span><input type="text" name="name" required></label>
+        <label class="field"><span data-i18n="form.email">אימייל</span><input type="email" name="email" required></label>
+        <label class="field"><span data-i18n="form.company">חברה (אופציונלי)</span><input type="text" name="company"></label>
+        <label class="field"><span data-i18n="form.project">מה אתם בונים?</span>
+          <select name="project">
+            <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>
+            <option value="Mobile" data-i18n="form.opt.mobile">מובייל</option>
+            <option value="PC" data-i18n="form.opt.pc">מחשב</option>
+            <option value="Web" data-i18n="form.opt.web">אתרים / ווב</option>
+            <option value="Not sure" data-i18n="form.opt.unsure">עדיין לא בטוח</option>
+          </select>
+        </label>
+        <label class="field"><span data-i18n="form.message">הודעה</span><textarea name="message" rows="4" required></textarea></label>
+        <button type="submit" class="btn btn-red" data-i18n="form.send">שליחה</button>
+        <p class="form-msg form-ok" data-i18n="form.success" hidden>תודה! אחזור אליכם בקרוב.</p>
+        <p class="form-msg form-err" data-i18n="form.error" hidden>משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <a class="logo" href="#top">
+        <img src="../assets/logo-kit/redcrown-primary-scarlet.svg" alt="Red Crown Interactive logo">
+        <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
+      </a>
+      <div class="foot-right">
+        <div class="contact">
+          <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="foot.loc">חיפה, ישראל</span></span>
+          <span><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></span>
+          <span dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:+972585760550">+972-58-576-0550</a></span>
+        </div>
+        <div class="socials">
+          <a href="https://www.linkedin.com/company/red-crown-interactive" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="copy" data-i18n="foot.copy">© 2026 Red Crown Interactive. כל הזכויות שמורות.</div>
+  </footer>
+
+</div>
+
+<script src="../site.js"></script>
+<!-- GoatCounter analytics (privacy-friendly, no cookies) -->
+<script data-goatcounter="https://redcrown.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+<script>
+(function(){
+  function showAll(){var els=document.querySelectorAll('.rv');for(var i=0;i<els.length;i++)els[i].classList.add('in');}
+  try{
+    if(!('IntersectionObserver' in window) || (window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){showAll();return;}
+    var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){if(es[i].isIntersecting){es[i].target.classList.add('in');io.unobserve(es[i].target);}}},{threshold:.12});
+    var els=document.querySelectorAll('.rv');for(var j=0;j<els.length;j++)io.observe(els[j]);
+    setTimeout(function(){if(!document.querySelector('.rv.in'))showAll();},1500);
+  }catch(e){showAll();}
+})();
+</script>
+</body>
+</html>
