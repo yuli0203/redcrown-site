@@ -300,3 +300,24 @@ document.addEventListener('keydown', e=>{
     card.addEventListener('mouseleave', ()=>{ card.style.transform = ''; });
   });
 })();
+
+/* ---------------- Lenis smooth scroll (vendored) — off for reduced motion ---------------- */
+(function(){
+  if (typeof Lenis === 'undefined') return;                              // library missing -> native scroll
+  if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return; // desktop pointers only; touch uses native scroll
+  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });            // smoothWheel only; touch stays native
+  function raf(t){ lenis.raf(t); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+  // in-page anchors: scroll with Lenis and honour the sticky-nav offset (matches scroll-padding-top:100px)
+  document.addEventListener('click', e=>{
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    e.preventDefault();
+    lenis.scrollTo(target, { offset: -100 });
+  });
+})();

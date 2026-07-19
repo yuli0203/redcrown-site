@@ -11,6 +11,12 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:100px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Lenis smooth scroll */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:hidden}
+.lenis.lenis-smooth iframe{pointer-events:none}
 body{background:radial-gradient(1200px 640px at 50% -8%,rgba(118,35,47,.42),transparent 62%),var(--black);color:var(--bone);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
 html,body{overflow-x:clip}
 ::selection{background:var(--red);color:var(--bone)}
