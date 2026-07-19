@@ -31,7 +31,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .nav-links{display:flex;gap:28px;margin-inline-start:auto;list-style:none}
 .nav-links a{font-size:.74rem;font-weight:600;letter-spacing:.14em;color:var(--dim);transition:color .2s}
 .nav-links a:hover,.nav-links a.on{color:var(--hot)}
-.btn{display:inline-block;font-family:var(--display);font-weight:600;font-size:.86rem;letter-spacing:.08em;padding:13px 26px;border-radius:10px;transition:all .2s}
+.btn{display:inline-block;font-family:var(--display);font-weight:600;font-size:.86rem;letter-spacing:.08em;padding:13px 26px;border-radius:10px;transition:transform .25s cubic-bezier(.16,1,.3,1),background-color .2s,color .2s,border-color .2s,filter .2s}
 .btn-line{border:1px solid var(--red);color:var(--hot)}
 .btn-line:hover{background:var(--red);color:var(--bone)}
 .btn-red{background:var(--red);color:var(--bone)}
@@ -186,3 +186,21 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 [dir="rtl"] .hero-scrim{background:linear-gradient(270deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
 [dir="rtl"] .sec-k{letter-spacing:.12em}
 [dir="rtl"] .about-xp-k{letter-spacing:.06em;font-size:.8rem}
+
+/* ---------------- custom cursor (dot + trailing ring) ---------------- */
+@media (hover:hover) and (pointer:fine){
+  html.cursor-on, html.cursor-on *{cursor:none !important}
+  html.cursor-on input, html.cursor-on textarea, html.cursor-on select{cursor:auto !important}
+  .cursor-ring,.cursor-dot{position:fixed;left:0;top:0;pointer-events:none;z-index:99999;border-radius:50%;opacity:0;transition:opacity .3s ease}
+  html.cursor-ready .cursor-ring, html.cursor-ready .cursor-dot{opacity:1}
+  html.cursor-hidden .cursor-ring, html.cursor-hidden .cursor-dot{opacity:0}
+  .cursor-dot{width:6px;height:6px;background:var(--bone)}
+  .cursor-ring{width:34px;height:34px;border:1.5px solid rgba(240,234,228,.55);
+    transition:width .28s ease,height .28s ease,border-color .28s ease,background-color .28s ease,opacity .3s ease}
+  .cursor-ring.is-hover{width:58px;height:58px;border-color:var(--bone);background:rgba(240,234,228,.10)}
+  .cursor-ring.is-click{width:26px;height:26px;background:rgba(240,234,228,.18)}
+
+  /* micro-interactions: smooth hover lift (no bounce, no cursor-tracking) */
+  .js .wcard{transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .6s ease; will-change:transform}
+  .btn:hover{transform:scale(1.05)}
+}

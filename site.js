@@ -252,3 +252,51 @@ document.addEventListener('keydown', e=>{
     if (card.getAttribute('aria-expanded')==='true'){ setCardOpen(card,false); card.focus(); }
   });
 });
+
+/* ---------------- custom cursor (dot + trailing ring) ---------------- */
+(function(){
+  const fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if (!fine) return;                       // touch / coarse pointers keep the native cursor
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const root = document.documentElement;
+  const ring = document.createElement('div'); ring.className = 'cursor-ring'; ring.setAttribute('aria-hidden','true');
+  const dot  = document.createElement('div'); dot.className  = 'cursor-dot';  dot.setAttribute('aria-hidden','true');
+  document.body.appendChild(ring); document.body.appendChild(dot);
+  root.classList.add('cursor-on');         // gates cursor:none — if JS never runs, native cursor stays
+
+  const HOVER = 'a,button,input,select,textarea,label,summary,[role="button"],.wcard,.lang-toggle';
+  let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my, ready = false;
+  const place = (el,x,y)=>{ el.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%)`; };
+
+  window.addEventListener('mousemove', e=>{
+    mx = e.clientX; my = e.clientY;
+    if (!ready){ ready = true; rx = mx; ry = my; root.classList.add('cursor-ready'); }
+    place(dot, mx, my);
+    if (reduce) place(ring, mx, my);        // no trailing lag when reduced motion is requested
+    ring.classList.toggle('is-hover', !!(e.target.closest && e.target.closest(HOVER)));
+  }, {passive:true});
+
+  if (!reduce){
+    (function loop(){ rx += (mx-rx)*0.18; ry += (my-ry)*0.18; place(ring, rx, ry); requestAnimationFrame(loop); })();
+  }
+  document.addEventListener('mousedown', ()=>ring.classList.add('is-click'), {passive:true});
+  document.addEventListener('mouseup',   ()=>ring.classList.remove('is-click'), {passive:true});
+  document.addEventListener('mouseleave',()=>root.classList.add('cursor-hidden'));
+  document.addEventListener('mouseenter',()=>root.classList.remove('cursor-hidden'));
+})();
+
+/* ---------------- micro-interactions: gentle hover lift on project cards ---------------- */
+/* (buttons expand via CSS :hover; nothing tracks the cursor) */
+(function(){
+  const fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if (!fine || reduce) return;             // mouse-only; skipped on touch and when reduced motion is requested
+
+  // Project cards lift + expand on hover (skip while expanded). Inline style beats the .rv reveal rule.
+  document.querySelectorAll('.wcard').forEach(card=>{
+    card.addEventListener('mouseenter', ()=>{
+      if (card.getAttribute('aria-expanded') !== 'true') card.style.transform = 'translateY(-8px) scale(1.03)';
+    });
+    card.addEventListener('mouseleave', ()=>{ card.style.transform = ''; });
+  });
+})();
