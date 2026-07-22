@@ -212,8 +212,8 @@ if (PAGE_LANG === 'he'){
 // Paste the "Send-to" values from each conversion action in Google Ads:
 // Google Ads > Goals > Conversions > (action) > Tag setup > Use Google tag > event snippet.
 const ADS_CONVERSIONS = {
-  formSubmit: 'AW-XXXXXXXXXX/YYYYYYYYYYYYYYYYYYY',
-  phoneClick: 'AW-XXXXXXXXXX/ZZZZZZZZZZZZZZZZZZZ'
+  formSubmit: 'AW-18313532220/H3CjCKq279QcELymyZxE',
+  phoneClick: 'AW-18313532220/XXXX' // TODO: paste phone-click conversion label
 };
 function trackConversion(key, params){
   const id = ADS_CONVERSIONS[key];
