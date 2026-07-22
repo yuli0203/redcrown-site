@@ -240,8 +240,8 @@ if (cform) {
   });
 }
 
-// phone clicks count as a conversion (calls started from the site)
-document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+// phone + WhatsApp clicks count as a conversion (contact started from the site)
+document.querySelectorAll('a[href^="tel:"], a[href*="wa.me/"]').forEach(a => {
   a.addEventListener('click', () => trackConversion('phoneClick'));
 });
 
