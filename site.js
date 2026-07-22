@@ -185,8 +185,16 @@ document.querySelectorAll('.lang-menu button').forEach(b=>{
     const l = b.dataset.lang;
     // Cross-page language switches navigate to the language's own URL so the
     // canonical Hebrew/English pages own their traffic; same-context stays JS.
-    if (l === 'he' && PAGE_LANG !== 'he'){ try{localStorage.setItem('rc_lang','he');}catch(e){} location.href = '/he/'; return; }
-    if (l !== 'he' && PAGE_LANG === 'he'){ try{localStorage.setItem('rc_lang',l);}catch(e){} location.href = (l === 'en') ? '/' : '/?lang=' + l; return; }
+    // preserve query string (gclid etc.) across language navigation
+    if (l === 'he' && PAGE_LANG !== 'he'){ try{localStorage.setItem('rc_lang','he');}catch(e){} location.href = '/he/' + location.search + location.hash; return; }
+    if (l !== 'he' && PAGE_LANG === 'he'){
+      try{localStorage.setItem('rc_lang',l);}catch(e){}
+      const p = new URLSearchParams(location.search);
+      if (l === 'en') p.delete('lang'); else p.set('lang', l);
+      const q = p.toString();
+      location.href = '/' + (q ? '?' + q : '') + location.hash;
+      return;
+    }
     applyLang(l, true); closeLang();
   });
 });
@@ -203,7 +211,8 @@ if (PAGE_LANG === 'he'){
   try { const q = new URLSearchParams(location.search).get('lang'); if (q && I18N[q]) initLang = q; } catch(e){}
   if (!initLang){ try { const s = localStorage.getItem('rc_lang'); if (s && I18N[s]) initLang = s; } catch(e){} }
   if (!initLang) initLang = detectLang();
-  if (initLang === 'he' && /^https?:$/.test(location.protocol)) location.replace('/he/');
+  // preserve query string (gclid etc.) and hash through the language redirect
+  if (initLang === 'he' && /^https?:$/.test(location.protocol)) location.replace('/he/' + location.search + location.hash);
   else applyLang(initLang, false);
 }
 
