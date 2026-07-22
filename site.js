@@ -208,6 +208,19 @@ if (PAGE_LANG === 'he'){
 }
 
 
+// Google Ads conversion tracking
+// Paste the "Send-to" values from each conversion action in Google Ads:
+// Google Ads > Goals > Conversions > (action) > Tag setup > Use Google tag > event snippet.
+const ADS_CONVERSIONS = {
+  formSubmit: 'AW-XXXXXXXXXX/YYYYYYYYYYYYYYYYYYY',
+  phoneClick: 'AW-XXXXXXXXXX/ZZZZZZZZZZZZZZZZZZZ'
+};
+function trackConversion(key, params){
+  const id = ADS_CONVERSIONS[key];
+  if (typeof gtag !== 'function' || !id || id.includes('XXXX')) return;
+  gtag('event', 'conversion', Object.assign({ send_to: id }, params));
+}
+
 // contact form (AJAX submit to Web3Forms)
 const cform = document.querySelector('.contact-form');
 if (cform) {
@@ -218,11 +231,19 @@ if (cform) {
     ok.hidden = true; err.hidden = true; btn.disabled = true;
     try {
       const r = await fetch(cform.action, { method:'POST', body:new FormData(cform), headers:{'Accept':'application/json'} });
-      if (r.ok) { cform.reset(); ok.hidden = false; } else { err.hidden = false; }
+      if (r.ok) {
+        cform.reset(); ok.hidden = false;
+        trackConversion('formSubmit');
+      } else { err.hidden = false; }
     } catch (_) { err.hidden = false; }
     btn.disabled = false;
   });
 }
+
+// phone clicks count as a conversion (calls started from the site)
+document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+  a.addEventListener('click', () => trackConversion('phoneClick'));
+});
 
 // selected work: a thumbnail opens its detail panel below the grid; only one open at a time
 const workCards = document.querySelectorAll('.wcard[aria-controls]');
