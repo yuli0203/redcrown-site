@@ -26,6 +26,7 @@ a{color:inherit;text-decoration:none}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:20px}
 .k{font-family:var(--brand);letter-spacing:.3em;text-transform:uppercase}
 .icon{width:1em;height:1em;fill:none;stroke:var(--hot);stroke-width:1.7;vertical-align:-.15em}
+.icon-wa{stroke:#25D366}
 
 /* ---------------- nav ---------------- */
 nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
