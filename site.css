@@ -137,9 +137,6 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .contact-intro h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:.04em;line-height:1.2}
 .contact-intro h2 em{font-style:normal;color:var(--hot)}
 .contact-intro p{color:var(--dim);font-size:.95rem;margin-top:16px;max-width:40ch}
-.contact-direct{margin-top:26px;display:flex;flex-direction:column;gap:12px}
-.contact-direct a{display:inline-flex;align-items:center;gap:10px;font-size:.9rem;color:var(--dim);width:fit-content;transition:color .2s}
-.contact-direct a:hover{color:var(--hot)}
 .contact-form{display:flex;flex-direction:column;gap:14px;position:relative}
 .contact-form .hp{position:absolute;width:1px;height:1px;padding:0;margin:-1px;border:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap;pointer-events:none}
 .field{display:flex;flex-direction:column;gap:6px}
