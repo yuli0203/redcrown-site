@@ -213,12 +213,13 @@ if (PAGE_LANG === 'he'){
 // Google Ads > Goals > Conversions > (action) > Tag setup > Use Google tag > event snippet.
 const ADS_CONVERSIONS = {
   formSubmit: 'AW-18313532220/H3CjCKq279QcELymyZxE',
-  phoneClick: 'AW-18313532220/XXXX' // TODO: paste phone-click conversion label
+  phoneClick: 'AW-18313532220/zWKzCPjS89QcELymyZxE'
 };
 function trackConversion(key, params){
   const id = ADS_CONVERSIONS[key];
   if (typeof gtag !== 'function' || !id || id.includes('XXXX')) return;
-  gtag('event', 'conversion', Object.assign({ send_to: id }, params));
+  // beacon transport so the hit survives tel:/wa.me navigation away from the page
+  gtag('event', 'conversion', Object.assign({ send_to: id, transport_type: 'beacon' }, params));
 }
 
 // contact form (AJAX submit to Web3Forms)
