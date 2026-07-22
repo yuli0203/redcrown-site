@@ -27,6 +27,10 @@ a{color:inherit;text-decoration:none}
 .k{font-family:var(--brand);letter-spacing:.3em;text-transform:uppercase}
 .icon{width:1em;height:1em;fill:none;stroke:var(--hot);stroke-width:1.7;vertical-align:-.15em}
 .icon-wa{stroke:#25D366}
+.wa-float{position:fixed;bottom:22px;inset-inline-end:22px;z-index:70;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.45);transition:transform .2s ease,box-shadow .2s ease}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 22px rgba(37,211,102,.45)}
+.wa-float svg{width:30px;height:30px;fill:none;stroke:#fff;stroke-width:1.7}
+@media (prefers-reduced-motion:reduce){.wa-float{transition:none}.wa-float:hover{transform:none}}
 
 /* ---------------- nav ---------------- */
 nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
