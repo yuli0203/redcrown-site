@@ -190,9 +190,8 @@ document.querySelectorAll('.lang-menu button').forEach(b=>{
     if (l !== 'he' && PAGE_LANG === 'he'){
       try{localStorage.setItem('rc_lang',l);}catch(e){}
       const p = new URLSearchParams(location.search);
-      if (l === 'en') p.delete('lang'); else p.set('lang', l);
-      const q = p.toString();
-      location.href = '/' + (q ? '?' + q : '') + location.hash;
+      p.set('lang', l); // keep an explicit ?lang (incl. en) so the English page can't auto-redirect back to /he/ when storage is blocked
+      location.href = '/?' + p.toString() + location.hash;
       return;
     }
     applyLang(l, true); closeLang();

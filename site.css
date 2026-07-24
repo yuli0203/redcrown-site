@@ -68,7 +68,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);backdrop-filter
 .hero-bg{position:absolute;inset:0;background:url('assets/hero.jpg') center right/cover no-repeat}
 .hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
 .hero-txt{position:relative;z-index:2;padding:64px 48px;max-width:600px}
-.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.06;letter-spacing:.02em}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.55rem,8.5vw,3.6rem);line-height:1.06;letter-spacing:.02em}
 .hero h1 em{font-style:normal;color:var(--hot)}
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
 .hero .plat s{text-decoration:none;color:var(--hot);padding:0 .4em}
@@ -149,7 +149,7 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .form-msg{font-size:.88rem;margin-top:2px}
 .form-ok{color:#5ec27a}
 .form-err{color:var(--hot)}
-@media(max-width:900px){.contact{padding:44px 28px}.contact-grid{grid-template-columns:1fr;gap:32px}}
+@media(max-width:900px){.contact{padding:44px 28px}.contact-grid{grid-template-columns:1fr;gap:32px}.field input,.field select,.field textarea{font-size:16px}}
 
 /* ---------------- about ---------------- */
 .about{margin-top:26px;padding:56px 40px}

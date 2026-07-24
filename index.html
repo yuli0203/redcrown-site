@@ -292,9 +292,11 @@
   function showAll(){var els=document.querySelectorAll('.rv');for(var i=0;i<els.length;i++)els[i].classList.add('in');}
   try{
     if(!('IntersectionObserver' in window) || (window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){showAll();return;}
-    var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){if(es[i].isIntersecting){es[i].target.classList.add('in');io.unobserve(es[i].target);}}},{threshold:.12});
+    var ioFired=false;
+    var io=new IntersectionObserver(function(es){ioFired=true;for(var i=0;i<es.length;i++){if(es[i].isIntersecting){es[i].target.classList.add('in');io.unobserve(es[i].target);}}},{threshold:.12});
     var els=document.querySelectorAll('.rv');for(var j=0;j<els.length;j++)io.observe(els[j]);
-    setTimeout(function(){if(!document.querySelector('.rv.in'))showAll();},1500);
+    // safety net: if the observer never fires (present but broken on a device), reveal everything so content is never stuck invisible
+    setTimeout(function(){if(!ioFired)showAll();},1500);
   }catch(e){showAll();}
 })();
 </script>
