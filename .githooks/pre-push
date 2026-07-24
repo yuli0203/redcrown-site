@@ -1,0 +1,26 @@
+#!/bin/sh
+# Element-integrity guard: verify the site renders without breakage before allowing a push.
+# Enable once per clone with:  git config core.hooksPath .githooks
+# Override in a true emergency with:  git push --no-verify
+
+echo "[pre-push] verifying no elements break across the device matrix..."
+
+ROOT=$(git rev-parse --show-toplevel)
+
+if command -v py >/dev/null 2>&1; then PY=py
+elif command -v python >/dev/null 2>&1; then PY=python
+elif command -v python3 >/dev/null 2>&1; then PY=python3
+else
+  echo "[pre-push] WARNING: Python not found; skipping verification (push allowed)."
+  exit 0
+fi
+
+"$PY" "$ROOT/tools/verify_no_break.py"
+if [ $? -ne 0 ]; then
+  echo "[pre-push] BLOCKED: element-integrity check failed (see above)."
+  echo "[pre-push] Fix the issues, or override with 'git push --no-verify' if you are certain."
+  exit 1
+fi
+
+echo "[pre-push] OK."
+exit 0
