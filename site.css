@@ -141,7 +141,17 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .wdetail-close:hover{color:var(--hot);border-color:rgba(200,16,46,.55)}
 .wdetail h4{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
 .wd-sub{font-family:var(--body);font-size:.82rem;font-weight:600;letter-spacing:.02em;color:var(--bone);opacity:.72;margin-top:10px}
-.wd-model{width:100%;height:clamp(260px,42vh,380px);margin-top:16px;background:transparent;border:1px solid var(--line);border-radius:14px;--poster-color:transparent}
+.wd-model-wrap{position:relative;margin-top:16px}
+.wd-model{width:100%;height:clamp(260px,42vh,380px);background:transparent;border:1px solid var(--line);border-radius:14px;--poster-color:transparent;display:block}
+.wd-model-badge{position:absolute;top:12px;inset-inline-start:12px;font-family:var(--brand);font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);background:rgba(14,8,10,.62);padding:5px 10px;border-radius:6px;border:1px solid var(--line);pointer-events:none}
+.wd-zoom-ctl{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(14,8,10,.55);border:1px solid var(--line);border-radius:999px;padding:6px 13px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.wd-zoom{width:132px;accent-color:var(--hot);cursor:pointer}
+.wd-zoom-ic{color:var(--dim);font-size:.95rem;width:10px;text-align:center;user-select:none}
+.wd-model-loading{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;transition:opacity .35s}
+.wd-model-wrap.loaded .wd-model-loading{opacity:0}
+.wd-spinner{width:34px;height:34px;border-radius:50%;border:2.5px solid rgba(240,234,228,.16);border-top-color:var(--hot);animation:wd-spin .8s linear infinite}
+@keyframes wd-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.wd-spinner{animation:none}}
 .wd-model-hint{font-size:.72rem;color:var(--dim);text-align:center;margin-top:8px;letter-spacing:.03em}
 .wd-body{margin-top:16px;display:grid;gap:12px;max-width:78ch}
 .wd-body p{color:var(--dim);font-size:.9rem}

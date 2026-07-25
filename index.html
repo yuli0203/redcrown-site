@@ -191,6 +191,13 @@
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
       <h4 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h4>
       <div class="wd-sub" data-i18n="work.ar.sub">Mixed Reality | Physics-Based Hand Interactions</div>
+      <div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="assets/models/enzym.glb" alt="Interactive 3D enzymatic lab model built for Meta Quest — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="14deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.5" shadow-softness="0.9" field-of-view="30deg" min-field-of-view="10deg" max-field-of-view="45deg" camera-orbit="0deg 75deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Meta Quest 3 · MR</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div>
+      <div class="wd-model-hint">A 3D model we built in-house for our Meta Quest 3 lab · drag to rotate · zoom in to see inside</div>
       <div class="wd-body" data-i18n="work.ar.body"><p>This complementary Meta Quest 3 model is used to explain theoretical material in greater depth as part of an enzymatic laboratory experiment at the Technion.</p><p>The model can be overlaid on any existing real table, allowing students to interact with virtual scientific content while maintaining a clear connection to their physical environment.</p><p>We implemented physics-based hand interactions that allow students to pick up molecules, rotate and zoom in on scientific models, and perform various interactive actions. These visualizations and interactions help students in the Wolfson Faculty of Chemical Engineering at the Technion better understand complex concepts related to enzymatic reactions and polarized light.</p></div>
     </div>
 
@@ -198,6 +205,13 @@
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
       <h4 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h4>
       <div class="wd-sub" data-i18n="work.vr.sub">Virtual Reality | Hand Gestures | Controllers</div>
+      <div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="assets/models/robi.glb" alt="Robi, our in-house VR instructor — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" autoplay interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="28deg" min-field-of-view="10deg" max-field-of-view="42deg" camera-orbit="15deg 82deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Robi · our VR instructor</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div>
+      <div class="wd-model-hint">Robi — the in-house VR instructor that guides students through the experiment · drag to rotate</div>
       <div class="wd-body" data-i18n="work.vr.body"><p>This fully immersive Meta Quest 3 VR experiment is used to teach fugacity as part of the Thermodynamics B course at the Technion.</p><p>The experiment is approximately one hour long and is designed to be performed by multiple student groups simultaneously (up to 12 devices). Students are also trained in laboratory safety and fire safety procedures as part of the experience.</p><p>The project includes a virtual instructor who guides students through the full experiment using spoken instructions. The Meta Quest 3 headsets are paired with tablets, allowing lab instructors to monitor each group&rsquo;s progress and receive data files generated during the experiment.</p></div>
     </div>
 
@@ -205,8 +219,13 @@
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
       <h4 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h4>
       <div class="wd-sub" data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</div>
-      <model-viewer class="wd-model" src="assets/models/caffeine.glb" alt="Interactive 3D molecule from LiveMol — drag to rotate" camera-controls touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" shadow-intensity="0.5" exposure="1.05" camera-orbit="0deg 75deg auto" loading="lazy" poster="assets/work-ml-livemol.jpg"></model-viewer>
-      <div class="wd-model-hint">↻ Drag to rotate · scroll to zoom · a live 3D model, right in the browser</div>
+      <div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="assets/models/caffeine2-fixed-normals.glb" alt="Interactive 3D molecule built in LiveMol — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="0.45" shadow-intensity="0.5" shadow-softness="0.9" field-of-view="32deg" min-field-of-view="12deg" max-field-of-view="46deg" camera-orbit="0deg 75deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Built in LiveMol</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div>
+      <div class="wd-model-hint">An actual 3D model generated by our LiveMol app · drag to rotate · use the slider to zoom</div>
       <div class="wd-body" data-i18n="work.ml.body"><p>LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.</p><p>Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.</p><p>It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.</p><p>This project is currently in development, first for PC, later stage for AR.</p></div>
     </div>
 
@@ -310,9 +329,57 @@
 <script src="holo.js" defer></script>
 <script>
 /* load the self-hosted model-viewer library only when the LiveMol card is opened (keeps initial load light) */
+function robiEyes(mv) {   // replicate the Unity instructor eyes: cyan glow + gentle pulse, blink, occasional expression
+  if (!mv.model || !mv.model.materials) return;
+  var eyes = mv.model.materials.filter(function (m) { return m.name && m.name.indexOf('EYE_') === 0; });
+  if (!eyes.length || mv.__eyes) return; mv.__eyes = 1;
+  var byName = {}; eyes.forEach(function (m) { byName[m.name] = m; });
+  function show(name) { eyes.forEach(function (m) { var bc = m.pbrMetallicRoughness.baseColorFactor; m.pbrMetallicRoughness.setBaseColorFactor([bc[0], bc[1], bc[2], m.name === name ? 1 : 0]); }); }
+  show('EYE_eyes');
+  // app behaviour: emission cycles a cyan palette on "speech beats", smoothly Lerp'd, back to base when quiet
+  var PAL = [[0, 0.571, 0.805], [0, 0.848, 1.0], [0, 1.0, 0.945]];
+  var cur = PAL[0].slice(), target = PAL[0], idx = 0, last = performance.now(), nextBeat = 300;
+  (function frame(now) {
+    var dt = Math.min((now - last) / 1000, 0.05); last = now;
+    nextBeat -= dt * 1000;
+    if (nextBeat <= 0) { idx = (idx + 1) % PAL.length; target = PAL[idx]; nextBeat = 170 + Math.random() * 260; }
+    var k = Math.min(dt * 5, 1);
+    cur[0] += (target[0] - cur[0]) * k; cur[1] += (target[1] - cur[1]) * k; cur[2] += (target[2] - cur[2]) * k;
+    eyes.forEach(function (m) { if (m.setEmissiveFactor) m.setEmissiveFactor([cur[0], cur[1], cur[2]]); });
+    requestAnimationFrame(frame);
+  })(last);
+  setInterval(function () { show('EYE_eyes_Blink'); setTimeout(function () { show('EYE_eyes'); }, 130); }, 3800 + Math.random() * 2200);   // blink
+  var exprs = ['EYE_eyes_Happy_3', 'EYE_eyes_Big', 'EYE_eyes_Square'].filter(function (n) { return byName[n]; });
+  if (exprs.length) setInterval(function () { var e = exprs[Math.floor(Math.random() * exprs.length)]; show(e); setTimeout(function () { show('EYE_eyes'); }, 1000); }, 11000);   // occasional expression
+}
+function applyModelZoom(wrap) {
+  var mv = wrap.querySelector('model-viewer'), sl = wrap.querySelector('.wd-zoom');
+  if (!mv || !sl) return;
+  var z = +sl.value;
+  var mn = parseFloat(mv.getAttribute('min-field-of-view')) || 12, mx = parseFloat(mv.getAttribute('max-field-of-view')) || 46;
+  mv.fieldOfView = (mx - (z / 100) * (mx - mn)).toFixed(1) + 'deg';           // slider -> zoom
+  var t = z / 100, mats = mv.model && mv.model.materials;                     // translucent surfaces: opaque when out, authored alpha when in
+  if (mats) for (var i = 0; i < mats.length; i++) { try {
+    var m = mats[i], bc = m.pbrMetallicRoughness.baseColorFactor;
+    if (m.__baseA === undefined) m.__baseA = bc[3];
+    if (m.__baseA < 0.999) { var OUT = 0.9; m.pbrMetallicRoughness.setBaseColorFactor([bc[0], bc[1], bc[2], OUT - t * (OUT - m.__baseA)]); }
+  } catch (_) {} }
+}
 document.addEventListener('click', function (e) {
-  var c = e.target.closest && e.target.closest('.wcard[data-project="ml"]');
-  if (c && !window.__mvLoaded) { window.__mvLoaded = 1; var s = document.createElement('script'); s.type = 'module'; s.src = 'vendor/model-viewer.min.js'; document.head.appendChild(s); }
+  var c = e.target.closest && e.target.closest('.wcard[data-project="ml"], .wcard[data-project="ar"], .wcard[data-project="vr"]');
+  if (c && !window.__mvLoaded) {
+    window.__mvLoaded = 1;
+    var s = document.createElement('script'); s.type = 'module'; s.src = 'vendor/model-viewer.min.js'; document.head.appendChild(s);
+    if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
+      document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
+        var w = mv.closest('.wd-model-wrap'), go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
+        if (mv.loaded) go(); else mv.addEventListener('load', go);
+      });
+    });
+  }
+}, true);
+document.addEventListener('input', function (e) {
+  if (e.target && e.target.classList && e.target.classList.contains('wd-zoom')) { var w = e.target.closest('.wd-model-wrap'); if (w) applyModelZoom(w); }
 }, true);
 </script>
 <!-- GoatCounter analytics (privacy-friendly, no cookies) -->
