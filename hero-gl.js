@@ -41,20 +41,21 @@
     'void main(){',
     '  vec2 uv=gl_FragCoord.xy/u_res.xy;',
     '  vec2 p=uv*vec2(u_res.x/u_res.y,1.0)*2.2;',
-    '  float t=u_time*0.045;',
+    '  float t=u_time*0.11;',
     '  vec2 q=vec2(fbm(p+t),fbm(p-t+7.3));',
-    '  vec2 r=vec2(fbm(p+1.6*q+vec2(1.7,9.2)+0.12*t),fbm(p+1.6*q+vec2(8.3,2.8)-0.10*t));',
-    '  float f=fbm(p+2.0*r);',
+    '  vec2 r=vec2(fbm(p+1.9*q+vec2(1.7,9.2)+0.35*t),fbm(p+1.9*q+vec2(8.3,2.8)-0.28*t));',
+    '  float f=fbm(p+2.3*r);',
     '  vec3 black=vec3(0.055,0.031,0.039);',
     '  vec3 maroon=vec3(0.463,0.137,0.184);',
     '  vec3 red=vec3(0.784,0.063,0.180);',
-    '  vec3 col=mix(black,maroon,smoothstep(0.25,0.75,f));',
-    '  col=mix(col,red,pow(smoothstep(0.55,0.95,f+0.15*r.x),2.0)*0.8);',
-    '  float emb=pow(smoothstep(0.72,1.0,f),3.0);',           // sparse brighter embers
-    '  col+=red*emb*0.9;',
-    '  float vig=smoothstep(1.15,0.15,length(uv-0.5));',      // fade at edges to blend
+    '  vec3 col=mix(black,maroon,smoothstep(0.18,0.70,f));',
+    '  col=mix(col,red,pow(smoothstep(0.45,0.90,f+0.20*r.x),2.0)*1.0);',
+    '  float emb=pow(smoothstep(0.60,1.0,f),2.0);',           // embers
+    '  col+=red*emb*1.5;',
+    '  float side=smoothstep(0.80,0.40,uv.x);',               // fade OUT over the girl (right side) so she never lights up',
+    '  float vig=smoothstep(1.40,0.08,length(uv-0.5))*side;', // edge fade * side mask
     '  col*=vig;',
-    '  float alpha=(0.35+0.65*f)*vig;',
+    '  float alpha=(0.42+0.78*f)*vig;',
     '  gl_FragColor=vec4(col,alpha);',
     '}'
   ].join('\n');

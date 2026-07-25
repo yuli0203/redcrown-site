@@ -42,9 +42,9 @@ MATRIX = [
 
 AUTOSCROLL = """async () => {
   await new Promise(res => { let y=0; const s=()=>{ window.scrollTo(0,y);
-    y+=Math.round(window.innerHeight*0.75);
-    if (y<document.body.scrollHeight) setTimeout(s,110);
-    else { window.scrollTo(0,document.body.scrollHeight); setTimeout(res,350);} }; s(); });
+    y+=Math.round(window.innerHeight*0.55);
+    if (y<document.body.scrollHeight) setTimeout(s,150);
+    else { window.scrollTo(0,document.body.scrollHeight); setTimeout(res,550);} }; s(); });
 }"""
 
 # Runs in-page; returns a list of human-readable problem strings.
