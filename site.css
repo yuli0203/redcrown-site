@@ -213,6 +213,8 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .socials a{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--dim);font-size:.8rem;transition:all .2s}
 .socials a:hover{border-color:var(--red);color:var(--hot)}
 .copy{text-align:center;font-size:.72rem;color:var(--dim);margin-top:26px}
+.wd-credit{display:inline-block;margin-top:3px;font-size:.68em;opacity:.55}
+.wd-credit a{color:inherit;text-decoration:underline}
 .js .rv{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
 .js .rv.in{opacity:1;transform:none}
 

@@ -206,7 +206,7 @@
       <h4 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h4>
       <div class="wd-sub" data-i18n="work.vr.sub">Virtual Reality | Hand Gestures | Controllers</div>
       <div class="wd-model-wrap">
-        <model-viewer class="wd-model" src="assets/models/robi.glb" alt="Robi, our in-house VR instructor — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" autoplay interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="28deg" min-field-of-view="10deg" max-field-of-view="42deg" camera-orbit="15deg 82deg auto" loading="lazy"></model-viewer>
+        <model-viewer class="wd-model" src="assets/models/robi.glb?v=21" alt="Robi, our in-house VR instructor — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" autoplay interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="28deg" min-field-of-view="10deg" max-field-of-view="42deg" camera-orbit="15deg 82deg auto" loading="lazy"></model-viewer>
         <span class="wd-model-badge">◆ Robi · our VR instructor</span>
         <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
         <div class="wd-model-loading"><span class="wd-spinner"></span></div>
@@ -233,6 +233,13 @@
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
       <h4 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h4>
       <div class="wd-sub" data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 | Instructor Tools</div>
+      <div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="assets/models/meta_quest_3.glb" alt="Meta Quest 3 headset — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="30deg" min-field-of-view="10deg" max-field-of-view="45deg" camera-orbit="25deg 78deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Meta Quest 3</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div>
+      <div class="wd-model-hint">The headset our classroom runs on · drag to rotate · use the slider to zoom<br><span class="wd-credit"><a href="https://sketchfab.com/3d-models/meta-quest-3-65a813833dc04eeeb7d33bdca58c184c" target="_blank" rel="noopener noreferrer">“Meta Quest 3” by Elin</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></span></div>
       <div class="wd-body" data-i18n="work.class.body"><p>An end-to-end physical VR classroom at the Technion, built to reliably support multiple student groups using immersive educational applications at the same time.</p><p>We consulted across the whole implementation, from planning and hardware selection to classroom layout, device configuration, deployment, testing, and instructor workflows, all shaped around the institution's available space, teaching requirements, safety, and technical infrastructure.</p><p>The room runs up to 12 Meta Quest 3 headsets simultaneously, with dedicated seating, spacing, and charging and storage, plus a paired tablet for each headset so instructors can monitor group progress, support students, and collect the data files generated in each session.</p></div>
     </div>
   </section>
@@ -333,24 +340,41 @@ function robiEyes(mv) {   // replicate the Unity instructor eyes: cyan glow + ge
   if (!mv.model || !mv.model.materials) return;
   var eyes = mv.model.materials.filter(function (m) { return m.name && m.name.indexOf('EYE_') === 0; });
   if (!eyes.length || mv.__eyes) return; mv.__eyes = 1;
-  var byName = {}; eyes.forEach(function (m) { byName[m.name] = m; });
-  function show(name) { eyes.forEach(function (m) { var bc = m.pbrMetallicRoughness.baseColorFactor; m.pbrMetallicRoughness.setBaseColorFactor([bc[0], bc[1], bc[2], m.name === name ? 1 : 0]); }); }
-  show('EYE_eyes');
-  // app behaviour: emission cycles a cyan palette on "speech beats", smoothly Lerp'd, back to base when quiet
-  var PAL = [[0, 0.571, 0.805], [0, 0.848, 1.0], [0, 1.0, 0.945]];
-  var cur = PAL[0].slice(), target = PAL[0], idx = 0, last = performance.now(), nextBeat = 300;
+  // faithful to the Unity InstructorViewModel: rest = palette[0]; each speech "beat" advances to the next
+  // palette colour, then Color.Lerp back at smoothingSpeed 5. Brighter palette entries = the talking flash.
+  var PAL = [[0, 0.5714, 0.8050], [0, 0.8481, 1.0], [0, 1.0, 0.9451]];  // exact prefab colorPalette
+  var disp = PAL[0].slice(), idx = 0, last = performance.now();
+  var talking = true, phaseEnd = last + 2000, beatT = 0;               // talking bursts <-> quiet pauses
+  var nextBlink = last + 1800, blinkStart = -1, pendingDouble = false; // eased blinks, occasional doubles
+  function ease(t) { return t * t * (3 - 2 * t); }
   (function frame(now) {
     var dt = Math.min((now - last) / 1000, 0.05); last = now;
-    nextBeat -= dt * 1000;
-    if (nextBeat <= 0) { idx = (idx + 1) % PAL.length; target = PAL[idx]; nextBeat = 170 + Math.random() * 260; }
-    var k = Math.min(dt * 5, 1);
-    cur[0] += (target[0] - cur[0]) * k; cur[1] += (target[1] - cur[1]) * k; cur[2] += (target[2] - cur[2]) * k;
-    eyes.forEach(function (m) { if (m.setEmissiveFactor) m.setEmissiveFactor([cur[0], cur[1], cur[2]]); });
+    if (now > phaseEnd) { talking = !talking; phaseEnd = now + (talking ? 1400 + Math.random() * 2000 : 900 + Math.random() * 1800); }
+    var target;
+    if (talking) {                                                     // relaxed beat ~0.34-0.66s advances the colour
+      beatT -= dt * 1000;
+      if (beatT <= 0) { idx = (idx + 1) % PAL.length; beatT = 340 + Math.random() * 320; }
+      target = PAL[idx];
+    } else { idx = 0; target = PAL[0]; }
+    var k = Math.min(dt * 3, 1);                                       // gentler smoothing (softer transitions)
+    disp[0] += (target[0] - disp[0]) * k; disp[1] += (target[1] - disp[1]) * k; disp[2] += (target[2] - disp[2]) * k;
+    var blinkMul = 1;                                                  // natural eased blink (close then open)
+    if (blinkStart < 0 && now >= nextBlink) blinkStart = now;
+    if (blinkStart >= 0) {
+      var bt = (now - blinkStart) / 150;
+      if (bt >= 1) {
+        blinkStart = -1;
+        if (pendingDouble) { pendingDouble = false; nextBlink = now + 2600 + Math.random() * 3600; }
+        else if (Math.random() < 0.28) { pendingDouble = true; nextBlink = now + 110; }
+        else nextBlink = now + 2600 + Math.random() * 3600;
+      } else { blinkMul = 1 - 0.95 * (bt < 0.5 ? ease(bt / 0.5) : ease((1 - bt) / 0.5)); }
+    }
+    eyes.forEach(function (m) {
+      var p = m.pbrMetallicRoughness;
+      if (p && p.setBaseColorFactor) p.setBaseColorFactor([disp[0] * blinkMul, disp[1] * blinkMul, disp[2] * blinkMul, 1]);
+    });
     requestAnimationFrame(frame);
   })(last);
-  setInterval(function () { show('EYE_eyes_Blink'); setTimeout(function () { show('EYE_eyes'); }, 130); }, 3800 + Math.random() * 2200);   // blink
-  var exprs = ['EYE_eyes_Happy_3', 'EYE_eyes_Big', 'EYE_eyes_Square'].filter(function (n) { return byName[n]; });
-  if (exprs.length) setInterval(function () { var e = exprs[Math.floor(Math.random() * exprs.length)]; show(e); setTimeout(function () { show('EYE_eyes'); }, 1000); }, 11000);   // occasional expression
 }
 function applyModelZoom(wrap) {
   var mv = wrap.querySelector('model-viewer'), sl = wrap.querySelector('.wd-zoom');
@@ -366,7 +390,7 @@ function applyModelZoom(wrap) {
   } catch (_) {} }
 }
 document.addEventListener('click', function (e) {
-  var c = e.target.closest && e.target.closest('.wcard[data-project="ml"], .wcard[data-project="ar"], .wcard[data-project="vr"]');
+  var c = e.target.closest && e.target.closest('.wcard[data-project="ml"], .wcard[data-project="ar"], .wcard[data-project="vr"], .wcard[data-project="class"]');
   if (c && !window.__mvLoaded) {
     window.__mvLoaded = 1;
     var s = document.createElement('script'); s.type = 'module'; s.src = 'vendor/model-viewer.min.js'; document.head.appendChild(s);
