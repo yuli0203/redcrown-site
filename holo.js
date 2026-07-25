@@ -121,6 +121,7 @@
   resize();
 
   var idx = Math.floor(Math.random() * SHAPES.length);
+  var lean = (document.documentElement.dir === 'rtl') ? 0.14 : -0.14;  // mirror the lean on the RTL (Hebrew) page
   var spin = Math.random() * TAU, running = true, visible = true, raf = 0, last = null, morph = 0, pendingSwap = false;
   function backOut(u) { var c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); }
   function rot(p, ay, ax, az) {                            // yaw (spin) innermost, then a CONSTANT screen-space lean
@@ -186,7 +187,7 @@
     if (!reduce) spin += dt * (1 + boost);
     var ay, ax, az;
     if (SHAPES[idx].inplane) { ay = 0; ax = -0.28; az = spin * 0.32; }  // snowflake: in-plane spin (the exception)
-    else { ay = spin * 0.40; ax = -0.30; az = -0.14; }                  // everyone else: slight left + inward (diamond) tilt
+    else { ay = spin * 0.40; ax = -0.30; az = lean; }                   // everyone else: slight lean + inward (mirrored on RTL)
     var flick = 0.86 + 0.14 * Math.sin(ts * 0.006) - (Math.random() < 0.03 ? 0.16 : 0); // holographic flicker
     draw(scale, flick < 0.55 ? 0.55 : flick, flash, ay, ax, az);
     req();

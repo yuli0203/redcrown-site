@@ -28,7 +28,7 @@ a{color:inherit;text-decoration:none}
 .k{font-family:var(--brand);letter-spacing:.3em;text-transform:uppercase}
 .icon{width:1em;height:1em;fill:none;stroke:var(--hot);stroke-width:1.7;vertical-align:-.15em}
 .icon-wa{stroke:#25D366}
-.wa-float{position:fixed;bottom:22px;inset-inline-end:22px;z-index:70;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.45);transition:transform .2s ease,box-shadow .2s ease}
+.wa-float{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));inset-inline-end:calc(22px + env(safe-area-inset-right));z-index:70;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.45);transition:transform .2s ease,box-shadow .2s ease}
 .wa-float:hover{transform:scale(1.1);box-shadow:0 6px 22px rgba(37,211,102,.45)}
 .wa-float svg{width:30px;height:30px;fill:none;stroke:#fff;stroke-width:1.7}
 @media (prefers-reduced-motion:reduce){.wa-float{transition:none}.wa-float:hover{transform:none}}
@@ -76,6 +76,11 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 /* mobile: hero stacks (image band on top) — float the hologram in that band */
 /* stacked layout: center the hologram in the dark negative space to the left of the girl */
 @media(max-width:900px){.holo{width:clamp(104px,26vw,180px);height:clamp(104px,26vw,180px);top:88px;left:23%;right:auto;transform:translate(-50%,-50%)}}
+/* RTL (Hebrew): the hero image is mirrored, so flip the hologram to the other side */
+[dir="rtl"] .holo{right:auto;left:39%}
+@media(max-width:900px){[dir="rtl"] .holo{left:77%;right:auto}}
+/* quick win: 44px touch targets for the mobile language control (it's the only nav control on mobile) */
+@media(max-width:900px){.lang-toggle{min-height:44px;padding:11px 13px}.lang-menu button{min-height:44px;padding:12px 16px}}
 .hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
 .hero-txt{position:relative;z-index:2;padding:64px 48px;max-width:600px}
 .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.55rem,8.5vw,3.6rem);line-height:1.06;letter-spacing:.02em}

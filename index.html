@@ -2,9 +2,23 @@
 <html lang="en" data-page-lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E080A">
+<script>
+/* Send Hebrew-preferring visitors to /he/ BEFORE the body paints, so they never see the English hero flash. */
+(function(){try{
+  if(document.documentElement.getAttribute('data-page-lang')==='he')return;
+  if(!/^https?:$/.test(location.protocol))return;
+  function go(){location.replace('/he/'+location.search+location.hash);}
+  var q=new URLSearchParams(location.search).get('lang');
+  if(q){ if(q==='he')go(); return; }
+  var s=null; try{s=localStorage.getItem('rc_lang');}catch(e){}
+  if(s){ if(s==='he')go(); return; }
+  var list=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||'en'];
+  for(var i=0;i<list.length;i++){var c=(list[i]||'').slice(0,2).toLowerCase(); if(c==='he'){go();return;} if(c==='en'||c==='ru')return;}
+}catch(e){}})();
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18313532220"></script>
 <script>
@@ -241,10 +255,11 @@
         <input type="hidden" name="access_key" value="35f8e692-deb5-4865-86a3-7a4be79eb90b">
         <input type="hidden" name="subject" value="New inquiry — redcrowninteractive.com">
         <input type="hidden" name="from_name" value="Red Crown Interactive website">
+        <input type="hidden" name="redirect" value="https://redcrowninteractive.com/?sent=1">
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label class="field"><span data-i18n="form.name">Name</span><input type="text" name="name" required></label>
-        <label class="field"><span data-i18n="form.email">Email</span><input type="email" name="email" required></label>
-        <label class="field"><span data-i18n="form.company">Company (optional)</span><input type="text" name="company"></label>
+        <label class="field"><span data-i18n="form.name">Name</span><input type="text" name="name" autocomplete="name" required></label>
+        <label class="field"><span data-i18n="form.email">Email</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+        <label class="field"><span data-i18n="form.company">Company (optional)</span><input type="text" name="company" autocomplete="organization"></label>
         <label class="field"><span data-i18n="form.project">What are you building?</span>
           <select name="project">
             <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>

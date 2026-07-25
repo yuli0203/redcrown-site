@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl" data-page-lang="he">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E080A">
 <!-- Google tag (gtag.js) -->
@@ -110,6 +110,9 @@
         <a class="arrow-link" href="#work" data-i18n="hero.ctaSecondary">לצפייה בעבודות &nbsp;←</a>
       </div>
     </div>
+    <button class="holo" type="button" aria-label="הולוגרמה תלת-ממדית — לחצו כדי להחליף צורה">
+      <canvas class="holo-canvas" aria-hidden="true"></canvas>
+    </button>
   </header>
 
   <section class="cards3" id="services">
@@ -239,10 +242,11 @@
         <input type="hidden" name="access_key" value="35f8e692-deb5-4865-86a3-7a4be79eb90b">
         <input type="hidden" name="subject" value="New inquiry — redcrowninteractive.com">
         <input type="hidden" name="from_name" value="Red Crown Interactive website">
+        <input type="hidden" name="redirect" value="https://redcrowninteractive.com/he/?sent=1">
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label class="field"><span data-i18n="form.name">שם</span><input type="text" name="name" required></label>
-        <label class="field"><span data-i18n="form.email">אימייל</span><input type="email" name="email" required></label>
-        <label class="field"><span data-i18n="form.company">חברה (אופציונלי)</span><input type="text" name="company"></label>
+        <label class="field"><span data-i18n="form.name">שם</span><input type="text" name="name" autocomplete="name" required></label>
+        <label class="field"><span data-i18n="form.email">אימייל</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+        <label class="field"><span data-i18n="form.company">חברה (אופציונלי)</span><input type="text" name="company" autocomplete="organization"></label>
         <label class="field"><span data-i18n="form.project">מה אתם בונים?</span>
           <select name="project">
             <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>
@@ -287,6 +291,8 @@
 
 <script src="../lenis.min.js"></script>
 <script src="../site.js"></script>
+<script src="../hero-gl.js" defer></script>
+<script src="../holo.js" defer></script>
 <!-- GoatCounter analytics (privacy-friendly, no cookies) -->
 <script data-goatcounter="https://redcrown.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
