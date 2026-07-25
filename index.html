@@ -248,7 +248,17 @@
     <h2 class="sec-k" data-i18n="about.kicker">ABOUT</h2>
     <div class="about-in">
       <div class="founder-card">
-        <picture><source srcset="assets/founder-portrait.webp" type="image/webp"><img class="founder-portrait" src="assets/founder-portrait.jpg" alt="Julia Pavlov, Founder and Lead Engineer" width="800" height="1000" loading="lazy"></picture>
+        <button type="button" class="founder-flip" aria-pressed="false" aria-label="Flip the founder card">
+          <span class="flip-inner">
+            <span class="flip-face flip-front">
+              <picture><source srcset="assets/founder-portrait.webp" type="image/webp"><img class="founder-portrait" src="assets/founder-portrait.jpg" alt="Julia Pavlov, Founder and Lead Engineer" width="800" height="1000" loading="lazy"></picture>
+            </span>
+            <span class="flip-face flip-back" aria-hidden="true">
+              <picture><source srcset="assets/founder-flip.webp" type="image/webp"><img class="founder-portrait founder-portrait-alt" src="assets/founder-flip.jpg" alt="Julia Pavlov as a voxel Software Architect character card" width="900" height="1125" loading="lazy"></picture>
+            </span>
+            <span class="flip-hint" aria-hidden="true">⟳</span>
+          </span>
+        </button>
         <b class="founder-name">Julia Pavlov</b>
         <span class="founder-role" data-i18n="about.role">Founder &amp; Lead Engineer</span>
         <span class="founder-edu" data-i18n="about.edu">MBA, Tel Aviv University · B.Sc Software Engineering, Technion</span>

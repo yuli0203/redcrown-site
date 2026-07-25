@@ -283,6 +283,14 @@ document.addEventListener('keydown', e=>{
   });
 });
 
+// founder-card easter egg: click/tap flips between the photo and the voxel "Software Architect" card
+document.querySelectorAll('.founder-flip').forEach(function(b){
+  b.addEventListener('click', function(){
+    var on = b.classList.toggle('flipped');
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+});
+
 /* ---------------- custom cursor (dot + trailing ring) ---------------- */
 (function(){
   const fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;

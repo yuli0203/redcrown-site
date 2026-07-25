@@ -185,6 +185,23 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .about-lead p{color:var(--dim);margin-top:16px;font-size:.95rem}
 .founder-card{display:flex;flex-direction:column}
 .founder-portrait{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:16px;border:1px solid var(--line);background:var(--panel-2);margin-bottom:16px}
+/* Founder card easter-egg: click to flip between the photo and the voxel "Software Architect" card */
+.founder-flip{position:relative;display:block;width:100%;margin:0 0 16px;padding:0;border:0;background:none;cursor:pointer;border-radius:16px;perspective:1200px;-webkit-tap-highlight-color:transparent}
+.founder-flip .flip-inner{position:relative;display:block;width:100%;aspect-ratio:4/5;transition:transform .7s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.founder-flip.flipped .flip-inner{transform:rotateY(180deg)}
+.founder-flip .flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;overflow:hidden}
+.founder-flip .flip-face .founder-portrait{margin:0;width:100%;height:100%;aspect-ratio:auto}
+.founder-flip .flip-back{transform:rotateY(180deg)}
+.founder-flip .flip-back .founder-portrait{object-position:center}
+.founder-flip .flip-hint{position:absolute;bottom:10px;inset-inline-end:10px;z-index:2;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(10,8,10,.55);border:1px solid var(--line);color:#fff;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none}
+.founder-flip:hover .flip-hint,.founder-flip:focus-visible .flip-hint{opacity:.85}
+.founder-flip:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){
+  .founder-flip .flip-inner{transition:none;transform:none!important}
+  .founder-flip .flip-face{backface-visibility:visible;-webkit-backface-visibility:visible}
+  .founder-flip .flip-back{transform:none;opacity:0;transition:opacity .35s}
+  .founder-flip.flipped .flip-back{opacity:1}
+}
 .founder-name{font-family:var(--display);font-weight:600;font-size:1.1rem;letter-spacing:.02em}
 .founder-role{font-size:.82rem;color:var(--dim);margin-top:2px}
 .founder-edu{font-size:.74rem;color:var(--dim);opacity:.85;line-height:1.4;margin-top:4px}
