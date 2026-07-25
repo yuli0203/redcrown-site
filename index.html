@@ -205,6 +205,8 @@
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
       <h4 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h4>
       <div class="wd-sub" data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</div>
+      <model-viewer class="wd-model" src="assets/models/molecule.glb" alt="Interactive 3D molecule — drag to rotate" camera-controls touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" shadow-intensity="0.5" exposure="1.05" camera-orbit="0deg 78deg 4.4m" min-camera-orbit="auto auto 3m" max-camera-orbit="auto auto 7m" loading="lazy" poster="assets/work-ml-livemol.jpg"></model-viewer>
+      <div class="wd-model-hint">↻ Drag to rotate · scroll to zoom · a live 3D model, right in the browser</div>
       <div class="wd-body" data-i18n="work.ml.body"><p>LiveMol is a research platform for molecular modeling, built for the Wolfson Faculty of Chemical Engineering at the Technion. It combines real-time 3D visualization with scientifically accurate computational chemistry.</p><p>Researchers build and edit molecules directly in 3D, then run quantum chemistry calculations on the structure in front of them and watch the results return onto the model. Supported calculations include single point energy, geometry and live optimization, vibrational frequency analysis, and transition state optimization.</p><p>It runs as a Unity client driving a Python compute server, which keeps the interface responsive while heavy calculations run separately. The scientific work is handled by established engines including ASE, tblite, Open Babel, and Sella, with machine-learning components planned alongside them.</p><p>This project is currently in development, first for PC, later stage for AR.</p></div>
     </div>
 
@@ -306,6 +308,13 @@
 <script src="site.js"></script>
 <script src="hero-gl.js" defer></script>
 <script src="holo.js" defer></script>
+<script>
+/* load the self-hosted model-viewer library only when the LiveMol card is opened (keeps initial load light) */
+document.addEventListener('click', function (e) {
+  var c = e.target.closest && e.target.closest('.wcard[data-project="ml"]');
+  if (c && !window.__mvLoaded) { window.__mvLoaded = 1; var s = document.createElement('script'); s.type = 'module'; s.src = 'vendor/model-viewer.min.js'; document.head.appendChild(s); }
+}, true);
+</script>
 <!-- GoatCounter analytics (privacy-friendly, no cookies) -->
 <script data-goatcounter="https://redcrown.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>

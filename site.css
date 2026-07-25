@@ -141,6 +141,8 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .wdetail-close:hover{color:var(--hot);border-color:rgba(200,16,46,.55)}
 .wdetail h4{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
 .wd-sub{font-family:var(--body);font-size:.82rem;font-weight:600;letter-spacing:.02em;color:var(--bone);opacity:.72;margin-top:10px}
+.wd-model{width:100%;height:clamp(260px,42vh,380px);margin-top:16px;background:transparent;border:1px solid var(--line);border-radius:14px;--poster-color:transparent}
+.wd-model-hint{font-size:.72rem;color:var(--dim);text-align:center;margin-top:8px;letter-spacing:.03em}
 .wd-body{margin-top:16px;display:grid;gap:12px;max-width:78ch}
 .wd-body p{color:var(--dim);font-size:.9rem}
 @media(max-width:900px){.work-grid{grid-template-columns:repeat(2,1fr)}}
