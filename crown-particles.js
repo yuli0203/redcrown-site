@@ -55,7 +55,9 @@
     cxp = homes.length ? sx / homes.length : W / 2; cyp = homes.length ? sy / homes.length : H / 2;
   }
   function size() {
-    W = Math.max(1, canvas.clientWidth); H = Math.max(1, canvas.clientHeight || W);
+    var nw = Math.max(1, canvas.clientWidth), nh = Math.max(1, canvas.clientHeight || nw);
+    if (nw === W && nh === H && parts.length) return;   // ignore spurious resizes (mobile URL-bar on scroll) -> no rebuild/jump
+    W = nw; H = nh;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     if (img.complete && img.width) { sampleHomes(); build(); }
   }
