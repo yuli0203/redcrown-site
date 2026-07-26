@@ -13,11 +13,12 @@
   if (!canvas || !canvas.getContext) return;
   var ctx = canvas.getContext('2d');
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var canHover = !window.matchMedia || matchMedia('(hover:hover) and (pointer:fine)').matches;  // desktop = cursor gleam; touch = auto gleam
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
   var TAU = 6.28318530718;
 
   var homes = [], parts = [], W = 0, H = 0, cxp = 0, cyp = 0, raf = 0, visible = true;
-  var mx = -9999, my = -9999, pointer = false, ox = 0, oy = 0;
+  var mx = -9999, my = -9999, pointer = false, clock = 0, lastTs = null;
 
   var img = new Image();
   img.src = '/assets/logo-kit/redcrown-knockout-white.png';
@@ -47,7 +48,9 @@
         r: hero ? 1.6 + Math.random() * 1.0 : 0.85 + Math.random() * 0.8,
         base: 0.5 + Math.random() * 0.35, tint: tint,
         tw: Math.random() * TAU, tws: 0.5 + Math.random() * 1.2,          // gentle living shimmer
-        bp: Math.random() * TAU, bx: 0.3 + Math.random() * 0.5 };
+        bp: Math.random() * TAU, bx: 0.3 + Math.random() * 0.5,
+        ox: 0, oy: 0, vx: 0, vy: 0,                                       // local stir displacement
+        k: 0.006 + Math.random() * 0.008, dmp: 0.93 + Math.random() * 0.03 };  // slow, floaty return
     });
     cxp = homes.length ? sx / homes.length : W / 2; cyp = homes.length ? sy / homes.length : H / 2;
   }
@@ -60,18 +63,33 @@
   function paint(t) {
     t = t || 0;
     var i, p, x, y, a, g, gd, dx, dy;
+    if (!canHover && !reduce) {                                     // touch devices: gleam roams on its own
+      mx = cxp + Math.cos(t * 0.00045) * Math.min(W, H) * 0.30;
+      my = cyp + Math.sin(t * 0.00062) * Math.min(W, H) * 0.22; pointer = true;
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = 'lighter';                        // additive -> rich, glowing, colorful jewels
-    var GR = Math.min(W, H) * 0.34, GR2 = GR * GR;                   // crown stays put; only the light responds
+    var GR = Math.min(W, H) * 0.34, GR2 = GR * GR;
+    var SR = Math.min(W, H) * 0.18, SR2 = SR * SR;                   // local stir field around the cursor
+    var ALx = cxp + Math.cos(t * 0.00028) * Math.min(W, H) * 0.32;   // faint ambient light that roams on its own
+    var ALy = cyp + Math.sin(t * 0.00040) * Math.min(W, H) * 0.22;
     for (i = 0; i < parts.length; i++) {
       p = parts[i];
       var bob = reduce ? 0 : Math.sin(t * 0.0011 + p.bp) * p.bx;
-      x = p.hx + bob * 0.5; y = p.hy + bob;
+      if (pointer && !reduce) {                                      // the cursor stirs nearby jewels (soft swirl)
+        var sx = p.hx + p.ox - mx, sy = p.hy + p.oy - my, sr2 = sx * sx + sy * sy;
+        if (sr2 < SR2) { var sr = Math.sqrt(sr2) || 1, sf = (1 - sr / SR); sf = sf * sf * 0.28;   // soft radial warp away, no swirl
+          p.vx += (sx / sr) * sf; p.vy += (sy / sr) * sf; }
+      }
+      p.vx += -p.ox * p.k; p.vy += -p.oy * p.k; p.vx *= p.dmp; p.vy *= p.dmp; p.ox += p.vx; p.oy += p.vy;  // settle home independently
+      x = p.hx + p.ox + bob * 0.5; y = p.hy + p.oy + bob;
       g = 0;
       if (pointer) { dx = x - mx; dy = y - my; gd = dx * dx + dy * dy; if (gd < GR2) { g = 1 - Math.sqrt(gd) / GR; g *= g; } }
-      var shimmer = reduce ? 0.9 : 0.68 + 0.32 * Math.sin(t * 0.0016 * p.tws + p.tw);   // alive even when unlit
-      a = Math.min(1, p.base * shimmer + 0.9 * g);
-      var mix = Math.min(1, g * 1.4);                                 // tint -> warm white inside the light pool
+      var ga = 0;
+      if (!reduce) { var ax = x - ALx, ay = y - ALy, a2 = ax * ax + ay * ay; if (a2 < GR2) { ga = 1 - Math.sqrt(a2) / GR; ga *= ga; } }
+      var shimmer = reduce ? 0.9 : 0.66 + 0.34 * Math.sin(t * 0.0018 * p.tws + p.tw);   // livelier shimmer
+      a = Math.min(1, p.base * shimmer + 0.9 * g + 0.5 * ga);         // ambient adds a gentle living glow
+      var mix = Math.min(1, g * 1.4 + ga * 0.22);                     // tint -> warm white inside the light
       var cr = p.tint[0] + (255 - p.tint[0]) * mix, cg = p.tint[1] + (255 - p.tint[1]) * mix, cb = p.tint[2] + (255 - p.tint[2]) * mix;
       var col = (cr | 0) + ',' + (cg | 0) + ',' + (cb | 0);
       var X = x * dpr, Y = y * dpr, R = p.r * dpr * (1 + 0.4 * g);
@@ -91,7 +109,12 @@
     ctx.globalCompositeOperation = 'source-over';
   }
 
-  function frame(ts) { raf = 0; if (!visible || document.hidden) return; paint(ts); if (!reduce) req(); }
+  function frame(ts) {
+    raf = 0; if (!visible || document.hidden) { lastTs = null; return; }   // freeze the clock while hidden -> no jump on scroll back
+    if (lastTs === null) lastTs = ts;
+    var dt = ts - lastTs; if (dt > 50) dt = 50; lastTs = ts;
+    clock += dt; paint(clock); if (!reduce) req();
+  }
   function req() { if (!raf) raf = requestAnimationFrame(frame); }
 
   section.addEventListener('pointermove', function (e) {
