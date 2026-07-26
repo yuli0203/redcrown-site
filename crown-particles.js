@@ -65,10 +65,6 @@
   function paint(t) {
     t = t || 0;
     var i, p, x, y, a, g, gd, dx, dy;
-    if (!canHover && !reduce) {                                     // touch devices: gleam roams on its own
-      mx = cxp + Math.cos(t * 0.00045) * Math.min(W, H) * 0.30;
-      my = cyp + Math.sin(t * 0.00062) * Math.min(W, H) * 0.22; pointer = true;
-    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = 'lighter';                        // additive -> rich, glowing, colorful jewels
     var GR = Math.min(W, H) * 0.34, GR2 = GR * GR;
@@ -120,6 +116,7 @@
   function req() { if (!raf) raf = requestAnimationFrame(frame); }
 
   section.addEventListener('pointermove', function (e) {
+    if (!canHover) return;                                          // touch devices: no gleam/warp, just the alive symbol
     var r = canvas.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; pointer = true; if (reduce) paint();
   }, { passive: true });
   section.addEventListener('pointerleave', function () { pointer = false; });
