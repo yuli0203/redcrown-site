@@ -82,6 +82,24 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 /* interactive particle crown in the contact CTA */
 .crown-particles{display:block;width:100%;max-width:340px;aspect-ratio:1;margin-top:20px}
 @media(max-width:900px){.crown-particles{max-width:250px;margin:14px auto 0}}
+/* founder-experience logos (white monochrome, uniform cells + names) */
+.xp-item{display:flex;flex-direction:column;align-items:center;gap:11px;width:88px;text-align:center}
+.xp-logo-box{height:36px;display:flex;align-items:center;justify-content:center}
+.xp-logo{max-height:34px;max-width:76px;width:auto;object-fit:contain;opacity:.72;transition:opacity .2s,transform .2s}
+.xp-item:hover .xp-logo{opacity:1;transform:translateY(-2px)}
+.xp-name{font-size:.6rem;letter-spacing:.03em;color:var(--dim);line-height:1.25}
+@media(max-width:480px){.xp-item{width:74px}.xp-logo-box{height:30px}.xp-logo{max-height:28px;max-width:62px}}
+/* technologies, split into Development / Design columns (white monochrome, compact) */
+.about-tech{margin-top:22px}
+.tech-cols{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:20px 0;align-items:stretch;margin-top:6px}
+.tech-col{display:flex;flex-direction:column;gap:12px;justify-content:flex-start}
+.tech-div{align-self:stretch;width:1px;background:rgba(255,255,255,.12);margin:0 36px}
+@media(max-width:600px){.tech-div{display:none}.tech-cols{gap:22px 0}}
+.tech-sub{font-size:.58rem;letter-spacing:.14em;color:var(--dim);opacity:.75;text-transform:uppercase}
+.tech-row{display:flex;flex-wrap:wrap;gap:17px 20px;align-items:center}
+.tech-ico{height:22px;width:auto;filter:brightness(0) invert(1);opacity:.55;transition:opacity .2s,transform .2s}
+.tech-ico:hover{opacity:.95;transform:translateY(-2px)}
+@media(max-width:480px){.tech-ico{height:18px}.tech-row{gap:14px}}
 /* quick win: 44px touch targets for the mobile language control (it's the only nav control on mobile) */
 @media(max-width:900px){.lang-toggle{min-height:44px;padding:11px 13px}.lang-menu button{min-height:44px;padding:12px 16px}}
 .hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
@@ -213,7 +231,7 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .founder-li:hover{color:var(--bone)}
 .about-xp{margin-top:34px}
 .about-xp-k{display:block;font-family:var(--brand);font-size:.66rem;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
-.logo-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.logo-row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
 .logo-tile{display:grid;place-items:center;text-align:center;padding:24px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);font-family:var(--display);font-weight:600;font-size:.92rem;letter-spacing:.04em;color:var(--bone);opacity:.82;transition:border-color .2s,opacity .2s}
 .logo-tile:hover{border-color:rgba(200,16,46,.5);opacity:1}
 .logo-tile img{max-height:40px;max-width:82%;object-fit:contain}
