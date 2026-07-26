@@ -211,7 +211,7 @@
         <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
         <div class="wd-model-loading"><span class="wd-spinner"></span></div>
       </div>
-      <div class="wd-model-hint">Robi — the in-house VR instructor that guides students through the experiment · drag to rotate</div>
+      <div class="wd-model-hint">Robi, the in-house VR instructor that guides students through the experiment · drag to rotate</div>
       <div class="wd-body" data-i18n="work.vr.body"><p>This fully immersive Meta Quest 3 VR experiment is used to teach fugacity as part of the Thermodynamics B course at the Technion.</p><p>The experiment is approximately one hour long and is designed to be performed by multiple student groups simultaneously (up to 12 devices). Students are also trained in laboratory safety and fire safety procedures as part of the experience.</p><p>The project includes a virtual instructor who guides students through the full experiment using spoken instructions. The Meta Quest 3 headsets are paired with tablets, allowing lab instructors to monitor each group&rsquo;s progress and receive data files generated during the experiment.</p></div>
     </div>
 
@@ -295,11 +295,12 @@
         <input type="hidden" name="from_name" value="Red Crown Interactive website">
         <input type="hidden" name="redirect" value="https://redcrowninteractive.com/?sent=1">
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label class="field"><span data-i18n="form.name">Name</span><input type="text" name="name" autocomplete="name" required></label>
-        <label class="field"><span data-i18n="form.email">Email</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
-        <label class="field"><span data-i18n="form.company">Company (optional)</span><input type="text" name="company" autocomplete="organization"></label>
+        <label class="field"><span data-i18n="form.name">Name</span><input type="text" name="name" autocomplete="name" placeholder="Your name" data-i18n-placeholder="form.ph.name" required></label>
+        <label class="field"><span data-i18n="form.email">Email</span><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@company.com" data-i18n-placeholder="form.ph.email" required></label>
+        <label class="field"><span data-i18n="form.company">Company (optional)</span><input type="text" name="company" autocomplete="organization" placeholder="Your company" data-i18n-placeholder="form.ph.company"></label>
         <label class="field"><span data-i18n="form.project">What are you building?</span>
           <select name="project">
+            <option value="" data-i18n="form.opt.choose" selected disabled hidden>Select project type</option>
             <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>
             <option value="Mobile" data-i18n="form.opt.mobile">Mobile</option>
             <option value="PC" data-i18n="form.opt.pc">PC / Desktop</option>
@@ -307,7 +308,7 @@
             <option value="Not sure" data-i18n="form.opt.unsure">Not sure yet</option>
           </select>
         </label>
-        <label class="field"><span data-i18n="form.message">Message</span><textarea name="message" rows="4" required></textarea></label>
+        <label class="field"><span data-i18n="form.message">Message</span><textarea name="message" rows="4" placeholder="Tell us about your project, even a rough idea is a great start." data-i18n-placeholder="form.ph.message" required></textarea></label>
         <button type="submit" class="btn btn-red" data-i18n="form.send">Send message</button>
         <p class="form-msg form-ok" data-i18n="form.success" hidden>Thanks! I'll get back to you soon.</p>
         <p class="form-msg form-err" data-i18n="form.error" hidden>Something went wrong. Please email hello@redcrowninteractive.com.</p>
@@ -399,36 +400,39 @@ function applyModelZoom(wrap) {
     if (m.__baseA < 0.999) { var OUT = 0.9; m.pbrMetallicRoughness.setBaseColorFactor([bc[0], bc[1], bc[2], OUT - t * (OUT - m.__baseA)]); }
   } catch (_) {} }
 }
+function loadModelViewers() {
+  if (window.__mvLoaded) return; window.__mvLoaded = 1;
+  var s = document.createElement('script'); s.type = 'module'; s.src = 'vendor/model-viewer.min.js'; document.head.appendChild(s);
+  if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
+    document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
+      var w = mv.closest('.wd-model-wrap'), go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
+      try { mv.loading = 'eager'; } catch (_) {}      // fetch the model in the background before it's opened
+      if (mv.loaded) go(); else mv.addEventListener('load', go);
+    });
+  });
+}
 document.addEventListener('click', function (e) {
   var c = e.target.closest && e.target.closest('.wcard[data-project="ml"], .wcard[data-project="ar"], .wcard[data-project="vr"], .wcard[data-project="class"]');
-  if (c && !window.__mvLoaded) {
-    window.__mvLoaded = 1;
-    var s = document.createElement('script'); s.type = 'module'; s.src = 'vendor/model-viewer.min.js'; document.head.appendChild(s);
-    if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
-      document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
-        var w = mv.closest('.wd-model-wrap'), go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
-        if (mv.loaded) go(); else mv.addEventListener('load', go);
-      });
-    });
-  }
+  if (c) loadModelViewers();
 }, true);
 document.addEventListener('input', function (e) {
   if (e.target && e.target.classList && e.target.classList.contains('wd-zoom')) { var w = e.target.closest('.wd-model-wrap'); if (w) applyModelZoom(w); }
 }, true);
-/* Warm the 3D assets during idle so a work card opens instantly — but skip on data-saver / slow
-   connections (e.g. weak phones on cellular) so we never spend their data before they ask. */
+/* Once the page itself has finished loading, quietly warm the 3D stack during idle time so a work
+   card opens instantly. Never blocks first paint (waits for load + requestIdleCallback), and is
+   skipped on data-saver / slow links so weak phones on cellular don't pay for it before they ask. */
 (function () {
   var c = navigator.connection || {};
   if (c.saveData) return;
   if (c.effectiveType && /2g|slow-2g|3g/.test(c.effectiveType)) return;
-  var assets = ['vendor/model-viewer.min.js', 'assets/models/caffeine2_opt.glb',
-    'assets/models/enzym_opt.glb', 'assets/models/robi_opt.glb', 'assets/models/meta_quest_3_opt.glb'];
+  var glbs = ['assets/models/caffeine2_opt.glb', 'assets/models/enzym_opt.glb',
+    'assets/models/robi_opt.glb', 'assets/models/meta_quest_3_opt.glb'];
   function warm() {
-    assets.forEach(function (u) {
-      var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l);
-    });
+    glbs.forEach(function (u) { var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l); });
+    loadModelViewers();                                // define the library ahead of the first click
   }
-  if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 5000 }); else setTimeout(warm, 3000);
+  function schedule() { if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 6000 }); else setTimeout(warm, 2000); }
+  if (document.readyState === 'complete') schedule(); else window.addEventListener('load', schedule);
 })();
 </script>
 <!-- GoatCounter analytics (privacy-friendly, no cookies) -->

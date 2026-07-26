@@ -198,7 +198,7 @@
         <div class="wd-zoom-ctl" dir="ltr"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="זום למודל התלת-ממד"><span class="wd-zoom-ic">+</span></div>
         <div class="wd-model-loading"><span class="wd-spinner"></span></div>
       </div>
-      <div class="wd-model-hint">רובי — המדריך הווירטואלי הפנימי שמלווה את הסטודנטים בניסוי · גררו לסיבוב</div>
+      <div class="wd-model-hint">רובי, המדריך הווירטואלי הפנימי שמלווה את הסטודנטים בניסוי · גררו לסיבוב</div>
       <div class="wd-body" data-i18n="work.vr.body"><p>ניסוי VR סוחף לחלוטין ל-Meta Quest 3 המשמש להוראת פוגסיות במסגרת הקורס תרמודינמיקה ב' בטכניון.</p><p>הניסוי אורך כשעה ומיועד לביצוע במקביל על ידי קבוצות סטודנטים רבות (עד 12 מכשירים). הסטודנטים גם עוברים הדרכה בנהלי בטיחות במעבדה ובטיחות אש כחלק מהחוויה.</p><p>הפרויקט כולל מדריך וירטואלי המלווה את הסטודנטים לאורך הניסוי כולו באמצעות הוראות קוליות. אוזניות ה-Meta Quest 3 מקושרות לטאבלטים, המאפשרים למדריכי המעבדה לעקוב אחר התקדמות כל קבוצה ולקבל את קובצי הנתונים הנוצרים במהלך הניסוי.</p></div>
     </div>
 
@@ -282,11 +282,12 @@
         <input type="hidden" name="from_name" value="Red Crown Interactive website">
         <input type="hidden" name="redirect" value="https://redcrowninteractive.com/he/?sent=1">
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label class="field"><span data-i18n="form.name">שם</span><input type="text" name="name" autocomplete="name" required></label>
-        <label class="field"><span data-i18n="form.email">אימייל</span><input type="email" name="email" autocomplete="email" inputmode="email" required></label>
-        <label class="field"><span data-i18n="form.company">חברה (אופציונלי)</span><input type="text" name="company" autocomplete="organization"></label>
+        <label class="field"><span data-i18n="form.name">שם</span><input type="text" name="name" autocomplete="name" placeholder="השם שלכם" data-i18n-placeholder="form.ph.name" required></label>
+        <label class="field"><span data-i18n="form.email">אימייל</span><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@company.com" data-i18n-placeholder="form.ph.email" required></label>
+        <label class="field"><span data-i18n="form.company">חברה (אופציונלי)</span><input type="text" name="company" autocomplete="organization" placeholder="החברה שלכם" data-i18n-placeholder="form.ph.company"></label>
         <label class="field"><span data-i18n="form.project">מה אתם בונים?</span>
           <select name="project">
+            <option value="" data-i18n="form.opt.choose" selected disabled hidden>בחרו סוג פרויקט</option>
             <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>
             <option value="Mobile" data-i18n="form.opt.mobile">מובייל</option>
             <option value="PC" data-i18n="form.opt.pc">מחשב</option>
@@ -294,7 +295,7 @@
             <option value="Not sure" data-i18n="form.opt.unsure">עדיין לא בטוח</option>
           </select>
         </label>
-        <label class="field"><span data-i18n="form.message">הודעה</span><textarea name="message" rows="4" required></textarea></label>
+        <label class="field"><span data-i18n="form.message">הודעה</span><textarea name="message" rows="4" placeholder="ספרו לנו על הפרויקט, גם רעיון ראשוני הוא התחלה מצוינת." data-i18n-placeholder="form.ph.message" required></textarea></label>
         <button type="submit" class="btn btn-red" data-i18n="form.send">שליחה</button>
         <p class="form-msg form-ok" data-i18n="form.success" hidden>תודה! אחזור אליכם בקרוב.</p>
         <p class="form-msg form-err" data-i18n="form.error" hidden>משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.</p>
@@ -384,30 +385,38 @@ function applyModelZoom(wrap) {
     if (m.__baseA < 0.999) { var OUT = 0.9; m.pbrMetallicRoughness.setBaseColorFactor([bc[0], bc[1], bc[2], OUT - t * (OUT - m.__baseA)]); }
   } catch (_) {} }
 }
+function loadModelViewers() {
+  if (window.__mvLoaded) return; window.__mvLoaded = 1;
+  var s = document.createElement('script'); s.type = 'module'; s.src = '../vendor/model-viewer.min.js'; document.head.appendChild(s);
+  if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
+    document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
+      var w = mv.closest('.wd-model-wrap'), go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
+      try { mv.loading = 'eager'; } catch (_) {}
+      if (mv.loaded) go(); else mv.addEventListener('load', go);
+    });
+  });
+}
 document.addEventListener('click', function (e) {
   var c = e.target.closest && e.target.closest('.wcard[data-project="ml"], .wcard[data-project="ar"], .wcard[data-project="vr"], .wcard[data-project="class"]');
-  if (c && !window.__mvLoaded) {
-    window.__mvLoaded = 1;
-    var s = document.createElement('script'); s.type = 'module'; s.src = '../vendor/model-viewer.min.js'; document.head.appendChild(s);
-    if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
-      document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
-        var w = mv.closest('.wd-model-wrap'), go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
-        if (mv.loaded) go(); else mv.addEventListener('load', go);
-      });
-    });
-  }
+  if (c) loadModelViewers();
 }, true);
 document.addEventListener('input', function (e) {
   if (e.target && e.target.classList && e.target.classList.contains('wd-zoom')) { var w = e.target.closest('.wd-model-wrap'); if (w) applyModelZoom(w); }
 }, true);
+/* Warm the 3D stack during idle after the page has loaded, so a work card opens instantly without
+   ever blocking first paint. Skipped on data-saver / slow connections. */
 (function () {
   var c = navigator.connection || {};
   if (c.saveData) return;
   if (c.effectiveType && /2g|slow-2g|3g/.test(c.effectiveType)) return;
-  var assets = ['../vendor/model-viewer.min.js', '../assets/models/caffeine2_opt.glb',
-    '../assets/models/enzym_opt.glb', '../assets/models/robi_opt.glb', '../assets/models/meta_quest_3_opt.glb'];
-  function warm() { assets.forEach(function (u) { var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l); }); }
-  if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 5000 }); else setTimeout(warm, 3000);
+  var glbs = ['../assets/models/caffeine2_opt.glb', '../assets/models/enzym_opt.glb',
+    '../assets/models/robi_opt.glb', '../assets/models/meta_quest_3_opt.glb'];
+  function warm() {
+    glbs.forEach(function (u) { var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l); });
+    loadModelViewers();
+  }
+  function schedule() { if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 6000 }); else setTimeout(warm, 2000); }
+  if (document.readyState === 'complete') schedule(); else window.addEventListener('load', schedule);
 })();
 </script>
 <!-- GoatCounter analytics (privacy-friendly, no cookies) -->

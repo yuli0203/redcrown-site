@@ -39,8 +39,9 @@ const I18N = {
     "foot.loc":"Haifa, Israel",
     "cta.title":"READY TO BUILD<br>SOMETHING <em>AMAZING?</em>","cta.lead":"Let's collaborate and create the next generation of graphical applications together.","cta.btn":"GET IN TOUCH",
     "form.name":"Name","form.email":"Email","form.company":"Company (optional)",
-    "form.project":"What are you building?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Mobile","form.opt.pc":"PC / Desktop","form.opt.web":"Web","form.opt.unsure":"Not sure yet",
+    "form.project":"What are you building?","form.opt.choose":"Select project type","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Mobile","form.opt.pc":"PC / Desktop","form.opt.web":"Web","form.opt.unsure":"Not sure yet",
     "form.message":"Message","form.send":"Send message",
+    "form.ph.name":"Your name","form.ph.email":"you@company.com","form.ph.company":"Your company","form.ph.message":"Tell us about your project, even a rough idea is a great start.",
     "form.success":"Thanks! I'll get back to you soon.","form.error":"Something went wrong. Please email hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
@@ -84,8 +85,9 @@ const I18N = {
     "foot.loc":"חיפה, ישראל",
     "cta.title":"מוכנים לבנות<br>משהו <em>מדהים?</em>","cta.lead":"בואו נשתף פעולה וניצור יחד את הדור הבא של אפליקציות גרפיות.","cta.btn":"דברו איתנו",
     "form.name":"שם","form.email":"אימייל","form.company":"חברה (אופציונלי)",
-    "form.project":"מה אתם בונים?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.web":"אתרים / ווב","form.opt.unsure":"עדיין לא בטוח",
+    "form.project":"מה אתם בונים?","form.opt.choose":"בחרו סוג פרויקט","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.web":"אתרים / ווב","form.opt.unsure":"עדיין לא בטוח",
     "form.message":"הודעה","form.send":"שליחה",
+    "form.ph.name":"השם שלכם","form.ph.email":"you@company.com","form.ph.company":"החברה שלכם","form.ph.message":"ספרו לנו על הפרויקט, גם רעיון ראשוני הוא התחלה מצוינת.",
     "form.success":"תודה! אחזור אליכם בקרוב.","form.error":"משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
@@ -129,8 +131,9 @@ const I18N = {
     "foot.loc":"Хайфа, Израиль",
     "cta.title":"ГОТОВЫ СОЗДАТЬ<br>ЧТО-ТО <em>ПОТРЯСАЮЩЕЕ?</em>","cta.lead":"Давайте сотрудничать и вместе создадим новое поколение графических приложений.","cta.btn":"СВЯЗАТЬСЯ С НАМИ",
     "form.name":"Имя","form.email":"Email","form.company":"Компания (необязательно)",
-    "form.project":"Что вы создаёте?","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Мобайл","form.opt.pc":"PC / Десктоп","form.opt.web":"Веб","form.opt.unsure":"Пока не уверен",
+    "form.project":"Что вы создаёте?","form.opt.choose":"Выберите тип проекта","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Мобайл","form.opt.pc":"PC / Десктоп","form.opt.web":"Веб","form.opt.unsure":"Пока не уверен",
     "form.message":"Сообщение","form.send":"Отправить",
+    "form.ph.name":"Ваше имя","form.ph.email":"you@company.com","form.ph.company":"Ваша компания","form.ph.message":"Расскажите о проекте, даже черновая идея станет отличным началом.",
     "form.success":"Спасибо! Я скоро свяжусь с вами.","form.error":"Что-то пошло не так. Напишите на hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
   }
@@ -150,6 +153,10 @@ function applyLang(lang, persist){
   document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
     const v = dict[el.getAttribute('data-i18n-aria')];
     if (v != null) el.setAttribute('aria-label', v);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const v = dict[el.getAttribute('data-i18n-placeholder')];
+    if (v != null) el.setAttribute('placeholder', v);
   });
   if (dict['doc.title']) document.title = dict['doc.title'];
   // Show the active language on the toggle; keep only the others in the menu.
