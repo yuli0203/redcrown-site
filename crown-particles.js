@@ -74,13 +74,7 @@
     for (i = 0; i < parts.length; i++) {
       p = parts[i];
       var bob = reduce ? 0 : Math.sin(t * 0.0011 + p.bp) * p.bx;
-      if (pointer && !reduce) {                                      // the cursor stirs nearby jewels (soft swirl)
-        var sx = p.hx + p.ox - mx, sy = p.hy + p.oy - my, sr2 = sx * sx + sy * sy;
-        if (sr2 < SR2) { var sr = Math.sqrt(sr2) || 1, sf = (1 - sr / SR); sf = sf * sf * 0.28;   // soft radial warp away, no swirl
-          p.vx += (sx / sr) * sf; p.vy += (sy / sr) * sf; }
-      }
-      p.vx += -p.ox * p.k; p.vy += -p.oy * p.k; p.vx *= p.dmp; p.vy *= p.dmp; p.ox += p.vx; p.oy += p.vy;  // settle home independently
-      x = p.hx + p.ox + bob * 0.5; y = p.hy + p.oy + bob;
+      x = p.hx + bob * 0.5; y = p.hy + bob;                          // warp removed for now; crown holds still, only the light responds
       g = 0;
       if (pointer) { dx = x - mx; dy = y - my; gd = dx * dx + dy * dy; if (gd < GR2) { g = 1 - Math.sqrt(gd) / GR; g *= g; } }
       var ga = 0;
