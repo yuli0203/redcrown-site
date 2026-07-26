@@ -79,6 +79,9 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 /* RTL (Hebrew): the hero image is mirrored, so flip the hologram to the other side */
 [dir="rtl"] .holo{right:auto;left:39%}
 @media(max-width:900px){[dir="rtl"] .holo{left:77%;right:auto}}
+/* interactive particle crown in the contact CTA */
+.crown-particles{display:block;width:100%;max-width:340px;aspect-ratio:1;margin-top:20px}
+@media(max-width:900px){.crown-particles{max-width:250px;margin:14px auto 0}}
 /* quick win: 44px touch targets for the mobile language control (it's the only nav control on mobile) */
 @media(max-width:900px){.lang-toggle{min-height:44px;padding:11px 13px}.lang-menu button{min-height:44px;padding:12px 16px}}
 .hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
