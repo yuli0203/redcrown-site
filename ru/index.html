@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ru" data-page-lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E080A">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18313532220"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18313532220');
+</script>
+<title>Разработка VR, XR и интерактивного 3D-ПО на Unity | Red Crown Interactive</title>
+<meta name="description" content="Red Crown Interactive разрабатывает интерактивное ПО для науки, инженерии и VR на Meta Quest, мобильных устройствах и ПК, на Unity, от идеи до внедрения.">
+<meta name="author" content="Julia Pavlov">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="../site.css">
+<link rel="canonical" href="https://redcrowninteractive.com/ru/">
+<link rel="alternate" hreflang="en" href="https://redcrowninteractive.com/">
+<link rel="alternate" hreflang="he" href="https://redcrowninteractive.com/he/">
+<link rel="alternate" hreflang="ru" href="https://redcrowninteractive.com/ru/">
+<link rel="alternate" hreflang="x-default" href="https://redcrowninteractive.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Red Crown Interactive">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="he_IL">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:title" content="Red Crown Interactive · Интерактивное ПО для науки, инженерии и VR">
+<meta property="og:description" content="Red Crown Interactive разрабатывает интерактивное ПО для науки, инженерии и VR на Meta Quest, мобильных устройствах и ПК, на Unity, от идеи до внедрения.">
+<meta property="og:url" content="https://redcrowninteractive.com/ru/">
+<meta property="og:image" content="https://redcrowninteractive.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Интерактивное ПО для науки, инженерии и VR">
+<meta name="twitter:description" content="Red Crown Interactive разрабатывает интерактивное ПО для науки, инженерии и VR на Meta Quest, мобильных устройствах и ПК, на Unity.">
+<meta name="twitter:image" content="https://redcrowninteractive.com/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Red Crown Interactive",
+  "url": "https://redcrowninteractive.com/",
+  "logo": "https://redcrowninteractive.com/assets/logo-kit/redcrown-solid.png",
+  "description": "Студия разработки на Unity, создающая интерактивное ПО для науки, инженерии и VR на Meta Quest, мобильных устройствах и ПК.",
+  "email": "hello@redcrowninteractive.com",
+  "telephone": "+972-58-576-0550",
+  "founder": {
+    "@type": "Person",
+    "name": "Julia Pavlov",
+    "jobTitle": "Founder",
+    "sameAs": "https://www.linkedin.com/in/julia-pavlov"
+  },
+  "address": { "@type": "PostalAddress", "addressCountry": "IL" },
+  "sameAs": [
+    "https://www.linkedin.com/company/red-crown-interactive"
+  ],
+  "knowsAbout": ["Virtual Reality","Augmented Reality","Unity Engine","Educational Simulations","Meta Quest Development"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "ru",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Сколько стоит разработка приложения VR или смешанной реальности?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Стоимость зависит от объёма, платформы и сложности контента. Мы начинаем с короткого разговора, чтобы понять ваши задачи, и даём понятную, прозрачную оценку ещё до старта, без сюрпризов."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Сколько времени занимает разработка такого приложения?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Зависит от объёма. Отдельный модуль может выйти за недели, а более крупная система дольше. Мы заранее определяем цели и этапы, чтобы у вас всегда была ясная картина темпа."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Для каких платформ вы разрабатываете?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Мы разрабатываем для Meta Quest 3, iOS и Android, ПК и WebGL, в основном на Unity. Вместе выберем платформу, подходящую вашей аудитории и целям."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Работаете ли вы с университетами и научными институтами?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да. Значительная часть нашей работы для академических и научных учреждений, включая Технион. Нам близки научный и инженерный контент, требования безопасности и многопользовательские классы."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Кто на самом деле создаёт проект?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Проект ведёт и создаёт основатель, старший инженер и дизайнер, от начала до конца, поэтому вы общаетесь напрямую с тем, кто и планирует, и создаёт, без посредников. Для крупных проектов может быть привлечена тщательно отобранная профессиональная команда высокого уровня, работающая под её руководством и контролем, чтобы качество сохранялось на всём пути."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Можно ли начать с малого или только с первоначальной идеи?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Конечно. Даже первоначальная идея это отличное начало. Можно начать с малого, с пилота или прототипа, и уверенно расти дальше."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="#top">
+      <img src="../assets/logo-kit/redcrown-primary-scarlet.svg" alt="Red Crown Interactive logo">
+      <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
+    </a>
+    <ul class="nav-links">
+      <li><a class="on" href="#top" data-i18n="nav.home">Главная</a></li>
+      <li><a href="#services" data-i18n="nav.services">Услуги</a></li>
+      <li><a href="#tech" data-i18n="nav.tech">Технологии</a></li>
+      <li><a href="#work" data-i18n="nav.work">Работы</a></li>
+      <li><a href="#about" data-i18n="nav.about">О нас</a></li>
+      <li><a href="#faq" data-i18n="nav.faq">Вопросы</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Контакты</a></li>
+    </ul>
+    <a class="btn btn-line nav-cta" href="#contact" data-i18n="nav.cta">Получить предложение</a>
+    <div class="lang" role="group" aria-label="Language / שפה / Язык">
+      <button type="button" class="lang-toggle" aria-haspopup="menu" aria-expanded="false" aria-label="Change language">
+        <span class="lang-cur"></span>
+        <svg class="caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="lang-menu" role="menu">
+        <button type="button" data-lang="en" role="menuitem"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3.2"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.6"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="2.2"/></svg>EN</button>
+        <button type="button" data-lang="ru" role="menuitem" lang="ru"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="5.33" width="24" height="5.34" fill="#0039A6"/><rect y="10.67" width="24" height="5.33" fill="#D52B1E"/></svg>RU</button>
+        <button type="button" data-lang="he" role="menuitem" lang="he"><svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect y="2.6" width="24" height="1.8" fill="#0038b8"/><rect y="11.6" width="24" height="1.8" fill="#0038b8"/><path d="M12 5L9.4 9.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/><path d="M12 11L9.4 6.5H14.6Z" fill="none" stroke="#0038b8" stroke-width="1"/></svg>עב</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+
+  <header class="panel hero">
+    <div class="hero-bg" role="img" aria-label="Developer wearing a VR headset in front of the Red Crown mark"></div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-txt rv in">
+      <h1 data-i18n="hero.title"><em>ИНТЕРАКТИВНОЕ ПО</em><br>ДЛЯ НАУКИ И ИНЖЕНЕРИИ</h1>
+      <div class="plat" data-i18n="hero.plat">XR<s>·</s>Мобайл<s>·</s>PC <em>· инженерия, 3D и внедрение под одной крышей</em></div>
+      <p data-i18n="hero.lead">Мы создаём ПО для XR, мобильных устройств и ПК, которое превращает сложную научную и инженерную работу в понятные, интуитивные решения, от идеи до внедрения.</p>
+      <div class="hero-cta">
+        <a class="btn btn-red" href="#contact" data-i18n="hero.ctaPrimary">ПОЛУЧИТЬ ПРЕДЛОЖЕНИЕ</a>
+        <a class="arrow-link" href="#work" data-i18n="hero.ctaSecondary">СМОТРЕТЬ РАБОТЫ &nbsp;→</a>
+      </div>
+    </div>
+    <button class="holo" type="button" aria-label="Interactive 3D hologram — click to change the shape">
+      <canvas class="holo-canvas" aria-hidden="true"></canvas>
+    </button>
+  </header>
+
+  <section class="cards3" id="services">
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3l-2-2h-6l-2 2H4a2 2 0 0 1-2-2z"/><circle cx="8" cy="11.5" r="1.6"/><circle cx="16" cy="11.5" r="1.6"/></svg>
+      <h3 data-i18n="svc.xr.title">XR / VR / AR</h3>
+      <p data-i18n="svc.xr.desc">Симуляции, лаборатории и обучающие сценарии в VR, AR и MR, с управлением руками, жестами и контроллерами, адаптированным под пользователя и рабочую среду. Создано на Meta Quest 3.</p>
+      <a href="#work" data-i18n="svc.xr.link">ПОДРОБНЕЕ О XR →</a>
+    </div>
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M11 18.5h2"/></svg>
+      <h3 data-i18n="svc.mobile.title">МОБАЙЛ</h3>
+      <p data-i18n="svc.mobile.desc">Мобильные приложения и вспомогательные AR-инструменты для полевой работы, для iOS и Android, на основе опыта основателя с коммерческими продуктами, которыми пользовались миллионы.</p>
+      <a href="#work" data-i18n="svc.mobile.link">ПОДРОБНЕЕ О МОБАЙЛ →</a>
+    </div>
+    <div class="panel pcard rv">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.6"/><path d="M9 20.5h6M12 16.5v4"/></svg>
+      <h3 data-i18n="svc.pc.title">PC</h3>
+      <p data-i18n="svc.pc.desc">Сложные интерактивные системы реального времени: исследовательские инструменты, симуляции и производительное 3D-ПО, с научными вычислениями и машинным обучением.</p>
+      <a href="#work" data-i18n="svc.pc.link">ПОДРОБНЕЕ О PC →</a>
+    </div>
+  </section>
+
+  <section class="panel wwd rv" id="tech">
+    <h2 class="sec-k" data-i18n="wwd.kicker">ОТ ИДЕИ ДО ГОТОВОГО ПРОДУКТА</h2>
+    <div class="wwd-grid">
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.6 10.8c-.7.55-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.65-1.1-2.2A6 6 0 0 1 12 3z"/></svg><h4 data-i18n="wwd.1.title">КОНЦЕПЦИЯ И ДИЗАЙН</h4><p data-i18n="wwd.1.desc">От идей до убедительных концепций и визуального повествования.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.06-.4.1-.8.1-1.2z"/></svg><h4 data-i18n="wwd.2.title">РАЗРАБОТКА</h4><p data-i18n="wwd.2.desc">Разработка от начала до конца, стабильная и модульная, которую легко расширять без переделки с нуля.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l2 5 5 .7-3.7 3.5.9 5.1L12 15l-4.2 2.3.9-5.1L5 8.7 10 8z"/></svg><h4 data-i18n="wwd.3.title">3D-ГРАФИКА И АНИМАЦИЯ</h4><p data-i18n="wwd.3.desc">Высококачественные 3D-объекты, анимации и эффекты, оживляющие миры.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><h4 data-i18n="wwd.4.title">ОПТИМИЗАЦИЯ</h4><p data-i18n="wwd.4.desc">Подход, ориентированный на производительность, для плавной работы на всех платформах.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h4 data-i18n="wwd.5.title">ПОДДЕРЖКА И СОПРОВОЖДЕНИЕ</h4><p data-i18n="wwd.5.desc">Постоянная поддержка и обновления в реальном времени для развития вашего приложения.</p></div>
+    </div>
+    <div class="about-tech">
+      <h2 class="sec-k tech-head" data-i18n="tech.k">Технологии</h2>
+      <div class="tech-cols">
+        <div class="tech-col">
+          <span class="tech-sub" data-i18n="tech.cap1">Разработка в реальном времени</span>
+          <div class="tech-row">
+            <img class="tech-ico" src="../assets/Tech/unity.svg" alt="Unity" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/csharp.svg" alt="C#" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/cplusplus.svg" alt="C++" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/unrealengine.svg" alt="Unreal Engine" loading="lazy">
+          </div>
+        </div>
+        <div class="tech-col">
+          <span class="tech-sub" data-i18n="tech.cap2">Научные вычисления</span>
+          <div class="tech-row">
+            <img class="tech-ico" src="../assets/Tech/python.svg" alt="Python" loading="lazy">
+          </div>
+        </div>
+        <div class="tech-col">
+          <span class="tech-sub" data-i18n="tech.cap3">Платформы</span>
+          <div class="tech-row">
+            <img class="tech-ico" src="../assets/Tech/oculus.svg" alt="Meta Quest" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/ios.svg" alt="iOS" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/android.svg" alt="Android" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/webgl.svg" alt="WebGL" loading="lazy">
+          </div>
+        </div>
+        <div class="tech-col">
+          <span class="tech-sub" data-i18n="tech.cap4">Визуальное производство</span>
+          <div class="tech-row">
+            <img class="tech-ico" src="../assets/Tech/blender.svg" alt="Blender" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/autodeskmaya.svg" alt="Autodesk Maya" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/adobephotoshop.svg" alt="Photoshop" loading="lazy">
+            <img class="tech-ico" src="../assets/Tech/figma.svg" alt="Figma" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <h2 class="sec-k rv" data-i18n="work.head">ИЗБРАННЫЕ РАБОТЫ</h2>
+    <p class="work-sub rv" data-i18n="work.sub">Проекты под руководством основателя, от идеи до внедрения под ключ.</p>
+    <div class="w2-grid">
+      <div class="lcell rv">
+        <div class="lcap"><span class="l-title" data-i18n="work.cat.vr">Виртуальная реальность</span><span class="l-en">VR</span></div>
+        <button type="button" class="lcard" data-project="vr" aria-expanded="false" aria-controls="wd-vr">
+          <img class="lart" src="../assets/lioness/vr.png" alt="Virtual Reality projects" loading="lazy">
+          <span class="l-cta"><span data-i18n="work.viewcta">Открыть пример проекта</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+      <div class="lcell rv">
+        <div class="lcap"><span class="l-title" data-i18n="work.cat.mr">Смешанная реальность</span><span class="l-en">AR / MR</span></div>
+        <button type="button" class="lcard" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
+          <img class="lart" src="../assets/lioness/ar.png" alt="Mixed Reality projects" loading="lazy">
+          <span class="l-cta"><span data-i18n="work.viewcta">Открыть пример проекта</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+      <div class="lcell rv">
+        <div class="lcap"><span class="l-title" data-i18n="work.cat.pc">Приложение для ПК</span><span class="l-en">PC</span></div>
+        <button type="button" class="lcard" data-project="ml" aria-expanded="false" aria-controls="wd-ml">
+          <img class="lart" src="../assets/lioness/pc.png" alt="PC application projects" loading="lazy">
+          <span class="l-cta"><span data-i18n="work.viewcta">Открыть пример проекта</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+      <div class="lcell rv">
+        <div class="lcap"><span class="l-title" data-i18n="work.cat.hw">Настройка оборудования</span><span class="l-en">HARDWARE</span></div>
+        <button type="button" class="lcard" data-project="class" aria-expanded="false" aria-controls="wd-class">
+          <img class="lart" src="../assets/lioness/hw.png" alt="Hardware setup projects" loading="lazy">
+          <span class="l-cta"><span data-i18n="work.viewcta">Открыть пример проекта</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="wdetail" id="wd-ar" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Закрыть описание проекта">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">Пример проекта</span><h4 data-i18n="work.ar.title">Учебная модель ферментативной лаборатории</h4>
+      <div class="wd-sub" data-i18n="work.ar.sub">Дополненная реальность | Отслеживание рук | Виртуальный инструктор</div>
+      <div class="wd-chips"><i>Hand Tracking</i><i>Virtual Instructor</i><i>3D</i></div>
+      <div class="wd-metric" data-i18n="work.ar.metric">Управление руками без контроллеров</div>
+      <div class="wd-media"><img class="wd-shot" src="../assets/work-ar-enzymatic.jpg" alt="Enzymatic lab AR project" loading="lazy"><div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="../assets/models/enzym_opt.glb" alt="Interactive 3D enzymatic lab model built for Meta Quest — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="14deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.5" shadow-softness="0.9" field-of-view="30deg" min-field-of-view="10deg" max-field-of-view="45deg" camera-orbit="0deg 75deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Meta Quest 3 · AR</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div></div>
+      <div class="wd-model-hint">A 3D model we built in-house for our Meta Quest 3 lab · drag to rotate · zoom in to see inside</div>
+      <div class="wd-body" data-i18n="work.ar.body"><p><b>Задача.</b> В лаборатории биохимии студенты проводят эксперимент с реактором ферментов, но никогда не видят молекулярный мир, стоящий за ним. Фермент остаётся невидимым, хиральность преподаётся по плоским схемам, а показания поляриметра меняются без ясной причины. Всё остаётся абстрактным.</p><p><b>Решение.</b> Мы создали обучающий модуль дополненной реальности для Meta Quest 3, который помещает молекулярный мир прямо на реальный стол студента, без контроллеров и без предварительного опыта. Роби, дружелюбный двуязычный робот-инструктор, сопровождает студентов, пока они сравнивают молекулы руками, вращают фермент, наблюдают реакцию шаг за шагом и даже стреляют поляризованным светом по молекулам, чтобы увидеть, как структура влияет на результат.</p><p><b>Результат.</b> То, что было невидимым за лабораторным столом, становится осязаемым, каждое понятие строится через действие и выбор и напрямую связывается с данными, которые измеряют студенты. Преподаватель управляет темпом в реальном времени и получает мгновенную обратную связь о понимании. Создано и используется на факультете химической инженерии им. Вольфсона, Технион.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-vr" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Закрыть описание проекта">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">Пример проекта</span><h4 data-i18n="work.vr.title">Иммерсивный VR-эксперимент по фугитивности</h4>
+      <div class="wd-sub" data-i18n="work.vr.sub">Виртуальная реальность | Жесты рук | Контроллеры</div>
+      <div class="wd-chips"><i>Meta Quest 3</i><i>Unity</i><i>Simulation</i></div>
+      <div class="wd-metric" data-i18n="work.vr.metric">Управляемый опыт около часа</div>
+      <div class="wd-media"><img class="wd-shot" src="../assets/work-vr-fugacity.jpg" alt="Fugacity VR experiment" loading="lazy"><div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="../assets/models/robi_opt.glb" alt="Robi, our in-house VR instructor — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" autoplay interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="28deg" min-field-of-view="10deg" max-field-of-view="42deg" camera-orbit="15deg 82deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Robi · our VR instructor</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div></div>
+      <div class="wd-model-hint">Robi, the in-house VR instructor that guides students through the experiment · drag to rotate</div>
+      <div class="wd-body" data-i18n="work.vr.body"><p><b>Задача.</b> Как преподать абстрактное термодинамическое понятие, такое как фугитивность, целому классу одновременно, последовательно и безопасно, чтобы у каждого студента был одинаковый опыт?</p><p><b>Решение.</b> Часовой эксперимент в виртуальной реальности, где студенты сами управляют лабораторным оборудованием, нагревают вещество, двигают поршень, открывают клапаны и считывают давление под руководством виртуального инструктора. До 12 устройств одновременно, каждое связано с планшетом преподавателя.</p><p><b>Результат.</b> Весь класс проходит один и тот же точный и безопасный опыт вместе, преподаватели видят, где находится каждая группа, и собирают данные занятия, а абстрактное понятие превращается в осязаемый, управляемый эксперимент. Используется в курсе «Термодинамика Б» в Технионе.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-ml" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Закрыть описание проекта">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">Пример проекта</span><h4 data-i18n="work.ml.title">Научный инструмент молекулярных исследований с машинным обучением</h4>
+      <div class="wd-sub" data-i18n="work.ml.sub">PC | Машинное обучение | Сервер Python</div>
+      <div class="wd-chips"><i>Python</i><i>Machine Learning</i><i>Real-time 3D</i></div>
+      <div class="wd-metric" data-i18n="work.ml.metric">Научные расчёты в реальном времени</div>
+      <div class="wd-media"><img class="wd-shot" src="../assets/work-ml-livemol.jpg" alt="LiveMol research tool" loading="lazy"><div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="../assets/models/caffeine2_opt.glb" alt="Interactive 3D molecule built in LiveMol — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="0.45" shadow-intensity="0.5" shadow-softness="0.9" field-of-view="32deg" min-field-of-view="12deg" max-field-of-view="46deg" camera-orbit="0deg 75deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Built in LiveMol</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div></div>
+      <div class="wd-model-hint">An actual 3D model generated by our LiveMol app · drag to rotate · use the slider to zoom</div>
+      <div class="wd-body" data-i18n="work.ml.body"><p><b>Задача.</b> Исследователям нужно было создавать и изменять молекулярные структуры и сразу видеть результат, вместо того чтобы ждать по одному расчёту за раз и гадать, что изменится.</p><p><b>Решение.</b> Мы создали интерактивный 3D-инструмент, в котором исследователь строит и редактирует молекулу, а модель машинного обучения быстро выполняет для неё научный расчёт и возвращает результат на модель перед ним, не выходя из процесса.</p><p><b>Результат.</b> Исследование становится быстрым, наглядным и интуитивным, а модель машинного обучения позволяет выполнять расчёты намного быстрее традиционного подхода. Создано для факультета химической инженерии им. Вольфсона в Технионе.</p></div>
+    </div>
+
+    <div class="wdetail" id="wd-class" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Закрыть описание проекта">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">Пример проекта</span><h4 data-i18n="work.class.title">Физический VR-класс на Meta Quest</h4>
+      <div class="wd-sub" data-i18n="work.class.sub">Многопользовательский VR | Meta Quest 3 | Мониторинг</div>
+      <div class="wd-chips"><i>Setup</i><i>Infrastructure</i><i>Management</i></div>
+      <div class="wd-metric" data-i18n="work.class.metric">До 12 гарнитур одновременно</div>
+      <div class="wd-media"><img class="wd-shot" src="../assets/work-class-setup.jpg" alt="Meta Quest classroom setup" loading="lazy"><div class="wd-model-wrap">
+        <model-viewer class="wd-model" src="../assets/models/meta_quest_3_opt.glb" alt="Meta Quest 3 headset — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="30deg" min-field-of-view="10deg" max-field-of-view="45deg" camera-orbit="25deg 78deg auto" loading="lazy"></model-viewer>
+        <span class="wd-model-badge">◆ Meta Quest 3</span>
+        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
+        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
+      </div></div>
+      <div class="wd-model-hint">The headset our classroom runs on · drag to rotate · use the slider to zoom<br><span class="wd-credit"><a href="https://sketchfab.com/3d-models/meta-quest-3-65a813833dc04eeeb7d33bdca58c184c" target="_blank" rel="noopener noreferrer">“Meta Quest 3” by Elin</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></span></div>
+      <div class="wd-body" data-i18n="work.class.body"><p><b>Задача.</b> Технион хотел класс, который надёжно запускает иммерсивную виртуальную реальность сразу для многих групп, без того чтобы персонал терял каждый урок на технические неполадки.</p><p><b>Решение.</b> Мы организовали класс от начала до конца: от выбора оборудования и планировки пространства до установки, тестирования и рабочих процессов преподавателей. До 12 гарнитур Meta Quest 3, каждая со своим планшетом.</p><p><b>Результат.</b> Класс, который просто работает, где преподаватели следят за каждой группой, помогают студентам и собирают данные на каждом занятии. Технология остаётся на заднем плане, а преподавание в центре внимания.</p></div>
+    </div>
+  </section>
+
+  <section class="panel about rv" id="about">
+    <h2 class="sec-k" data-i18n="about.kicker">О НАС</h2>
+    <div class="about-in">
+      <div class="founder-card">
+        <button type="button" class="founder-flip" aria-pressed="false" aria-label="Flip the founder card">
+          <span class="flip-inner">
+            <span class="flip-face flip-front">
+              <picture><source srcset="../assets/founder-portrait.webp" type="image/webp"><img class="founder-portrait" src="../assets/founder-portrait.jpg" alt="Julia Pavlov, Founder and Lead Engineer" width="800" height="1000" loading="lazy"></picture>
+            </span>
+            <span class="flip-face flip-back" aria-hidden="true">
+              <picture><source srcset="../assets/founder-flip.webp" type="image/webp"><img class="founder-portrait founder-portrait-alt" src="../assets/founder-flip.jpg" alt="Julia Pavlov as a voxel Software Architect character card" width="900" height="1125" loading="lazy"></picture>
+            </span>
+            <span class="flip-hint" aria-hidden="true">⟳</span>
+          </span>
+        </button>
+        <b class="founder-name">Julia Pavlov</b>
+        <span class="founder-role" data-i18n="about.role">Основатель и ведущий инженер</span>
+        <span class="founder-edu" data-i18n="about.edu">MBA, Тель-Авивский университет · B.Sc, программная инженерия, Технион</span>
+        <a class="founder-li" href="https://www.linkedin.com/in/julia-pavlov" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2 2 0 1 1-.02 4 2 2 0 0 1 .02-4zM3 8.98h4V21H3zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.06 3.76-2.06 4.02 0 4.76 2.65 4.76 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+      <div class="about-lead">
+        <h3 data-i18n="about.h">Десять лет разработки 3D в реальном времени</h3>
+        <p data-i18n="about.p">Red Crown Interactive это студия разработки под руководством Юлии Павловой, инженера-программиста, специализирующегося на 3D реального времени, с более чем десятилетним опытом в XR, медицинских технологиях, играх и обороне. В зависимости от задач проекта студия собирает и ведёт команды разработки, 3D и дизайна, так что каждый проект создаётся как единое целое, от кода до визуала. Мы строим системы, где точность, стабильность и производительность важны не меньше, чем впечатление.</p>
+        <div class="about-xp">
+          <span class="about-xp-k" data-i18n="about.xpk">Опыт основателя</span>
+          <div class="logo-row">
+            <span class="xp-item"><span class="xp-logo-box"><img class="xp-logo" src="../assets/Companies/technion_w.png" alt="Technion" loading="lazy"></span><span class="xp-name">Technion</span></span>
+            <span class="xp-item"><span class="xp-logo-box"><img class="xp-logo" src="../assets/Companies/philips_w.png" alt="Philips" loading="lazy"></span><span class="xp-name">Philips</span></span>
+            <span class="xp-item"><span class="xp-logo-box"><img class="xp-logo" src="../assets/Companies/playtika_w.png" alt="Playtika" loading="lazy"></span><span class="xp-name">Playtika</span></span>
+            <span class="xp-item"><span class="xp-logo-box"><img class="xp-logo" src="../assets/Companies/israelnavy_w.png" alt="Israeli Navy" loading="lazy"></span><span class="xp-name">Israeli Navy</span></span>
+            <span class="xp-item"><span class="xp-logo-box"><img class="xp-logo" src="../assets/Companies/tel_aviv_university_w.png" alt="Tel Aviv University" loading="lazy"></span><span class="xp-name">Tel Aviv University</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel faq rv" id="faq">
+    <h2 class="sec-k" data-i18n="faq.head">ВОПРОСЫ И ОТВЕТЫ</h2>
+    <div class="faq-list">
+      <details class="faq-item"><summary data-i18n="faq.q1">Сколько стоит разработка приложения VR или смешанной реальности?</summary><p data-i18n="faq.a1">Стоимость зависит от объёма, платформы и сложности контента. Мы начинаем с короткого разговора, чтобы понять ваши задачи, и даём понятную, прозрачную оценку ещё до старта, без сюрпризов.</p></details>
+      <details class="faq-item"><summary data-i18n="faq.q2">Сколько времени занимает разработка такого приложения?</summary><p data-i18n="faq.a2">Зависит от объёма. Отдельный модуль может выйти за недели, а более крупная система дольше. Мы заранее определяем цели и этапы, чтобы у вас всегда была ясная картина темпа.</p></details>
+      <details class="faq-item"><summary data-i18n="faq.q3">Для каких платформ вы разрабатываете?</summary><p data-i18n="faq.a3">Мы разрабатываем для Meta Quest 3, iOS и Android, ПК и WebGL, в основном на Unity. Вместе выберем платформу, подходящую вашей аудитории и целям.</p></details>
+      <details class="faq-item"><summary data-i18n="faq.q4">Работаете ли вы с университетами и научными институтами?</summary><p data-i18n="faq.a4">Да. Значительная часть нашей работы для академических и научных учреждений, включая Технион. Нам близки научный и инженерный контент, требования безопасности и многопользовательские классы.</p></details>
+      <details class="faq-item"><summary data-i18n="faq.q5">Кто на самом деле создаёт проект?</summary><p data-i18n="faq.a5">Проект ведёт и создаёт основатель, старший инженер и дизайнер, от начала до конца, поэтому вы общаетесь напрямую с тем, кто и планирует, и создаёт, без посредников. Для крупных проектов может быть привлечена тщательно отобранная профессиональная команда высокого уровня, работающая под её руководством и контролем, чтобы качество сохранялось на всём пути.</p></details>
+      <details class="faq-item"><summary data-i18n="faq.q6">Можно ли начать с малого или только с первоначальной идеи?</summary><p data-i18n="faq.a6">Конечно. Даже первоначальная идея это отличное начало. Можно начать с малого, с пилота или прототипа, и уверенно расти дальше.</p></details>
+    </div>
+  </section>
+
+  <section class="panel contact rv" id="contact">
+    <div class="contact-grid">
+      <div class="contact-intro">
+        <h2 data-i18n="cta.title">ЕСТЬ СЛОЖНАЯ ИДЕЯ?<br><em>ДАВАЙТЕ ВОПЛОТИМ ЕЁ.</em></h2>
+        <p data-i18n="cta.lead">Расскажите, что вы хотите создать, даже если это пока черновая идея. Вы будете общаться напрямую с тем, кто её и создаёт, и обычно мы отвечаем в течение одного рабочего дня.</p>
+        <canvas class="crown-particles" aria-hidden="true"></canvas>
+      </div>
+      <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="35f8e692-deb5-4865-86a3-7a4be79eb90b">
+        <input type="hidden" name="subject" value="New inquiry — redcrowninteractive.com">
+        <input type="hidden" name="from_name" value="Red Crown Interactive website">
+        <input type="hidden" name="redirect" value="https://redcrowninteractive.com/?sent=1">
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="field"><span data-i18n="form.name">Имя</span><input type="text" name="name" autocomplete="name" placeholder="Ваше имя" data-i18n-placeholder="form.ph.name" required></label>
+        <label class="field"><span data-i18n="form.email">Email</span><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@company.com" data-i18n-placeholder="form.ph.email" required></label>
+        <label class="field"><span data-i18n="form.company">Компания (необязательно)</span><input type="text" name="company" autocomplete="organization" placeholder="Ваша компания" data-i18n-placeholder="form.ph.company"></label>
+        <label class="field"><span data-i18n="form.project">Что вы создаёте?</span>
+          <select name="project">
+            <option value="" data-i18n="form.opt.choose" selected disabled hidden>Выберите тип проекта</option>
+            <option value="XR" data-i18n="form.opt.xr">XR / VR / AR</option>
+            <option value="Mobile" data-i18n="form.opt.mobile">Мобайл</option>
+            <option value="PC" data-i18n="form.opt.pc">PC / Десктоп</option>
+            <option value="Web" data-i18n="form.opt.web">Веб</option>
+            <option value="Not sure" data-i18n="form.opt.unsure">Пока не уверен</option>
+          </select>
+        </label>
+        <label class="field"><span data-i18n="form.message">Сообщение</span><textarea name="message" rows="4" placeholder="Расскажите о проекте, даже черновая идея станет отличным началом." data-i18n-placeholder="form.ph.message" required></textarea></label>
+        <button type="submit" class="btn btn-red" data-i18n="form.send">Отправить</button>
+        <p class="form-msg form-ok" data-i18n="form.success" hidden>Спасибо! Я скоро свяжусь с вами.</p>
+        <p class="form-msg form-err" data-i18n="form.error" hidden>Что-то пошло не так. Напишите на hello@redcrowninteractive.com.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <a class="logo" href="#top">
+        <img src="../assets/logo-kit/redcrown-primary-scarlet.svg" alt="Red Crown Interactive logo">
+        <span><b>RED CROWN</b><i>INTERACTIVE</i></span>
+      </a>
+      <div class="foot-right">
+        <div class="contact">
+          <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="foot.loc">Хайфа, Израиль</span></span>
+          <span><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></span>
+          <span dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:+972585760550">+972-58-576-0550</a></span>
+          <span dir="ltr"><svg class="icon icon-wa" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5z"/><path d="M9.2 8.8c-.3 3.1 2.9 6.3 6 6l.6-1.6-2-1.2-.9.7c-.7-.4-1.2-.9-1.6-1.6l.7-.9-1.2-2z"/></svg><a href="https://wa.me/972585760550?text=Hi%21%20I%27m%20interested%20in%20app%20development%20services" target="_blank" rel="noopener">WhatsApp</a></span>
+        </div>
+        <div class="socials">
+          <a href="https://www.linkedin.com/company/red-crown-interactive" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="copy" data-i18n="foot.copy">© 2026 Red Crown Interactive. Все права защищены.</div>
+  </footer>
+
+</div>
+
+<a class="wa-float" href="https://wa.me/972585760550?text=Hi%21%20I%27m%20interested%20in%20app%20development%20services" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5z"/><path d="M9.2 8.8c-.3 3.1 2.9 6.3 6 6l.6-1.6-2-1.2-.9.7c-.7-.4-1.2-.9-1.6-1.6l.7-.9-1.2-2z"/></svg></a>
+
+<script src="../lenis.min.js"></script>
+<script src="../site.js"></script>
+<script src="../hero-gl.js" defer></script>
+<script src="../holo.js" defer></script>
+<script src="../crown-particles.js" defer></script>
+<script>
+/* load the self-hosted model-viewer library only when the LiveMol card is opened (keeps initial load light) */
+function robiEyes(mv) {   // replicate the Unity instructor eyes: cyan glow + gentle pulse, blink, occasional expression
+  if (!mv.model || !mv.model.materials) return;
+  var eyes = mv.model.materials.filter(function (m) { return m.name && m.name.indexOf('EYE_') === 0; });
+  if (!eyes.length || mv.__eyes) return; mv.__eyes = 1;
+  // faithful to the Unity InstructorViewModel: rest = palette[0]; each speech "beat" advances to the next
+  // palette colour, then Color.Lerp back at smoothingSpeed 5. Brighter palette entries = the talking flash.
+  var PAL = [[0, 0.5714, 0.8050], [0, 0.8481, 1.0], [0, 1.0, 0.9451]];  // exact prefab colorPalette
+  var disp = PAL[0].slice(), idx = 0, last = performance.now();
+  var talking = true, phaseEnd = last + 2000, beatT = 0;               // talking bursts <-> quiet pauses
+  var nextBlink = last + 1800, blinkStart = -1, pendingDouble = false; // eased blinks, occasional doubles
+  function ease(t) { return t * t * (3 - 2 * t); }
+  (function frame(now) {
+    var dt = Math.min((now - last) / 1000, 0.05); last = now;
+    if (now > phaseEnd) { talking = !talking; phaseEnd = now + (talking ? 1400 + Math.random() * 2000 : 900 + Math.random() * 1800); }
+    var target;
+    if (talking) {                                                     // relaxed beat ~0.34-0.66s advances the colour
+      beatT -= dt * 1000;
+      if (beatT <= 0) { idx = (idx + 1) % PAL.length; beatT = 340 + Math.random() * 320; }
+      target = PAL[idx];
+    } else { idx = 0; target = PAL[0]; }
+    var k = Math.min(dt * 3, 1);                                       // gentler smoothing (softer transitions)
+    disp[0] += (target[0] - disp[0]) * k; disp[1] += (target[1] - disp[1]) * k; disp[2] += (target[2] - disp[2]) * k;
+    var blinkMul = 1;                                                  // natural eased blink (close then open)
+    if (blinkStart < 0 && now >= nextBlink) blinkStart = now;
+    if (blinkStart >= 0) {
+      var bt = (now - blinkStart) / 150;
+      if (bt >= 1) {
+        blinkStart = -1;
+        if (pendingDouble) { pendingDouble = false; nextBlink = now + 2600 + Math.random() * 3600; }
+        else if (Math.random() < 0.28) { pendingDouble = true; nextBlink = now + 110; }
+        else nextBlink = now + 2600 + Math.random() * 3600;
+      } else { blinkMul = 1 - 0.95 * (bt < 0.5 ? ease(bt / 0.5) : ease((1 - bt) / 0.5)); }
+    }
+    eyes.forEach(function (m) {
+      var p = m.pbrMetallicRoughness;
+      if (p && p.setBaseColorFactor) p.setBaseColorFactor([disp[0] * blinkMul, disp[1] * blinkMul, disp[2] * blinkMul, 1]);
+    });
+    requestAnimationFrame(frame);
+  })(last);
+}
+function applyModelZoom(wrap) {
+  var mv = wrap.querySelector('model-viewer'), sl = wrap.querySelector('.wd-zoom');
+  if (!mv || !sl) return;
+  var z = +sl.value;
+  var mn = parseFloat(mv.getAttribute('min-field-of-view')) || 12, mx = parseFloat(mv.getAttribute('max-field-of-view')) || 46;
+  mv.fieldOfView = (mx - (z / 100) * (mx - mn)).toFixed(1) + 'deg';           // slider -> zoom
+  var t = z / 100, mats = mv.model && mv.model.materials;                     // translucent surfaces: opaque when out, authored alpha when in
+  if (mats) for (var i = 0; i < mats.length; i++) { try {
+    var m = mats[i], bc = m.pbrMetallicRoughness.baseColorFactor;
+    if (m.__baseA === undefined) m.__baseA = bc[3];
+    if (m.__baseA < 0.999) { var OUT = 0.9; m.pbrMetallicRoughness.setBaseColorFactor([bc[0], bc[1], bc[2], OUT - t * (OUT - m.__baseA)]); }
+  } catch (_) {} }
+}
+function loadModelViewers() {
+  if (window.__mvLoaded) return; window.__mvLoaded = 1;
+  var s = document.createElement('script'); s.type = 'module'; s.src = '../vendor/model-viewer.min.js'; document.head.appendChild(s);
+  if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
+    document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
+      var w = mv.closest('.wd-model-wrap'), go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
+      try { mv.loading = 'eager'; } catch (_) {}      // fetch the model in the background before it's opened
+      if (mv.loaded) go(); else mv.addEventListener('load', go);
+    });
+  });
+}
+document.addEventListener('click', function (e) {
+  var c = e.target.closest && e.target.closest('.wcard[data-project="ml"], .wcard[data-project="ar"], .wcard[data-project="vr"], .wcard[data-project="class"]');
+  if (c) loadModelViewers();
+}, true);
+document.addEventListener('input', function (e) {
+  if (e.target && e.target.classList && e.target.classList.contains('wd-zoom')) { var w = e.target.closest('.wd-model-wrap'); if (w) applyModelZoom(w); }
+}, true);
+/* Once the page itself has finished loading, quietly warm the 3D stack during idle time so a work
+   card opens instantly. Never blocks first paint (waits for load + requestIdleCallback), and is
+   skipped on data-saver / slow links so weak phones on cellular don't pay for it before they ask. */
+(function () {
+  var c = navigator.connection || {};
+  if (c.saveData) return;
+  if (c.effectiveType && /2g|slow-2g|3g/.test(c.effectiveType)) return;
+  var glbs = ['../assets/models/caffeine2_opt.glb', '../assets/models/enzym_opt.glb',
+    '../assets/models/robi_opt.glb', '../assets/models/meta_quest_3_opt.glb'];
+  function warm() {
+    glbs.forEach(function (u) { var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l); });
+    loadModelViewers();                                // define the library ahead of the first click
+  }
+  function schedule() { if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 6000 }); else setTimeout(warm, 2000); }
+  if (document.readyState === 'complete') schedule(); else window.addEventListener('load', schedule);
+})();
+</script>
+<!-- GoatCounter analytics (privacy-friendly, no cookies) -->
+<script data-goatcounter="https://redcrown.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+<script>
+(function(){
+  function showAll(){var els=document.querySelectorAll('.rv');for(var i=0;i<els.length;i++)els[i].classList.add('in');}
+  try{
+    if(!('IntersectionObserver' in window) || (window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){showAll();return;}
+    var ioFired=false;
+    var io=new IntersectionObserver(function(es){ioFired=true;for(var i=0;i<es.length;i++){if(es[i].isIntersecting){es[i].target.classList.add('in');io.unobserve(es[i].target);}}},{threshold:.12});
+    var els=document.querySelectorAll('.rv');for(var j=0;j<els.length;j++)io.observe(els[j]);
+    // safety net: if the observer never fires (present but broken on a device), reveal everything so content is never stuck invisible
+    setTimeout(function(){if(!ioFired)showAll();},1500);
+  }catch(e){showAll();}
+})();
+</script>
+</body>
+</html>

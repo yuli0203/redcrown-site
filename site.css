@@ -117,6 +117,9 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 .hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
 .hero-txt{position:relative;z-index:2;padding:64px 48px;max-width:600px}
 .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.55rem,8.5vw,3.6rem);line-height:1.06;letter-spacing:.02em}
+/* Russian sets the headline as single unbreakable words ("ИНТЕРАКТИВНОЕ"), which
+   clip on a 320px screen at the shared size. Only the size drops; wording holds. */
+html[lang="ru"] .hero h1{font-size:clamp(1.35rem,7vw,3.6rem)}
 .hero h1 em{font-style:normal;color:var(--hot)}
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
 .hero .plat s{text-decoration:none;color:var(--hot);padding:0 .4em}

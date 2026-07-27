@@ -6,17 +6,18 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E080A">
 <script>
-/* Send Hebrew-preferring visitors to /he/ BEFORE the body paints, so they never see the English hero flash. */
+/* Send visitors to their language's own URL BEFORE the body paints, so they never see the English hero flash. */
 (function(){try{
-  if(document.documentElement.getAttribute('data-page-lang')==='he')return;
+  if(document.documentElement.getAttribute('data-page-lang')!=='en')return;
   if(!/^https?:$/.test(location.protocol))return;
-  function go(){location.replace('/he/'+location.search+location.hash);}
+  var HOME={he:'/he/',ru:'/ru/'};
+  function go(l){ if(HOME[l]) location.replace(HOME[l]+location.search+location.hash); }
   var q=new URLSearchParams(location.search).get('lang');
-  if(q){ if(q==='he')go(); return; }
+  if(q){ go(q); return; }
   var s=null; try{s=localStorage.getItem('rc_lang');}catch(e){}
-  if(s){ if(s==='he')go(); return; }
+  if(s){ go(s); return; }
   var list=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||'en'];
-  for(var i=0;i<list.length;i++){var c=(list[i]||'').slice(0,2).toLowerCase(); if(c==='he'){go();return;} if(c==='en'||c==='ru')return;}
+  for(var i=0;i<list.length;i++){var c=(list[i]||'').slice(0,2).toLowerCase(); if(HOME[c]){go(c);return;} if(c==='en')return;}
 }catch(e){}})();
 </script>
 <!-- Google tag (gtag.js) -->
@@ -38,11 +39,13 @@
 <link rel="canonical" href="https://redcrowninteractive.com/">
 <link rel="alternate" hreflang="en" href="https://redcrowninteractive.com/">
 <link rel="alternate" hreflang="he" href="https://redcrowninteractive.com/he/">
+<link rel="alternate" hreflang="ru" href="https://redcrowninteractive.com/ru/">
 <link rel="alternate" hreflang="x-default" href="https://redcrowninteractive.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Red Crown Interactive">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="he_IL">
+<meta property="og:locale:alternate" content="ru_RU">
 <meta property="og:title" content="Red Crown Interactive · Interactive Software for Science, Engineering &amp; VR">
 <meta property="og:description" content="Red Crown Interactive builds interactive software for science, engineering, and VR, on Meta Quest, mobile, and desktop, in Unity, from concept to real-world deployment.">
 <meta property="og:url" content="https://redcrowninteractive.com/">

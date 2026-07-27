@@ -38,6 +38,7 @@ MATRIX = [
     ("Pixel 7",     "chromium", "Pixel 7",    "/"),      # 412px
     ("iPad Mini",   "webkit",   "iPad Mini",  "/"),      # 768px
     ("iPhone SE HE","webkit",   "iPhone SE",  "/he/"),   # Hebrew RTL
+    ("iPhone SE RU","webkit",   "iPhone SE",  "/ru/"),   # Russian (longest words)
 ]
 
 AUTOSCROLL = """async () => {

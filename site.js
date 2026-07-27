@@ -175,6 +175,9 @@ const I18N = {
 const RTL = new Set(['he']);
 const rm = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 const PAGE_LANG = document.documentElement.getAttribute('data-page-lang') || 'en';
+// Every language owns a crawlable URL. Search engines index one language per
+// URL, so a language that only exists as a JS state on "/" is invisible to them.
+const LANG_HOME = { en: '/', he: '/he/', ru: '/ru/' };
 
 function applyLang(lang, persist){
   const dict = I18N[lang] || I18N.en;
@@ -224,15 +227,17 @@ langToggle.addEventListener('click', e=>{
 document.querySelectorAll('.lang-menu button').forEach(b=>{
   b.addEventListener('click', ()=>{
     const l = b.dataset.lang;
-    // Cross-page language switches navigate to the language's own URL so the
-    // canonical Hebrew/English pages own their traffic; same-context stays JS.
-    // preserve query string (gclid etc.) across language navigation
-    if (l === 'he' && PAGE_LANG !== 'he'){ try{localStorage.setItem('rc_lang','he');}catch(e){} location.href = '/he/' + location.search + location.hash; return; }
-    if (l !== 'he' && PAGE_LANG === 'he'){
+    // Picking a language is a navigation to that language's own URL, so the page
+    // the visitor lands on is the one search engines index and they can share.
+    // The query string (gclid etc.) and hash ride along.
+    if (l !== PAGE_LANG && LANG_HOME[l]){
       try{localStorage.setItem('rc_lang',l);}catch(e){}
       const p = new URLSearchParams(location.search);
-      p.set('lang', l); // keep an explicit ?lang (incl. en) so the English page can't auto-redirect back to /he/ when storage is blocked
-      location.href = '/?' + p.toString() + location.hash;
+      // an explicit ?lang=en survives blocked storage, so "/" can't bounce the
+      // visitor straight back to the language they just switched away from
+      if (l === 'en') p.set('lang', l);
+      const qs = p.toString();
+      location.href = LANG_HOME[l] + (qs ? '?' + qs : '') + location.hash;
       return;
     }
     applyLang(l, true); closeLang();
@@ -241,19 +246,20 @@ document.querySelectorAll('.lang-menu button').forEach(b=>{
 document.addEventListener('click', e=>{ if(!langWrap.contains(e.target)) closeLang(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLang(); });
 
-// This page's own language is fixed by its URL. The Hebrew page always renders
-// Hebrew; the English page honours ?lang, a saved choice, then device language,
-// and sends Hebrew-preferring visitors to the canonical /he/ URL.
-if (PAGE_LANG === 'he'){
-  applyLang('he', false);
+// A translated page renders its own language and nothing else: its URL already
+// says which language it is, and a crawler must see that language there.
+// Only "/" reads a preference, and it hands the visitor to that language's URL.
+if (PAGE_LANG !== 'en'){
+  applyLang(PAGE_LANG, false);
 } else {
   let initLang = null;
   try { const q = new URLSearchParams(location.search).get('lang'); if (q && I18N[q]) initLang = q; } catch(e){}
   if (!initLang){ try { const s = localStorage.getItem('rc_lang'); if (s && I18N[s]) initLang = s; } catch(e){} }
   if (!initLang) initLang = detectLang();
   // preserve query string (gclid etc.) and hash through the language redirect
-  if (initLang === 'he' && /^https?:$/.test(location.protocol)) location.replace('/he/' + location.search + location.hash);
-  else applyLang(initLang, false);
+  if (initLang !== 'en' && LANG_HOME[initLang] && /^https?:$/.test(location.protocol)){
+    location.replace(LANG_HOME[initLang] + location.search + location.hash);
+  } else applyLang(initLang, false);
 }
 
 
