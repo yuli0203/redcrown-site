@@ -18,7 +18,7 @@
   var TAU = 6.28318530718;
 
   var homes = [], parts = [], W = 0, H = 0, cxp = 0, cyp = 0, raf = 0, visible = true;
-  var mx = -9999, my = -9999, pointer = false, clock = 0, lastTs = null;
+  var mx = -9999, my = -9999, pointer = false, clock = 0, lastTs = null, glow = 0;
 
   var img = new Image();
   img.src = '/assets/logo-kit/redcrown-knockout-white.png';
@@ -76,7 +76,7 @@
       var bob = reduce ? 0 : Math.sin(t * 0.0011 + p.bp) * p.bx;
       x = p.hx + bob * 0.5; y = p.hy + bob;                          // warp removed for now; crown holds still, only the light responds
       g = 0;
-      if (pointer) { dx = x - mx; dy = y - my; gd = dx * dx + dy * dy; if (gd < GR2) { g = 1 - Math.sqrt(gd) / GR; g *= g; } }
+      if (pointer) { dx = x - mx; dy = y - my; gd = dx * dx + dy * dy; if (gd < GR2) { g = 1 - Math.sqrt(gd) / GR; g *= g; if (!canHover) g *= glow; } }
       var ga = 0;
       if (!reduce) { var ax = x - ALx, ay = y - ALy, a2 = ax * ax + ay * ay; if (a2 < GR2) { ga = 1 - Math.sqrt(a2) / GR; ga *= ga; } }
       var shimmer = reduce ? 0.9 : 0.66 + 0.34 * Math.sin(t * 0.0018 * p.tws + p.tw);   // livelier shimmer
@@ -105,7 +105,7 @@
     raf = 0; if (!visible || document.hidden) { lastTs = null; return; }   // freeze the clock while hidden -> no jump on scroll back
     if (lastTs === null) lastTs = ts;
     var dt = ts - lastTs; if (dt > 50) dt = 50; lastTs = ts;
-    clock += dt; paint(clock); if (!reduce) req();
+    clock += dt; if (!canHover && glow > 0) glow = Math.max(0, glow - dt * 0.0006); paint(clock); if (!reduce) req();
   }
   function req() { if (!raf) raf = requestAnimationFrame(frame); }
 
@@ -114,6 +114,14 @@
     var r = canvas.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; pointer = true; if (reduce) paint();
   }, { passive: true });
   section.addEventListener('pointerleave', function () { pointer = false; });
+  function onTouch(e) {
+    if (canHover || reduce) return;                                 // touch-only: a warm glow follows the touch and slowly fades
+    var tt = e.touches && e.touches[0]; if (!tt) return;
+    var r = canvas.getBoundingClientRect();
+    mx = tt.clientX - r.left; my = tt.clientY - r.top; pointer = true; glow = 1; req();
+  }
+  section.addEventListener('touchstart', onTouch, { passive: true });
+  section.addEventListener('touchmove', onTouch, { passive: true });
   window.addEventListener('resize', function () { size(); }, { passive: true });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) req(); }, { threshold: 0 }).observe(section);
   document.addEventListener('visibilitychange', function () { if (!document.hidden && visible) req(); });
