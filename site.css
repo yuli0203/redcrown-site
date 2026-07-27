@@ -331,6 +331,10 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 
 /* ---------------- RTL ---------------- */
 [dir="rtl"] .hero-bg{transform:scaleX(-1)}
+/* The ember field is masked to the empty half so the subject never lights up.
+   RTL mirrors the photo, moving her to the left, so the mask has to mirror with
+   it or the embers land on her instead of the open space. */
+[dir="rtl"] .hero-gl{transform:scaleX(-1)}
 [dir="rtl"] .hero-scrim{background:linear-gradient(270deg,rgba(14,8,10,.97) 0%,rgba(14,8,10,.9) 30%,rgba(14,8,10,.45) 50%,rgba(14,8,10,0) 68%)}
 [dir="rtl"] .sec-k{letter-spacing:.12em}
 [dir="rtl"] .about-xp-k{letter-spacing:.06em;font-size:.8rem}
