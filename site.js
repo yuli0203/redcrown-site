@@ -22,10 +22,10 @@ const I18N = {
     "work.ar.metric":"Controller-free hand interaction","work.vr.metric":"~1-hour guided experience","work.ml.metric":"Real-time scientific calculation","work.class.metric":"Up to 12 headsets at once",
     "work.ar.title":"Enzymatic Lab Educational Model",
     "work.ar.sub":"Augmented Reality | Hand Tracking | Virtual Instructor",
-    "work.ar.body":"<p><b>The challenge.</b> In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.</p><p><b>The solution.</b> We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student's real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result.</p><p><b>The result.</b> What was invisible at the bench becomes tangible, every concept is built through doing and deciding, and connects directly to the data students measure. Instructors control the pace live and get real-time comprehension feedback. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.</p>",
+    "work.ar.body":"<p><b>The challenge.</b> In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.</p><p><b>The solution.</b> We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student's real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum and lets students who normally avoid headsets take part.</p><p><b>The result.</b> What was invisible at the bench becomes tangible, every concept is built through doing and deciding, and connects directly to the data students measure. Instructors control the pace live and get real-time comprehension feedback. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.</p>",
     "work.vr.title":"Immersive Fugacity VR Experiment",
     "work.vr.sub":"Virtual Reality | Hand Gestures | Controllers",
-    "work.vr.body":"<p><b>The challenge.</b> How do you teach an abstract thermodynamic concept like fugacity to a whole class at once, consistently and safely, without each student getting a different experience?</p><p><b>The solution.</b> An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor's tablet.</p><p><b>The result.</b> The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.</p>",
+    "work.vr.body":"<p><b>The challenge.</b> How do you teach an abstract thermodynamic concept like fugacity to a whole class at once, consistently and safely, without each student getting a different experience?</p><p><b>The solution.</b> An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor's tablet. Movement inside the experiment is deliberately designed to keep motion sickness to a minimum, so a full hour in the headset stays comfortable for an entire class.</p><p><b>The result.</b> The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.</p>",
     "work.ml.title":"Molecular Scientific ML Research Tool",
     "work.ml.sub":"PC | Machine-Learning | Python Server",
     "work.ml.body":"<p><b>The challenge.</b> Researchers needed to build and modify molecular structures and see results immediately, instead of waiting for one calculation at a time and guessing what would change.</p><p><b>The solution.</b> We built an interactive 3D tool where the researcher builds and edits a molecule, and a machine-learning model runs a scientific calculation on it quickly and returns the result onto the model in front of them, without leaving the flow.</p><p><b>The result.</b> Research becomes fast, visual, and intuitive, and the machine-learning model enables calculations far faster than the traditional approach. Built for the Wolfson Faculty of Chemical Engineering at the Technion.</p>",
@@ -80,16 +80,16 @@ const I18N = {
     "work.ar.metric":"אינטראקציה בידיים, בלי שלטים","work.vr.metric":"חוויה מודרכת בת כשעה","work.ml.metric":"חישוב מדעי בזמן אמת","work.class.metric":"עד 12 מכשירים בו-זמנית",
     "work.ar.title":"מודל לימודי למעבדה אנזימטית",
     "work.ar.sub":"מציאות רבודה | מעקב ידיים | מדריך וירטואלי",
-    "work.ar.body":"<p><b>האתגר.</b> במעבדת הביוכימיה הסטודנטים מריצים ניסוי עם ריאקטור אנזימים, אבל אף פעם לא רואים את העולם המולקולרי שמאחוריו. האנזים נשאר בלתי נראה, הכיראליות נלמדת משרטוטים שטוחים, וקריאת הפולרימטר משתנה בלי שברור למה. הכול נשאר מופשט.</p><p><b>הפתרון.</b> בנינו מודול למידה במציאות רבודה ל-Meta Quest 3 שמניח את העולם המולקולרי ממש על שולחן המעבדה, בלי שלטים ובלי צורך בניסיון קודם. רובי, מדריך רובוט ידידותי שמדבר עברית ואנגלית, מלווה את הסטודנטים כשהם משווים מולקולות בידיים, מסובבים את האנזים, צופים בתגובה מתרחשת צעד אחר צעד, ואפילו יורים אור מקוטב על מולקולות כדי לראות איך המבנה משפיע על התוצאה.</p><p><b>התוצאה.</b> מה שהיה בלתי נראה במעבדה הופך למוחשי, כל מושג נבנה דרך עשייה והחלטה ומתחבר ישירות לנתונים שהסטודנטים מודדים בשולחן. המרצה שולט בקצב בזמן אמת ומקבל משוב הבנה מיידי. נבנה ומשמש בפקולטה להנדסה כימית ע\"ש וולפסון בטכניון.</p>",
+    "work.ar.body":"<p><b>האתגר.</b> במעבדת הביוכימיה הסטודנטים מריצים ניסוי עם ריאקטור אנזימים, אבל אף פעם לא רואים את העולם המולקולרי שמאחוריו. האנזים נשאר בלתי נראה, הכיראליות נלמדת משרטוטים שטוחים, וקריאת הפולרימטר משתנה בלי שברור למה. הכול נשאר מופשט.</p><p><b>הפתרון.</b> בנינו מודול למידה במציאות רבודה ל-Meta Quest 3 שמניח את העולם המולקולרי ממש על שולחן המעבדה, בלי שלטים ובלי צורך בניסיון קודם. רובי, מדריך רובוט ידידותי שמדבר עברית ואנגלית, מלווה את הסטודנטים כשהם משווים מולקולות בידיים, מסובבים את האנזים, צופים בתגובה מתרחשת צעד אחר צעד, ואפילו יורים אור מקוטב על מולקולות כדי לראות איך המבנה משפיע על התוצאה. הסטודנטים יושבים ליד השולחן שלהם ורואים את החדר האמיתי סביבם לאורך כל הזמן, מה שמצמצם למינימום תחושת בחילה ומאפשר גם לסטודנטים שנמנעים בדרך כלל ממשקפי מציאות מדומה להשתתף.</p><p><b>התוצאה.</b> מה שהיה בלתי נראה במעבדה הופך למוחשי, כל מושג נבנה דרך עשייה והחלטה ומתחבר ישירות לנתונים שהסטודנטים מודדים בשולחן. המדריך שולט בקצב בזמן אמת ומקבל משוב הבנה מיידי. נבנה ומשמש בפקולטה להנדסה כימית ע\"ש וולפסון בטכניון.</p>",
     "work.vr.title":"ניסוי VR סוחף בפוגסיות",
     "work.vr.sub":"מציאות מדומה | מחוות ידיים | שלטים",
-    "work.vr.body":"<p><b>האתגר.</b> איך מלמדים מושג תרמודינמי מופשט כמו פוגסיות לכיתה שלמה בו-זמנית, בצורה עקבית ובטוחה, בלי שכל סטודנט יקבל חוויה אחרת?</p><p><b>הפתרון.</b> ניסוי מציאות מדומה בן כשעה שבו הסטודנטים מפעילים בעצמם את ציוד המעבדה, מחממים את החומר, מזיזים את הבוכנה, פותחים שסתומים וקוראים את הלחץ, בהנחיית מדריך וירטואלי. עד 12 מכשירים במקביל, כל אחד מחובר לטאבלט של המרצה.</p><p><b>התוצאה.</b> כל הכיתה מתנסה יחד באותה חוויה מדויקת ובטוחה, המרצים רואים בדיוק איפה כל קבוצה נמצאת ואוספים את נתוני המפגש, ומושג מופשט הופך לניסוי מוחשי ומודרך. פועל בקורס תרמודינמיקה ב' בטכניון.</p>",
+    "work.vr.body":"<p><b>האתגר.</b> איך מלמדים מושג תרמודינמי מופשט כמו פוגסיות לכיתה שלמה בו-זמנית, בצורה עקבית ובטוחה, בלי שכל סטודנט יקבל חוויה אחרת?</p><p><b>הפתרון.</b> ניסוי מציאות מדומה בן כשעה שבו הסטודנטים מפעילים בעצמם את ציוד המעבדה, מחממים את החומר, מזיזים את הבוכנה, פותחים שסתומים וקוראים את הלחץ, בהנחיית מדריך וירטואלי. עד 12 מכשירים במקביל, כל אחד מחובר לטאבלט של המדריך. התנועה בתוך הניסוי תוכננה במכוון כדי לצמצם למינימום תחושת בחילה, כך ששעה שלמה עם המשקפיים נשארת נוחה לכיתה שלמה.</p><p><b>התוצאה.</b> כל הכיתה מתנסה יחד באותה חוויה מדויקת ובטוחה, המדריכים רואים בדיוק איפה כל קבוצה נמצאת ואוספים את נתוני המפגש, ומושג מופשט הופך לניסוי מוחשי ומודרך. פועל בקורס תרמודינמיקה ב' בטכניון.</p>",
     "work.ml.title":"כלי מחקר מולקולרי מבוסס למידת מכונה",
     "work.ml.sub":"מחשב | למידת מכונה | תלת-ממד בזמן אמת",
     "work.ml.body":"<p><b>האתגר.</b> חוקרים היו צריכים לבנות ולשנות מבנים מולקולריים ולראות תוצאות מיד, במקום להמתין לחישוב אחד בכל פעם ולנחש מה ישתנה.</p><p><b>הפתרון.</b> בנינו כלי תלת-ממד אינטראקטיבי שבו החוקר בונה ומשנה מולקולה, ומודל למידת מכונה מריץ עליה חישוב מדעי במהירות ומחזיר את התוצאה אל המודל שמולו, בלי לצאת מהתהליך.</p><p><b>התוצאה.</b> המחקר הופך למהיר, ויזואלי ואינטואיטיבי, ומודל למידת המכונה מאפשר חישובים מהירים בהרבה מהדרך המסורתית. נבנה עבור הפקולטה להנדסה כימית ע\"ש וולפסון בטכניון.</p>",
     "work.class.title":"מערך כיתת VR פיזית עם Meta Quest",
     "work.class.sub":"VR רב-משתתפים | Meta Quest 3 | כלי מדריך",
-    "work.class.body":"<p><b>האתגר.</b> הטכניון רצה כיתה שמפעילה מציאות מדומה סוחפת לקבוצות רבות בו-זמנית, בצורה אמינה, בלי שהצוות יבזבז כל שיעור על תקלות.</p><p><b>הפתרון.</b> הקמנו את הכיתה מקצה לקצה, מבחירת החומרה ותכנון החלל ועד ההתקנה, הבדיקות ותהליכי העבודה של המדריכים. עד 12 מכשירי Meta Quest 3, כל אחד עם טאבלט מלווה.</p><p><b>התוצאה.</b> כיתה שפשוט עובדת, שבה המרצים עוקבים אחרי כל קבוצה, תומכים בסטודנטים ואוספים נתונים בכל מפגש. הטכנולוגיה נשארת ברקע, וההוראה בקדמת הבמה.</p>",
+    "work.class.body":"<p><b>האתגר.</b> הטכניון רצה כיתה שמפעילה מציאות מדומה סוחפת לקבוצות רבות בו-זמנית, בצורה אמינה, בלי שהצוות יבזבז כל שיעור על תקלות.</p><p><b>הפתרון.</b> הקמנו את הכיתה מקצה לקצה, מבחירת החומרה ותכנון החלל ועד ההתקנה, הבדיקות ותהליכי העבודה של המדריכים. עד 12 מכשירי Meta Quest 3, כל אחד עם טאבלט מלווה.</p><p><b>התוצאה.</b> כיתה שפשוט עובדת, שבה המדריכים עוקבים אחרי כל קבוצה, תומכים בסטודנטים ואוספים נתונים בכל מפגש. הטכנולוגיה נשארת ברקע, וההוראה בקדמת הבמה.</p>",
     "about.kicker":"אודות",
     "about.h":"עשור של פיתוח תלת-ממד בזמן אמת",
     "about.p":"Red Crown Interactive הוא סטודיו פיתוח בהובלת יוליה פבלוב, מהנדסת תוכנה המתמחה בפיתוח תלת-ממד בזמן אמת, עם יותר מעשור של ניסיון בתחומי ה-XR, הטכנולוגיה הרפואית, הגיימינג והביטחון. בהתאם לצורכי הפרויקט, הסטודיו מרכיב ומנהל צוותי פיתוח, תלת-ממד ועיצוב, כך שכל פרויקט נבנה כמכלול, מהקוד ועד הוויזואליה. אנחנו בונים מערכות שבהן הדיוק, היציבות והביצועים חשובים לא פחות מהחוויה.",
@@ -137,10 +137,10 @@ const I18N = {
     "work.ar.metric":"Управление руками без контроллеров","work.vr.metric":"Управляемый опыт около часа","work.ml.metric":"Научные расчёты в реальном времени","work.class.metric":"До 12 гарнитур одновременно",
     "work.ar.title":"Учебная модель ферментативной лаборатории",
     "work.ar.sub":"Дополненная реальность | Отслеживание рук | Виртуальный инструктор",
-    "work.ar.body":"<p><b>Задача.</b> В лаборатории биохимии студенты проводят эксперимент с реактором ферментов, но никогда не видят молекулярный мир, стоящий за ним. Фермент остаётся невидимым, хиральность преподаётся по плоским схемам, а показания поляриметра меняются без ясной причины. Всё остаётся абстрактным.</p><p><b>Решение.</b> Мы создали обучающий модуль дополненной реальности для Meta Quest 3, который помещает молекулярный мир прямо на реальный стол студента, без контроллеров и без предварительного опыта. Роби, дружелюбный двуязычный робот-инструктор, сопровождает студентов, пока они сравнивают молекулы руками, вращают фермент, наблюдают реакцию шаг за шагом и даже стреляют поляризованным светом по молекулам, чтобы увидеть, как структура влияет на результат.</p><p><b>Результат.</b> То, что было невидимым за лабораторным столом, становится осязаемым, каждое понятие строится через действие и выбор и напрямую связывается с данными, которые измеряют студенты. Преподаватель управляет темпом в реальном времени и получает мгновенную обратную связь о понимании. Создано и используется на факультете химической инженерии им. Вольфсона, Технион.</p>",
+    "work.ar.body":"<p><b>Задача.</b> В лаборатории биохимии студенты проводят эксперимент с реактором ферментов, но никогда не видят молекулярный мир, стоящий за ним. Фермент остаётся невидимым, хиральность преподаётся по плоским схемам, а показания поляриметра меняются без ясной причины. Всё остаётся абстрактным.</p><p><b>Решение.</b> Мы создали обучающий модуль дополненной реальности для Meta Quest 3, который помещает молекулярный мир прямо на реальный стол студента, без контроллеров и без предварительного опыта. Роби, дружелюбный двуязычный робот-инструктор, сопровождает студентов, пока они сравнивают молекулы руками, вращают фермент, наблюдают реакцию шаг за шагом и даже стреляют поляризованным светом по молекулам, чтобы увидеть, как структура влияет на результат. Студенты сидят за собственным столом и всё время видят реальную комнату вокруг, что сводит укачивание к минимуму и позволяет участвовать даже тем, кто обычно избегает гарнитур.</p><p><b>Результат.</b> То, что было невидимым за лабораторным столом, становится осязаемым, каждое понятие строится через действие и выбор и напрямую связывается с данными, которые измеряют студенты. Преподаватель управляет темпом в реальном времени и получает мгновенную обратную связь о понимании. Создано и используется на факультете химической инженерии им. Вольфсона, Технион.</p>",
     "work.vr.title":"Иммерсивный VR-эксперимент по фугитивности",
     "work.vr.sub":"Виртуальная реальность | Жесты рук | Контроллеры",
-    "work.vr.body":"<p><b>Задача.</b> Как преподать абстрактное термодинамическое понятие, такое как фугитивность, целому классу одновременно, последовательно и безопасно, чтобы у каждого студента был одинаковый опыт?</p><p><b>Решение.</b> Часовой эксперимент в виртуальной реальности, где студенты сами управляют лабораторным оборудованием, нагревают вещество, двигают поршень, открывают клапаны и считывают давление под руководством виртуального инструктора. До 12 устройств одновременно, каждое связано с планшетом преподавателя.</p><p><b>Результат.</b> Весь класс проходит один и тот же точный и безопасный опыт вместе, преподаватели видят, где находится каждая группа, и собирают данные занятия, а абстрактное понятие превращается в осязаемый, управляемый эксперимент. Используется в курсе «Термодинамика Б» в Технионе.</p>",
+    "work.vr.body":"<p><b>Задача.</b> Как преподать абстрактное термодинамическое понятие, такое как фугитивность, целому классу одновременно, последовательно и безопасно, чтобы у каждого студента был одинаковый опыт?</p><p><b>Решение.</b> Часовой эксперимент в виртуальной реальности, где студенты сами управляют лабораторным оборудованием, нагревают вещество, двигают поршень, открывают клапаны и считывают давление под руководством виртуального инструктора. До 12 устройств одновременно, каждое связано с планшетом преподавателя. Перемещение внутри эксперимента специально спроектировано так, чтобы свести укачивание к минимуму, поэтому целый час в гарнитуре остаётся комфортным для всего класса.</p><p><b>Результат.</b> Весь класс проходит один и тот же точный и безопасный опыт вместе, преподаватели видят, где находится каждая группа, и собирают данные занятия, а абстрактное понятие превращается в осязаемый, управляемый эксперимент. Используется в курсе «Термодинамика Б» в Технионе.</p>",
     "work.ml.title":"Научный инструмент молекулярных исследований с машинным обучением",
     "work.ml.sub":"PC | Машинное обучение | Сервер Python",
     "work.ml.body":"<p><b>Задача.</b> Исследователям нужно было создавать и изменять молекулярные структуры и сразу видеть результат, вместо того чтобы ждать по одному расчёту за раз и гадать, что изменится.</p><p><b>Решение.</b> Мы создали интерактивный 3D-инструмент, в котором исследователь строит и редактирует молекулу, а модель машинного обучения быстро выполняет для неё научный расчёт и возвращает результат на модель перед ним, не выходя из процесса.</p><p><b>Результат.</b> Исследование становится быстрым, наглядным и интуитивным, а модель машинного обучения позволяет выполнять расчёты намного быстрее традиционного подхода. Создано для факультета химической инженерии им. Вольфсона в Технионе.</p>",
@@ -175,6 +175,9 @@ const I18N = {
 const RTL = new Set(['he']);
 const rm = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 const PAGE_LANG = document.documentElement.getAttribute('data-page-lang') || 'en';
+// Every language owns a crawlable URL. Search engines index one language per
+// URL, so a language that only exists as a JS state on "/" is invisible to them.
+const LANG_HOME = { en: '/', he: '/he/', ru: '/ru/' };
 
 function applyLang(lang, persist){
   const dict = I18N[lang] || I18N.en;
@@ -224,15 +227,19 @@ langToggle.addEventListener('click', e=>{
 document.querySelectorAll('.lang-menu button').forEach(b=>{
   b.addEventListener('click', ()=>{
     const l = b.dataset.lang;
-    // Cross-page language switches navigate to the language's own URL so the
-    // canonical Hebrew/English pages own their traffic; same-context stays JS.
-    // preserve query string (gclid etc.) across language navigation
-    if (l === 'he' && PAGE_LANG !== 'he'){ try{localStorage.setItem('rc_lang','he');}catch(e){} location.href = '/he/' + location.search + location.hash; return; }
-    if (l !== 'he' && PAGE_LANG === 'he'){
+    // Picking a language is a navigation to that language's own URL, so the page
+    // the visitor lands on is the one search engines index and they can share.
+    // The query string (gclid etc.) and hash ride along.
+    if (l !== PAGE_LANG && LANG_HOME[l]){
       try{localStorage.setItem('rc_lang',l);}catch(e){}
       const p = new URLSearchParams(location.search);
-      p.set('lang', l); // keep an explicit ?lang (incl. en) so the English page can't auto-redirect back to /he/ when storage is blocked
-      location.href = '/?' + p.toString() + location.hash;
+      // an explicit ?lang=en survives blocked storage, so "/" can't bounce the
+      // visitor straight back to the language they just switched away from.
+      // Any other language owns its URL, so a leftover ?lang would contradict it
+      // (/he/?lang=ru).
+      if (l === 'en') p.set('lang', l); else p.delete('lang');
+      const qs = p.toString();
+      location.href = LANG_HOME[l] + (qs ? '?' + qs : '') + location.hash;
       return;
     }
     applyLang(l, true); closeLang();
@@ -241,19 +248,20 @@ document.querySelectorAll('.lang-menu button').forEach(b=>{
 document.addEventListener('click', e=>{ if(!langWrap.contains(e.target)) closeLang(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLang(); });
 
-// This page's own language is fixed by its URL. The Hebrew page always renders
-// Hebrew; the English page honours ?lang, a saved choice, then device language,
-// and sends Hebrew-preferring visitors to the canonical /he/ URL.
-if (PAGE_LANG === 'he'){
-  applyLang('he', false);
+// A translated page renders its own language and nothing else: its URL already
+// says which language it is, and a crawler must see that language there.
+// Only "/" reads a preference, and it hands the visitor to that language's URL.
+if (PAGE_LANG !== 'en'){
+  applyLang(PAGE_LANG, false);
 } else {
   let initLang = null;
   try { const q = new URLSearchParams(location.search).get('lang'); if (q && I18N[q]) initLang = q; } catch(e){}
   if (!initLang){ try { const s = localStorage.getItem('rc_lang'); if (s && I18N[s]) initLang = s; } catch(e){} }
   if (!initLang) initLang = detectLang();
   // preserve query string (gclid etc.) and hash through the language redirect
-  if (initLang === 'he' && /^https?:$/.test(location.protocol)) location.replace('/he/' + location.search + location.hash);
-  else applyLang(initLang, false);
+  if (initLang !== 'en' && LANG_HOME[initLang] && /^https?:$/.test(location.protocol)){
+    location.replace(LANG_HOME[initLang] + location.search + location.hash);
+  } else applyLang(initLang, false);
 }
 
 

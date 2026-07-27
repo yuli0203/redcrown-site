@@ -38,6 +38,7 @@ MATRIX = [
     ("Pixel 7",     "chromium", "Pixel 7",    "/"),      # 412px
     ("iPad Mini",   "webkit",   "iPad Mini",  "/"),      # 768px
     ("iPhone SE HE","webkit",   "iPhone SE",  "/he/"),   # Hebrew RTL
+    ("iPhone SE RU","webkit",   "iPhone SE",  "/ru/"),   # Russian (longest words)
 ]
 
 AUTOSCROLL = """async () => {
@@ -125,7 +126,20 @@ def main():
                     with contextlib.suppress(Exception):
                         pg.wait_for_load_state("networkidle", timeout=8000)
                     pg.evaluate(AUTOSCROLL)
+                    # .in is applied by an IntersectionObserver, so it lands a beat
+                    # after the element is scrolled past. Give the observers a bounded
+                    # chance to settle; anything still unrevealed after this really is
+                    # stuck and the check below will say so.
+                    with contextlib.suppress(Exception):
+                        pg.wait_for_function(
+                            "document.querySelectorAll('.rv:not(.in)').length === 0",
+                            timeout=5000)
                     pg.evaluate("window.scrollTo(0,0)")
+                    # font-display:swap paints in a fallback face first, so measuring
+                    # before the webfonts land judges text the visitor never sees and
+                    # makes the headline checks depend on the runner's system fonts.
+                    with contextlib.suppress(Exception):
+                        pg.evaluate("document.fonts.ready")
                     pg.wait_for_timeout(300)
                     problems = pg.evaluate(INTEGRITY)
                     if perr: problems.append(f"JS page error: {perr[0]}")

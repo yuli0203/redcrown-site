@@ -6,17 +6,18 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E080A">
 <script>
-/* Send Hebrew-preferring visitors to /he/ BEFORE the body paints, so they never see the English hero flash. */
+/* Send visitors to their language's own URL BEFORE the body paints, so they never see the English hero flash. */
 (function(){try{
-  if(document.documentElement.getAttribute('data-page-lang')==='he')return;
+  if(document.documentElement.getAttribute('data-page-lang')!=='en')return;
   if(!/^https?:$/.test(location.protocol))return;
-  function go(){location.replace('/he/'+location.search+location.hash);}
+  var HOME={he:'/he/',ru:'/ru/'};
+  function go(l){ if(HOME[l]) location.replace(HOME[l]+location.search+location.hash); }
   var q=new URLSearchParams(location.search).get('lang');
-  if(q){ if(q==='he')go(); return; }
+  if(q){ go(q); return; }
   var s=null; try{s=localStorage.getItem('rc_lang');}catch(e){}
-  if(s){ if(s==='he')go(); return; }
+  if(s){ go(s); return; }
   var list=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||'en'];
-  for(var i=0;i<list.length;i++){var c=(list[i]||'').slice(0,2).toLowerCase(); if(c==='he'){go();return;} if(c==='en'||c==='ru')return;}
+  for(var i=0;i<list.length;i++){var c=(list[i]||'').slice(0,2).toLowerCase(); if(HOME[c]){go(c);return;} if(c==='en')return;}
 }catch(e){}})();
 </script>
 <!-- Google tag (gtag.js) -->
@@ -38,11 +39,13 @@
 <link rel="canonical" href="https://redcrowninteractive.com/">
 <link rel="alternate" hreflang="en" href="https://redcrowninteractive.com/">
 <link rel="alternate" hreflang="he" href="https://redcrowninteractive.com/he/">
+<link rel="alternate" hreflang="ru" href="https://redcrowninteractive.com/ru/">
 <link rel="alternate" hreflang="x-default" href="https://redcrowninteractive.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Red Crown Interactive">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="he_IL">
+<meta property="og:locale:alternate" content="ru_RU">
 <meta property="og:title" content="Red Crown Interactive · Interactive Software for Science, Engineering &amp; VR">
 <meta property="og:description" content="Red Crown Interactive builds interactive software for science, engineering, and VR, on Meta Quest, mobile, and desktop, in Unity, from concept to real-world deployment.">
 <meta property="og:url" content="https://redcrowninteractive.com/">
@@ -56,24 +59,31 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": ["Organization","ProfessionalService"],
   "name": "Red Crown Interactive",
   "url": "https://redcrowninteractive.com/",
+  "inLanguage": "en",
   "logo": "https://redcrowninteractive.com/assets/logo-kit/redcrown-solid.png",
+  "image": "https://redcrowninteractive.com/og-image.png",
   "description": "Unity development studio building interactive software for science, engineering, and VR across Meta Quest, mobile, and PC.",
+  "slogan": "International quality, no compromises",
   "email": "hello@redcrowninteractive.com",
   "telephone": "+972-58-576-0550",
+  "priceRange": "$$$",
+  "areaServed": ["IL","Worldwide"],
+  "serviceType": ["Virtual Reality development","VR development","Augmented Reality development","XR development","Mobile app development","PC application development","Unity development","Scientific visualization"],
   "founder": {
     "@type": "Person",
     "name": "Julia Pavlov",
-    "jobTitle": "Founder",
+    "jobTitle": "Founder and Lead Engineer",
+    "alumniOf": ["Technion – Israel Institute of Technology","Tel Aviv University"],
     "sameAs": "https://www.linkedin.com/in/julia-pavlov"
   },
-  "address": { "@type": "PostalAddress", "addressCountry": "IL" },
+  "address": { "@type": "PostalAddress", "addressLocality": "Haifa", "addressCountry": "IL" },
   "sameAs": [
     "https://www.linkedin.com/company/red-crown-interactive"
   ],
-  "knowsAbout": ["Virtual Reality","Augmented Reality","Unity Engine","Educational Simulations","Meta Quest Development"]
+  "knowsAbout": ["Virtual Reality","Augmented Reality","Mixed Reality","Unity","VR development","XR development","Meta Quest 3","Scientific visualization","Mobile app development","Machine learning"]
 }
 </script>
 <script type="application/ld+json">
@@ -221,28 +231,28 @@
       <div class="lcell rv">
         <div class="lcap"><span class="l-title" data-i18n="work.cat.vr">Virtual Reality</span><span class="l-en">VR</span></div>
         <button type="button" class="lcard" data-project="vr" aria-expanded="false" aria-controls="wd-vr">
-          <img class="lart" src="assets/lioness/vr.png" alt="Virtual Reality projects" loading="lazy">
+          <picture><source srcset="assets/lioness/vr.webp" type="image/webp"><img class="lart" src="assets/lioness/vr.png" alt="Virtual Reality projects" width="584" height="760" loading="lazy"></picture>
           <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
         </button>
       </div>
       <div class="lcell rv">
         <div class="lcap"><span class="l-title" data-i18n="work.cat.mr">Mixed Reality</span><span class="l-en">AR / MR</span></div>
         <button type="button" class="lcard" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
-          <img class="lart" src="assets/lioness/ar.png" alt="Mixed Reality projects" loading="lazy">
+          <picture><source srcset="assets/lioness/ar.webp" type="image/webp"><img class="lart" src="assets/lioness/ar.png" alt="Mixed Reality projects" width="580" height="760" loading="lazy"></picture>
           <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
         </button>
       </div>
       <div class="lcell rv">
         <div class="lcap"><span class="l-title" data-i18n="work.cat.pc">PC Application</span><span class="l-en">PC</span></div>
         <button type="button" class="lcard" data-project="ml" aria-expanded="false" aria-controls="wd-ml">
-          <img class="lart" src="assets/lioness/pc.png" alt="PC application projects" loading="lazy">
+          <picture><source srcset="assets/lioness/pc.webp" type="image/webp"><img class="lart" src="assets/lioness/pc.png" alt="PC application projects" width="582" height="760" loading="lazy"></picture>
           <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
         </button>
       </div>
       <div class="lcell rv">
         <div class="lcap"><span class="l-title" data-i18n="work.cat.hw">Hardware Setup</span><span class="l-en">HARDWARE</span></div>
         <button type="button" class="lcard" data-project="class" aria-expanded="false" aria-controls="wd-class">
-          <img class="lart" src="assets/lioness/hw.png" alt="Hardware setup projects" loading="lazy">
+          <picture><source srcset="assets/lioness/hw.webp" type="image/webp"><img class="lart" src="assets/lioness/hw.png" alt="Hardware setup projects" width="576" height="760" loading="lazy"></picture>
           <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
         </button>
       </div>
@@ -261,7 +271,7 @@
         <div class="wd-model-loading"><span class="wd-spinner"></span></div>
       </div></div>
       <div class="wd-model-hint">A 3D model we built in-house for our Meta Quest 3 lab · drag to rotate · zoom in to see inside</div>
-      <div class="wd-body" data-i18n="work.ar.body"><p><b>The challenge.</b> In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.</p><p><b>The solution.</b> We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student's real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result.</p><p><b>The result.</b> What was invisible at the bench becomes tangible, every concept is built through doing and deciding, and connects directly to the data students measure. Instructors control the pace live and get real-time comprehension feedback. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.</p></div>
+      <div class="wd-body" data-i18n="work.ar.body"><p><b>The challenge.</b> In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.</p><p><b>The solution.</b> We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student's real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum and lets students who normally avoid headsets take part.</p><p><b>The result.</b> What was invisible at the bench becomes tangible, every concept is built through doing and deciding, and connects directly to the data students measure. Instructors control the pace live and get real-time comprehension feedback. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.</p></div>
     </div>
 
     <div class="wdetail" id="wd-vr" hidden>
@@ -277,7 +287,7 @@
         <div class="wd-model-loading"><span class="wd-spinner"></span></div>
       </div></div>
       <div class="wd-model-hint">Robi, the in-house VR instructor that guides students through the experiment · drag to rotate</div>
-      <div class="wd-body" data-i18n="work.vr.body"><p><b>The challenge.</b> How do you teach an abstract thermodynamic concept like fugacity to a whole class at once, consistently and safely, without each student getting a different experience?</p><p><b>The solution.</b> An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor's tablet.</p><p><b>The result.</b> The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.</p></div>
+      <div class="wd-body" data-i18n="work.vr.body"><p><b>The challenge.</b> How do you teach an abstract thermodynamic concept like fugacity to a whole class at once, consistently and safely, without each student getting a different experience?</p><p><b>The solution.</b> An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor's tablet. Movement inside the experiment is deliberately designed to keep motion sickness to a minimum, so a full hour in the headset stays comfortable for an entire class.</p><p><b>The result.</b> The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.</p></div>
     </div>
 
     <div class="wdetail" id="wd-ml" hidden>
