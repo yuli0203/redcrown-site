@@ -127,6 +127,11 @@ def main():
                         pg.wait_for_load_state("networkidle", timeout=8000)
                     pg.evaluate(AUTOSCROLL)
                     pg.evaluate("window.scrollTo(0,0)")
+                    # font-display:swap paints in a fallback face first, so measuring
+                    # before the webfonts land judges text the visitor never sees and
+                    # makes the headline checks depend on the runner's system fonts.
+                    with contextlib.suppress(Exception):
+                        pg.evaluate("document.fonts.ready")
                     pg.wait_for_timeout(300)
                     problems = pg.evaluate(INTEGRITY)
                     if perr: problems.append(f"JS page error: {perr[0]}")

@@ -2,6 +2,13 @@
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-SemiBold.woff2')format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:'IBM Plex Sans';src:url('fonts/IBMPlexSans-var.woff2')format('woff2');font-weight:100 700;font-display:swap}
 @font-face{font-family:'Michroma';src:url('fonts/Michroma-Regular.woff2')format('woff2');font-weight:400;font-display:swap}
+/* Chakra Petch and Michroma have no Cyrillic, so Russian headings silently fell back
+   to whatever font the operating system chose, which differs per platform: the same
+   headline measured 214px on Windows and 230px on Linux. Map the Cyrillic range onto
+   IBM Plex Sans, which we already ship and which does cover it, so every platform
+   renders the same shipped font at the same width. */
+@font-face{font-family:'Chakra Petch';src:url('fonts/IBMPlexSans-var.woff2')format('woff2');font-weight:600 700;unicode-range:U+0400-04FF,U+0500-052F,U+2DE0-2DFF,U+A640-A69F;font-display:swap}
+@font-face{font-family:'Michroma';src:url('fonts/IBMPlexSans-var.woff2')format('woff2');font-weight:400;unicode-range:U+0400-04FF,U+0500-052F,U+2DE0-2DFF,U+A640-A69F;font-display:swap}
 :root{
   color-scheme:dark; /* tell auto-darkening browsers (Samsung Internet, Chrome auto-dark) the page is already dark so they don't re-invert it */
   --black:#0E080A; --panel:#1A1013; --panel-2:#221519; --maroon:#76232F;
@@ -118,8 +125,10 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 .hero-txt{position:relative;z-index:2;padding:64px 48px;max-width:600px}
 .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.55rem,8.5vw,3.6rem);line-height:1.06;letter-spacing:.02em}
 /* Russian sets the headline as single unbreakable words ("ИНТЕРАКТИВНОЕ"), which
-   clip on a 320px screen at the shared size. Only the size drops; wording holds. */
-html[lang="ru"] .hero h1{font-size:clamp(1.35rem,7vw,3.6rem)}
+   clip on a 320px screen at the shared size. Only the size drops; wording holds.
+   The longest word then measures ~177px in a 214px box, leaving room for the
+   slightly different metrics of a fallback face during the font swap. */
+html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.6rem)}
 .hero h1 em{font-style:normal;color:var(--hot)}
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
 .hero .plat s{text-decoration:none;color:var(--hot);padding:0 .4em}
