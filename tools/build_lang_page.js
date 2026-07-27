@@ -226,7 +226,9 @@ function build(lang) {
   // Every version points at every version, itself included.
   const alts = Object.keys(LANGS).filter(l => l !== lang)
     .map(l => `<meta property="og:locale:alternate" content="${LANGS[l].ogLocale}">`).join(EOL);
-  html = html.replace(/<meta property="og:locale:alternate"[^>]*>/, () => alts);
+  // Replace the whole consecutive run: leaving one behind would list this page's
+  // own locale as an alternate of itself.
+  html = html.replace(/(?:<meta property="og:locale:alternate"[^>]*>\r?\n?)+/, () => alts + EOL);
 
   html = html.replace(/(<link rel="alternate" hreflang="[^"]*"[^>]*>\r?\n)+/, () => hreflangBlock(EOL));
 
@@ -262,6 +264,21 @@ function check(lang) {
   }
   const slots = count(src, /data-i18n="/g);
   if (count(out, /data-i18n="/g) !== slots) problems.push('data-i18n slots lost');
+
+  // Counting slots proves nothing about translation: a key missing from the dict
+  // leaves the English text in place and the counts still match.
+  const dict = loadDicts()[lang] || {};
+  const keys = [...new Set([...src.matchAll(/data-i18n(?:-aria|-placeholder)?="([^"]+)"/g)]
+    .map(m => m[1]))];
+  for (const k of keys.filter(k => dict[k] == null)) {
+    problems.push(`missing ${lang} translation, English would ship: ${k}`);
+  }
+
+  // A generated page that drifts from index.html/site.js is worse than none.
+  const onDisk = path.join(ROOT, lang, 'index.html');
+  if (fs.existsSync(onDisk) && fs.readFileSync(onDisk, 'utf8') !== out) {
+    problems.push(`${lang}/index.html is stale: regenerate with "node tools/build_lang_page.js ${lang} > ${lang}/index.html"`);
+  }
   // Anything still document-relative would resolve under /<lang>/ and 404.
   const rel = [...out.matchAll(/\b(href|src|srcset|poster)="([^"]+)"/g)]
     .flatMap(([, a, v]) => v.split(',').map(s => s.trim().split(/\s/)[0]).map(u => [a, u]))
