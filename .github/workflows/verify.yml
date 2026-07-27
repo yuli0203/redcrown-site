@@ -41,3 +41,6 @@ jobs:
       # a clipped hero, images that fail to load, sub-16px inputs, sections left
       # invisible, and console errors. Exits non-zero on any of them.
       - run: python tools/verify_no_break.py
+      # Design, functionality and responsivity of the standalone pages:
+      # link integrity, prev/next loop, 7 viewports, tap targets, schema.
+      - run: python tools/test_pages.py
