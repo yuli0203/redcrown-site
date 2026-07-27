@@ -40,8 +40,50 @@ const LANGS = {
     twitterTitle: 'Интерактивное ПО для науки, инженерии и VR',
     twitterDescription: 'Red Crown Interactive разрабатывает интерактивное ПО для науки, инженерии и VR на Meta Quest, мобильных устройствах и ПК, на Unity.',
     orgDescription: 'Студия разработки на Unity, создающая интерактивное ПО для науки, инженерии и VR на Meta Quest, мобильных устройствах и ПК.',
+    alternateName: 'Ред Краун Интерактив',
+    slogan: 'Международное качество без компромиссов',
+    jobTitle: 'Основательница и ведущий инженер',
+    serviceType: ['Разработка виртуальной реальности', 'Разработка VR',
+      'Разработка дополненной реальности', 'Разработка XR',
+      'Разработка мобильных приложений', 'Разработка приложений для ПК',
+      'Разработка на Unity', 'Научная визуализация'],
+    knowsAbout: ['Виртуальная реальность', 'Дополненная реальность',
+      'Смешанная реальность', 'Unity', 'Разработка VR', 'Разработка XR',
+      'Meta Quest 3', 'Научная визуализация', 'Разработка мобильных приложений',
+      'Машинное обучение'],
+    // alt/aria text lives in the markup, not the dictionary, so a screen reader
+    // on /ru/ would otherwise hear English. Brand names stay untranslated.
+    text: {
+      'Red Crown Interactive logo': 'Логотип Red Crown Interactive',
+      'Virtual Reality projects': 'Проекты виртуальной реальности',
+      'Mixed Reality projects': 'Проекты смешанной реальности',
+      'PC application projects': 'Проекты приложений для ПК',
+      'Hardware setup projects': 'Проекты по настройке оборудования',
+      'Julia Pavlov, Founder and Lead Engineer': 'Юлия Павлова, основательница и ведущий инженер',
+      'Julia Pavlov as a voxel Software Architect character card': 'Юлия Павлова в виде воксельной карточки персонажа «Архитектор ПО»',
+      'Robi, our in-house VR instructor — drag to rotate': 'Роби, наш внутренний VR-инструктор. Перетащите, чтобы повернуть',
+      'Meta Quest 3 headset — drag to rotate': 'Гарнитура Meta Quest 3. Перетащите, чтобы повернуть',
+      'Interactive 3D molecule built in LiveMol — drag to rotate': 'Интерактивная 3D-молекула, созданная в LiveMol. Перетащите, чтобы повернуть',
+      'Interactive 3D enzymatic lab model built for Meta Quest — drag to rotate': 'Интерактивная 3D-модель ферментной лаборатории для Meta Quest. Перетащите, чтобы повернуть',
+      'Meta Quest classroom setup': 'Оснащение учебного класса гарнитурами Meta Quest',
+      'LiveMol research tool': 'Исследовательский инструмент LiveMol',
+      'Fugacity VR experiment': 'VR-эксперимент Fugacity',
+      'Enzymatic lab AR project': 'AR-проект ферментной лаборатории',
+      'Change language': 'Сменить язык',
+      'Chat on WhatsApp': 'Написать в WhatsApp',
+      'Developer wearing a VR headset in front of the Red Crown mark': 'Разработчица в VR-гарнитуре на фоне знака Red Crown',
+      'Flip the founder card': 'Перевернуть карточку основательницы',
+      'Interactive 3D hologram — click to change the shape': 'Интерактивная 3D-голограмма. Нажмите, чтобы сменить форму',
+      'Zoom the 3D model': 'Приблизить 3D-модель',
+    },
   },
 };
+
+// Proper nouns that read the same in every language, so they need no translation.
+const BRAND = new Set(['iOS', 'WebGL', 'Unreal Engine', 'Unity', 'Tel Aviv University',
+  'Technion', 'Python', 'Playtika', 'Photoshop', 'Philips', 'Meta Quest', 'Israeli Navy',
+  'Figma', 'C++', 'C#', 'Blender', 'Autodesk Maya', 'Android', 'LinkedIn',
+  'Language / שפה / Язык']);
 
 const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
   'link', 'meta', 'param', 'source', 'track', 'wbr']);
@@ -158,6 +200,15 @@ function applyI18n(html, dict) {
   return html;
 }
 
+// alt and aria-label are written into the markup rather than the dictionary, so
+// without this a screen reader on /ru/ reads the whole page in Russian and then
+// announces every image in English.
+function localizeAttrs(html, map) {
+  if (!map) return html;
+  return html.replace(/\b(alt|aria-label)="([^"]*)"/g,
+                      (m, a, v) => (map[v] != null ? `${a}="${map[v]}"` : m));
+}
+
 // The page lives one directory down, so document-relative refs need a hop up.
 // srcset carries a comma-separated list, each entry with an optional descriptor.
 function reparent(html) {
@@ -208,6 +259,7 @@ function build(lang) {
   html = setAttr(html, htmlTag, 'data-page-lang', lang);
 
   html = applyI18n(html, dict);
+  html = localizeAttrs(html, cfg.text);
   html = reparent(html);
 
   const abs = SITE + cfg.url;
@@ -232,9 +284,24 @@ function build(lang) {
 
   html = html.replace(/(<link rel="alternate" hreflang="[^"]*"[^>]*>\r?\n)+/, () => hreflangBlock(EOL));
 
-  // Organization description + a language-matched FAQ block.
+  // The business entity is one company in three languages, so every human-readable
+  // field in it has to speak the page's language, not just the description.
   if (cfg.orgDescription) {
-    html = html.replace(/("description": ")[^"]*(")/, '$1' + cfg.orgDescription + '$2');
+    html = html.replace(/("description": ")[^"]*(")/, () => `"description": "${cfg.orgDescription}"`);
+  }
+  html = html.replace(/("inLanguage": ")[^"]*(")/g, () => `"inLanguage": "${lang}"`);
+  const jsonStr = s => JSON.stringify(s);
+  for (const [key, val] of [['slogan', cfg.slogan], ['jobTitle', cfg.jobTitle],
+                            ['alternateName', cfg.alternateName]]) {
+    if (val) html = html.replace(new RegExp(`("${key}": ")[^"]*(")`), () => `"${key}": ${jsonStr(val)}`);
+  }
+  for (const key of ['serviceType', 'knowsAbout']) {
+    if (cfg[key]) html = html.replace(new RegExp(`("${key}": )\\[[^\\]]*\\]`), () => `"${key}": ${jsonStr(cfg[key])}`);
+  }
+  // alternateName has no English counterpart to replace, so insert it.
+  if (cfg.alternateName && !html.includes('"alternateName"')) {
+    html = html.replace(/"name": "Red Crown Interactive",/,
+                        m => `${m}${EOL}  "alternateName": ${jsonStr(cfg.alternateName)},`);
   }
   html = html.replace(/\{\s*"@context": "https:\/\/schema\.org",\s*"@type": "FAQPage"[\s\S]*?\r?\n\}/,
                       () => faqJsonLd(dict, lang));
@@ -272,6 +339,15 @@ function check(lang) {
     .map(m => m[1]))];
   for (const k of keys.filter(k => dict[k] == null)) {
     problems.push(`missing ${lang} translation, English would ship: ${k}`);
+  }
+
+  // Every alt/aria string must be deliberately translated or deliberately kept,
+  // so adding an image later cannot silently ship English to a translated page.
+  for (const m of out.matchAll(/\b(?:alt|aria-label)="([^"]+)"/g)) {
+    const v = m[1];
+    if (!BRAND.has(v) && /[a-z]{3}/.test(v) && !/[Ѐ-ӿ֐-׿]/.test(v)) {
+      problems.push(`untranslated ${lang} alt/aria text: "${v}"`);
+    }
   }
 
   // A generated page that drifts from index.html/site.js is worse than none.

@@ -1,0 +1,40 @@
+# The pre-push hook only runs for a clone that opted in with
+# `git config core.hooksPath .githooks`, and it lets the push through when
+# Python or Playwright is missing. This runs the same checks where nobody
+# can skip them.
+
+name: verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  language-pages:
+    name: Language pages are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # Fails if a translation key is missing, if alt/aria text was left in
+      # English, if a path would 404 one directory down, or if the committed
+      # page no longer matches a fresh render of index.html + site.js.
+      - run: node tools/build_lang_page.js ru --check
+
+  device-matrix:
+    name: No elements break across devices
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: playwright install --with-deps chromium webkit
+      # Real WebKit and Chromium across the mobile matrix: horizontal overflow,
+      # a clipped hero, images that fail to load, sub-16px inputs, sections left
+      # invisible, and console errors. Exits non-zero on any of them.
+      - run: python tools/verify_no_break.py

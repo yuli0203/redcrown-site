@@ -234,8 +234,10 @@ document.querySelectorAll('.lang-menu button').forEach(b=>{
       try{localStorage.setItem('rc_lang',l);}catch(e){}
       const p = new URLSearchParams(location.search);
       // an explicit ?lang=en survives blocked storage, so "/" can't bounce the
-      // visitor straight back to the language they just switched away from
-      if (l === 'en') p.set('lang', l);
+      // visitor straight back to the language they just switched away from.
+      // Any other language owns its URL, so a leftover ?lang would contradict it
+      // (/he/?lang=ru).
+      if (l === 'en') p.set('lang', l); else p.delete('lang');
       const qs = p.toString();
       location.href = LANG_HOME[l] + (qs ? '?' + qs : '') + location.hash;
       return;
