@@ -17,7 +17,9 @@ const { SERVICES, WORK } = require('./pages.data.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://redcrowninteractive.com';
-const EOL = '\r\n';
+// Match whatever this checkout actually has. Git normalises line endings per
+// platform, so hard-coding CRLF makes every page look stale on a Linux runner.
+const EOL = fs.readFileSync(path.join(ROOT, 'site.css'), 'utf8').includes('\r\n') ? '\r\n' : '\n';
 
 const bySlug = {};
 for (const p of SERVICES) bySlug[p.slug] = { ...p, section: 'services' };
@@ -293,8 +295,9 @@ for (const p of all) {
   const file = path.join(dir, 'index.html');
   const html = render(p);
   if (check) {
+    const norm = s => (s === null ? null : s.replace(/\r\n/g, '\n'));
     const cur = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
-    if (cur !== html) { console.error(`[pages] stale: ${p.section}/${p.slug}/index.html`); stale++; }
+    if (norm(cur) !== norm(html)) { console.error(`[pages] stale: ${p.section}/${p.slug}/index.html`); stale++; }
   } else {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, html);
