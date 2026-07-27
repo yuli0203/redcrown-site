@@ -85,8 +85,15 @@ INTEGRITY = r"""
     }
   }
 
-  // 5. scroll-reveal content must not be stuck invisible
-  const stuck = document.querySelectorAll('.rv:not(.in)').length;
+  // 5. scroll-reveal content must not be stuck invisible.
+  // Only count elements that are actually in the layout: a .rv inside a collapsed
+  // work panel never intersects, so it can never be revealed, and flagging it says
+  // nothing about whether a visitor can read the page.
+  const stuck = [...document.querySelectorAll('.rv:not(.in)')].filter(el => {
+    if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }).length;
   if (stuck > 0) problems.push(`${stuck} scroll-reveal section(s) stuck invisible (opacity:0)`);
 
   // 6. structural sanity
@@ -132,8 +139,10 @@ def main():
                     # stuck and the check below will say so.
                     with contextlib.suppress(Exception):
                         pg.wait_for_function(
-                            "document.querySelectorAll('.rv:not(.in)').length === 0",
-                            timeout=5000)
+                            "[...document.querySelectorAll('.rv:not(.in)')]"
+                            ".filter(e=>e.offsetParent&&e.getBoundingClientRect().height>0)"
+                            ".length === 0",
+                            timeout=6000)
                     pg.evaluate("window.scrollTo(0,0)")
                     # font-display:swap paints in a fallback face first, so measuring
                     # before the webfonts land judges text the visitor never sees and
