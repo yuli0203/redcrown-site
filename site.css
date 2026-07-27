@@ -356,3 +356,49 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   .js .wcard{transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .6s ease; will-change:transform}
   .btn:hover{transform:scale(1.05)}
 }
+
+/* ---------------- standalone service / case-study pages ----------------
+   Additive only: these selectors are used by /services/* and /work/* and by
+   nothing on the home page, so adding them cannot change how it renders. */
+.pg{padding-top:52px;padding-bottom:20px}
+.pg-crumb{font-family:var(--display);font-weight:600;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:18px}
+.pg-crumb a{color:var(--hot)}
+.pg-crumb a:hover{text-decoration:underline}
+.pg-crumb span{color:var(--line);padding:0 .25em}
+.pg-h1{font-family:var(--display);font-weight:700;font-size:clamp(1.85rem,4.3vw,3rem);line-height:1.09;letter-spacing:.01em;max-width:22ch}
+.pg-h1 em{font-style:normal;color:var(--hot)}
+.pg-sub{margin-top:14px;font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.pg-lead{color:var(--dim);max-width:64ch;margin-top:18px;font-size:1.02rem}
+.pg-cta-row{margin-top:30px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.pg-sec{margin-top:62px}
+.pg-prose{padding:30px 30px;margin-top:20px}
+.pg-prose p{color:var(--dim);max-width:76ch}
+.pg-prose p+p{margin-top:14px}
+.pg-prose b{color:var(--bone)}
+.pg-hero{display:block;width:100%;height:auto;margin-top:30px;border-radius:16px;border:1px solid var(--line)}
+.pg-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+.pg-facts div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.pg-facts i{display:block;font-style:normal;font-family:var(--display);font-weight:600;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--hot)}
+.pg-facts b{display:block;margin-top:7px;font-weight:400;font-size:.88rem;color:var(--bone)}
+.pg-rels{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:20px}
+.pg-rel{display:block;padding:24px 24px;transition:border-color .25s,transform .25s}
+.pg-rel:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
+.pg-rel b{display:block;font-family:var(--display);font-weight:700;font-size:1.02rem;color:var(--bone)}
+.pg-rel span{display:block;margin-top:9px;color:var(--dim);font-size:.88rem}
+.pg-rel-go{display:block;margin-top:14px;font-style:normal;font-family:var(--display);font-weight:600;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hot)}
+.pg-end{padding:36px 30px;margin-top:56px;text-align:center}
+.pg-end h2{font-family:var(--display);font-weight:700;font-size:clamp(1.25rem,2.5vw,1.85rem)}
+.pg-end p{color:var(--dim);margin-top:12px}
+.pg-end p:last-child{margin-top:22px}
+.pg-pager{display:flex;gap:16px;margin-top:44px;border-top:1px solid var(--line);padding-top:26px}
+.pg-pager a{display:flex;align-items:center;gap:14px;flex:1;padding:18px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;transition:border-color .25s,transform .25s}
+.pg-pager a:hover{border-color:rgba(200,16,46,.55);transform:translateY(-2px)}
+.pg-pager .pg-next{justify-content:flex-end;text-align:right}
+.pg-pager i{display:block;font-style:normal;font-family:var(--display);font-weight:600;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.pg-pager b{display:block;margin-top:5px;font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--bone)}
+.pg-arr{font-size:1.2rem;line-height:1;color:var(--hot);flex-shrink:0}
+@media(max-width:760px){
+  .pg-facts{grid-template-columns:repeat(2,1fr)}
+  .pg-pager{flex-direction:column}
+  .pg-pager .pg-next{justify-content:flex-start;text-align:left;flex-direction:row-reverse}
+}

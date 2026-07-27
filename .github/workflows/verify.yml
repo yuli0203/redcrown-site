@@ -23,6 +23,9 @@ jobs:
       # English, if a path would 404 one directory down, or if the committed
       # page no longer matches a fresh render of index.html + site.js.
       - run: node tools/build_lang_page.js ru --check
+      # Fails if any service/case-study page differs from a fresh render of
+      # tools/pages.data.js, so edited content cannot ship half-applied.
+      - run: node tools/build_pages.js --check
 
   device-matrix:
     name: No elements break across devices
