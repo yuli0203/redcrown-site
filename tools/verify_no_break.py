@@ -126,6 +126,14 @@ def main():
                     with contextlib.suppress(Exception):
                         pg.wait_for_load_state("networkidle", timeout=8000)
                     pg.evaluate(AUTOSCROLL)
+                    # .in is applied by an IntersectionObserver, so it lands a beat
+                    # after the element is scrolled past. Give the observers a bounded
+                    # chance to settle; anything still unrevealed after this really is
+                    # stuck and the check below will say so.
+                    with contextlib.suppress(Exception):
+                        pg.wait_for_function(
+                            "document.querySelectorAll('.rv:not(.in)').length === 0",
+                            timeout=5000)
                     pg.evaluate("window.scrollTo(0,0)")
                     # font-display:swap paints in a fallback face first, so measuring
                     # before the webfonts land judges text the visitor never sees and
