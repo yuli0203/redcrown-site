@@ -413,3 +413,38 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   .pg .arrow-link{padding:12px 0}
   .pg-cta-row{gap:18px}
 }
+
+/* ---------------- case-study project rail ----------------
+   Four cards, the current one lit. Hover or keyboard-focus expands one and
+   eases the others back. Pure CSS on real links, so it degrades to a plain
+   row of cards with no script and honours reduced-motion. */
+.pg-ring{display:flex;gap:12px;margin-top:22px}
+.pg-ring-i{position:relative;display:block;flex:1 1 0;min-width:0;height:220px;border-radius:16px;overflow:hidden;
+  border:1px solid var(--line);background-image:var(--shot);background-size:cover;background-position:center;
+  filter:grayscale(.4) brightness(.55);
+  transition:flex-grow .55s cubic-bezier(.16,1,.3,1),filter .4s ease,border-color .3s ease}
+.pg-ring-i::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(14,8,10,.15) 30%,rgba(14,8,10,.93) 100%)}
+.pg-ring-i.is-on{flex-grow:1.8;filter:grayscale(0) brightness(.85);border-color:rgba(200,16,46,.6)}
+.pg-ring-i.is-on::before{content:"";position:absolute;inset:auto 0 0 0;height:3px;background:var(--red);z-index:3}
+/* pull the whole row back a little while one card is being explored */
+.pg-ring:hover .pg-ring-i,.pg-ring:focus-within .pg-ring-i{flex-grow:.85}
+.pg-ring-i:hover,.pg-ring-i:focus-visible{flex-grow:2.6;filter:grayscale(0) brightness(1);border-color:var(--red)}
+.pg-ring-cat,.pg-ring-t{position:relative;z-index:2;display:block;padding-inline:16px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg-ring-cat{position:absolute;bottom:44px;left:0;right:0;font-family:var(--display);font-weight:600;
+  font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:#FF5A70;
+  text-shadow:0 1px 6px rgba(0,0,0,.95)}
+.pg-ring-t{position:absolute;bottom:16px;left:0;right:0;font-family:var(--display);font-weight:700;
+  font-size:1rem;color:var(--bone);text-shadow:0 1px 8px rgba(0,0,0,.9)}
+@media(max-width:760px){
+  .pg-ring{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .pg-ring-i{height:132px;filter:grayscale(0) brightness(.75)}
+  .pg-ring:hover .pg-ring-i,.pg-ring:focus-within .pg-ring-i,
+  .pg-ring-i:hover,.pg-ring-i:focus-visible{flex-grow:1}
+  .pg-ring-i.is-on{filter:grayscale(0) brightness(.95)}
+  .pg-ring-cat{bottom:42px;font-size:.55rem}
+  /* long project names should wrap rather than clip on a narrow card */
+  .pg-ring-t{bottom:10px;font-size:.82rem;white-space:normal;line-height:1.22;max-height:2.5em}
+}
+@media(prefers-reduced-motion:reduce){.pg-ring-i{transition:none}}

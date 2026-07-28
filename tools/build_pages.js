@@ -133,6 +133,30 @@ function breadcrumb(p) {
   return `  <p class="pg-crumb"><a href="/">Home</a> <span>·</span> <a href="/${hash}">${label}</a> <span>·</span> ${esc(p.nav)}</p>`;
 }
 
+/* ---------- the project rail ----------
+   Every case study, current one lit. Expands on hover and on keyboard focus,
+   purely in CSS: real links, no script, and nothing to break if JS is off. */
+
+function ring(p) {
+  const up = '../../';
+  const items = WORK.map(w => {
+    const on = w.slug === p.slug;
+    return [
+      `    <a class="pg-ring-i${on ? ' is-on' : ''}" href="/work/${w.slug}/"`,
+      `       style="--shot:url('${up}${w.image.src}')"${on ? ' aria-current="page"' : ''}>`,
+      `      <span class="pg-ring-cat">${esc(w.sub.split('·')[0].trim())}</span>`,
+      `      <span class="pg-ring-t">${esc(w.nav)}</span>`,
+      '    </a>',
+    ].join(EOL);
+  }).join(EOL);
+  return [
+    '  <h2 class="sec-k pg-sec">ALL CASE STUDIES</h2>',
+    '  <nav class="pg-ring" aria-label="All case studies">',
+    items,
+    '  </nav>',
+  ].join(EOL);
+}
+
 /* ---------- prev / next within a section ---------- */
 
 function pager(p) {
@@ -244,6 +268,7 @@ function workBody(p) {
   out.push('    <p>Tell us what you want to build, even if it is still a rough idea.</p>');
   out.push('    <p><a class="btn btn-red" href="/#contact">GET A PROJECT PROPOSAL</a></p>');
   out.push('  </div>');
+  out.push(ring(p));
   out.push(pager(p));
   out.push('</main>');
   return out.join(EOL);
