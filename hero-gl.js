@@ -90,6 +90,7 @@
     new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) req(); }, { threshold: 0 }).observe(host);
   }
   document.addEventListener('visibilitychange', function () { if (!document.hidden && visible) req(); });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { t0 = null; req(); } });  // bfcache restore
   canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); running = false; }, false);
 
   var raf = 0;
