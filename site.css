@@ -69,7 +69,12 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 .lang-menu button[hidden]{display:none}
 .lang .flag{width:18px;height:12px;border-radius:2px;flex-shrink:0;display:block;box-shadow:0 0 0 .5px rgba(255,255,255,.25)}
 [dir="rtl"] .lang-menu{right:auto;left:0}
-@media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}.lang{margin-inline-start:auto}}
+@media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}.lang{margin-inline-start:auto}
+/* .lang carries direction:ltr so the flag and caret read left-to-right, which
+   makes its OWN inline-start the left side even on the Hebrew page, so the auto
+   margin landed on the wrong side and the pill floated 45px off the corner.
+   Push it with physical margins that follow the page, not the pill. */
+[dir="rtl"] .lang{margin-left:0;margin-right:auto}}
 
 /* ---------------- hero ---------------- */
 .hero{position:relative;margin-top:26px;overflow:hidden;min-height:560px;display:flex;align-items:center;background:var(--black)}
