@@ -93,9 +93,12 @@ function nav(opts) {
     ]).join(EOL);
 }
 
+const PROPOSAL_SVG = '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>';
+
 function waFloat(EOL) {
   return ['', `<a class="wa-float" href="${CONTACT.whatsapp}" target="_blank" rel="noopener"` +
-    ` aria-label="Chat on WhatsApp">${ICON.waBig}</a>`, ''].join(EOL);
+    ` aria-label="Chat on WhatsApp">${ICON.waBig}</a>`,
+    `<a class="proposal-float" href="/#contact" aria-label="Get a project proposal">${PROPOSAL_SVG}</a>`, ''].join(EOL);
 }
 
 function footer(opts) {

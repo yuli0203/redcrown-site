@@ -75,6 +75,7 @@ const LANGS = {
       'Flip the founder card': 'Перевернуть карточку основательницы',
       'Interactive 3D hologram — click to change the shape': 'Интерактивная 3D-голограмма. Нажмите, чтобы сменить форму',
       'Zoom the 3D model': 'Приблизить 3D-модель',
+      'Get a project proposal': 'Получить предложение по проекту',
       '◆ Robi · our VR instructor': '◆ Роби · наш VR-инструктор',
       '◆ Built in LiveMol': '◆ Создано в LiveMol',
       'A 3D model we built in-house for our Meta Quest 3 lab · drag to rotate · zoom in to see inside': '3D-модель, созданная нами для нашей лаборатории Meta Quest 3. Перетащите, чтобы повернуть',

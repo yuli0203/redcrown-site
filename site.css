@@ -573,3 +573,20 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
   background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 22px;margin-top:22px}
 .pg-tech .tech-ico{height:26px}
 @media(max-width:480px){.pg-tech{gap:18px}.pg-tech .tech-ico{height:20px}}
+
+/* client credit, sitting under the result paragraph and sharing its alignment */
+.wd-client,.pg-client{margin-top:14px;font-family:var(--display);font-weight:600;font-size:.84rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.wd-client a,.pg-client a{color:var(--hot);display:inline-block;padding:6px 0}
+.wd-client a:hover,.pg-client a:hover{text-decoration:underline}
+
+/* Floating proposal button, mobile only. The nav CTA is hidden under 900px, so
+   until now a phone had no proposal action until the foot of the page. Sits in
+   the corner opposite WhatsApp, same size, same elevation. */
+.proposal-float{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));inset-inline-start:calc(22px + env(safe-area-inset-left));
+  z-index:70;width:56px;height:56px;border-radius:50%;background:var(--red);display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);transition:transform .2s ease,box-shadow .2s ease}
+.proposal-float:hover{transform:scale(1.1);box-shadow:0 6px 22px rgba(200,16,46,.5)}
+.proposal-float svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:900px){.proposal-float{display:flex}}
+@media(prefers-reduced-motion:reduce){.proposal-float{transition:none}.proposal-float:hover{transform:none}}
