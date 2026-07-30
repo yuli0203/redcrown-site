@@ -289,8 +289,18 @@ function workBody(p) {
 
 const footer = p => chrome.footer({ EOL, up: upOf(p) }) + chrome.waFloat(EOL);
 
+// The old inline footer also carried the model-cards script and the closing tags.
+// When the chrome moved to chrome.js those went with it, and every generated page
+// silently lost its 3D models. The page tail now lives here, explicitly.
+const tail = p => [
+  `<script src="${upOf(p)}model-cards.js" defer></script>`,
+  '</body>',
+  '</html>',
+  '',
+].join(EOL);
+
 function render(p) {
-  return head(p) + nav(p) + (p.section === 'services' ? serviceBody(p) : workBody(p)) + footer(p);
+  return head(p) + nav(p) + (p.section === 'services' ? serviceBody(p) : workBody(p)) + footer(p) + tail(p);
 }
 
 /* ---------- run ---------- */
