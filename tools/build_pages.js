@@ -26,12 +26,17 @@ for (const p of SERVICES) bySlug[p.slug] = { ...p, section: 'services' };
 for (const p of WORK) bySlug[p.slug] = { ...p, section: 'work' };
 
 const esc = s => String(s).replace(/&(?![a-zA-Z#0-9]+;)/g, '&amp;').replace(/"/g, '&quot;');
-const urlOf = p => `${SITE}/${p.section}/${p.slug}/`;
+// An empty slug means the page IS the section: /services/ rather than
+// /services/something/. That changes its URL, its file path, and how far
+// it must reach back up for shared assets.
+const hrefOf = p => (p.slug ? `/${p.section}/${p.slug}/` : `/${p.section}/`);
+const upOf = p => (p.slug ? '../../' : '../');
+const urlOf = p => `${SITE}${hrefOf(p)}`;
 
 /* ---------- shared chrome ---------- */
 
 function head(p) {
-  const up = '../../';
+  const up = upOf(p);
   const isWork = p.section === 'work';
   const crumbName = p.section === 'services' ? 'Services' : 'Work';
   const crumbHash = p.section === 'services' ? '#services' : '#work';
@@ -103,7 +108,7 @@ function head(p) {
 }
 
 function nav(p) {
-  const up = '../../';
+  const up = upOf(p);
   const on = s => (p.section === s ? ' class="on"' : '');
   return [
     '',
@@ -150,7 +155,6 @@ function ring(p) {
     ].join(EOL);
   }).join(EOL);
   return [
-    '  <h2 class="sec-k pg-sec">ALL CASE STUDIES</h2>',
     '  <nav class="pg-ring" aria-label="All case studies">',
     items,
     '  </nav>',
@@ -181,7 +185,7 @@ function relatedCards(slugs) {
     const t = bySlug[s];
     if (!t) throw new Error('unknown related slug: ' + s);
     return [
-      `      <a class="panel pg-rel" href="/${t.section}/${t.slug}/">`,
+      `      <a class="panel pg-rel" href="${hrefOf(t)}">`,
       `        <b>${esc(t.nav)}</b>`,
       `        <span>${esc(t.lead)}</span>`,
       '        <i class="pg-rel-go">View project →</i>',
@@ -231,14 +235,25 @@ function serviceBody(p) {
 }
 
 function workBody(p) {
-  const up = '../../';
+  const up = upOf(p);
   const out = [];
   out.push('<main class="wrap pg">');
   out.push(breadcrumb(p));
   out.push(`  <h1 class="pg-h1">${esc(p.h1[0])}<em>${esc(p.h1[1])}</em></h1>`);
   out.push(`  <p class="pg-sub">${esc(p.sub)}</p>`);
+  out.push(ring(p));
   out.push(`  <p class="pg-lead">${esc(p.lead)}</p>`);
   out.push(`  <img class="pg-hero" src="${up}${p.image.src}" alt="${esc(p.image.alt)}" width="1200" height="900">`);
+  // The live model, built by model-cards.js from the same config the home page
+  // uses. Declarative: the page says which model, the module does the rest.
+  if (p.model) {
+    out.push('  <div class="pg-model">');
+    out.push(`    <div class="wd-model-wrap" data-model="${p.model.key}"` +
+             `${EOL}         data-alt="${esc(p.model.alt)}"` +
+             `${EOL}         data-badge="${esc(p.model.badge)}"></div>`);
+    out.push(`    <p class="wd-model-hint">${esc(p.model.hint)}</p>`);
+    out.push('  </div>');
+  }
 
   out.push('  <div class="pg-facts">');
   for (const [k, v] of p.facts) out.push(`    <div><i>${esc(k)}</i><b>${esc(v)}</b></div>`);
@@ -254,7 +269,7 @@ function workBody(p) {
     out.push('  <h2 class="sec-k pg-sec">THE SERVICE BEHIND IT</h2>');
     out.push('  <div class="pg-rels">');
     out.push([
-      `      <a class="panel pg-rel" href="/services/${svc.slug}/">`,
+      `      <a class="panel pg-rel" href="${hrefOf(svc)}">`,
       `        <b>${esc(svc.nav)}</b>`,
       `        <span>${esc(svc.lead)}</span>`,
       '        <i class="pg-rel-go">Read more →</i>',
@@ -268,14 +283,13 @@ function workBody(p) {
   out.push('    <p>Tell us what you want to build, even if it is still a rough idea.</p>');
   out.push('    <p><a class="btn btn-red" href="/#contact">GET A PROJECT PROPOSAL</a></p>');
   out.push('  </div>');
-  out.push(ring(p));
   out.push(pager(p));
   out.push('</main>');
   return out.join(EOL);
 }
 
-function footer() {
-  const up = '../../';
+function footer(p) {
+  const up = upOf(p);
   return [
     '',
     '<footer>',
@@ -298,6 +312,7 @@ function footer() {
     '  <div class="copy">© 2026 Red Crown Interactive. All rights reserved.</div>',
     '</footer>',
     '',
+    `<script src="${upOf(p)}model-cards.js" defer></script>`,
     '</body>',
     '</html>',
     '',
@@ -305,7 +320,7 @@ function footer() {
 }
 
 function render(p) {
-  return head(p) + nav(p) + (p.section === 'services' ? serviceBody(p) : workBody(p)) + footer();
+  return head(p) + nav(p) + (p.section === 'services' ? serviceBody(p) : workBody(p)) + footer(p);
 }
 
 /* ---------- run ---------- */
@@ -322,11 +337,11 @@ for (const p of all) {
   if (check) {
     const norm = s => (s === null ? null : s.replace(/\r\n/g, '\n'));
     const cur = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
-    if (norm(cur) !== norm(html)) { console.error(`[pages] stale: ${p.section}/${p.slug}/index.html`); stale++; }
+    if (norm(cur) !== norm(html)) { console.error(`[pages] stale: ${hrefOf(p)}index.html`); stale++; }
   } else {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, html);
-    console.log(`  wrote ${p.section}/${p.slug}/index.html`);
+    console.log(`  wrote ${hrefOf(p)}index.html`);
   }
 }
 
