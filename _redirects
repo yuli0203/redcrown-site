@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects.
+# /index.html served the home page at a second URL alongside "/", which is a
+# duplicate of the canonical and spends crawl budget for nothing.
+/index.html  /  301
