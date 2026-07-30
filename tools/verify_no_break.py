@@ -39,6 +39,8 @@ MATRIX = [
     ("iPad Mini",   "webkit",   "iPad Mini",  "/"),      # 768px
     ("iPhone SE HE","webkit",   "iPhone SE",  "/he/"),   # Hebrew RTL
     ("iPhone SE RU","webkit",   "iPhone SE",  "/ru/"),   # Russian (longest words)
+    ("360 EN",      "chromium", "Galaxy S9+", "/"),      # 360-400 band, where sec-k wraps
+    ("412 RU",      "chromium", "Pixel 7",    "/ru/"),   # Russian at a common Android width
 ]
 
 AUTOSCROLL = """async () => {
@@ -89,7 +91,27 @@ INTEGRITY = r"""
   const stuck = document.querySelectorAll('.rv:not(.in)').length;
   if (stuck > 0) problems.push(`${stuck} scroll-reveal section(s) stuck invisible (opacity:0)`);
 
-  // 6. structural sanity
+  // 6. any text cut off by its own box.
+  // The page-level overflow check above cannot see this: html/body use
+  // overflow-x:clip, so an over-wide heading is silently chopped instead of
+  // producing a scrollbar. That is how "FROM IDEA TO WORKING PRODUCT" shipped
+  // reading "FROM IDEA TO WORKING PROD" on every phone.
+  for (const el of document.querySelectorAll('body *')) {
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+    if (cs.textOverflow === 'ellipsis') continue;              // clipped on purpose
+    if (['auto', 'scroll'].includes(cs.overflowX)) continue;   // scrollable on purpose
+    const own = [...el.childNodes].filter(n => n.nodeType === 3)
+                                  .map(n => n.textContent.trim()).join('');
+    if (!own) continue;
+    if (el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1) {
+      const t = (el.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 42);
+      problems.push(`text clipped: <${el.tagName.toLowerCase()} class="${el.className}"> overflows its box by ${el.scrollWidth - el.clientWidth}px ("${t}")`);
+      break;                                                   // one is enough to fail
+    }
+  }
+
+  // 7. structural sanity
   if (!document.querySelector('nav')) problems.push('nav missing');
   if (!document.querySelector('footer')) problems.push('footer missing');
 
