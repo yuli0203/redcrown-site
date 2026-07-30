@@ -61,6 +61,9 @@ with sync_playwright() as pw:
               imgCount: document.images.length,
               schema: [...document.querySelectorAll('script[type="application/ld+json"]')].map(s=>s.textContent),
               panels: document.querySelectorAll('.panel').length,
+              navLabels: [...document.querySelectorAll('nav .nav-links li a')].map(a=>a.textContent),
+              hasLang: !!document.querySelector('nav .lang-static, nav .lang'),
+              hasWa: !!document.querySelector('.wa-float'),
               pagerLinks: [...document.querySelectorAll('.pg-pager a')].map(a=>a.getAttribute('href')),
               crumbLinks: [...document.querySelectorAll('.pg-crumb a')].map(a=>a.getAttribute('href')),
             };
@@ -97,6 +100,24 @@ with sync_playwright() as pw:
             if n > 1: fail("seo", f"duplicate {field} on {n} pages: {val[:52]}")
         for p in PAGES:
             if not meta[p][field].strip(): fail("seo", f"{p}: empty {field}")
+
+    # ---------- A2. the chrome must not drift from the home page ----------
+    # The home page is still hand-maintained HTML; these pages are generated from
+    # tools/chrome.js. If someone adds a nav link to one and not the other, this
+    # fails rather than letting the two quietly diverge.
+    import re as _re
+    with open(os.path.join(os.getcwd(), "index.html"), encoding="utf-8") as _f: home = _f.read()
+    hnav = _re.search(r"<nav>(.*?)</nav>", home, _re.S).group(1)
+    home_links = [t.strip() for _, t in
+                  _re.findall(r"<li><a[^>]*href=\"([^\"]*)\"[^>]*>([^<]*)</a></li>", hnav)]
+    for path in PAGES:
+        got = [t.strip() for t in meta[path]["navLabels"]]
+        if got != home_links:
+            fail("chrome", "%s nav differs from home page: %s vs %s" % (path, got, home_links))
+        if not meta[path]["hasLang"]:
+            fail("chrome", "%s has no language switcher" % path)
+        if not meta[path]["hasWa"]:
+            fail("chrome", "%s has no WhatsApp button" % path)
 
     # ---------- B. link integrity ----------
     targets = set()
@@ -179,7 +200,7 @@ with sync_playwright() as pw:
     b.close()
 srv.shutdown()
 
-CATS = ["structure", "design", "responsive", "clipping", "nav", "links", "seo", "a11y", "schema", "console"]
+CATS = ["structure", "design", "chrome", "responsive", "clipping", "nav", "links", "seo", "a11y", "schema", "console"]
 total = sum(len(fails[c]) for c in CATS)
 print(f"pages: {len(PAGES)}   viewports: {len(VIEWPORTS)}   renders: {len(PAGES)*(len(VIEWPORTS)+1)}")
 for c in CATS:

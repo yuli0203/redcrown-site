@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const { SERVICES, WORK } = require('./pages.data.js');
+const chrome = require('./chrome.js');   // nav, footer, WhatsApp, language switcher
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://redcrowninteractive.com';
@@ -107,30 +108,9 @@ function head(p) {
   ].join(EOL);
 }
 
-function nav(p) {
-  const up = upOf(p);
-  const on = s => (p.section === s ? ' class="on"' : '');
-  return [
-    '',
-    '<nav>',
-    '  <div class="nav-in">',
-    '    <a class="logo" href="/">',
-    `      <img src="${up}assets/logo-kit/redcrown-primary-scarlet.svg" alt="Red Crown Interactive logo" width="40" height="40">`,
-    '      <span><b>RED CROWN</b><i>INTERACTIVE</i></span>',
-    '    </a>',
-    '    <ul class="nav-links">',
-    '      <li><a href="/">HOME</a></li>',
-    `      <li><a${on('services')} href="/#services">SERVICES</a></li>`,
-    `      <li><a${on('work')} href="/#work">WORK</a></li>`,
-    '      <li><a href="/#about">ABOUT</a></li>',
-    '      <li><a href="/#contact">CONTACT</a></li>',
-    '    </ul>',
-    '    <a class="btn btn-line nav-cta" href="/#contact">GET A PROPOSAL</a>',
-    '  </div>',
-    '</nav>',
-    '',
-  ].join(EOL);
-}
+// Nav, footer and the floating WhatsApp button all come from tools/chrome.js so
+// they cannot drift from the home page.
+const nav = p => chrome.nav({ EOL, up: upOf(p), section: p.section });
 
 function breadcrumb(p) {
   const label = p.section === 'services' ? 'Services' : 'Work';
@@ -307,36 +287,7 @@ function workBody(p) {
   return out.join(EOL);
 }
 
-function footer(p) {
-  const up = upOf(p);
-  return [
-    '',
-    '<footer>',
-    '  <div class="foot">',
-    '    <a class="logo" href="/">',
-    `      <img src="${up}assets/logo-kit/redcrown-primary-scarlet.svg" alt="Red Crown Interactive logo" width="40" height="40">`,
-    '      <span><b>RED CROWN</b><i>INTERACTIVE</i></span>',
-    '    </a>',
-    '    <div class="foot-right">',
-    '      <div class="contact">',
-    '        <span><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Haifa, Israel</span></span>',
-    '        <span><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></span>',
-    '        <span dir="ltr"><svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><a href="tel:+972585760550">+972-58-576-0550</a></span>',
-    '      </div>',
-    '      <div class="socials">',
-    '        <a href="https://www.linkedin.com/company/red-crown-interactive" aria-label="LinkedIn" rel="noopener">in</a>',
-    '      </div>',
-    '    </div>',
-    '  </div>',
-    '  <div class="copy">© 2026 Red Crown Interactive. All rights reserved.</div>',
-    '</footer>',
-    '',
-    `<script src="${upOf(p)}model-cards.js" defer></script>`,
-    '</body>',
-    '</html>',
-    '',
-  ].join(EOL);
-}
+const footer = p => chrome.footer({ EOL, up: upOf(p) }) + chrome.waFloat(EOL);
 
 function render(p) {
   return head(p) + nav(p) + (p.section === 'services' ? serviceBody(p) : workBody(p)) + footer(p);
