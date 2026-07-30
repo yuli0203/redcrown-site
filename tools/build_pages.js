@@ -128,7 +128,7 @@ function ring(p) {
     const on = w.slug === p.slug;
     return [
       `    <a class="pg-ring-i${on ? ' is-on' : ''}" href="/work/${w.slug}/"`,
-      `       style="--shot:url('${up}${w.image.src}'); view-transition-name:rail-${w.slug}"${on ? ' aria-current="page"' : ''}>`,
+      `       style="--shot:url('${up}${w.image.src}')"${on ? ' aria-current="page"' : ''}>`,
       `      <span class="pg-ring-cat">${esc(w.sub.split('·')[0].trim())}</span>`,
       `      <span class="pg-ring-t">${esc(w.nav)}</span>`,
       on ? '      <i class="pg-ring-bar" aria-hidden="true"></i>' : null,
