@@ -23,15 +23,22 @@ const SERVICES = [
         { h: 'Mobile', p: 'iOS and Android apps and companion AR tools for work that happens in the field, drawing on commercial products that served millions of users.' },
         { h: 'PC', p: 'Complex real-time systems: research tools, simulations and high-performance 3D software, with scientific computing and machine learning behind them.' },
       ]},
-      { kind: 'prose', head: 'WHAT WE ACTUALLY DO', paras: [
-        'Concept and design, development, 3D art and animation, optimisation, and the support that keeps software alive after launch. Depending on what a project needs, the studio assembles and manages the development, 3D and design people around it, so the whole thing is built as one piece rather than stitched together.',
-        'Projects are led and built by the founder, a senior engineer and designer, so you talk directly to the person who both plans and builds. For larger work a selected professional team operates under her lead.',
+      { kind: 'chips', head: 'WHAT WE ACTUALLY DO', note: 'Led hands-on by the founder, a senior engineer and designer. For larger work, a selected team operates under her lead.', items: [
+        { icon: 'bulb',   t: 'Concept & design' },
+        { icon: 'gear',   t: 'Development' },
+        { icon: 'cube',   t: '3D art & animation' },
+        { icon: 'gauge',  t: 'Optimisation' },
+        { icon: 'wrench', t: 'Support & updates' },
       ]},
-      { kind: 'prose', head: 'BUILT FOR A REAL TIMETABLE', paras: [
-        'Teaching software has to survive contact with a scheduled class, not just a demo. That means comfort in the headset for a full hour, a whole cohort running the same session at once, instructor tools that show where each group is, and the unglamorous parts: charging, resetting between groups, and what happens when one device misbehaves five minutes in.',
+      { kind: 'icons', head: 'TOOLS WE BUILD WITH', icons: [
+        ['unity','Unity'],['csharp','C#'],['cplusplus','C++'],['python','Python'],
+        ['oculus','Meta Quest'],['ios','iOS'],['android','Android'],['webgl','WebGL'],['blender','Blender'],
       ]},
-      { kind: 'prose', head: 'HOW A PROJECT STARTS', paras: [
-        'A short call to understand what you need, then a clear estimate before work begins. You can start small, with a pilot or a prototype, and grow from there. A focused module can launch within weeks; a larger system takes longer, with goals and milestones set up front.',
+      { kind: 'tiles', head: 'BUILT FOR A REAL TIMETABLE', items: [
+        ['Comfort', 'A full hour in the headset'],
+        ['Scale', 'A whole cohort at once'],
+        ['Instructors', 'See where every group is'],
+        ['Between classes', 'Charging, reset, recovery'],
       ]},
       { kind: 'process', head: 'HOW A PROJECT RUNS', tracks: [
         { name: 'Focused module or pilot',
@@ -78,8 +85,8 @@ const WORK = [
     lead: 'A complementary Meta Quest 3 model used to explain theoretical material in greater depth as part of an enzymatic laboratory experiment at the Technion.',
     story: [
       ['The challenge', 'In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.'],
-      ['The solution', 'We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student’s real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum and lets students who normally avoid headsets take part.'],
-      ['The result', 'What was invisible at the bench becomes tangible. Students move inside structures they could never see, handle them with their own hands, and build every concept by doing and deciding rather than by reading a flat diagram. Instructors control the pace live and get real-time comprehension feedback. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.'],
+      ['The solution', 'We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student’s real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum.'],
+      ['The result', 'What was invisible at the bench becomes tangible. Students move inside structures they could never see, handle them with their own hands, and build every concept by doing and deciding rather than by reading a flat diagram. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.'],
     ],
     facts: [['Platform', 'Meta Quest 3, mixed reality passthrough'], ['Interaction', 'Hand tracking, no controllers'], ['Built with', 'Unity'], ['In use at', 'Wolfson Faculty of Chemical Engineering, Technion']],
     service: '',
@@ -111,17 +118,17 @@ const WORK = [
              hint: 'A molecule generated by LiveMol itself. Drag to rotate, use the slider to zoom in.' },
     nav: 'LiveMol Research Tool',
     title: 'LiveMol: Interactive Molecular Research Tool | Red Crown Interactive',
-    desc: 'A desktop research tool where scientists build and edit molecules and a machine-learning model returns the calculation onto the structure in front of them, built for the Technion.',
+    desc: 'A desktop research tool where scientists build and edit molecules and a Python compute server returns the quantum chemistry calculation onto the structure in front of them, built for the Technion.',
     h1: ['Molecular Scientific ', 'ML Research Tool'],
     sub: 'PC · Machine Learning · Python Server · Real-time 3D',
     image: { src: 'assets/work-ml-livemol.jpg', alt: 'The LiveMol interface with a molecule under analysis, force vectors, and the calculation job panel' },
     lead: 'An interactive 3D tool that keeps a researcher in the loop, instead of waiting for one calculation at a time.',
     story: [
       ['The challenge', 'Researchers needed to build and modify molecular structures and see results immediately, instead of waiting for one calculation at a time and guessing what would change.'],
-      ['The solution', 'We built an interactive 3D tool where the researcher builds and edits a molecule, and a machine-learning model runs a scientific calculation on it quickly and returns the result onto the model in front of them, without leaving the flow.'],
-      ['The result', 'Research becomes fast, visual, and intuitive, and the machine-learning model enables calculations far faster than the traditional approach. Built for the Wolfson Faculty of Chemical Engineering at the Technion.'],
+      ['The solution', 'We built an interactive 3D tool where the researcher builds and edits a molecule, and a Python compute server runs the quantum chemistry calculation, using established engines including ASE, tblite, Open Babel and Sella, and returns the result onto the model in front of them, without leaving the flow.'],
+      ['The result', 'Research becomes fast, visual, and intuitive, and the researcher stays inside the structure while the calculation runs, instead of waiting on one job at a time. Built for the Wolfson Faculty of Chemical Engineering at the Technion.'],
     ],
-    facts: [['Platform', 'Desktop'], ['Behind it', 'Python service, machine-learning model'], ['Built with', 'Unity'], ['Built for', 'Wolfson Faculty of Chemical Engineering, Technion']],
+    facts: [['Platform', 'Desktop'], ['Behind it', 'Python compute server, quantum chemistry engines (ASE, tblite, Open Babel, Sella)'], ['Built with', 'Unity'], ['Built for', 'Wolfson Faculty of Chemical Engineering, Technion']],
     service: '',
   },
   {
@@ -131,17 +138,17 @@ const WORK = [
              hint: 'The headset the classroom runs on. Drag to rotate.' },
     nav: 'Meta Quest Classroom',
     title: 'Meta Quest Classroom Setup for a University | Red Crown Interactive',
-    desc: 'A physical VR classroom set up end to end at the Technion: up to 12 Meta Quest 3 headsets with paired tablets, installed, tested, and handed over with instructor workflows.',
+    desc: 'A physical VR classroom guided end to end at the Technion: up to 12 Meta Quest 3 headsets with paired tablets, configured, tested, and handed over with instructor workflows.',
     h1: ['Physical Meta Quest ', 'Classroom Setup'],
     sub: 'Multi-User VR · Meta Quest 3 · Instructor Tools',
     image: { src: 'assets/work-class-setup.jpg', alt: 'A university classroom with students seated in Meta Quest 3 headsets around lab benches' },
     lead: 'A classroom that runs immersive virtual reality for many groups at once, reliably, week after week.',
     story: [
       ['The challenge', 'The Technion wanted a classroom that runs immersive virtual reality for many groups at once, reliably, without staff losing every lesson to technical issues.'],
-      ['The solution', 'We set up the classroom end to end, from hardware selection and space planning to installation, testing, and the instructors’ workflows. Up to 12 Meta Quest 3 headsets, each with a paired tablet.'],
+      ['The solution', 'We consulted end to end, from early planning and hardware selection through classroom layout, device configuration, deployment, testing, and the instructors’ workflows. Up to 12 Meta Quest 3 headsets, each with a paired tablet.'],
       ['The result', 'A classroom that simply works, where instructors follow each group, support students, and collect data every session. The technology stays in the background, and teaching stays center stage.'],
     ],
-    facts: [['Scale', 'Up to 12 headsets with paired tablets'], ['Scope', 'Hardware selection through installation and handover'], ['Includes', 'Instructor workflows and testing'], ['Location', 'Technion']],
+    facts: [['Scale', 'Up to 12 headsets with paired tablets'], ['Scope', 'Advisory, from hardware selection through handover'], ['Includes', 'Instructor workflows and testing'], ['Location', 'Technion']],
     service: '',
   },
 ];

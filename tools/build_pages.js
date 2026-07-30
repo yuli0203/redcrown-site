@@ -161,6 +161,14 @@ function pager(p) {
 
 /* ---------- blocks ---------- */
 
+const CHIP_ICON = {
+  bulb:   '<svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>',
+  gear:   '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>',
+  cube:   '<svg class="icon" viewBox="0 0 24 24"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9L12 2zM12 11l8-4.5M12 11L4 6.5M12 11v9"/></svg>',
+  gauge:  '<svg class="icon" viewBox="0 0 24 24"><path d="M4 14a8 8 0 1 1 16 0"/><path d="M12 14l4-4"/><path d="M2 20h20"/></svg>',
+  wrench: '<svg class="icon" viewBox="0 0 24 24"><path d="M14 7a4 4 0 0 1 5.6-3.7L16.5 6.4l1.1 1.1 3.1-3.1A4 4 0 0 1 15 10L7 18a2 2 0 0 1-3-3l8-8z"/></svg>',
+};
+
 function relatedCards(slugs) {
   return slugs.map(s => {
     const t = bySlug[s];
@@ -196,6 +204,26 @@ function serviceBody(p) {
       out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
       out.push('  <div class="panel pg-prose">');
       for (const t of b.paras) out.push(`    <p>${t}</p>`);
+      out.push('  </div>');
+    } else if (b.kind === 'chips') {
+      out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
+      out.push('  <div class="pg-chips">');
+      for (const it of b.items) {
+        out.push(`    <div class="pg-chip">${CHIP_ICON[it.icon] || ''}<b>${esc(it.t)}</b></div>`);
+      }
+      out.push('  </div>');
+      if (b.note) out.push(`  <p class="pg-chips-note">${esc(b.note)}</p>`);
+    } else if (b.kind === 'icons') {
+      out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
+      out.push('  <div class="pg-tech">');
+      for (const [file, label] of b.icons) {
+        out.push(`    <img class="tech-ico" src="${upOf(p)}assets/Tech/${file}.svg" alt="${esc(label)}" title="${esc(label)}" loading="lazy">`);
+      }
+      out.push('  </div>');
+    } else if (b.kind === 'tiles') {
+      out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
+      out.push('  <div class="pg-facts">');
+      for (const [k, v] of b.items) out.push(`    <div><i>${esc(k)}</i><b>${esc(v)}</b></div>`);
       out.push('  </div>');
     } else if (b.kind === 'process') {
       out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
