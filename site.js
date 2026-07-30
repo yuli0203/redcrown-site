@@ -1,6 +1,6 @@
 const I18N = {
   en: {
-    "float.cta":"GET A PROPOSAL",
+    "nav.ctaMini":"Proposal",
     "doc.title":"VR, XR & Interactive 3D Software in Unity | Red Crown Interactive",
     "nav.home":"HOME","nav.services":"SERVICES","nav.tech":"TECHNOLOGIES","nav.work":"WORK","nav.about":"ABOUT","nav.faq":"FAQ","nav.contact":"CONTACT","nav.cta":"GET A PROPOSAL",
     "hero.title":"<em>INTERACTIVE SOFTWARE</em><br>FOR SCIENCE &amp; ENGINEERING",
@@ -58,7 +58,7 @@ const I18N = {
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
   },
   he: {
-    "float.cta":"קבלת הצעה",
+    "nav.ctaMini":"הצעה",
     "doc.title":"פיתוח VR, XR ואפליקציות גרפיות ב-Unity | Red Crown Interactive",
     "nav.home":"בית","nav.services":"שירותים","nav.tech":"טכנולוגיות","nav.work":"עבודות","nav.about":"אודות","nav.faq":"שאלות נפוצות","nav.contact":"צור קשר","nav.cta":"קבלת הצעה",
     "hero.title":"פיתוח <em>תוכנה אינטראקטיבית</em><br>למדע, הנדסה<br>ומציאות מדומה",
@@ -117,7 +117,7 @@ const I18N = {
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
   },
   ru: {
-    "float.cta":"Получить предложение",
+    "nav.ctaMini":"Заявка",
     "doc.title":"Разработка VR, XR и интерактивного 3D-ПО на Unity | Red Crown Interactive",
     "nav.home":"Главная","nav.services":"Услуги","nav.tech":"Технологии","nav.work":"Работы","nav.about":"О нас","nav.faq":"Вопросы","nav.contact":"Контакты","nav.cta":"Получить предложение",
     "hero.title":"<em>ИНТЕРАКТИВНОЕ ПО</em><br>ДЛЯ НАУКИ И ИНЖЕНЕРИИ",
