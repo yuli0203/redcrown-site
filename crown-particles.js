@@ -125,4 +125,8 @@
   window.addEventListener('resize', function () { size(); }, { passive: true });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) req(); }, { threshold: 0 }).observe(section);
   document.addEventListener('visibilitychange', function () { if (!document.hidden && visible) req(); });
+  // iOS restores the page from the back-forward cache when the visitor swipes
+  // back from a case study; only pageshow fires then, and without this the
+  // crown comes back frozen.
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { lastTs = null; req(); } });
 })();
