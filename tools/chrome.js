@@ -98,7 +98,7 @@ const PROPOSAL_SVG = '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14
 function waFloat(EOL) {
   return ['', `<a class="wa-float" href="${CONTACT.whatsapp}" target="_blank" rel="noopener"` +
     ` aria-label="Chat on WhatsApp">${ICON.waBig}</a>`,
-    `<a class="proposal-float" href="/#contact" aria-label="Get a project proposal">${PROPOSAL_SVG}</a>`, ''].join(EOL);
+    `<a class="proposal-float" href="/#contact" aria-label="Get a project proposal">${PROPOSAL_SVG}<span>GET A PROPOSAL</span></a>`, ''].join(EOL);
 }
 
 function footer(opts) {

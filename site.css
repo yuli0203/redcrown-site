@@ -583,10 +583,17 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 /* Floating proposal button, mobile only. The nav CTA is hidden under 900px, so
    until now a phone had no proposal action until the foot of the page. Sits in
    the corner opposite WhatsApp, same size, same elevation. */
-.proposal-float{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));inset-inline-start:calc(22px + env(safe-area-inset-left));
-  z-index:70;width:56px;height:56px;border-radius:50%;background:var(--red);display:none;align-items:center;justify-content:center;
-  box-shadow:0 4px 16px rgba(0,0,0,.45);transition:transform .2s ease,box-shadow .2s ease}
-.proposal-float:hover{transform:scale(1.1);box-shadow:0 6px 22px rgba(200,16,46,.5)}
-.proposal-float svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* stacked right above WhatsApp: one corner holds every action, the other side
+   of the view stays clean */
+.proposal-float{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));inset-inline-end:calc(22px + env(safe-area-inset-right));
+  z-index:70;height:48px;padding:0 18px;border-radius:999px;background:var(--red);display:none;align-items:center;gap:9px;
+  font-family:var(--display);font-weight:600;font-size:.76rem;letter-spacing:.08em;color:#fff;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);
+  opacity:0;transform:translateY(80px);transition:transform .35s cubic-bezier(.2,.8,.3,1),opacity .35s ease}
+.proposal-float svg{width:19px;height:19px;flex-shrink:0;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* only on phones, only once the visitor is actually reading, and never on top
+   of the form it points at */
+.proposal-float.is-in{opacity:1;transform:none}
 @media(max-width:900px){.proposal-float{display:flex}}
-@media(prefers-reduced-motion:reduce){.proposal-float{transition:none}.proposal-float:hover{transform:none}}
+@media(max-width:360px){.proposal-float{font-size:.7rem;padding:0 14px;height:44px}}
+@media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}}

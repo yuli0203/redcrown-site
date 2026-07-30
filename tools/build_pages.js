@@ -330,6 +330,7 @@ const footer = p => chrome.footer({ EOL, up: upOf(p) }) + chrome.waFloat(EOL);
 const tail = p => [
   `<script src="${upOf(p)}model-cards.js" defer></script>`,
   `<script src="${upOf(p)}rail-nav.js" defer></script>`,
+  `<script src="${upOf(p)}float.js" defer></script>`,
   '</body>',
   '</html>',
   '',
