@@ -476,7 +476,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .pg-ring{margin-top:26px;margin-bottom:6px}
 
 /* the current project's screenshot gets a scarlet frame */
-.pg-hero{border:2px solid var(--red);box-shadow:0 0 0 1px rgba(200,16,46,.25),0 18px 44px rgba(0,0,0,.5)}
+.pg-hero{border:1px solid var(--line)}
 
 /* the live model on a case-study page: same component as the home page cards */
 .pg-model{margin-top:26px}
@@ -520,3 +520,17 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   .pg-media .pg-hero{height:auto}
   .pg-media .wd-model{height:clamp(260px,44vh,360px)}
 }
+
+/* JS-free language switcher for the standalone pages. The home page dropdown
+   needs site.js, which these pages do not load, so this is three plain links
+   styled to sit where the dropdown sits. */
+.lang-static{display:inline-flex;align-items:center;gap:2px;margin-inline-start:14px;flex-shrink:0;
+  direction:ltr;border:1px solid var(--line);border-radius:8px;padding:3px}
+.lang-static a,.lang-static .lang-on{font-family:var(--display);font-weight:600;font-size:.68rem;
+  letter-spacing:.06em;padding:7px 9px;border-radius:6px;line-height:1}
+.lang-static a{color:var(--dim);transition:color .2s,background-color .2s}
+.lang-static a:hover{color:var(--hot);background:var(--panel)}
+.lang-static .lang-on{color:var(--bone);background:var(--panel-2)}
+@media(max-width:900px){.lang-static{margin-inline-start:auto}
+  /* real tap targets on a phone */
+  .lang-static a,.lang-static .lang-on{padding:12px 11px}}
