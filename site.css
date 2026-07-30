@@ -161,7 +161,14 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.6rem)}
 .wwd{margin-top:26px;padding:40px 40px}
 .sec-k{text-align:center;font-family:var(--brand);font-size:.82rem;font-weight:400;margin:0;letter-spacing:.4em;color:var(--bone);position:relative}
 .sec-k::before,.sec-k::after{content:"";display:inline-block;width:56px;height:1px;background:var(--red);vertical-align:middle;margin:0 18px}
-@media(max-width:600px){.sec-k{font-size:.7rem;letter-spacing:.16em;white-space:nowrap}.sec-k::before,.sec-k::after{width:20px;margin:0 9px}}
+/* A section kicker must never be cut off. nowrap forced long headings such as
+   "FROM IDEA TO WORKING PRODUCT" onto one line, and html{overflow-x:clip} then
+   hid the overflow instead of scrolling, so the text was simply chopped. */
+@media(max-width:600px){.sec-k{font-size:.7rem;letter-spacing:.14em;white-space:normal;line-height:1.65}.sec-k::before,.sec-k::after{width:20px;margin:0 9px}}
+@media(max-width:400px){.sec-k{font-size:.66rem;letter-spacing:.1em}.sec-k::before,.sec-k::after{width:13px;margin:0 6px}}
+/* On the narrowest screens the rules orphan onto a line of their own once the
+   heading wraps, which reads as a stray dash. Centred text alone is cleaner. */
+@media(max-width:360px){.sec-k::before,.sec-k::after{display:none}}
 .wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px;margin-top:44px;text-align:center}
 .wwd-grid .icon{font-size:1.9rem;margin-bottom:14px}
 .wwd-grid h4{font-size:.72rem;font-weight:700;letter-spacing:.16em;margin-bottom:10px}

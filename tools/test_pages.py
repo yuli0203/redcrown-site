@@ -138,11 +138,28 @@ with sync_playwright() as pw:
                 const cards = document.querySelector('.cards3');
                 const facts = document.querySelector('.pg-facts');
                 const cols = n => n ? getComputedStyle(n).gridTemplateColumns.split(' ').length : 0;
-                return {overflow: de.scrollWidth - vw, small, tap, wide,
+                // text cut off by its own box. overflow-x:clip on html hides this
+                // from the page-level number above, which is how a chopped heading
+                // shipped to production unnoticed.
+                let clipped = '';
+                for (const e of document.querySelectorAll('body *')) {
+                    const c = getComputedStyle(e);
+                    if (c.display==='none'||c.visibility==='hidden') continue;
+                    if (c.textOverflow==='ellipsis') continue;
+                    if (['auto','scroll'].includes(c.overflowX)) continue;
+                    const own=[...e.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent.trim()).join('');
+                    if (!own) continue;
+                    if (e.clientWidth>0 && e.scrollWidth > e.clientWidth+1) {
+                        clipped = `<${e.tagName.toLowerCase()} class="${e.className}"> +${e.scrollWidth-e.clientWidth}px "${(e.innerText||'').replace(/\s+/g,' ').trim().slice(0,38)}"`;
+                        break;
+                    }
+                }
+                return {overflow: de.scrollWidth - vw, small, tap, wide, clipped,
                         cardCols: cols(cards), factCols: cols(facts),
                         pagerDir: document.querySelector('.pg-pager')
                             ? getComputedStyle(document.querySelector('.pg-pager')).flexDirection : ''};
             }""", w)
+            if r["clipped"]: fail("clipping", f"{path} @{label}: {r['clipped']}")
             if r["overflow"] > 2: fail("responsive", f"{path} @{label}: {r['overflow']}px horizontal overflow")
             if r["wide"]: fail("responsive", f"{path} @{label}: {r['wide']} element(s) wider than viewport")
             if r["small"]: fail("responsive", f"{path} @{label}: {r['small']} text run(s) under 13px")
@@ -155,7 +172,7 @@ with sync_playwright() as pw:
     b.close()
 srv.shutdown()
 
-CATS = ["structure", "design", "responsive", "nav", "links", "seo", "a11y", "schema", "console"]
+CATS = ["structure", "design", "responsive", "clipping", "nav", "links", "seo", "a11y", "schema", "console"]
 total = sum(len(fails[c]) for c in CATS)
 print(f"pages: {len(PAGES)}   viewports: {len(VIEWPORTS)}   renders: {len(PAGES)*(len(VIEWPORTS)+1)}")
 for c in CATS:
