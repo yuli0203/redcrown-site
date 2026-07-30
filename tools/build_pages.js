@@ -128,11 +128,12 @@ function ring(p) {
     const on = w.slug === p.slug;
     return [
       `    <a class="pg-ring-i${on ? ' is-on' : ''}" href="/work/${w.slug}/"`,
-      `       style="--shot:url('${up}${w.image.src}')"${on ? ' aria-current="page"' : ''}>`,
+      `       style="--shot:url('${up}${w.image.src}'); view-transition-name:rail-${w.slug}"${on ? ' aria-current="page"' : ''}>`,
       `      <span class="pg-ring-cat">${esc(w.sub.split('·')[0].trim())}</span>`,
       `      <span class="pg-ring-t">${esc(w.nav)}</span>`,
+      on ? '      <i class="pg-ring-bar" aria-hidden="true"></i>' : null,
       '    </a>',
-    ].join(EOL);
+    ].filter(Boolean).join(EOL);
   }).join(EOL);
   return [
     '  <nav class="pg-ring" aria-label="All case studies">',
@@ -294,6 +295,7 @@ const footer = p => chrome.footer({ EOL, up: upOf(p) }) + chrome.waFloat(EOL);
 // silently lost its 3D models. The page tail now lives here, explicitly.
 const tail = p => [
   `<script src="${upOf(p)}model-cards.js" defer></script>`,
+  `<script src="${upOf(p)}rail-nav.js" defer></script>`,
   '</body>',
   '</html>',
   '',
