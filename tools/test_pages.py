@@ -12,8 +12,13 @@ BASE = f"http://127.0.0.1:{srv.server_address[1]}"
 
 PAGES = ["/services/vr-development/", "/services/ar-mr-development/",
          "/services/scientific-visualization/", "/services/unity-app-development/",
+         "/services/mobile-app-development/",
          "/work/enzymatic-lab-ar/", "/work/fugacity-vr-lab/",
          "/work/livemol-research-tool/", "/work/meta-quest-classroom/"]
+
+# Derived, never hard-coded: adding a page must not silently reshuffle the
+# section split and make the pager loop check assert the wrong thing.
+SECTIONS = {s: [p for p in PAGES if p.startswith("/%s/" % s)] for s in ("services", "work")}
 
 VIEWPORTS = [(320, "320 iPhone SE"), (390, "390 iPhone 12"), (412, "412 Pixel"),
              (768, "768 iPad"), (1024, "1024 small laptop"), (1440, "1440 desktop"),
@@ -108,7 +113,7 @@ with sync_playwright() as pw:
     pg.close()
 
     # ---------- C. pager forms a closed loop per section ----------
-    for section, group in (("services", PAGES[:4]), ("work", PAGES[4:])):
+    for section, group in SECTIONS.items():
         nxt = {}
         for p in group:
             pl = meta[p]["pagerLinks"]

@@ -85,6 +85,28 @@ const SERVICES = [
     cta: { h: 'Sitting on data or a model nobody can explore?', p: 'Tell us what your researchers need to see and do.' },
   },
   {
+    slug: 'mobile-app-development',
+    nav: 'Mobile App Development',
+    title: 'Mobile App & Companion AR Development | Red Crown Interactive',
+    desc: 'iOS and Android development for field work and technical teams, including companion AR tools, built by an engineer whose commercial products have served millions of users.',
+    h1: ['Mobile apps for work that happens ', 'away from a desk'],
+    lead: 'We build iOS and Android software for people doing technical work in the field, including companion AR tools that put the model, the reading, or the instruction where the job is.',
+    serviceType: 'Mobile app development',
+    blocks: [
+      { kind: 'cards', head: 'WHAT WE BUILD', items: [
+        { h: 'Field tools', p: 'Apps for technical work that happens on site rather than at a workstation, where the phone is the only device the user has to hand.' },
+        { h: 'Companion AR', p: 'Augmented reality on a phone or tablet, for cases where a headset is the wrong tool but the content still belongs in the real space.' },
+        { h: 'Apps at scale', p: 'Built on the founder’s experience with commercial products that served millions of users, so the things that only appear at scale are designed for from the start.' },
+      ]},
+      { kind: 'prose', head: 'ONE TEAM, BOTH PLATFORMS', paras: [
+        'Built in <b>Unity</b> for <b>iOS</b> and <b>Android</b> together, so a single codebase covers both rather than two builds drifting apart.',
+        'Where a project also needs a headset or a desktop component, the same studio builds that too, which keeps the 3D content and the interaction model consistent across everything the user touches.',
+      ]},
+      { kind: 'related', head: 'RELATED WORK', items: ['enzymatic-lab-ar'] },
+    ],
+    cta: { h: 'Have work that happens away from a desk?', p: 'Tell us what your people need in their hands.' },
+  },
+  {
     slug: 'unity-app-development',
     nav: 'Unity Development',
     title: 'Unity Application Development for XR, Mobile & PC | Red Crown Interactive',
