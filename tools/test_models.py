@@ -63,7 +63,7 @@ def main():
                         if (b) b.click();
                     }""")
                 else:
-                    pg.evaluate("document.querySelector('.pg-model').scrollIntoView()")
+                    pg.evaluate("document.querySelector('.pg-media, .pg-model').scrollIntoView()")
 
                 # the custom element must get defined, i.e. the library really loaded
                 pg.wait_for_function("!!(window.customElements && customElements.get('model-viewer'))",

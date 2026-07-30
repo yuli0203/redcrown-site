@@ -183,7 +183,9 @@
   }, true);
 
   function watchInline() {
-    var inline = document.querySelectorAll('.pg-model .wd-model-wrap[data-model]');
+    // A case study shows its model inline, whether it sits beside the screenshot
+    // in .pg-media or on its own in .pg-model.
+    var inline = document.querySelectorAll('.pg-media .wd-model-wrap[data-model], .pg-model .wd-model-wrap[data-model]');
     if (!inline.length) return;
     if (!('IntersectionObserver' in window)) { loadModelViewers(); return; }
     var io = new IntersectionObserver(function (es) {

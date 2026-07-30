@@ -216,6 +216,25 @@ function serviceBody(p) {
       out.push('  <div class="panel pg-prose">');
       for (const t of b.paras) out.push(`    <p>${t}</p>`);
       out.push('  </div>');
+    } else if (b.kind === 'process') {
+      out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
+      out.push('  <div class="pr-tracks">');
+      for (const tr of b.tracks) {
+        out.push('    <div class="pr-track">');
+        out.push(`      <h3 class="pr-name">${esc(tr.name)}</h3>`);
+        out.push(`      <p class="pr-note">${esc(tr.note)}</p>`);
+        out.push('      <ol class="pr-steps">');
+        for (const st of tr.steps) {
+          out.push('        <li class="pr-step">');
+          out.push(`          <span class="pr-when">${esc(st.d)}</span>`);
+          out.push(`          <b class="pr-what">${esc(st.t)}</b>`);
+          out.push(`          <span class="pr-why">${esc(st.p)}</span>`);
+          out.push('        </li>');
+        }
+        out.push('      </ol>');
+        out.push('    </div>');
+      }
+      out.push('  </div>');
     } else if (b.kind === 'related') {
       out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
       out.push('  <div class="pg-rels">');
@@ -243,17 +262,17 @@ function workBody(p) {
   out.push(`  <p class="pg-sub">${esc(p.sub)}</p>`);
   out.push(ring(p));
   out.push(`  <p class="pg-lead">${esc(p.lead)}</p>`);
-  out.push(`  <img class="pg-hero" src="${up}${p.image.src}" alt="${esc(p.image.alt)}" width="1200" height="900">`);
-  // The live model, built by model-cards.js from the same config the home page
-  // uses. Declarative: the page says which model, the module does the rest.
+  // Screenshot and live model side by side, the same pairing the home page uses,
+  // so neither dominates and the still can be compared against the real thing.
+  out.push('  <div class="pg-media">');
+  out.push(`    <img class="pg-hero" src="${up}${p.image.src}" alt="${esc(p.image.alt)}" width="1200" height="900">`);
   if (p.model) {
-    out.push('  <div class="pg-model">');
     out.push(`    <div class="wd-model-wrap" data-model="${p.model.key}"` +
              `${EOL}         data-alt="${esc(p.model.alt)}"` +
              `${EOL}         data-badge="${esc(p.model.badge)}"></div>`);
-    out.push(`    <p class="wd-model-hint">${esc(p.model.hint)}</p>`);
-    out.push('  </div>');
   }
+  out.push('  </div>');
+  if (p.model) out.push(`  <p class="wd-model-hint">${esc(p.model.hint)}</p>`);
 
   out.push('  <div class="pg-facts">');
   for (const [k, v] of p.facts) out.push(`    <div><i>${esc(k)}</i><b>${esc(v)}</b></div>`);
