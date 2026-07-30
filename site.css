@@ -458,3 +458,22 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   .pg-ring-t{bottom:10px;font-size:.82rem;white-space:normal;line-height:1.22;max-height:2.5em}
 }
 @media(prefers-reduced-motion:reduce){.pg-ring-i{transition:none}}
+
+/* ---------------- case-study page transitions ----------------
+   Moving between projects is a real navigation, which normally means a white
+   blink and a jump to the top. A cross-document view transition keeps the rail
+   and the heading anchored while the body crossfades, so switching project
+   feels like the page changed rather than like the browser reloaded.
+   Progressive enhancement: browsers without it simply navigate as before. */
+@view-transition{navigation:auto}
+.pg-ring{view-transition-name:project-rail}
+.pg-hero{view-transition-name:project-hero}
+.pg-h1{view-transition-name:project-title}
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.32s}
+
+/* the rail sits above the story now, so it needs its own breathing room */
+.pg-ring{margin-top:26px;margin-bottom:6px}
+
+/* the current project's screenshot gets a scarlet frame */
+.pg-hero{border:2px solid var(--red);box-shadow:0 0 0 1px rgba(200,16,46,.25),0 18px 44px rgba(0,0,0,.5)}

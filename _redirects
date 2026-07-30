@@ -2,3 +2,11 @@
 # /index.html served the home page at a second URL alongside "/", which is a
 # duplicate of the canonical and spends crawl budget for nothing.
 /index.html  /  301
+
+# Five per-platform service pages collapsed into one at /services/.
+# They were live and crawled, so they redirect rather than 404.
+/services/vr-development/  /services/  301
+/services/ar-mr-development/  /services/  301
+/services/mobile-app-development/  /services/  301
+/services/scientific-visualization/  /services/  301
+/services/unity-app-development/  /services/  301

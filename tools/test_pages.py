@@ -10,9 +10,7 @@ srv = ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Q, directory=os.ge
 threading.Thread(target=srv.serve_forever, daemon=True).start()
 BASE = f"http://127.0.0.1:{srv.server_address[1]}"
 
-PAGES = ["/services/vr-development/", "/services/ar-mr-development/",
-         "/services/scientific-visualization/", "/services/unity-app-development/",
-         "/services/mobile-app-development/",
+PAGES = ["/services/",
          "/work/enzymatic-lab-ar/", "/work/fugacity-vr-lab/",
          "/work/livemol-research-tool/", "/work/meta-quest-classroom/"]
 
@@ -114,6 +112,10 @@ with sync_playwright() as pw:
 
     # ---------- C. pager forms a closed loop per section ----------
     for section, group in SECTIONS.items():
+        # A section with one page has nothing to page between, and the
+        # generator correctly omits the arrows there.
+        if len(group) < 2:
+            continue
         nxt = {}
         for p in group:
             pl = meta[p]["pagerLinks"]
