@@ -477,3 +477,9 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 
 /* the current project's screenshot gets a scarlet frame */
 .pg-hero{border:2px solid var(--red);box-shadow:0 0 0 1px rgba(200,16,46,.25),0 18px 44px rgba(0,0,0,.5)}
+
+/* the live model on a case-study page: same component as the home page cards */
+.pg-model{margin-top:26px}
+.pg-model .wd-model-wrap{margin-top:0}
+.pg-model .wd-model{height:clamp(300px,52vh,460px)}
+.pg-model .wd-model-hint{margin-top:12px;color:var(--dim);font-size:.86rem;text-align:center}

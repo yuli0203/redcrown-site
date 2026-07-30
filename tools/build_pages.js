@@ -244,6 +244,16 @@ function workBody(p) {
   out.push(ring(p));
   out.push(`  <p class="pg-lead">${esc(p.lead)}</p>`);
   out.push(`  <img class="pg-hero" src="${up}${p.image.src}" alt="${esc(p.image.alt)}" width="1200" height="900">`);
+  // The live model, built by model-cards.js from the same config the home page
+  // uses. Declarative: the page says which model, the module does the rest.
+  if (p.model) {
+    out.push('  <div class="pg-model">');
+    out.push(`    <div class="wd-model-wrap" data-model="${p.model.key}"` +
+             `${EOL}         data-alt="${esc(p.model.alt)}"` +
+             `${EOL}         data-badge="${esc(p.model.badge)}"></div>`);
+    out.push(`    <p class="wd-model-hint">${esc(p.model.hint)}</p>`);
+    out.push('  </div>');
+  }
 
   out.push('  <div class="pg-facts">');
   for (const [k, v] of p.facts) out.push(`    <div><i>${esc(k)}</i><b>${esc(v)}</b></div>`);
@@ -302,6 +312,7 @@ function footer(p) {
     '  <div class="copy">© 2026 Red Crown Interactive. All rights reserved.</div>',
     '</footer>',
     '',
+    `<script src="${upOf(p)}model-cards.js" defer></script>`,
     '</body>',
     '</html>',
     '',

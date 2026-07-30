@@ -44,3 +44,6 @@ jobs:
       # Design, functionality and responsivity of the standalone pages:
       # link integrity, prev/next loop, 7 viewports, tap targets, schema.
       - run: python tools/test_pages.py
+      # The 3D cards are the one part CSS checks cannot judge: this drives a
+      # real browser and asserts each card builds, loads and zooms.
+      - run: python tools/test_models.py
