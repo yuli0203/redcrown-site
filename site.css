@@ -583,17 +583,30 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 /* Floating proposal button, mobile only. The nav CTA is hidden under 900px, so
    until now a phone had no proposal action until the foot of the page. Sits in
    the corner opposite WhatsApp, same size, same elevation. */
-/* stacked right above WhatsApp: one corner holds every action, the other side
-   of the view stays clean */
-.proposal-float{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));inset-inline-end:calc(22px + env(safe-area-inset-right));
-  z-index:70;height:48px;padding:0 18px;border-radius:999px;background:var(--red);display:none;align-items:center;gap:9px;
-  font-family:var(--display);font-weight:600;font-size:.76rem;letter-spacing:.08em;color:#fff;white-space:nowrap;
-  box-shadow:0 4px 16px rgba(0,0,0,.45);
-  opacity:0;transform:translateY(80px);transition:transform .35s cubic-bezier(.2,.8,.3,1),opacity .35s ease}
-.proposal-float svg{width:19px;height:19px;flex-shrink:0;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-/* only on phones, only once the visitor is actually reading, and never on top
-   of the form it points at */
-.proposal-float.is-in{opacity:1;transform:none}
-@media(max-width:900px){.proposal-float{display:flex}}
-@media(max-width:360px){.proposal-float{font-size:.7rem;padding:0 14px;height:44px}}
-@media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}}
+/* Mobile proposal button: lives in the nav between the logo and the language
+   pill, so it never covers content and needs no show/hide behaviour. One word.
+   The desktop nav already has the full-width CTA, so this is phones only. */
+.nav-cta-mini{display:none;padding-block:10px;padding-inline:clamp(14px,6vw,30px);font-size:.76rem;white-space:nowrap;border-radius:10px}
+@media(max-width:900px){
+  .nav-cta-mini{display:inline-block}
+  /* Three items, space-between: the leftover width is split equally, so the
+     button sits the same distance from the logo as from the flag. Auto margins
+     dumped all the slack on one side and the gaps came out 12 vs 22. */
+  .nav-in{justify-content:space-between}
+  /* the space the button needs comes from the pill: flag only, no label */
+  .lang-toggle{padding:9px 9px;gap:5px}
+  .lang-toggle .lang-cur{font-size:0;gap:0}
+  .lang-toggle .lang-cur .flag{width:20px;height:14px}
+  .lang{margin-inline-start:0;margin-inline-end:0}
+  /* The corner fix gave .lang margin-right:auto for when it was the only item at
+     the end of the bar. With three items and space-between it swallowed the slack
+     and Hebrew came out 12 / 67. */
+  [dir="rtl"] .lang{margin-right:0}
+  /* The button narrowed the logo's column and RED CROWN wrapped onto two lines.
+     Hold it on one line and tighten the wordmark just enough to fit. */
+  .logo b{white-space:nowrap;font-size:.72rem;letter-spacing:.17em}
+  .logo i{white-space:nowrap;font-size:.45rem;letter-spacing:.3em}
+  .logo img{height:34px}
+  .logo{gap:9px}
+}
+@media(max-width:360px){.nav-cta-mini{padding-block:9px;padding-inline:12px;font-size:.72rem}}

@@ -86,6 +86,7 @@ function nav(opts) {
     .concat([
       '    </ul>',
       '    <a class="btn btn-line nav-cta" href="/#contact">GET A PROPOSAL</a>',
+      '    <a class="btn btn-red nav-cta-mini" href="/#contact">Proposal</a>',
       langSwitcher(EOL),
       '  </div>',
       '</nav>',
@@ -97,8 +98,7 @@ const PROPOSAL_SVG = '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14
 
 function waFloat(EOL) {
   return ['', `<a class="wa-float" href="${CONTACT.whatsapp}" target="_blank" rel="noopener"` +
-    ` aria-label="Chat on WhatsApp">${ICON.waBig}</a>`,
-    `<a class="proposal-float" href="/#contact" aria-label="Get a project proposal">${PROPOSAL_SVG}<span>GET A PROPOSAL</span></a>`, ''].join(EOL);
+    ` aria-label="Chat on WhatsApp">${ICON.waBig}</a>`, ''].join(EOL);
 }
 
 function footer(opts) {
