@@ -436,7 +436,6 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .pg-ring-i::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(14,8,10,.15) 30%,rgba(14,8,10,.93) 100%)}
 .pg-ring-i.is-on{flex-grow:1.8;filter:grayscale(0) brightness(.85);border-color:rgba(200,16,46,.6)}
-.pg-ring-i.is-on::before{content:"";position:absolute;inset:auto 0 0 0;height:3px;background:var(--red);z-index:3}
 /* pull the whole row back a little while one card is being explored */
 .pg-ring:hover .pg-ring-i,.pg-ring:focus-within .pg-ring-i{flex-grow:.85}
 .pg-ring-i:hover,.pg-ring-i:focus-visible{flex-grow:2.6;filter:grayscale(0) brightness(1);border-color:var(--red)}
@@ -466,11 +465,21 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
    feels like the page changed rather than like the browser reloaded.
    Progressive enhancement: browsers without it simply navigate as before. */
 @view-transition{navigation:auto}
+/* The rail is the stable switcher: each card carries its own view-transition-name
+   (set inline per project), so when the active project changes the cards MORPH,
+   the outgoing one easing narrower while the incoming one grows, and the scarlet
+   indicator bar slides from the old card to the new one. The content below slides
+   as one block instead of flashing. */
 .pg-ring{view-transition-name:project-rail}
-.pg-hero{view-transition-name:project-hero}
-.pg-h1{view-transition-name:project-title}
+main.pg{view-transition-name:pg-main}
+::view-transition-group(*){animation-duration:.5s;animation-timing-function:cubic-bezier(.16,1,.3,1)}
+::view-transition-old(pg-main){animation:pgOut .32s cubic-bezier(.55,0,.7,.3) both}
+::view-transition-new(pg-main){animation:pgIn .5s .1s cubic-bezier(.16,1,.3,1) both}
+@keyframes pgOut{to{opacity:0;transform:translateY(-16px)}}
+@keyframes pgIn{from{opacity:0;transform:translateY(22px)}}
+::view-transition-group(rail-indicator){animation-duration:.55s;animation-timing-function:cubic-bezier(.3,1.2,.35,1)}
+.pg-ring-bar{position:absolute;inset:auto 0 0 0;height:3px;background:var(--red);z-index:3;view-transition-name:rail-indicator}
 @media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
-::view-transition-old(root),::view-transition-new(root){animation-duration:.32s}
 
 /* the rail sits above the story now, so it needs its own breathing room */
 .pg-ring{margin-top:26px;margin-bottom:6px}
@@ -534,3 +543,9 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 @media(max-width:900px){.lang-static{margin-inline-start:auto}
   /* real tap targets on a phone */
   .lang-static a,.lang-static .lang-on{padding:12px 11px}}
+
+/* rail-nav.js fallback: same exit and entry the native transition performs */
+main.pg{will-change:auto}
+main.pg.pg-leave{animation:pgOut .24s cubic-bezier(.55,0,.7,.3) both}
+main.pg.pg-enter{opacity:0;transform:translateY(22px)}
+main.pg{transition:opacity .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1)}

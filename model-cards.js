@@ -152,20 +152,30 @@
 
   /* ---------- load the library once, then wire every card ---------- */
 
+  // Wiring is separate from library loading so cards added AFTER the library is
+  // in (a page swap by rail-nav.js, for instance) still get their spinner cleared,
+  // their zoom applied and their eyes running. Each wrap wires once.
+  function wireCards() {
+    document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
+      var w = mv.closest('.wd-model-wrap');
+      if (w.__wired) return; w.__wired = 1;
+      var go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
+      try { mv.loading = 'eager'; } catch (_) {}
+      if (mv.loaded) go(); else mv.addEventListener('load', go);
+    });
+  }
+
   function loadModelViewers() {
     document.querySelectorAll('.wd-model-wrap[data-model]').forEach(buildCard);
-    if (window.__mvLoaded) return; window.__mvLoaded = 1;
+    if (window.__mvLoaded) {
+      if (window.customElements && customElements.get('model-viewer')) wireCards();
+      return;
+    }
+    window.__mvLoaded = 1;
     var s = document.createElement('script');
     s.type = 'module'; s.src = LIB;
     document.head.appendChild(s);
-    if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
-      document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
-        var w = mv.closest('.wd-model-wrap');
-        var go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
-        try { mv.loading = 'eager'; } catch (_) {}
-        if (mv.loaded) go(); else mv.addEventListener('load', go);
-      });
-    });
+    if (window.customElements) customElements.whenDefined('model-viewer').then(wireCards);
   }
 
   document.addEventListener('input', function (e) {
