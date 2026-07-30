@@ -549,3 +549,19 @@ main.pg{will-change:auto}
 main.pg.pg-leave{animation:pgOut .24s cubic-bezier(.55,0,.7,.3) both}
 main.pg.pg-enter{opacity:0;transform:translateY(22px)}
 main.pg{transition:opacity .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1)}
+
+/* ---------------- visual blocks on the standalone pages ----------------
+   Chips, an icon strip and tiles carry what used to be paragraphs, because a
+   scanning client reads shapes before sentences. */
+.pg-chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
+.pg-chip{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 12px;
+  transition:border-color .25s,transform .25s}
+.pg-chip:hover{border-color:rgba(200,16,46,.45);transform:translateY(-2px)}
+.pg-chip .icon{font-size:1.7rem}
+.pg-chip b{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.04em;color:var(--bone)}
+.pg-chips-note{margin-top:14px;color:var(--dim);font-size:.86rem;text-align:center}
+.pg-tech{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:26px;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 22px;margin-top:22px}
+.pg-tech .tech-ico{height:26px}
+@media(max-width:480px){.pg-tech{gap:18px}.pg-tech .tech-ico{height:20px}}

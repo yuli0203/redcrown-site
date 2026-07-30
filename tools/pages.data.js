@@ -23,15 +23,22 @@ const SERVICES = [
         { h: 'Mobile', p: 'iOS and Android apps and companion AR tools for work that happens in the field, drawing on commercial products that served millions of users.' },
         { h: 'PC', p: 'Complex real-time systems: research tools, simulations and high-performance 3D software, with scientific computing and machine learning behind them.' },
       ]},
-      { kind: 'prose', head: 'WHAT WE ACTUALLY DO', paras: [
-        'Concept and design, development, 3D art and animation, optimisation, and the support that keeps software alive after launch. Depending on what a project needs, the studio assembles and manages the development, 3D and design people around it, so the whole thing is built as one piece rather than stitched together.',
-        'Projects are led and built by the founder, a senior engineer and designer, so you talk directly to the person who both plans and builds. For larger work a selected professional team operates under her lead.',
+      { kind: 'chips', head: 'WHAT WE ACTUALLY DO', note: 'Led hands-on by the founder, a senior engineer and designer. For larger work, a selected team operates under her lead.', items: [
+        { icon: 'bulb',   t: 'Concept & design' },
+        { icon: 'gear',   t: 'Development' },
+        { icon: 'cube',   t: '3D art & animation' },
+        { icon: 'gauge',  t: 'Optimisation' },
+        { icon: 'wrench', t: 'Support & updates' },
       ]},
-      { kind: 'prose', head: 'BUILT FOR A REAL TIMETABLE', paras: [
-        'Teaching software has to survive contact with a scheduled class, not just a demo. That means comfort in the headset for a full hour, a whole cohort running the same session at once, instructor tools that show where each group is, and the unglamorous parts: charging, resetting between groups, and what happens when one device misbehaves five minutes in.',
+      { kind: 'icons', head: 'TOOLS WE BUILD WITH', icons: [
+        ['unity','Unity'],['csharp','C#'],['cplusplus','C++'],['python','Python'],
+        ['oculus','Meta Quest'],['ios','iOS'],['android','Android'],['webgl','WebGL'],['blender','Blender'],
       ]},
-      { kind: 'prose', head: 'HOW A PROJECT STARTS', paras: [
-        'A short call to understand what you need, then a clear estimate before work begins. You can start small, with a pilot or a prototype, and grow from there. A focused module can launch within weeks; a larger system takes longer, with goals and milestones set up front.',
+      { kind: 'tiles', head: 'BUILT FOR A REAL TIMETABLE', items: [
+        ['Comfort', 'A full hour in the headset'],
+        ['Scale', 'A whole cohort at once'],
+        ['Instructors', 'See where every group is'],
+        ['Between classes', 'Charging, reset, recovery'],
       ]},
       { kind: 'process', head: 'HOW A PROJECT RUNS', tracks: [
         { name: 'Focused module or pilot',
