@@ -22,8 +22,8 @@
 const NAV = [
   { hash: '#top',      label: 'HOME' },
   { hash: '#services', label: 'SERVICES', section: 'services' },
-  { hash: '#tech',     label: 'TECHNOLOGIES' },
   { hash: '#work',     label: 'WORK', section: 'work' },
+  { hash: '#tech',     label: 'TECHNOLOGIES' },
   { hash: '#about',    label: 'ABOUT' },
   { hash: '#faq',      label: 'FAQ' },
   { hash: '#contact',  label: 'CONTACT' },
