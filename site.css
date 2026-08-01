@@ -580,8 +580,12 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 /* client credit, sitting under the result paragraph and sharing its alignment */
 .wd-client,.pg-client{margin-top:14px;font-family:var(--display);font-weight:600;font-size:.84rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
-.wd-client a,.pg-client a{color:var(--hot);display:inline-block;padding:6px 0}
+.wd-client a,.pg-client a{color:var(--hot);display:inline-flex;align-items:center;gap:6px;padding:6px 0;vertical-align:baseline}
+/* the external-link arrow lives in CSS, not the text: a neutral "↗" inside an RTL
+   paragraph gets bidi-reordered away from the name, and its baseline drifts */
+.wd-client a::after,.pg-client a::after{content:"↗";font-size:.9em;line-height:1;letter-spacing:0}
 .wd-client a:hover,.pg-client a:hover{text-decoration:underline}
+[dir="rtl"] .wd-client{letter-spacing:0}
 
 /* Floating proposal button, mobile only. The nav CTA is hidden under 900px, so
    until now a phone had no proposal action until the foot of the page. Sits in

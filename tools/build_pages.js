@@ -303,7 +303,7 @@ function workBody(p) {
     // the client credit sits inside the result panel, directly below its
     // paragraph and sharing its left edge
     const cred = last && p.client
-      ? `<p class="pg-client">Client: <a href="${p.client.url}" target="_blank" rel="noopener">${esc(p.client.name)} ↗</a></p>`
+      ? `<p class="pg-client">Client: <a href="${p.client.url}" target="_blank" rel="noopener">${esc(p.client.name)}</a></p>`
       : '';
     out.push(`  <div class="panel pg-prose"><p>${body}</p>${cred}</div>`);
   });
