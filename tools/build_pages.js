@@ -77,6 +77,16 @@ function head(p) {
     '<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">',
     '<meta name="color-scheme" content="dark">',
     '<meta name="theme-color" content="#0E080A">',
+    // Same Google tag as the home page: without it, Google Ads can neither
+    // attribute a visit that lands here nor record the contact-click conversion.
+    '<!-- Google tag (gtag.js) -->',
+    '<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18313532220"></script>',
+    '<script>',
+    '  window.dataLayer = window.dataLayer || [];',
+    '  function gtag(){dataLayer.push(arguments);}',
+    "  gtag('js', new Date());",
+    "  gtag('config', 'AW-18313532220');",
+    '</script>',
     `<title>${esc(p.title)}</title>`,
     `<meta name="description" content="${esc(p.desc)}">`,
     '<meta name="author" content="Julia Pavlov">',
@@ -328,6 +338,14 @@ const footer = p => chrome.footer({ EOL, up: upOf(p) }) + chrome.waFloat(EOL);
 // When the chrome moved to chrome.js those went with it, and every generated page
 // silently lost its 3D models. The page tail now lives here, explicitly.
 const tail = p => [
+  // These pages do not load site.js, so the contact-click conversion lives here.
+  // Keep the send_to label in sync with ADS_CONVERSIONS.phoneClick in site.js.
+  '<script>',
+  "document.addEventListener('click', function (e) {",
+  "  var a = e.target.closest && e.target.closest('a[href^=\"tel:\"], a[href*=\"wa.me/\"]');",
+  "  if (a && typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-18313532220/zWKzCPjS89QcELymyZxE', transport_type: 'beacon' });",
+  '});',
+  '</script>',
   `<script src="${upOf(p)}model-cards.js" defer></script>`,
   `<script src="${upOf(p)}rail-nav.js" defer></script>`,
   `<script src="${upOf(p)}float.js" defer></script>`,
