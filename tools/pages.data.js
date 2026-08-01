@@ -20,7 +20,7 @@ const SERVICES = [
     blocks: [
       { kind: 'cards', head: 'THREE PLATFORMS, ONE STUDIO', items: [
         { h: 'XR / VR / AR', p: 'Simulations, labs and training in VR, AR and mixed reality, with hand, gesture and controller interaction chosen to fit the task. Built on Meta Quest 3.' },
-        { h: 'Mobile', p: 'Games and utility apps for iOS and Android, drawing on commercial products that served millions of users.' },
+        { h: 'Mobile', p: 'Commercial and utility apps for iOS and Android, drawing on products that served millions of users.' },
         { h: 'PC', p: 'Complex real-time systems: research tools, simulations and high-performance 3D software, with scientific computing and machine learning behind them.' },
       ]},
       { kind: 'chips', head: 'WHAT WE ACTUALLY DO', note: 'Led hands-on by the founder, a senior engineer and designer. For larger work, a selected team operates under her lead.', items: [
