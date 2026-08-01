@@ -21,16 +21,16 @@
   var MODELS = {
     enzym:  { src: '/assets/models/enzym_opt.glb',
               autoRotate: '14deg', exposure: '1',    shadow: ['0.5', '0.9'],
-              fov: ['30deg', '10deg', '45deg'], orbit: '0deg 75deg auto' },
+              fov: ['26deg', '10deg', '38deg'], orbit: '0deg 75deg auto' },
     robi:   { src: '/assets/models/robi_opt.glb',
               autoplay: true,      exposure: '1',    shadow: ['0.6', '0.9'],
-              fov: ['28deg', '10deg', '42deg'], orbit: '15deg 82deg auto' },
+              fov: ['25deg', '10deg', '36deg'], orbit: '15deg 82deg auto' },
     caffeine: { src: '/assets/models/caffeine2_opt.glb',
               autoRotate: '16deg', exposure: '0.45', shadow: ['0.5', '0.9'],
-              fov: ['32deg', '12deg', '46deg'], orbit: '0deg 75deg auto' },
+              fov: ['28deg', '12deg', '40deg'], orbit: '0deg 75deg auto' },
     quest3: { src: '/assets/models/meta_quest_3_opt.glb',
               autoRotate: '16deg', exposure: '1',    shadow: ['0.6', '0.9'],
-              fov: ['30deg', '10deg', '45deg'], orbit: '25deg 78deg auto' }
+              fov: ['24deg', '9deg', '36deg'], orbit: '25deg 78deg auto' }
   };
 
   var LIB = '/vendor/model-viewer.min.js';
