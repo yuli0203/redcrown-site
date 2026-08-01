@@ -20,7 +20,7 @@ const SERVICES = [
     blocks: [
       { kind: 'cards', head: 'THREE PLATFORMS, ONE STUDIO', items: [
         { h: 'XR / VR / AR', p: 'Simulations, labs and training in VR, AR and mixed reality, with hand, gesture and controller interaction chosen to fit the task. Built on Meta Quest 3.' },
-        { h: 'Mobile', p: 'iOS and Android apps and companion AR tools for work that happens in the field, drawing on commercial products that served millions of users.' },
+        { h: 'Mobile', p: 'iOS and Android apps, drawing on commercial products that served millions of users.' },
         { h: 'PC', p: 'Complex real-time systems: research tools, simulations and high-performance 3D software, with scientific computing and machine learning behind them.' },
       ]},
       { kind: 'chips', head: 'WHAT WE ACTUALLY DO', note: 'Led hands-on by the founder, a senior engineer and designer. For larger work, a selected team operates under her lead.', items: [
@@ -89,7 +89,7 @@ const WORK = [
       ['The solution', 'We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student’s real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum.'],
       ['The result', 'What was invisible at the bench becomes tangible. Students move inside structures they could never see, handle them with their own hands, and build every concept by doing and deciding rather than by reading a flat diagram. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.'],
     ],
-    facts: [['Platform', 'Meta Quest 3, mixed reality passthrough'], ['Interaction', 'Hand tracking, no controllers'], ['Built with', 'Unity'], ['In use at', 'Wolfson Faculty of Chemical Engineering, Technion']],
+    facts: [['Platform', 'Meta Quest 3, mixed reality passthrough'], ['Interaction', 'Hand tracking, no controllers'], ['Built with', 'Unity'], ['In use at', 'Wolfson Faculty of Chemical Engineering, Technion']],
     service: '',
   },
   {
@@ -110,7 +110,7 @@ const WORK = [
       ['The solution', 'An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor’s tablet. Movement inside the experiment is deliberately designed to keep motion sickness to a minimum, so a full hour in the headset stays comfortable for an entire class.'],
       ['The result', 'The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.'],
     ],
-    facts: [['Platform', 'Meta Quest 3'], ['Scale', 'Up to 12 headsets in parallel'], ['Session', 'Around one hour, guided'], ['In use at', 'Thermodynamics B, Technion']],
+    facts: [['Platform', 'Meta Quest 3'], ['Scale', 'Up to 12 headsets in parallel'], ['Session', 'Around one hour, guided'], ['In use at', 'Thermodynamics B, Technion']],
     service: '',
   },
   {
@@ -131,7 +131,7 @@ const WORK = [
       ['The solution', 'We built an interactive 3D tool where the researcher builds and edits a molecule, and a Python compute server runs the quantum chemistry calculation, using established engines including ASE, tblite, Open Babel and Sella, and returns the result onto the model in front of them, without leaving the flow.'],
       ['The result', 'Research becomes fast, visual, and intuitive, and the researcher stays inside the structure while the calculation runs, instead of waiting on one job at a time. Built for the Wolfson Faculty of Chemical Engineering at the Technion.'],
     ],
-    facts: [['Platform', 'Desktop'], ['Behind it', 'Python compute server, quantum chemistry engines (ASE, tblite, Open Babel, Sella)'], ['Built with', 'Unity'], ['Built for', 'Wolfson Faculty of Chemical Engineering, Technion']],
+    facts: [['Platform', 'Desktop'], ['Behind it', 'Python compute server, quantum chemistry engines (ASE, tblite, Open Babel, Sella)'], ['Built with', 'Unity'], ['Built for', 'Wolfson Faculty of Chemical Engineering, Technion']],
     service: '',
   },
   {
@@ -152,7 +152,7 @@ const WORK = [
       ['The solution', 'We consulted end to end, from early planning and hardware selection through classroom layout, device configuration, deployment, testing, and the instructors’ workflows. Up to 12 Meta Quest 3 headsets, each with a paired tablet.'],
       ['The result', 'A classroom that simply works, where instructors follow each group, support students, and collect data every session. The technology stays in the background, and teaching stays center stage.'],
     ],
-    facts: [['Scale', 'Up to 12 headsets with paired tablets'], ['Scope', 'Advisory, from hardware selection through handover'], ['Includes', 'Instructor workflows and testing'], ['Location', 'Technion']],
+    facts: [['Scale', 'Up to 12 headsets with paired tablets'], ['Scope', 'Advisory, from hardware selection through handover'], ['Includes', 'Instructor workflows and testing'], ['Location', 'Technion']],
     service: '',
   },
 ];
