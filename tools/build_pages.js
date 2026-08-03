@@ -300,10 +300,11 @@ function workBody(p) {
   p.story.forEach(([headTxt, body], i) => {
     out.push(`  <h2 class="sec-k pg-sec">${headTxt.toUpperCase()}</h2>`);
     const last = i === p.story.length - 1;
-    // the client credit sits inside the result panel, directly below its
-    // paragraph and sharing its left edge
+    // the credit sits inside the result panel, directly below its paragraph
+    // and sharing its left edge. "Developed at", not "client": this work was
+    // led from inside the group, so a client label would misstate it
     const cred = last && p.client
-      ? `<p class="pg-client">Client: <a href="${p.client.url}" target="_blank" rel="noopener">${esc(p.client.name)}</a></p>`
+      ? `<p class="pg-client">Developed at <a href="${p.client.url}" target="_blank" rel="noopener">${esc(p.client.name)}</a></p>`
       : '';
     out.push(`  <div class="panel pg-prose"><p>${body}</p>${cred}</div>`);
   });
