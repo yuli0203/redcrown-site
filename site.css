@@ -138,8 +138,10 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 /* Russian sets the headline as single unbreakable words ("ИНТЕРАКТИВНОЕ"), which
    clip on a 320px screen at the shared size. Only the size drops; wording holds.
    The longest word then measures ~177px in a 214px box, leaving room for the
-   slightly different metrics of a fallback face during the font swap. */
-html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.6rem)}
+   slightly different metrics of a fallback face during the font swap.
+   The same unbreakable words clip again at 1280, where the 3.6rem cap applies
+   and "ИНТЕРАКТИВНОЕ" measures 526px inside a 504px box, so the cap drops too. */
+html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 .hero h1 em{font-style:normal;color:var(--hot)}
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
 .hero .plat s{text-decoration:none;color:var(--hot);padding:0 .4em}
@@ -160,12 +162,12 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.6rem)}
 
 /* ---------------- platform cards ---------------- */
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
-.pcard{padding:34px 30px;transition:border-color .25s,transform .25s}
+.pcard{padding:34px 30px;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;align-items:flex-start}
 .pcard:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
 .pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
 .pcard h3{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
 .pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
-.pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot)}
+.pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot);margin-top:auto}
 @media(max-width:900px){.cards3{grid-template-columns:1fr}}
 
 /* ---------------- what we do ---------------- */
@@ -226,7 +228,11 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .lcap{display:flex;flex-direction:column;gap:5px;min-height:5rem}
 .lcap-top{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 .wd-kicker{display:block;font-family:var(--brand);font-weight:700;font-size:.62rem;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:9px}
-.lcap .l-title{font-family:var(--display);font-weight:700;font-size:1.1rem;line-height:1.2;color:#fff}
+/* Reserve two lines for every project title. A title that wraps in one card and
+   not its neighbour used to push that card's body down and break the row, and
+   the length that triggers it differs per language, so policing copy length in
+   three dictionaries would never hold. Reserving the space fixes it everywhere. */
+.lcap .l-title{font-family:var(--display);font-weight:700;font-size:1.1rem;line-height:1.2;color:#fff;min-height:2.4em}
 .lcap .l-en{color:#ea4b62;font-family:var(--display);font-weight:700;font-size:.74rem;letter-spacing:.05em;line-height:1.2;text-transform:uppercase}
 [dir="rtl"] .lcap .l-en{letter-spacing:0}
 .l-result{color:var(--dim);font-size:.8rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -580,10 +586,11 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 /* client credit, sitting under the result paragraph and sharing its alignment */
 .wd-client,.pg-client{margin-top:14px;font-family:var(--display);font-weight:600;font-size:.84rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
-.wd-client a,.pg-client a{color:var(--hot);display:inline-flex;align-items:center;gap:6px;padding:6px 0;vertical-align:baseline}
+.wd-client a,.pg-client a{color:var(--hot);display:inline-flex;align-items:baseline;gap:6px;padding:6px 0;vertical-align:baseline}
 /* the external-link arrow lives in CSS, not the text: a neutral "↗" inside an RTL
-   paragraph gets bidi-reordered away from the name, and its baseline drifts */
-.wd-client a::after,.pg-client a::after{content:"↗";font-size:.9em;line-height:1;letter-spacing:0}
+   paragraph gets bidi-reordered away from the name; baseline-align it so it sits
+   on the same line as the letters instead of floating above them */
+.wd-client a::after,.pg-client a::after{content:"↗";font-size:.92em;letter-spacing:0}
 .wd-client a:hover,.pg-client a:hover{text-decoration:underline}
 [dir="rtl"] .wd-client{letter-spacing:0}
 

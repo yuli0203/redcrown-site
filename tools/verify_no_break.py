@@ -8,6 +8,8 @@ Chromium engines) and FAILS (exit 1) if any element breaks, e.g.:
   - the hero <h1> clipping/overflowing its box
   - any <img> that failed to load or renders with broken geometry
     (absurd aspect ratio -- this is the "founder portrait went huge" class of bug)
+  - a card heading that wraps one line further than its row neighbours, which
+    pushes that card's body down and breaks the row alignment (desktop only)
   - contact-form inputs under 16px (iOS focus-zoom)
   - scroll-reveal sections left permanently invisible
   - JavaScript console/page errors
@@ -21,6 +23,13 @@ import os, sys, threading, functools, contextlib
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Problem messages quote the offending text, which is Hebrew or Russian on two
+# thirds of the matrix. A Windows console defaults to a codepage that cannot
+# encode either, and the resulting UnicodeEncodeError used to surface as a bogus
+# "harness error" that hid the real finding.
+with contextlib.suppress(Exception):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 # Missing tooling must not block a push on a machine that simply can't verify.
 try:
@@ -41,7 +50,15 @@ MATRIX = [
     ("iPhone SE RU","webkit",   "iPhone SE",  "/ru/"),   # Russian (longest words)
     ("360 EN",      "chromium", "Galaxy S9+", "/"),      # 360-400 band, where sec-k wraps
     ("412 RU",      "chromium", "Pixel 7",    "/ru/"),   # Russian at a common Android width
+    # Card rows only exist above the stacking breakpoint, so a heading that wraps
+    # one line too far is invisible to every mobile entry above. device=None runs
+    # a plain desktop viewport.
+    ("1440 HE",     "chromium", None,         "/he/"),
+    ("1440 EN",     "chromium", None,         "/"),
+    ("1280 RU",     "chromium", None,         "/ru/"),
 ]
+
+DESKTOP = {"1440 HE": 1440, "1440 EN": 1440, "1280 RU": 1280}
 
 AUTOSCROLL = """async () => {
   await new Promise(res => { let y=0; const s=()=>{ window.scrollTo(0,y);
@@ -118,7 +135,36 @@ INTEGRITY = r"""
     }
   }
 
-  // 7. structural sanity
+  // 7. cards sharing a row must stay top-aligned.
+  // A card heading that wraps to one more line than its neighbours pushes that
+  // card's body down and the row stops reading as a row. Nothing overflows, so
+  // checks 1/6 never see it -- only the comparison between siblings does. This
+  // is what a one-word-too-long project title costs, and it is invisible until
+  // someone looks at the page. Stacked (mobile) layouts have no row to break.
+  for (const [gridSel, headSel] of [['.w2-grid', '.l-title'], ['.cards3', 'h3']]) {
+    for (const grid of document.querySelectorAll(gridSel)) {
+      const cards = [...grid.children].filter(el => el.getBoundingClientRect().height > 1);
+      if (cards.length < 2) continue;
+      const rows = new Map();
+      for (const c of cards) {
+        const key = Math.round(c.getBoundingClientRect().top / 8);   // tolerate sub-pixel
+        if (!rows.has(key)) rows.set(key, []);
+        rows.get(key).push(c);
+      }
+      for (const row of rows.values()) {
+        if (row.length < 2) continue;                                // stacked: nothing to align
+        const heads = row.map(c => c.querySelector(headSel)).filter(Boolean);
+        if (heads.length < 2) continue;
+        const hs = heads.map(h => Math.round(h.getBoundingClientRect().height));
+        if (Math.max(...hs) - Math.min(...hs) > 2) {
+          const tall = heads[hs.indexOf(Math.max(...hs))];
+          problems.push(`card headings misaligned in ${gridSel}: "${(tall.innerText||'').trim().slice(0,40)}" wraps to a taller box than its row (${hs.join('/')}px) -- shorten it`);
+        }
+      }
+    }
+  }
+
+  // 8. structural sanity
   if (!document.querySelector('nav')) problems.push('nav missing');
   if (!document.querySelector('footer')) problems.push('footer missing');
 
@@ -146,7 +192,9 @@ def main():
                 cerr, perr = [], []
                 try:
                     b = getattr(p, engine).launch()
-                    ctx = b.new_context(**p.devices[device],
+                    opts = (p.devices[device] if device
+                            else {"viewport": {"width": DESKTOP[label], "height": 900}})
+                    ctx = b.new_context(**opts,
                                         locale=("he-IL" if path == "/he/" else "en-US"))
                     pg = ctx.new_page()
                     pg.on("console", lambda m: cerr.append(m.text) if m.type == "error" else None)
