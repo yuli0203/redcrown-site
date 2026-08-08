@@ -187,15 +187,23 @@
 
   // The home page opens a card on click; a case study shows its model inline, so
   // build that one as soon as it is near the viewport.
+  // Match both card class names: the project cards were renamed .wcard -> .lcard,
+  // and a selector that matches nothing fails silently, leaving a dead model box.
   document.addEventListener('click', function (e) {
-    var c = e.target.closest && e.target.closest('.wcard[data-project]');
+    var c = e.target.closest && e.target.closest('.lcard[data-project], .wcard[data-project]');
     if (c) loadModelViewers();
   }, true);
 
   function watchInline() {
     // A case study shows its model inline, whether it sits beside the screenshot
-    // in .pg-media or on its own in .pg-model.
-    var inline = document.querySelectorAll('.pg-media .wd-model-wrap[data-model], .pg-model .wd-model-wrap[data-model]');
+    // in .pg-media or on its own in .pg-model. The home page does the same when a
+    // case study starts open, so an already-visible model must build on load
+    // rather than wait for a click that will never come for a panel nobody opens.
+    var inline = [].slice.call(document.querySelectorAll(
+      '.pg-media .wd-model-wrap[data-model], .pg-model .wd-model-wrap[data-model]'));
+    [].forEach.call(document.querySelectorAll('.wdetail:not([hidden]) .wd-model-wrap[data-model]'), function (n) {
+      if (inline.indexOf(n) < 0) inline.push(n);
+    });
     if (!inline.length) return;
     if (!('IntersectionObserver' in window)) { loadModelViewers(); return; }
     var io = new IntersectionObserver(function (es) {
