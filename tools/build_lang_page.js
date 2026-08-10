@@ -53,6 +53,7 @@ const LANGS = {
       'Enzymatic lab AR project': 'פרויקט AR של מעבדה אנזימטית',
       'Change language': 'שינוי שפה',
       'Chat on WhatsApp': 'שיחה בוואטסאפ',
+      'Legal': 'מידע משפטי',
       'Developer wearing a VR headset in front of the Red Crown mark': 'דמות עם משקפי VR על רקע הסמל של Red Crown',
       'Flip the founder card': 'היפוך כרטיס המייסדת',
       'Interactive 3D hologram — click to change the shape': 'הולוגרמה תלת-ממדית אינטראקטיבית. לחצו כדי להחליף צורה',
@@ -105,6 +106,7 @@ const LANGS = {
       'Enzymatic lab AR project': 'AR-проект ферментной лаборатории',
       'Change language': 'Сменить язык',
       'Chat on WhatsApp': 'Написать в WhatsApp',
+      'Legal': 'Правовая информация',
       'Developer wearing a VR headset in front of the Red Crown mark': 'Разработчица в VR-гарнитуре на фоне знака Red Crown',
       'Flip the founder card': 'Перевернуть карточку основательницы',
       'Interactive 3D hologram — click to change the shape': 'Интерактивная 3D-голограмма. Нажмите, чтобы сменить форму',
@@ -302,6 +304,9 @@ function build(lang) {
 
   html = applyI18n(html, dict);
   html = localizeAttrs(html, cfg.text);
+  // The legal page exists per language; a relative href would resolve to the
+  // English /legal/ from under the language directory.
+  html = html.replace(/href="legal\//g, `href="${cfg.url}legal/`);
   // Model hints are element text, not attributes or dictionary slots, so the
   // Russian page was rendering them in English.
   if (cfg.text) for (const [en, tr] of Object.entries(cfg.text)) html = html.split(en).join(tr);

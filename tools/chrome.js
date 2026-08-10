@@ -117,6 +117,11 @@ function footer(opts) {
     '    </div>',
     '  </div>',
     '  <div class="copy">© 2026 Red Crown Interactive. All rights reserved.</div>',
+    '  <nav class="foot-legal" aria-label="Legal">',
+    '    <a href="/legal/#privacy">Privacy Policy</a>',
+    '    <a href="/legal/#terms">Terms of Use</a>',
+    '    <a href="/legal/#accessibility">Accessibility Statement</a>',
+    '  </nav>',
     '</footer>',
     '',
   ].join(EOL);

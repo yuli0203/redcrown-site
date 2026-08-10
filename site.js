@@ -59,7 +59,8 @@ const I18N = {
     "form.message":"Message","form.send":"Send message",
     "form.ph.name":"Your name","form.ph.email":"you@company.com","form.ph.company":"Your company","form.ph.message":"Tell us about your project, even a rough idea is a great start.",
     "form.success":"Thanks! I'll get back to you soon.","form.error":"Something went wrong. Please email hello@redcrowninteractive.com.",
-    "foot.copy":"© 2026 Red Crown Interactive. All rights reserved."
+    "foot.copy":"© 2026 Red Crown Interactive. All rights reserved.",
+    "foot.privacy":"Privacy Policy","foot.terms":"Terms of Use","foot.a11y":"Accessibility Statement"
   },
   he: {
     "float.cta":"לייעוץ חינם",
@@ -122,7 +123,8 @@ const I18N = {
     "form.message":"הודעה","form.send":"שליחה",
     "form.ph.name":"השם שלכם","form.ph.email":"you@company.com","form.ph.company":"החברה שלכם","form.ph.message":"ספרו לנו על הפרויקט, גם רעיון ראשוני הוא התחלה מצוינת.",
     "form.success":"תודה! אחזור אליכם בקרוב.","form.error":"משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.",
-    "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות."
+    "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות.",
+    "foot.privacy":"מדיניות פרטיות","foot.terms":"תנאי שימוש","foot.a11y":"הצהרת נגישות"
   },
   ru: {
     "float.cta":"Получить предложение",
@@ -184,7 +186,8 @@ const I18N = {
     "form.message":"Сообщение","form.send":"Отправить",
     "form.ph.name":"Ваше имя","form.ph.email":"you@company.com","form.ph.company":"Ваша компания","form.ph.message":"Расскажите о проекте, даже черновая идея станет отличным началом.",
     "form.success":"Спасибо! Я скоро свяжусь с вами.","form.error":"Что-то пошло не так. Напишите на hello@redcrowninteractive.com.",
-    "foot.copy":"© 2026 Red Crown Interactive. Все права защищены."
+    "foot.copy":"© 2026 Red Crown Interactive. Все права защищены.",
+    "foot.privacy":"Политика конфиденциальности","foot.terms":"Условия использования","foot.a11y":"Заявление о доступности"
   }
 };
 const RTL = new Set(['he']);

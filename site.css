@@ -346,6 +346,9 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .foot .contact span{display:inline-flex;align-items:center;white-space:nowrap}
 .foot .contact a{color:var(--dim);transition:color .2s}
 .foot .contact a:hover{color:var(--hot)}
+.foot-legal{display:flex;justify-content:center;gap:0 16px;flex-wrap:wrap;margin-top:6px;font-size:.76rem}
+.foot-legal a{color:var(--dim);transition:color .2s;display:inline-flex;align-items:center;min-height:36px;padding:0 6px}
+.foot-legal a:hover{color:var(--hot)}
 .foot .contact .icon{margin-inline-end:.5em;flex:none}
 .socials{display:flex;gap:16px}
 .socials a{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--dim);font-size:.8rem;transition:all .2s}
