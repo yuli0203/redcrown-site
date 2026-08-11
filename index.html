@@ -105,6 +105,9 @@
 <body>
 <script>document.documentElement.classList.add('js');</script>
 
+  <!-- WCAG 2.4.1: let keyboard users jump the nav instead of tabbing it every page -->
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
 <nav>
   <div class="nav-in">
     <a class="logo" href="#top">
@@ -137,6 +140,7 @@
 
 <div class="wrap" id="top">
 
+  <main id="main" tabindex="-1">
   <header class="panel hero">
     <div class="hero-bg" role="img" aria-label="Developer wearing a VR headset in front of the Red Crown mark"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -157,19 +161,19 @@
   <section class="cards3" id="services">
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3l-2-2h-6l-2 2H4a2 2 0 0 1-2-2z"/><circle cx="8" cy="11.5" r="1.6"/><circle cx="16" cy="11.5" r="1.6"/></svg>
-      <h3 data-i18n="svc.xr.title">XR / VR / AR</h3>
+      <h2 data-i18n="svc.xr.title">XR / VR / AR</h2>
       <p data-i18n="svc.xr.desc">Simulations, labs, and training experiences in VR, AR, and MR, with hand, gesture, and controller interactions tailored to the user and the work environment. Built on Meta Quest 3.</p>
       <a href="#work" data-i18n="svc.xr.link">EXPLORE XR →</a>
     </div>
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M11 18.5h2"/></svg>
-      <h3 data-i18n="svc.mobile.title">MOBILE</h3>
+      <h2 data-i18n="svc.mobile.title">MOBILE</h2>
       <p data-i18n="svc.mobile.desc">Commercial and utility mobile apps for iOS and Android, drawing on the founder's experience with products that served millions of users.</p>
       <a href="#work" data-i18n="svc.mobile.link">EXPLORE MOBILE →</a>
     </div>
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.6"/><path d="M9 20.5h6M12 16.5v4"/></svg>
-      <h3 data-i18n="svc.pc.title">PC</h3>
+      <h2 data-i18n="svc.pc.title">PC</h2>
       <p data-i18n="svc.pc.desc">Complex real-time interactive systems: research tools, simulations, and high-performance 3D software, with scientific computing and machine learning.</p>
       <a href="#work" data-i18n="svc.pc.link">EXPLORE PC →</a>
     </div>
@@ -211,7 +215,7 @@
 
     <div class="wdetail" id="wd-ar" hidden>
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h4 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h4>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h3>
       <div class="wd-sub" data-i18n="work.ar.sub">Augmented Reality | Hand Tracking | Virtual Instructor</div>
       <div class="wd-chips"><i>Hand Tracking</i><i>Virtual Instructor</i><i>3D</i></div>
       <div class="wd-metric" data-i18n="work.ar.metric">Controller-free hand interaction</div>
@@ -224,7 +228,7 @@
 
     <div class="wdetail" id="wd-vr">
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h4 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h4>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h3>
       <div class="wd-sub" data-i18n="work.vr.sub">Virtual Reality | Hand Gestures | Controllers</div>
       <div class="wd-chips"><i>Meta Quest 3</i><i>Unity</i><i>Simulation</i></div>
       <div class="wd-metric" data-i18n="work.vr.metric">~1-hour guided experience</div>
@@ -237,7 +241,7 @@
 
     <div class="wdetail" id="wd-ml" hidden>
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h4 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h4>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h3>
       <div class="wd-sub" data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</div>
       <div class="wd-chips"><i>Python</i><i>Machine Learning</i><i>Real-time 3D</i></div>
       <div class="wd-metric" data-i18n="work.ml.metric">Real-time scientific calculation</div>
@@ -250,7 +254,7 @@
 
     <div class="wdetail" id="wd-class" hidden>
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h4 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h4>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h3>
       <div class="wd-sub" data-i18n="work.class.sub">Physical VR Classroom | Meta Quest 3 | Instructor Tools</div>
       <div class="wd-chips"><i>Setup</i><i>Infrastructure</i><i>Management</i></div>
       <div class="wd-metric" data-i18n="work.class.metric">Up to 12 headsets at once</div>
@@ -265,11 +269,11 @@
   <section class="panel wwd rv" id="tech">
     <h2 class="sec-k" data-i18n="wwd.kicker">FROM IDEA TO WORKING PRODUCT</h2>
     <div class="wwd-grid">
-      <div><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.6 10.8c-.7.55-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.65-1.1-2.2A6 6 0 0 1 12 3z"/></svg><h4 data-i18n="wwd.1.title">CONCEPT &amp; DESIGN</h4><p data-i18n="wwd.1.desc">From ideas to compelling concepts and visual storytelling.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.06-.4.1-.8.1-1.2z"/></svg><h4 data-i18n="wwd.2.title">DEVELOPMENT</h4><p data-i18n="wwd.2.desc">End-to-end development, stable and modular, easy to extend later without rebuilding from scratch.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l2 5 5 .7-3.7 3.5.9 5.1L12 15l-4.2 2.3.9-5.1L5 8.7 10 8z"/></svg><h4 data-i18n="wwd.3.title">3D ART &amp; ANIMATION</h4><p data-i18n="wwd.3.desc">High-quality 3D assets, animations, and effects that bring worlds to life.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><h4 data-i18n="wwd.4.title">OPTIMIZATION</h4><p data-i18n="wwd.4.desc">Performance-first approach for smooth experiences across all platforms.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h4 data-i18n="wwd.5.title">SUPPORT &amp; MAINTENANCE</h4><p data-i18n="wwd.5.desc">Ongoing support and live updates to keep your application evolving.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.6 10.8c-.7.55-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.65-1.1-2.2A6 6 0 0 1 12 3z"/></svg><h3 data-i18n="wwd.1.title">CONCEPT &amp; DESIGN</h3><p data-i18n="wwd.1.desc">From ideas to compelling concepts and visual storytelling.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.06-.4.1-.8.1-1.2z"/></svg><h3 data-i18n="wwd.2.title">DEVELOPMENT</h3><p data-i18n="wwd.2.desc">End-to-end development, stable and modular, easy to extend later without rebuilding from scratch.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l2 5 5 .7-3.7 3.5.9 5.1L12 15l-4.2 2.3.9-5.1L5 8.7 10 8z"/></svg><h3 data-i18n="wwd.3.title">3D ART &amp; ANIMATION</h3><p data-i18n="wwd.3.desc">High-quality 3D assets, animations, and effects that bring worlds to life.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><h3 data-i18n="wwd.4.title">OPTIMIZATION</h3><p data-i18n="wwd.4.desc">Performance-first approach for smooth experiences across all platforms.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h3 data-i18n="wwd.5.title">SUPPORT &amp; MAINTENANCE</h3><p data-i18n="wwd.5.desc">Ongoing support and live updates to keep your application evolving.</p></div>
     </div>
     <div class="about-tech">
       <h2 class="sec-k tech-head" data-i18n="tech.k">TECHNOLOGIES</h2>
@@ -396,6 +400,8 @@
       </form>
     </div>
   </section>
+
+  </main>
 
   <footer>
     <div class="foot">

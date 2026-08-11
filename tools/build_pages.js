@@ -195,7 +195,7 @@ function relatedCards(slugs) {
 
 function serviceBody(p) {
   const out = [];
-  out.push('<main class="wrap pg">');
+  out.push('<main class="wrap pg" id="main" tabindex="-1">');
   out.push(breadcrumb(p));
   out.push(`  <h1 class="pg-h1">${esc(p.h1[0])}<em>${esc(p.h1[1])}</em></h1>`);
   out.push(`  <p class="pg-lead">${esc(p.lead)}</p>`);
@@ -275,7 +275,7 @@ function serviceBody(p) {
 function workBody(p) {
   const up = upOf(p);
   const out = [];
-  out.push('<main class="wrap pg">');
+  out.push('<main class="wrap pg" id="main" tabindex="-1">');
   out.push(breadcrumb(p));
   out.push(`  <h1 class="pg-h1">${esc(p.h1[0])}<em>${esc(p.h1[1])}</em></h1>`);
   out.push(`  <p class="pg-sub">${esc(p.sub)}</p>`);

@@ -41,6 +41,15 @@ a{color:inherit;text-decoration:none}
 @media (prefers-reduced-motion:reduce){.wa-float{transition:none}.wa-float:hover{transform:none}}
 
 /* ---------------- nav ---------------- */
+/* Skip link (WCAG 2.4.1 Bypass Blocks). Off-screen until focused, then pinned to
+   the top so a keyboard user can jump the nav rather than tab all seven links. */
+.skip-link{position:fixed;top:-120px;inset-inline-start:12px;z-index:2000;
+  font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.06em;
+  background:var(--hot);color:#fff;padding:11px 18px;border-radius:0 0 8px 8px;
+  transition:top .18s ease}
+.skip-link:focus{top:0}
+#main:focus{outline:none}   /* focus target only, never draws a box round the page */
+
 nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;gap:34px;padding:16px 24px;max-width:1180px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:12px}
@@ -165,7 +174,7 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 .pcard{padding:34px 30px;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;align-items:flex-start}
 .pcard:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
 .pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
-.pcard h3{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
+.pcard h2{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
 .pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
 .pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot);margin-top:auto}
 @media(max-width:900px){.cards3{grid-template-columns:1fr}}
@@ -184,7 +193,7 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 @media(max-width:360px){.sec-k::before,.sec-k::after{display:none}}
 .wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px;margin-top:44px;text-align:center}
 .wwd-grid .icon{font-size:1.9rem;margin-bottom:14px}
-.wwd-grid h4{font-size:.72rem;font-weight:700;letter-spacing:.16em;margin-bottom:10px}
+.wwd-grid h3{font-size:.72rem;font-weight:700;letter-spacing:.16em;margin-bottom:10px}
 .wwd-grid p{font-size:.8rem;color:var(--dim)}
 @media(max-width:900px){.wwd-grid{grid-template-columns:repeat(2,1fr)}}
 
@@ -259,7 +268,7 @@ button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:
 .wdetail[hidden]{display:none}
 .wdetail-close{position:absolute;top:14px;inset-inline-end:14px;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;font-size:1.15rem;line-height:1;display:grid;place-content:center;transition:color .2s,border-color .2s}
 .wdetail-close:hover{color:var(--hot);border-color:rgba(200,16,46,.55)}
-.wdetail h4{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
+.wdetail h3{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
 .wd-sub{font-family:var(--body);font-size:.82rem;font-weight:600;letter-spacing:.02em;color:var(--bone);opacity:.72;margin-top:10px}
 .wd-model-wrap{position:relative;margin-top:16px}
 .wd-model{width:100%;height:clamp(260px,42vh,380px);background:transparent;border:1px solid var(--line);border-radius:14px;--poster-color:transparent;display:block}

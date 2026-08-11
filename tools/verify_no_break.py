@@ -141,7 +141,7 @@ INTEGRITY = r"""
   // checks 1/6 never see it -- only the comparison between siblings does. This
   // is what a one-word-too-long project title costs, and it is invisible until
   // someone looks at the page. Stacked (mobile) layouts have no row to break.
-  for (const [gridSel, headSel] of [['.w2-grid', '.l-title'], ['.cards3', 'h3']]) {
+  for (const [gridSel, headSel] of [['.w2-grid', '.l-title'], ['.cards3', 'h2']]) {
     for (const grid of document.querySelectorAll(gridSel)) {
       const cards = [...grid.children].filter(el => el.getBoundingClientRect().height > 1);
       if (cards.length < 2) continue;

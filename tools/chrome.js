@@ -80,7 +80,10 @@ function nav(opts) {
     const href = l.hash === '#top' ? '/' : '/' + l.hash;
     return `      <li><a${on} href="${href}">${l.label}</a></li>`;
   });
-  return ['', '<nav>', '  <div class="nav-in">', logo(up, EOL),
+  return ['',
+    // WCAG 2.4.1: same skip link the home pages carry, so every page can bypass the nav
+    '<a class="skip-link" href="#main">Skip to content</a>',
+    '<nav>', '  <div class="nav-in">', logo(up, EOL),
     '    <ul class="nav-links">']
     .concat(items)
     .concat([

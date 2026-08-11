@@ -2,7 +2,7 @@ const I18N = {
   en: {
     "float.cta":"GET A PROPOSAL",
     "doc.title":"App, 3D & VR Software Development in Unity | Red Crown Interactive",
-    "nav.home":"HOME","nav.services":"SERVICES","nav.tech":"TECHNOLOGIES","nav.work":"WORK","nav.about":"ABOUT","nav.faq":"FAQ","nav.contact":"CONTACT","nav.cta":"GET A PROPOSAL",
+    "a11y.skip":"Skip to content","nav.home":"HOME","nav.services":"SERVICES","nav.tech":"TECHNOLOGIES","nav.work":"WORK","nav.about":"ABOUT","nav.faq":"FAQ","nav.contact":"CONTACT","nav.cta":"GET A PROPOSAL",
     "hero.title":"<em>INTERACTIVE SOFTWARE</em><br>FOR SCIENCE &amp; ENGINEERING",
     "hero.plat":"MOBILE<s>·</s>PC<s>·</s>XR <em>· ENGINEERING, 3D &amp; DEPLOYMENT UNDER ONE ROOF</em>",
     "hero.lead":"We build mobile, desktop, and XR software that turns complex scientific and engineering work into clear, intuitive experiences, from concept to real-world deployment.",
@@ -65,8 +65,8 @@ const I18N = {
   he: {
     "float.cta":"לייעוץ חינם",
     "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR ב-Unity | Red Crown Interactive",
-    "nav.home":"בית","nav.services":"שירותים","nav.tech":"טכנולוגיות","nav.work":"עבודות","nav.about":"אודות","nav.faq":"שאלות נפוצות","nav.contact":"צור קשר","nav.cta":"לייעוץ חינם",
-    "hero.title":"יש לכם <em>רעיון שיכול לשנות</em> איך אנשים לומדים, חוקרים או&nbsp;עובדים?",
+    "a11y.skip":"דלג לתוכן","nav.home":"בית","nav.services":"שירותים","nav.tech":"טכנולוגיות","nav.work":"עבודות","nav.about":"אודות","nav.faq":"שאלות נפוצות","nav.contact":"צור קשר","nav.cta":"לייעוץ חינם",
+    "hero.title":"<em>פיתוח VR, <span style=\"white-space:nowrap\">תלת-ממד</span> ואפליקציות</em><br>חדשנות לארגון שלכם",
     "hero.plat":"פיתוח בהתאמה אישית למחקר, לתעשייה ולסטארטאפים <em>· נייד · מחשב · מציאות מדומה</em>",
     "hero.lead":"אנחנו הופכים רעיונות מורכבים למוצרים אינטראקטיביים יפים ואמינים, שנבנים כמכלול אחד ומוכנים לשימוש אמיתי, לא רק להדגמה.",
     "work.intro":"כל מודל תלת-ממד כאן נלקח מתוך פרויקט אמיתי שבנינו. סובבו, התקרבו ושחקו איתו בעצמכם, ותראו עבודה אמיתית שלנו מקרוב.",
@@ -129,7 +129,7 @@ const I18N = {
   ru: {
     "float.cta":"Получить предложение",
     "doc.title":"Разработка приложений, 3D и VR на Unity | Red Crown Interactive",
-    "nav.home":"Главная","nav.services":"Услуги","nav.tech":"Технологии","nav.work":"Работы","nav.about":"О нас","nav.faq":"Вопросы","nav.contact":"Контакты","nav.cta":"Получить предложение",
+    "a11y.skip":"Перейти к содержанию","nav.home":"Главная","nav.services":"Услуги","nav.tech":"Технологии","nav.work":"Работы","nav.about":"О нас","nav.faq":"Вопросы","nav.contact":"Контакты","nav.cta":"Получить предложение",
     "hero.title":"<em>ИНТЕРАКТИВНОЕ ПО</em><br>ДЛЯ НАУКИ И ИНЖЕНЕРИИ",
     "hero.plat":"Мобайл<s>·</s>PC<s>·</s>XR <em>· инженерия, 3D и внедрение под одной крышей</em>",
     "hero.lead":"Мы создаём ПО для мобильных устройств, ПК и XR, которое превращает сложную научную и инженерную работу в понятные, интуитивные решения, от идеи до внедрения.",
@@ -428,5 +428,12 @@ document.querySelectorAll('.founder-flip').forEach(function(b){
     if (!target) return;
     e.preventDefault();
     lenis.scrollTo(target, { offset: -100 });
+    // preventDefault also cancels the focus move a real anchor jump performs, which
+    // silently breaks the skip link: the page scrolls but the next Tab lands back in
+    // the nav. Move focus ourselves, without letting it scroll a second time.
+    if (target.focus) {
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    }
   });
 })();
