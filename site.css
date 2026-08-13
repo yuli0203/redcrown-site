@@ -13,6 +13,9 @@
   color-scheme:dark; /* tell auto-darkening browsers (Samsung Internet, Chrome auto-dark) the page is already dark so they don't re-invert it */
   --black:#0E080A; --panel:#1A1013; --panel-2:#221519; --maroon:#76232F;
   --line:rgba(240,234,228,.08); --red:#C8102E; --hot:#C8102E;
+  /* Red as TEXT only. #C8102E is 3.17:1 on the panels, under the 4.5:1 AA needs
+     for small text. Same hue and saturation, lifted to 4.93:1. Chrome keeps --red. */
+  --hot-text:#F03F5C;
   --bone:#F0EAE4; --dim:#A89DA0;
   --display:'Chakra Petch',sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --brand:'Michroma',sans-serif;
 }
@@ -55,26 +58,26 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 .logo{display:flex;align-items:center;gap:12px}
 .logo img{height:40px}
 .logo b{font-family:var(--brand);font-weight:400;font-size:.82rem;letter-spacing:.26em;display:block}
-.logo i{font-family:var(--brand);font-style:normal;font-size:.5rem;letter-spacing:.44em;color:var(--red);display:block;margin-top:3px}
+.logo i{font-family:var(--brand);font-style:normal;font-size:.5rem;letter-spacing:.44em;color:var(--hot-text);display:block;margin-top:3px}
 .nav-links{display:flex;gap:22px;margin-inline-start:auto;list-style:none}
 .nav-links a{font-size:.74rem;font-weight:600;letter-spacing:.12em;color:var(--dim);transition:color .2s;white-space:nowrap}
-.nav-links a:hover,.nav-links a.on{color:var(--hot)}
+.nav-links a:hover,.nav-links a.on{color:var(--hot-text)}
 .btn{display:inline-block;font-family:var(--display);font-weight:600;font-size:.86rem;letter-spacing:.08em;padding:13px 26px;border-radius:10px;transition:transform .25s cubic-bezier(.16,1,.3,1),background-color .2s,color .2s,border-color .2s,filter .2s}
-.btn-line{border:1px solid var(--red);color:var(--hot)}
+.btn-line{border:1px solid var(--red);color:var(--hot-text)}
 .btn-line:hover{background:var(--red);color:var(--bone)}
 .btn-red{background:var(--red);color:var(--bone)}
 .btn-red:hover{filter:brightness(1.12)}
 .nav-cta{margin-inline-start:14px;white-space:nowrap}
 .lang{position:relative;margin-inline-start:14px;flex-shrink:0;direction:ltr}
 .lang-toggle{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:8px 11px;background:transparent;color:var(--bone);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s}
-.lang-toggle:hover{border-color:var(--red);color:var(--hot)}
+.lang-toggle:hover{border-color:var(--hot-text);color:var(--hot-text)}
 .lang-cur{display:inline-flex;align-items:center;gap:6px}
 .lang .caret{width:9px;height:6px;color:var(--dim);transition:transform .2s}
 .lang.open .caret{transform:rotate(180deg)}
 .lang-menu{position:absolute;top:calc(100% + 6px);right:0;min-width:100%;display:none;flex-direction:column;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.45);z-index:60}
 .lang.open .lang-menu{display:flex}
 .lang-menu button{display:inline-flex;align-items:center;gap:7px;width:100%;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:9px 16px 9px 11px;background:transparent;color:var(--dim);border:0;cursor:pointer;white-space:nowrap;transition:all .2s}
-.lang-menu button:hover{background:var(--panel);color:var(--hot)}
+.lang-menu button:hover{background:var(--panel);color:var(--hot-text)}
 .lang-menu button[hidden]{display:none}
 .lang .flag{width:18px;height:12px;border-radius:2px;flex-shrink:0;display:block;box-shadow:0 0 0 .5px rgba(255,255,255,.25)}
 [dir="rtl"] .lang-menu{right:auto;left:0}
@@ -158,7 +161,7 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 .hero p{color:var(--dim);max-width:38ch}
 .hero-cta{margin-top:36px;display:flex;align-items:center;gap:30px;flex-wrap:wrap}
 .arrow-link{font-size:.78rem;font-weight:600;letter-spacing:.16em;color:var(--bone)}
-.arrow-link:hover{color:var(--hot)}
+.arrow-link:hover{color:var(--hot-text)}
 @media(max-width:900px){
   .hero{display:block;min-height:0}
   .hero-bg{position:relative;inset:auto;height:280px;background-position:66% center}
@@ -176,7 +179,7 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 .pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
 .pcard h2{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
 .pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
-.pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot);margin-top:auto}
+.pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot-text);margin-top:auto}
 @media(max-width:900px){.cards3{grid-template-columns:1fr}}
 
 /* ---------------- what we do ---------------- */
@@ -221,13 +224,13 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .wcard .wcat{position:absolute;z-index:2;top:12px;inset-inline-start:12px;font-family:var(--display);font-weight:700;font-size:.68rem;letter-spacing:.09em;padding:6px 13px;border-radius:999px;background:rgba(200,16,46,.92);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.4)}
 .wcard .wproj{display:block;margin-top:15px;font-size:.98rem;font-weight:600;color:var(--bone);line-height:1.3}
 .wcard .wgo{display:block;margin-top:7px;font-size:.72rem;font-weight:600;letter-spacing:.05em;color:var(--dim);transition:color .2s,transform .25s cubic-bezier(.16,1,.3,1)}
-.wcard:hover .wgo{color:var(--hot);transform:translateX(5px)}
+.wcard:hover .wgo{color:var(--hot-text);transform:translateX(5px)}
 [dir="rtl"] .wcard:hover .wgo{transform:translateX(-5px)}
 /* work v2 — lioness category cards */
 #work{position:relative}
 .work2-hd{position:relative;margin-bottom:40px;min-height:170px}
 .w2-hero{position:absolute;top:-18px;inset-inline-end:0;width:340px;max-width:36%;pointer-events:none;opacity:.95;transform:scaleX(-1)}
-.w2-kick{font-family:var(--brand);font-weight:700;font-size:.72rem;letter-spacing:.2em;color:var(--red);display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.w2-kick{font-family:var(--brand);font-weight:700;font-size:.72rem;letter-spacing:.2em;color:var(--hot-text);display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .w2-kick::before{content:"";width:34px;height:1px;background:var(--red)}
 .w2-title{font-family:var(--display);font-weight:800;font-size:clamp(1.7rem,3.6vw,2.7rem);line-height:1.07;color:#fff;margin:0;max-width:16ch}
 .w2-title em{color:var(--red);font-style:normal}
@@ -236,7 +239,7 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .lcell{display:flex;flex-direction:column;gap:12px}
 .lcap{display:flex;flex-direction:column;gap:5px;min-height:5rem}
 .lcap-top{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
-.wd-kicker{display:block;font-family:var(--brand);font-weight:700;font-size:.62rem;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:9px}
+.wd-kicker{display:block;font-family:var(--brand);font-weight:700;font-size:.62rem;letter-spacing:.22em;color:var(--hot-text);text-transform:uppercase;margin-bottom:9px}
 /* Reserve two lines for every project title. A title that wraps in one card and
    not its neighbour used to push that card's body down and break the row, and
    the length that triggers it differs per language, so policing copy length in
@@ -267,7 +270,7 @@ button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:
 .wdetail{margin-top:24px;padding:28px 30px;border-radius:14px;border:1px solid var(--line);background:var(--panel);position:relative}
 .wdetail[hidden]{display:none}
 .wdetail-close{position:absolute;top:14px;inset-inline-end:14px;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;font-size:1.15rem;line-height:1;display:grid;place-content:center;transition:color .2s,border-color .2s}
-.wdetail-close:hover{color:var(--hot);border-color:rgba(200,16,46,.55)}
+.wdetail-close:hover{color:var(--hot-text);border-color:rgba(200,16,46,.55)}
 .wdetail h3{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
 .wd-sub{font-family:var(--body);font-size:.82rem;font-weight:600;letter-spacing:.02em;color:var(--bone);opacity:.72;margin-top:10px}
 .wd-model-wrap{position:relative;margin-top:16px}
@@ -304,7 +307,7 @@ button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:
 .contact-form .btn-red{margin-top:6px;align-self:flex-start;cursor:pointer;border:0}
 .form-msg{font-size:.88rem;margin-top:2px}
 .form-ok{color:#5ec27a}
-.form-err{color:var(--hot)}
+.form-err{color:var(--hot-text)}
 @media(max-width:900px){.contact{padding:44px 28px}.contact-grid{grid-template-columns:1fr;gap:32px}.field input,.field select,.field textarea{font-size:16px}}
 
 /* ---------------- about ---------------- */
@@ -335,7 +338,7 @@ button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:
 .founder-name{font-family:var(--display);font-weight:600;font-size:1.1rem;letter-spacing:.02em}
 .founder-role{font-size:.82rem;color:var(--dim);margin-top:2px}
 .founder-edu{font-size:.74rem;color:var(--dim);opacity:.85;line-height:1.4;margin-top:4px}
-.founder-li{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:.82rem;font-weight:600;letter-spacing:.04em;line-height:1;color:var(--hot);width:fit-content}
+.founder-li{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:.82rem;font-weight:600;letter-spacing:.04em;line-height:1;color:var(--hot-text);width:fit-content}
 .founder-li svg{width:15px;height:15px;flex-shrink:0;fill:currentColor}
 .founder-li:hover{color:var(--bone)}
 .about-xp{margin-top:auto;padding-top:22px;margin-bottom:16px}
@@ -354,14 +357,14 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .foot .contact{margin:0;padding:0;display:flex;align-items:center;gap:14px 26px;flex-wrap:wrap;font-size:.86rem;color:var(--dim)}
 .foot .contact span{display:inline-flex;align-items:center;white-space:nowrap}
 .foot .contact a{color:var(--dim);transition:color .2s}
-.foot .contact a:hover{color:var(--hot)}
+.foot .contact a:hover{color:var(--hot-text)}
 .foot-legal{display:flex;justify-content:center;gap:0 16px;flex-wrap:wrap;margin-top:6px;font-size:.76rem}
 .foot-legal a{color:var(--dim);transition:color .2s;display:inline-flex;align-items:center;min-height:36px;padding:0 6px}
-.foot-legal a:hover{color:var(--hot)}
+.foot-legal a:hover{color:var(--hot-text)}
 .foot .contact .icon{margin-inline-end:.5em;flex:none}
 .socials{display:flex;gap:16px}
 .socials a{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--dim);font-size:.8rem;transition:all .2s}
-.socials a:hover{border-color:var(--red);color:var(--hot)}
+.socials a:hover{border-color:var(--hot-text);color:var(--hot-text)}
 .copy{text-align:center;font-size:.72rem;color:var(--dim);margin-top:26px}
 .wd-credit{display:inline-block;margin-top:3px;font-size:.68em;opacity:.55}
 .wd-credit a{color:inherit;text-decoration:underline}
@@ -401,7 +404,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
    nothing on the home page, so adding them cannot change how it renders. */
 .pg{padding-top:52px;padding-bottom:20px}
 .pg-crumb{font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:18px}
-.pg-crumb a{color:var(--hot)}
+.pg-crumb a{color:var(--hot-text)}
 .pg-crumb a:hover{text-decoration:underline}
 .pg-crumb span{color:var(--line);padding:0 .25em}
 .pg-h1{font-family:var(--display);font-weight:700;font-size:clamp(1.85rem,4.3vw,3rem);line-height:1.09;letter-spacing:.01em;max-width:22ch}
@@ -417,14 +420,14 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .pg-hero{display:block;width:100%;height:auto;margin-top:30px;border-radius:16px;border:1px solid var(--line)}
 .pg-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
 .pg-facts div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
-.pg-facts i{display:block;font-style:normal;font-family:var(--display);font-weight:600;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--hot)}
+.pg-facts i{display:block;font-style:normal;font-family:var(--display);font-weight:600;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--hot-text)}
 .pg-facts b{display:block;margin-top:7px;font-weight:400;font-size:.88rem;color:var(--bone)}
 .pg-rels{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:20px}
 .pg-rel{display:block;padding:24px 24px;transition:border-color .25s,transform .25s}
 .pg-rel:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
 .pg-rel b{display:block;font-family:var(--display);font-weight:700;font-size:1.02rem;color:var(--bone)}
 .pg-rel span{display:block;margin-top:9px;color:var(--dim);font-size:.88rem}
-.pg-rel-go{display:block;margin-top:14px;font-style:normal;font-family:var(--display);font-weight:600;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hot)}
+.pg-rel-go{display:block;margin-top:14px;font-style:normal;font-family:var(--display);font-weight:600;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hot-text)}
 .pg-end{padding:36px 30px;margin-top:56px;text-align:center}
 .pg-end h2{font-family:var(--display);font-weight:700;font-size:clamp(1.25rem,2.5vw,1.85rem)}
 .pg-end p{color:var(--dim);margin-top:12px}
@@ -541,7 +544,7 @@ main.pg{view-transition-name:pg-main}
 .pr-step:last-child{padding-bottom:0}
 .pr-step:last-child::after{display:none}
 .pr-when{display:block;font-family:var(--display);font-weight:600;font-size:.6rem;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--hot)}
+  text-transform:uppercase;color:var(--hot-text)}
 .pr-what{display:block;margin-top:4px;font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--bone)}
 .pr-why{display:block;margin-top:5px;color:var(--dim);font-size:.86rem;line-height:1.55}
 @media(max-width:860px){.pr-tracks{grid-template-columns:1fr}.pr-track{padding:24px 20px}}
@@ -567,7 +570,7 @@ main.pg{view-transition-name:pg-main}
 .lang-static a,.lang-static .lang-on{font-family:var(--display);font-weight:600;font-size:.68rem;
   letter-spacing:.06em;padding:7px 9px;border-radius:6px;line-height:1}
 .lang-static a{color:var(--dim);transition:color .2s,background-color .2s}
-.lang-static a:hover{color:var(--hot);background:var(--panel)}
+.lang-static a:hover{color:var(--hot-text);background:var(--panel)}
 .lang-static .lang-on{color:var(--bone);background:var(--panel-2)}
 @media(max-width:900px){.lang-static{margin-inline-start:auto}
   /* real tap targets on a phone */
@@ -598,7 +601,7 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 /* client credit, sitting under the result paragraph and sharing its alignment */
 .wd-client,.pg-client{margin-top:14px;font-family:var(--display);font-weight:600;font-size:.84rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
-.wd-client a,.pg-client a{color:var(--hot);display:inline-flex;align-items:baseline;gap:6px;padding:6px 0;vertical-align:baseline}
+.wd-client a,.pg-client a{color:var(--hot-text);display:inline-flex;align-items:baseline;gap:6px;padding:6px 0;vertical-align:baseline}
 /* the external-link arrow lives in CSS, not the text: a neutral "↗" inside an RTL
    paragraph gets bidi-reordered away from the name; baseline-align it so it sits
    on the same line as the letters instead of floating above them */

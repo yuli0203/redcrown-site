@@ -73,7 +73,7 @@ const I18N = {
     "hero.ctaPrimary":"לייעוץ חינם",
     "hero.ctaSecondary":"ראו מה כבר בנינו &nbsp;←",
     "svc.xr.title":"להכניס אנשים לתוך החוויה","svc.xr.desc":"הדרכה, סימולציה ומחקר ב-VR, ב-AR וב-MR, שמאפשרים ללמוד ולעשות דרך התנסות. נבנה על Meta Quest 3.","svc.xr.link":"גלו עוד ←",
-    "svc.mobile.title":"להביא את המוצר לכל מקום","svc.mobile.desc":"אפליקציות ל-iOS ול-Android שמאפשרות למשתמשים לעבוד, ללמוד ולתקשר בפשטות, מתוך ניסיון במוצרים ששירתו מיליוני משתמשים.","svc.mobile.link":"גלו עוד ←",
+    "svc.mobile.title":"להביא את המוצר לכל מקום","svc.mobile.desc":"אפליקציות ל-iOS ול-Android שמאפשרות למשתמשים לעבוד, ללמוד ולתקשר בפשטות, מתוך ניסיון של המייסדת במוצרים ששירתו מיליוני משתמשים.","svc.mobile.link":"גלו עוד ←",
     "svc.pc.title":"להפוך מורכבות לכלי עובד","svc.pc.desc":"מערכות אינטראקטיביות, סימולציות וכלים שמחברים תלת-ממד, מידע וחישובים למוצר אחד ברור.","svc.pc.link":"גלו עוד ←",
     "wwd.kicker":"כשגרפיקה והנדסה נבנות יחד, המוצר מרגיש שלם",
     "wwd.1.title":"קונספט ועיצוב","wwd.1.desc":"החלטות עיצוביות שמבינות גם את הטכנולוגיה, כך שמה שמתוכנן הוא באמת מה שייבנה.",
@@ -236,8 +236,8 @@ function detectLang(){
 // language dropdown: toggle open, pick a language, close on outside click / Escape
 const langWrap = document.querySelector('.lang');
 const langToggle = document.querySelector('.lang-toggle');
-function closeLang(){ langWrap.classList.remove('open'); langToggle.setAttribute('aria-expanded','false'); }
-langToggle.addEventListener('click', e=>{
+function closeLang(){ if(!langWrap || !langToggle) return; langWrap.classList.remove('open'); langToggle.setAttribute('aria-expanded','false'); }
+langToggle?.addEventListener('click', e=>{
   e.stopPropagation();
   const open = langWrap.classList.toggle('open');
   langToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -263,7 +263,7 @@ document.querySelectorAll('.lang-menu button').forEach(b=>{
     applyLang(l, true); closeLang();
   });
 });
-document.addEventListener('click', e=>{ if(!langWrap.contains(e.target)) closeLang(); });
+document.addEventListener('click', e=>{ if(langWrap && !langWrap.contains(e.target)) closeLang(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLang(); });
 
 // A translated page renders its own language and nothing else: its URL already
