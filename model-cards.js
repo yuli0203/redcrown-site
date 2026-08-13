@@ -25,7 +25,7 @@
     robi:   { src: '/assets/models/robi_opt.glb',
               autoplay: true,      exposure: '1',    shadow: ['0.6', '0.9'],
               fov: ['25deg', '10deg', '36deg'], orbit: '15deg 82deg auto' },
-    caffeine: { src: '/assets/models/caffeine2_opt.glb',
+    caffeine: { src: '/assets/models/caffeine2_opt.glb?v=20260813-3',
               autoRotate: '16deg', exposure: '0.45', shadow: ['0.5', '0.9'],
               fov: ['28deg', '12deg', '40deg'], orbit: '0deg 75deg auto' },
     quest3: { src: '/assets/models/meta_quest_3_opt.glb',

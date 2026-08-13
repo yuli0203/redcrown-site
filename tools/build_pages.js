@@ -347,7 +347,7 @@ const tail = p => [
   "  if (a && typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-18313532220/zWKzCPjS89QcELymyZxE', transport_type: 'beacon' });",
   '});',
   '</script>',
-  `<script src="${upOf(p)}model-cards.js" defer></script>`,
+  `<script src="${upOf(p)}model-cards.js?v=20260814-2" defer></script>`,
   `<script src="${upOf(p)}rail-nav.js" defer></script>`,
   `<script src="${upOf(p)}float.js" defer></script>`,
   '</body>',
