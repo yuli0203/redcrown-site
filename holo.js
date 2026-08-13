@@ -201,6 +201,7 @@
   window.addEventListener('resize', function () { resize(); }, { passive: true });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) req(); }, { threshold: 0 }).observe(holo);
   document.addEventListener('visibilitychange', function () { if (!document.hidden && visible) req(); });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) req(); });  // bfcache restore
 
   if (reduce) draw(1, 1, 0, 0, 0.02, 0.3); else req();
 })();

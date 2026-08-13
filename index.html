@@ -28,8 +28,8 @@
   gtag('js', new Date());
   gtag('config', 'AW-18313532220');
 </script>
-<title>VR, XR & Interactive 3D Software in Unity | Red Crown Interactive</title>
-<meta name="description" content="Red Crown Interactive builds interactive software for science, engineering, and VR, on Meta Quest, mobile, and desktop, in Unity, from concept to real-world deployment.">
+<title>App, 3D & VR Software Development in Unity | Red Crown Interactive</title>
+<meta name="description" content="Red Crown Interactive builds apps and interactive software for science, engineering, and business, on mobile, desktop, and Meta Quest, in Unity, from concept to real-world deployment.">
 <meta name="author" content="Julia Pavlov">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -46,15 +46,15 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="he_IL">
 <meta property="og:locale:alternate" content="ru_RU">
-<meta property="og:title" content="Red Crown Interactive · Interactive Software for Science, Engineering &amp; VR">
-<meta property="og:description" content="Red Crown Interactive builds interactive software for science, engineering, and VR, on Meta Quest, mobile, and desktop, in Unity, from concept to real-world deployment.">
+<meta property="og:title" content="Red Crown Interactive · Interactive Software for Science &amp; Engineering">
+<meta property="og:description" content="Red Crown Interactive builds apps and interactive software for science, engineering, and business, on mobile, desktop, and Meta Quest, in Unity, from concept to real-world deployment.">
 <meta property="og:url" content="https://redcrowninteractive.com/">
 <meta property="og:image" content="https://redcrowninteractive.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Interactive Software for Science, Engineering &amp; VR">
-<meta name="twitter:description" content="Red Crown Interactive builds interactive software for science, engineering, and VR, on Meta Quest, mobile, and desktop, in Unity.">
+<meta name="twitter:title" content="Interactive Software for Science &amp; Engineering">
+<meta name="twitter:description" content="Red Crown Interactive builds apps and interactive software for science, engineering, and business, on mobile, desktop, and Meta Quest, in Unity.">
 <meta name="twitter:image" content="https://redcrowninteractive.com/og-image.png">
 <script type="application/ld+json">
 {
@@ -105,6 +105,9 @@
 <body>
 <script>document.documentElement.classList.add('js');</script>
 
+  <!-- WCAG 2.4.1: let keyboard users jump the nav instead of tabbing it every page -->
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
 <nav>
   <div class="nav-in">
     <a class="logo" href="#top">
@@ -114,8 +117,8 @@
     <ul class="nav-links">
       <li><a class="on" href="#top" data-i18n="nav.home">HOME</a></li>
       <li><a href="#services" data-i18n="nav.services">SERVICES</a></li>
-      <li><a href="#tech" data-i18n="nav.tech">TECHNOLOGIES</a></li>
       <li><a href="#work" data-i18n="nav.work">WORK</a></li>
+      <li><a href="#tech" data-i18n="nav.tech">TECHNOLOGIES</a></li>
       <li><a href="#about" data-i18n="nav.about">ABOUT</a></li>
       <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
       <li><a href="#contact" data-i18n="nav.contact">CONTACT</a></li>
@@ -137,13 +140,14 @@
 
 <div class="wrap" id="top">
 
+  <main id="main" tabindex="-1">
   <header class="panel hero">
     <div class="hero-bg" role="img" aria-label="Developer wearing a VR headset in front of the Red Crown mark"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="hero-txt rv in">
       <h1 data-i18n="hero.title"><em>INTERACTIVE SOFTWARE</em><br>FOR SCIENCE &amp; ENGINEERING</h1>
-      <div class="plat" data-i18n="hero.plat">XR<s>•</s>MOBILE<s>•</s>PC</div>
-      <p data-i18n="hero.lead">We build XR, mobile, and desktop software that turns complex scientific and engineering work into clear, intuitive experiences, from concept to real-world deployment.</p>
+      <div class="plat" data-i18n="hero.plat">MOBILE<s>•</s>PC<s>•</s>XR</div>
+      <p data-i18n="hero.lead">We build mobile, desktop, and XR software that turns complex scientific and engineering work into clear, intuitive experiences, from concept to real-world deployment.</p>
       <div class="hero-cta">
         <a class="btn btn-red" href="#contact" data-i18n="hero.ctaPrimary">GET A PROJECT PROPOSAL</a>
         <a class="arrow-link" href="#work" data-i18n="hero.ctaSecondary">VIEW OUR WORK &nbsp;→</a>
@@ -157,32 +161,119 @@
   <section class="cards3" id="services">
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><path d="M2 9a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3l-2-2h-6l-2 2H4a2 2 0 0 1-2-2z"/><circle cx="8" cy="11.5" r="1.6"/><circle cx="16" cy="11.5" r="1.6"/></svg>
-      <h3 data-i18n="svc.xr.title">XR / VR / AR</h3>
+      <h2 data-i18n="svc.xr.title">XR / VR / AR</h2>
       <p data-i18n="svc.xr.desc">Simulations, labs, and training experiences in VR, AR, and MR, with hand, gesture, and controller interactions tailored to the user and the work environment. Built on Meta Quest 3.</p>
       <a href="#work" data-i18n="svc.xr.link">EXPLORE XR →</a>
     </div>
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M11 18.5h2"/></svg>
-      <h3 data-i18n="svc.mobile.title">MOBILE</h3>
-      <p data-i18n="svc.mobile.desc">Mobile apps and companion AR tools for field work, for iOS and Android, drawing on the founder's experience with commercial products that served millions of users.</p>
+      <h2 data-i18n="svc.mobile.title">MOBILE</h2>
+      <p data-i18n="svc.mobile.desc">Commercial and utility mobile apps for iOS and Android, drawing on the founder's experience with products that served millions of users.</p>
       <a href="#work" data-i18n="svc.mobile.link">EXPLORE MOBILE →</a>
     </div>
     <div class="panel pcard rv">
       <svg class="icon" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.6"/><path d="M9 20.5h6M12 16.5v4"/></svg>
-      <h3 data-i18n="svc.pc.title">PC</h3>
+      <h2 data-i18n="svc.pc.title">PC</h2>
       <p data-i18n="svc.pc.desc">Complex real-time interactive systems: research tools, simulations, and high-performance 3D software, with scientific computing and machine learning.</p>
       <a href="#work" data-i18n="svc.pc.link">EXPLORE PC →</a>
+    </div>
+  </section>
+
+  <section id="work">
+    <h2 class="sec-k rv" data-i18n="work.head">SELECTED WORK</h2>
+    <p class="work-sub rv" data-i18n="work.sub">Founder-led projects, from concept to deployment.</p>
+    <div class="w2-grid">
+      <div class="lcell rv">
+        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.vr.title">Fugacity VR Experiment</span><span class="l-en" data-i18n="work.card.vr.tag">Guided VR</span></span><span class="l-result" data-i18n="work.card.vr.result">A whole class runs a virtual laboratory, live at the Technion.</span></div>
+        <button type="button" class="lcard" data-project="vr" aria-expanded="true" aria-controls="wd-vr">
+          <picture><source srcset="assets/lioness/vr.webp" type="image/webp"><img class="lart" src="assets/lioness/vr.png" alt="Virtual Reality projects" width="584" height="760" loading="lazy"></picture>
+          <span class="l-cta"><span data-i18n="work.viewcta">View case study</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+      <div class="lcell rv">
+        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.ar.title">Enzyme Lab in AR</span><span class="l-en" data-i18n="work.card.ar.tag">Hand tracking</span></span><span class="l-result" data-i18n="work.card.ar.result">Physics-based interaction with virtual objects on a real table, no controllers.</span></div>
+        <button type="button" class="lcard" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
+          <picture><source srcset="assets/lioness/ar.webp" type="image/webp"><img class="lart" src="assets/lioness/ar.png" alt="Mixed Reality projects" width="580" height="760" loading="lazy"></picture>
+          <span class="l-cta"><span data-i18n="work.viewcta">View case study</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+      <div class="lcell rv">
+        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.ml.title">Molecular Research Tool</span><span class="l-en" data-i18n="work.card.ml.tag">Real-time ML</span></span><span class="l-result" data-i18n="work.card.ml.result">Edit a molecule and a Python server returns the result instantly, in 3D.</span></div>
+        <button type="button" class="lcard" data-project="ml" aria-expanded="false" aria-controls="wd-ml">
+          <picture><source srcset="assets/lioness/pc.webp" type="image/webp"><img class="lart" src="assets/lioness/pc.png" alt="PC application projects" width="582" height="760" loading="lazy"></picture>
+          <span class="l-cta"><span data-i18n="work.viewcta">View case study</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+      <div class="lcell rv">
+        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.class.title">Technion VR Classroom</span><span class="l-en" data-i18n="work.card.class.tag">Hardware</span></span><span class="l-result" data-i18n="work.card.class.result">12 Meta Quest headsets with tablets, guided end to end.</span></div>
+        <button type="button" class="lcard" data-project="class" aria-expanded="false" aria-controls="wd-class">
+          <picture><source srcset="assets/lioness/hw.webp" type="image/webp"><img class="lart" src="assets/lioness/hw.png" alt="Hardware setup projects" width="576" height="760" loading="lazy"></picture>
+          <span class="l-cta"><span data-i18n="work.viewcta">View case study</span><b class="l-arr">→</b></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="wdetail" id="wd-ar" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h3>
+      <div class="wd-sub" data-i18n="work.ar.sub">Augmented Reality | Hand Tracking | Virtual Instructor</div>
+      <div class="wd-chips"><i>Hand Tracking</i><i>Virtual Instructor</i><i>3D</i></div>
+      <div class="wd-metric" data-i18n="work.ar.metric">Controller-free hand interaction</div>
+      <div class="wd-media"><img class="wd-shot" src="assets/work-ar-enzymatic.jpg" alt="Enzymatic lab AR project" loading="lazy"><div class="wd-model-wrap" data-model="enzym"
+           data-alt="Interactive 3D enzymatic lab model built for Meta Quest — drag to rotate"
+           data-badge="◆ Meta Quest 3 · AR"></div></div>
+      <div class="wd-model-hint">A 3D model we built in-house for our Meta Quest 3 lab · drag to rotate · zoom in to see inside</div>
+      <div class="wd-body" data-i18n="work.ar.body"><p><b>The challenge.</b> In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.</p><p><b>The solution.</b> We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student's real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum.</p><p><b>The result.</b> What was invisible at the bench becomes tangible. Students move inside structures they could never see, handle them with their own hands, and build every concept by doing and deciding rather than by reading a flat diagram. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.</p><p class="wd-client">Developed at <a href="https://dana.net.technion.ac.il/" target="_blank" rel="noopener">Dana Research Group</a></p></div>
+    </div>
+
+    <div class="wdetail" id="wd-vr">
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h3>
+      <div class="wd-sub" data-i18n="work.vr.sub">Virtual Reality | Hand Gestures | Controllers</div>
+      <div class="wd-chips"><i>Meta Quest 3</i><i>Unity</i><i>Simulation</i></div>
+      <div class="wd-metric" data-i18n="work.vr.metric">~1-hour guided experience</div>
+      <div class="wd-media"><img class="wd-shot" src="assets/work-vr-fugacity.jpg" alt="Fugacity VR experiment" loading="lazy"><div class="wd-model-wrap" data-model="robi"
+           data-alt="Robi, our in-house VR instructor — drag to rotate"
+           data-badge="◆ Robi · our VR instructor"></div></div>
+      <div class="wd-model-hint">Robi, the in-house VR instructor that guides students through the experiment · drag to rotate</div>
+      <div class="wd-body" data-i18n="work.vr.body"><p><b>The challenge.</b> How do you teach an abstract thermodynamic concept like fugacity to a whole class at once, consistently and safely, without each student getting a different experience?</p><p><b>The solution.</b> An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor's tablet. Movement inside the experiment is deliberately designed to keep motion sickness to a minimum, so a full hour in the headset stays comfortable for an entire class.</p><p><b>The result.</b> The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.</p><p class="wd-client">Developed at <a href="https://dana.net.technion.ac.il/" target="_blank" rel="noopener">Dana Research Group</a></p></div>
+    </div>
+
+    <div class="wdetail" id="wd-ml" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h3>
+      <div class="wd-sub" data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</div>
+      <div class="wd-chips"><i>Python</i><i>Machine Learning</i><i>Real-time 3D</i></div>
+      <div class="wd-metric" data-i18n="work.ml.metric">Real-time scientific calculation</div>
+      <div class="wd-media"><img class="wd-shot" src="assets/work-ml-livemol.jpg" alt="LiveMol research tool" loading="lazy"><div class="wd-model-wrap" data-model="caffeine"
+           data-alt="Interactive 3D molecule built in LiveMol — drag to rotate"
+           data-badge="◆ Built in LiveMol"></div></div>
+      <div class="wd-model-hint">An actual 3D model generated by our LiveMol app · drag to rotate · use the slider to zoom</div>
+      <div class="wd-body" data-i18n="work.ml.body"><p><b>The challenge.</b> Researchers needed to build and modify molecular structures and see results immediately, instead of waiting for one calculation at a time and guessing what would change.</p><p><b>The solution.</b> We built an interactive 3D tool where the researcher builds and edits a molecule, and a Python compute server runs the quantum chemistry calculation, using established engines including ASE, tblite, Open Babel and Sella, and returns the result onto the model in front of them, without leaving the flow.</p><p><b>The result.</b> Research becomes fast, visual, and intuitive, and the researcher stays inside the structure while the calculation runs, instead of waiting on one job at a time. Built for the Wolfson Faculty of Chemical Engineering at the Technion.</p><p class="wd-client">Developed at <a href="https://dana.net.technion.ac.il/" target="_blank" rel="noopener">Dana Research Group</a></p></div>
+    </div>
+
+    <div class="wdetail" id="wd-class" hidden>
+      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
+      <span class="wd-kicker" data-i18n="work.exkicker">CASE STUDY</span><h3 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h3>
+      <div class="wd-sub" data-i18n="work.class.sub">Physical VR Classroom | Meta Quest 3 | Instructor Tools</div>
+      <div class="wd-chips"><i>Setup</i><i>Infrastructure</i><i>Management</i></div>
+      <div class="wd-metric" data-i18n="work.class.metric">Up to 12 headsets at once</div>
+      <div class="wd-media"><img class="wd-shot" src="assets/work-class-setup.jpg" alt="Meta Quest classroom setup" loading="lazy"><div class="wd-model-wrap" data-model="quest3"
+           data-alt="Meta Quest 3 headset — drag to rotate"
+           data-badge="◆ Meta Quest 3"></div></div>
+      <div class="wd-model-hint">The headset our classroom runs on · drag to rotate · use the slider to zoom<br><span class="wd-credit"><a href="https://sketchfab.com/3d-models/meta-quest-3-65a813833dc04eeeb7d33bdca58c184c" target="_blank" rel="noopener noreferrer">“Meta Quest 3” by Elin</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></span></div>
+      <div class="wd-body" data-i18n="work.class.body"><p><b>The challenge.</b> The Technion wanted a classroom that runs immersive virtual reality for many groups at once, reliably, without staff losing every lesson to technical issues.</p><p><b>The solution.</b> We consulted end to end, from early planning and hardware selection through classroom layout, device configuration, deployment, testing, and the instructors' workflows. Up to 12 Meta Quest 3 headsets, each with a paired tablet.</p><p><b>The result.</b> A classroom that simply works, where instructors follow each group, support students, and collect data every session. The technology stays in the background, and teaching stays center stage.</p><p class="wd-client">Developed at <a href="https://dana.net.technion.ac.il/" target="_blank" rel="noopener">Dana Research Group</a></p></div>
     </div>
   </section>
 
   <section class="panel wwd rv" id="tech">
     <h2 class="sec-k" data-i18n="wwd.kicker">FROM IDEA TO WORKING PRODUCT</h2>
     <div class="wwd-grid">
-      <div><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.6 10.8c-.7.55-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.65-1.1-2.2A6 6 0 0 1 12 3z"/></svg><h4 data-i18n="wwd.1.title">CONCEPT &amp; DESIGN</h4><p data-i18n="wwd.1.desc">From ideas to compelling concepts and visual storytelling.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.06-.4.1-.8.1-1.2z"/></svg><h4 data-i18n="wwd.2.title">DEVELOPMENT</h4><p data-i18n="wwd.2.desc">End-to-end development, stable and modular, easy to extend later without rebuilding from scratch.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l2 5 5 .7-3.7 3.5.9 5.1L12 15l-4.2 2.3.9-5.1L5 8.7 10 8z"/></svg><h4 data-i18n="wwd.3.title">3D ART &amp; ANIMATION</h4><p data-i18n="wwd.3.desc">High-quality 3D assets, animations, and effects that bring worlds to life.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><h4 data-i18n="wwd.4.title">OPTIMIZATION</h4><p data-i18n="wwd.4.desc">Performance-first approach for smooth experiences across all platforms.</p></div>
-      <div><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h4 data-i18n="wwd.5.title">SUPPORT &amp; MAINTENANCE</h4><p data-i18n="wwd.5.desc">Ongoing support and live updates to keep your application evolving.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 3.6 10.8c-.7.55-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.65-1.1-2.2A6 6 0 0 1 12 3z"/></svg><h3 data-i18n="wwd.1.title">CONCEPT &amp; DESIGN</h3><p data-i18n="wwd.1.desc">From ideas to compelling concepts and visual storytelling.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.06-.4.1-.8.1-1.2z"/></svg><h3 data-i18n="wwd.2.title">DEVELOPMENT</h3><p data-i18n="wwd.2.desc">End-to-end development, stable and modular, easy to extend later without rebuilding from scratch.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l2 5 5 .7-3.7 3.5.9 5.1L12 15l-4.2 2.3.9-5.1L5 8.7 10 8z"/></svg><h3 data-i18n="wwd.3.title">3D ART &amp; ANIMATION</h3><p data-i18n="wwd.3.desc">High-quality 3D assets, animations, and effects that bring worlds to life.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><h3 data-i18n="wwd.4.title">OPTIMIZATION</h3><p data-i18n="wwd.4.desc">Performance-first approach for smooth experiences across all platforms.</p></div>
+      <div><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h3 data-i18n="wwd.5.title">SUPPORT &amp; MAINTENANCE</h3><p data-i18n="wwd.5.desc">Ongoing support and live updates to keep your application evolving.</p></div>
     </div>
     <div class="about-tech">
       <h2 class="sec-k tech-head" data-i18n="tech.k">TECHNOLOGIES</h2>
@@ -221,105 +312,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section id="work">
-    <h2 class="sec-k rv" data-i18n="work.head">SELECTED WORK</h2>
-    <p class="work-sub rv" data-i18n="work.sub">Founder-led projects, delivered end to end from concept through deployment.</p>
-    <div class="w2-grid">
-      <div class="lcell rv">
-        <div class="lcap"><span class="l-title" data-i18n="work.cat.vr">Virtual Reality</span><span class="l-en">VR</span></div>
-        <button type="button" class="lcard" data-project="vr" aria-expanded="false" aria-controls="wd-vr">
-          <picture><source srcset="assets/lioness/vr.webp" type="image/webp"><img class="lart" src="assets/lioness/vr.png" alt="Virtual Reality projects" width="584" height="760" loading="lazy"></picture>
-          <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
-        </button>
-      </div>
-      <div class="lcell rv">
-        <div class="lcap"><span class="l-title" data-i18n="work.cat.mr">Mixed Reality</span><span class="l-en">AR / MR</span></div>
-        <button type="button" class="lcard" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
-          <picture><source srcset="assets/lioness/ar.webp" type="image/webp"><img class="lart" src="assets/lioness/ar.png" alt="Mixed Reality projects" width="580" height="760" loading="lazy"></picture>
-          <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
-        </button>
-      </div>
-      <div class="lcell rv">
-        <div class="lcap"><span class="l-title" data-i18n="work.cat.pc">PC Application</span><span class="l-en">PC</span></div>
-        <button type="button" class="lcard" data-project="ml" aria-expanded="false" aria-controls="wd-ml">
-          <picture><source srcset="assets/lioness/pc.webp" type="image/webp"><img class="lart" src="assets/lioness/pc.png" alt="PC application projects" width="582" height="760" loading="lazy"></picture>
-          <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
-        </button>
-      </div>
-      <div class="lcell rv">
-        <div class="lcap"><span class="l-title" data-i18n="work.cat.hw">Hardware Setup</span><span class="l-en">HARDWARE</span></div>
-        <button type="button" class="lcard" data-project="class" aria-expanded="false" aria-controls="wd-class">
-          <picture><source srcset="assets/lioness/hw.webp" type="image/webp"><img class="lart" src="assets/lioness/hw.png" alt="Hardware setup projects" width="576" height="760" loading="lazy"></picture>
-          <span class="l-cta"><span data-i18n="work.viewcta">View example project</span><b class="l-arr">→</b></span>
-        </button>
-      </div>
-    </div>
-
-    <div class="wdetail" id="wd-ar" hidden>
-      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">EXAMPLE PROJECT</span><h4 data-i18n="work.ar.title">Enzymatic Lab Educational Model</h4>
-      <div class="wd-sub" data-i18n="work.ar.sub">Augmented Reality | Hand Tracking | Virtual Instructor</div>
-      <div class="wd-chips"><i>Hand Tracking</i><i>Virtual Instructor</i><i>3D</i></div>
-      <div class="wd-metric" data-i18n="work.ar.metric">Controller-free hand interaction</div>
-      <div class="wd-media"><img class="wd-shot" src="assets/work-ar-enzymatic.jpg" alt="Enzymatic lab AR project" loading="lazy"><div class="wd-model-wrap">
-        <model-viewer class="wd-model" src="assets/models/enzym_opt.glb" alt="Interactive 3D enzymatic lab model built for Meta Quest — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="14deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.5" shadow-softness="0.9" field-of-view="30deg" min-field-of-view="10deg" max-field-of-view="45deg" camera-orbit="0deg 75deg auto" loading="lazy"></model-viewer>
-        <span class="wd-model-badge">◆ Meta Quest 3 · AR</span>
-        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
-        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
-      </div></div>
-      <div class="wd-model-hint">A 3D model we built in-house for our Meta Quest 3 lab · drag to rotate · zoom in to see inside</div>
-      <div class="wd-body" data-i18n="work.ar.body"><p><b>The challenge.</b> In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.</p><p><b>The solution.</b> We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student's real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum and lets students who normally avoid headsets take part.</p><p><b>The result.</b> What was invisible at the bench becomes tangible, every concept is built through doing and deciding, and connects directly to the data students measure. Instructors control the pace live and get real-time comprehension feedback. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.</p></div>
-    </div>
-
-    <div class="wdetail" id="wd-vr" hidden>
-      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">EXAMPLE PROJECT</span><h4 data-i18n="work.vr.title">Immersive Fugacity VR Experiment</h4>
-      <div class="wd-sub" data-i18n="work.vr.sub">Virtual Reality | Hand Gestures | Controllers</div>
-      <div class="wd-chips"><i>Meta Quest 3</i><i>Unity</i><i>Simulation</i></div>
-      <div class="wd-metric" data-i18n="work.vr.metric">~1-hour guided experience</div>
-      <div class="wd-media"><img class="wd-shot" src="assets/work-vr-fugacity.jpg" alt="Fugacity VR experiment" loading="lazy"><div class="wd-model-wrap">
-        <model-viewer class="wd-model" src="assets/models/robi_opt.glb" alt="Robi, our in-house VR instructor — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" autoplay interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="28deg" min-field-of-view="10deg" max-field-of-view="42deg" camera-orbit="15deg 82deg auto" loading="lazy"></model-viewer>
-        <span class="wd-model-badge">◆ Robi · our VR instructor</span>
-        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
-        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
-      </div></div>
-      <div class="wd-model-hint">Robi, the in-house VR instructor that guides students through the experiment · drag to rotate</div>
-      <div class="wd-body" data-i18n="work.vr.body"><p><b>The challenge.</b> How do you teach an abstract thermodynamic concept like fugacity to a whole class at once, consistently and safely, without each student getting a different experience?</p><p><b>The solution.</b> An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor's tablet. Movement inside the experiment is deliberately designed to keep motion sickness to a minimum, so a full hour in the headset stays comfortable for an entire class.</p><p><b>The result.</b> The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.</p></div>
-    </div>
-
-    <div class="wdetail" id="wd-ml" hidden>
-      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">EXAMPLE PROJECT</span><h4 data-i18n="work.ml.title">Molecular Scientific ML Research Tool</h4>
-      <div class="wd-sub" data-i18n="work.ml.sub">PC | Machine-Learning | Python Server</div>
-      <div class="wd-chips"><i>Python</i><i>Machine Learning</i><i>Real-time 3D</i></div>
-      <div class="wd-metric" data-i18n="work.ml.metric">Real-time scientific calculation</div>
-      <div class="wd-media"><img class="wd-shot" src="assets/work-ml-livemol.jpg" alt="LiveMol research tool" loading="lazy"><div class="wd-model-wrap">
-        <model-viewer class="wd-model" src="assets/models/caffeine2_opt.glb" alt="Interactive 3D molecule built in LiveMol — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="0.45" shadow-intensity="0.5" shadow-softness="0.9" field-of-view="32deg" min-field-of-view="12deg" max-field-of-view="46deg" camera-orbit="0deg 75deg auto" loading="lazy"></model-viewer>
-        <span class="wd-model-badge">◆ Built in LiveMol</span>
-        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
-        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
-      </div></div>
-      <div class="wd-model-hint">An actual 3D model generated by our LiveMol app · drag to rotate · use the slider to zoom</div>
-      <div class="wd-body" data-i18n="work.ml.body"><p><b>The challenge.</b> Researchers needed to build and modify molecular structures and see results immediately, instead of waiting for one calculation at a time and guessing what would change.</p><p><b>The solution.</b> We built an interactive 3D tool where the researcher builds and edits a molecule, and a machine-learning model runs a scientific calculation on it quickly and returns the result onto the model in front of them, without leaving the flow.</p><p><b>The result.</b> Research becomes fast, visual, and intuitive, and the machine-learning model enables calculations far faster than the traditional approach. Built for the Wolfson Faculty of Chemical Engineering at the Technion.</p></div>
-    </div>
-
-    <div class="wdetail" id="wd-class" hidden>
-      <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="Close project details">&times;</button>
-      <span class="wd-kicker" data-i18n="work.exkicker">EXAMPLE PROJECT</span><h4 data-i18n="work.class.title">Physical Meta Quest Classroom Setup</h4>
-      <div class="wd-sub" data-i18n="work.class.sub">Multi-User VR | Meta Quest 3 | Instructor Tools</div>
-      <div class="wd-chips"><i>Setup</i><i>Infrastructure</i><i>Management</i></div>
-      <div class="wd-metric" data-i18n="work.class.metric">Up to 12 headsets at once</div>
-      <div class="wd-media"><img class="wd-shot" src="assets/work-class-setup.jpg" alt="Meta Quest classroom setup" loading="lazy"><div class="wd-model-wrap">
-        <model-viewer class="wd-model" src="assets/models/meta_quest_3_opt.glb" alt="Meta Quest 3 headset — drag to rotate" camera-controls disable-zoom disable-pan touch-action="pan-y" auto-rotate rotation-per-second="16deg" interaction-prompt="none" environment-image="neutral" tone-mapping="neutral" exposure="1" shadow-intensity="0.6" shadow-softness="0.9" field-of-view="30deg" min-field-of-view="10deg" max-field-of-view="45deg" camera-orbit="25deg 78deg auto" loading="lazy"></model-viewer>
-        <span class="wd-model-badge">◆ Meta Quest 3</span>
-        <div class="wd-zoom-ctl"><span class="wd-zoom-ic">–</span><input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="Zoom the 3D model"><span class="wd-zoom-ic">+</span></div>
-        <div class="wd-model-loading"><span class="wd-spinner"></span></div>
-      </div></div>
-      <div class="wd-model-hint">The headset our classroom runs on · drag to rotate · use the slider to zoom<br><span class="wd-credit"><a href="https://sketchfab.com/3d-models/meta-quest-3-65a813833dc04eeeb7d33bdca58c184c" target="_blank" rel="noopener noreferrer">“Meta Quest 3” by Elin</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></span></div>
-      <div class="wd-body" data-i18n="work.class.body"><p><b>The challenge.</b> The Technion wanted a classroom that runs immersive virtual reality for many groups at once, reliably, without staff losing every lesson to technical issues.</p><p><b>The solution.</b> We set up the classroom end to end, from hardware selection and space planning to installation, testing, and the instructors' workflows. Up to 12 Meta Quest 3 headsets, each with a paired tablet.</p><p><b>The result.</b> A classroom that simply works, where instructors follow each group, support students, and collect data every session. The technology stays in the background, and teaching stays center stage.</p></div>
     </div>
   </section>
 
@@ -409,6 +401,8 @@
     </div>
   </section>
 
+  </main>
+
   <footer>
     <div class="foot">
       <a class="logo" href="#top">
@@ -428,10 +422,16 @@
       </div>
     </div>
     <div class="copy" data-i18n="foot.copy">© 2026 Red Crown Interactive. All rights reserved.</div>
+    <nav class="foot-legal" aria-label="Legal">
+      <a href="legal/#privacy" data-i18n="foot.privacy">Privacy Policy</a>
+      <a href="legal/#terms" data-i18n="foot.terms">Terms of Use</a>
+      <a href="legal/#accessibility" data-i18n="foot.a11y">Accessibility Statement</a>
+    </nav>
   </footer>
 
 </div>
 
+<a class="proposal-float" href="#contact" aria-label="Get a project proposal"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span data-i18n="float.cta">GET A PROPOSAL</span></a>
 <a class="wa-float" href="https://wa.me/972585760550?text=Hi%21%20I%27m%20interested%20in%20app%20development%20services" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5z"/><path d="M9.2 8.8c-.3 3.1 2.9 6.3 6 6l.6-1.6-2-1.2-.9.7c-.7-.4-1.2-.9-1.6-1.6l.7-.9-1.2-2z"/></svg></a>
 
 <script src="lenis.min.js"></script>
@@ -439,79 +439,11 @@
 <script src="hero-gl.js" defer></script>
 <script src="holo.js" defer></script>
 <script src="crown-particles.js" defer></script>
+<script src="float.js" defer></script>
+<script src="model-cards.js" defer></script>
 <script>
-/* load the self-hosted model-viewer library only when the LiveMol card is opened (keeps initial load light) */
-function robiEyes(mv) {   // replicate the Unity instructor eyes: cyan glow + gentle pulse, blink, occasional expression
-  if (!mv.model || !mv.model.materials) return;
-  var eyes = mv.model.materials.filter(function (m) { return m.name && m.name.indexOf('EYE_') === 0; });
-  if (!eyes.length || mv.__eyes) return; mv.__eyes = 1;
-  // faithful to the Unity InstructorViewModel: rest = palette[0]; each speech "beat" advances to the next
-  // palette colour, then Color.Lerp back at smoothingSpeed 5. Brighter palette entries = the talking flash.
-  var PAL = [[0, 0.5714, 0.8050], [0, 0.8481, 1.0], [0, 1.0, 0.9451]];  // exact prefab colorPalette
-  var disp = PAL[0].slice(), idx = 0, last = performance.now();
-  var talking = true, phaseEnd = last + 2000, beatT = 0;               // talking bursts <-> quiet pauses
-  var nextBlink = last + 1800, blinkStart = -1, pendingDouble = false; // eased blinks, occasional doubles
-  function ease(t) { return t * t * (3 - 2 * t); }
-  (function frame(now) {
-    var dt = Math.min((now - last) / 1000, 0.05); last = now;
-    if (now > phaseEnd) { talking = !talking; phaseEnd = now + (talking ? 1400 + Math.random() * 2000 : 900 + Math.random() * 1800); }
-    var target;
-    if (talking) {                                                     // relaxed beat ~0.34-0.66s advances the colour
-      beatT -= dt * 1000;
-      if (beatT <= 0) { idx = (idx + 1) % PAL.length; beatT = 340 + Math.random() * 320; }
-      target = PAL[idx];
-    } else { idx = 0; target = PAL[0]; }
-    var k = Math.min(dt * 3, 1);                                       // gentler smoothing (softer transitions)
-    disp[0] += (target[0] - disp[0]) * k; disp[1] += (target[1] - disp[1]) * k; disp[2] += (target[2] - disp[2]) * k;
-    var blinkMul = 1;                                                  // natural eased blink (close then open)
-    if (blinkStart < 0 && now >= nextBlink) blinkStart = now;
-    if (blinkStart >= 0) {
-      var bt = (now - blinkStart) / 150;
-      if (bt >= 1) {
-        blinkStart = -1;
-        if (pendingDouble) { pendingDouble = false; nextBlink = now + 2600 + Math.random() * 3600; }
-        else if (Math.random() < 0.28) { pendingDouble = true; nextBlink = now + 110; }
-        else nextBlink = now + 2600 + Math.random() * 3600;
-      } else { blinkMul = 1 - 0.95 * (bt < 0.5 ? ease(bt / 0.5) : ease((1 - bt) / 0.5)); }
-    }
-    eyes.forEach(function (m) {
-      var p = m.pbrMetallicRoughness;
-      if (p && p.setBaseColorFactor) p.setBaseColorFactor([disp[0] * blinkMul, disp[1] * blinkMul, disp[2] * blinkMul, 1]);
-    });
-    requestAnimationFrame(frame);
-  })(last);
-}
-function applyModelZoom(wrap) {
-  var mv = wrap.querySelector('model-viewer'), sl = wrap.querySelector('.wd-zoom');
-  if (!mv || !sl) return;
-  var z = +sl.value;
-  var mn = parseFloat(mv.getAttribute('min-field-of-view')) || 12, mx = parseFloat(mv.getAttribute('max-field-of-view')) || 46;
-  mv.fieldOfView = (mx - (z / 100) * (mx - mn)).toFixed(1) + 'deg';           // slider -> zoom
-  var t = z / 100, mats = mv.model && mv.model.materials;                     // translucent surfaces: opaque when out, authored alpha when in
-  if (mats) for (var i = 0; i < mats.length; i++) { try {
-    var m = mats[i], bc = m.pbrMetallicRoughness.baseColorFactor;
-    if (m.__baseA === undefined) m.__baseA = bc[3];
-    if (m.__baseA < 0.999) { var OUT = 0.9; m.pbrMetallicRoughness.setBaseColorFactor([bc[0], bc[1], bc[2], OUT - t * (OUT - m.__baseA)]); }
-  } catch (_) {} }
-}
-function loadModelViewers() {
-  if (window.__mvLoaded) return; window.__mvLoaded = 1;
-  var s = document.createElement('script'); s.type = 'module'; s.src = 'vendor/model-viewer.min.js'; document.head.appendChild(s);
-  if (window.customElements) customElements.whenDefined('model-viewer').then(function () {
-    document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
-      var w = mv.closest('.wd-model-wrap'), go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
-      try { mv.loading = 'eager'; } catch (_) {}      // fetch the model in the background before it's opened
-      if (mv.loaded) go(); else mv.addEventListener('load', go);
-    });
-  });
-}
-document.addEventListener('click', function (e) {
-  var c = e.target.closest && e.target.closest('.wcard[data-project="ml"], .wcard[data-project="ar"], .wcard[data-project="vr"], .wcard[data-project="class"]');
-  if (c) loadModelViewers();
-}, true);
-document.addEventListener('input', function (e) {
-  if (e.target && e.target.classList && e.target.classList.contains('wd-zoom')) { var w = e.target.closest('.wd-model-wrap'); if (w) applyModelZoom(w); }
-}, true);
+/* The 3D model cards live in model-cards.js, shared with the case-study
+   pages, so the loader, the zoom and Robi's eyes exist in one place. */
 /* Once the page itself has finished loading, quietly warm the 3D stack during idle time so a work
    card opens instantly. Never blocks first paint (waits for load + requestIdleCallback), and is
    skipped on data-saver / slow links so weak phones on cellular don't pay for it before they ask. */
@@ -519,11 +451,11 @@ document.addEventListener('input', function (e) {
   var c = navigator.connection || {};
   if (c.saveData) return;
   if (c.effectiveType && /2g|slow-2g|3g/.test(c.effectiveType)) return;
-  var glbs = ['assets/models/caffeine2_opt.glb', 'assets/models/enzym_opt.glb',
-    'assets/models/robi_opt.glb', 'assets/models/meta_quest_3_opt.glb'];
+  var glbs = Object.keys(window.RCModels ? RCModels.MODELS : {})
+    .map(function (k) { return RCModels.MODELS[k].src; });
   function warm() {
     glbs.forEach(function (u) { var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l); });
-    loadModelViewers();                                // define the library ahead of the first click
+    if (window.RCModels) RCModels.load();                                // define the library ahead of the first click
   }
   function schedule() { if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 6000 }); else setTimeout(warm, 2000); }
   if (document.readyState === 'complete') schedule(); else window.addEventListener('load', schedule);

@@ -41,6 +41,15 @@ a{color:inherit;text-decoration:none}
 @media (prefers-reduced-motion:reduce){.wa-float{transition:none}.wa-float:hover{transform:none}}
 
 /* ---------------- nav ---------------- */
+/* Skip link (WCAG 2.4.1 Bypass Blocks). Off-screen until focused, then pinned to
+   the top so a keyboard user can jump the nav rather than tab all seven links. */
+.skip-link{position:fixed;top:-120px;inset-inline-start:12px;z-index:2000;
+  font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.06em;
+  background:var(--hot);color:#fff;padding:11px 18px;border-radius:0 0 8px 8px;
+  transition:top .18s ease}
+.skip-link:focus{top:0}
+#main:focus{outline:none}   /* focus target only, never draws a box round the page */
+
 nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;gap:34px;padding:16px 24px;max-width:1180px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:12px}
@@ -69,7 +78,12 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 .lang-menu button[hidden]{display:none}
 .lang .flag{width:18px;height:12px;border-radius:2px;flex-shrink:0;display:block;box-shadow:0 0 0 .5px rgba(255,255,255,.25)}
 [dir="rtl"] .lang-menu{right:auto;left:0}
-@media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}.lang{margin-inline-start:auto}}
+@media(max-width:900px){.nav-links{display:none}.nav-in{gap:12px}.nav-cta{display:none}.lang{margin-inline-start:auto}
+/* .lang carries direction:ltr so the flag and caret read left-to-right, which
+   makes its OWN inline-start the left side even on the Hebrew page, so the auto
+   margin landed on the wrong side and the pill floated 45px off the corner.
+   Push it with physical margins that follow the page, not the pill. */
+[dir="rtl"] .lang{margin-left:0;margin-right:auto}}
 
 /* ---------------- hero ---------------- */
 .hero{position:relative;margin-top:26px;overflow:hidden;min-height:560px;display:flex;align-items:center;background:var(--black)}
@@ -87,7 +101,13 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 [dir="rtl"] .holo{right:auto;left:39%}
 @media(max-width:900px){[dir="rtl"] .holo{left:77%;right:auto}}
 /* interactive particle crown in the contact CTA */
-.crown-particles{display:block;width:100%;max-width:340px;aspect-ratio:1;margin-top:20px}
+/* The crown reacts to touch, so a long press on it should feel like pressing a
+   control, not like grabbing text. Without this iOS starts a selection in the
+   paragraph behind it and drops the Copy / Look Up callout over the animation. */
+/* Selection suppression only. touch-action:manipulation was here too and changed
+   how iOS interprets gestures on the canvas, which degraded the touch glow; the
+   three remaining properties kill the blue selection and nothing else. */
+.crown-particles{display:block;width:100%;max-width:340px;aspect-ratio:1;margin-top:20px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 @media(max-width:900px){.crown-particles{max-width:250px;margin:14px auto 0}}
 /* founder-experience logos (white monochrome, uniform cells + names) */
 .xp-item{display:flex;flex-direction:column;align-items:center;gap:11px;width:88px;text-align:center}
@@ -127,8 +147,10 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,7,8,.88);-webkit-backdro
 /* Russian sets the headline as single unbreakable words ("ИНТЕРАКТИВНОЕ"), which
    clip on a 320px screen at the shared size. Only the size drops; wording holds.
    The longest word then measures ~177px in a 214px box, leaving room for the
-   slightly different metrics of a fallback face during the font swap. */
-html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.6rem)}
+   slightly different metrics of a fallback face during the font swap.
+   The same unbreakable words clip again at 1280, where the 3.6rem cap applies
+   and "ИНТЕРАКТИВНОЕ" measures 526px inside a 504px box, so the cap drops too. */
+html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 .hero h1 em{font-style:normal;color:var(--hot)}
 .hero .plat{margin:22px 0 18px;font-family:var(--body);font-weight:400;font-size:.74rem;letter-spacing:.28em;color:var(--bone)}
 .hero .plat s{text-decoration:none;color:var(--hot);padding:0 .4em}
@@ -149,22 +171,29 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.6rem)}
 
 /* ---------------- platform cards ---------------- */
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
-.pcard{padding:34px 30px;transition:border-color .25s,transform .25s}
+.pcard{padding:34px 30px;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;align-items:flex-start}
 .pcard:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
 .pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
-.pcard h3{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
+.pcard h2{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em}
 .pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
-.pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot)}
+.pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot);margin-top:auto}
 @media(max-width:900px){.cards3{grid-template-columns:1fr}}
 
 /* ---------------- what we do ---------------- */
 .wwd{margin-top:26px;padding:40px 40px}
 .sec-k{text-align:center;font-family:var(--brand);font-size:.82rem;font-weight:400;margin:0;letter-spacing:.4em;color:var(--bone);position:relative}
 .sec-k::before,.sec-k::after{content:"";display:inline-block;width:56px;height:1px;background:var(--red);vertical-align:middle;margin:0 18px}
-@media(max-width:600px){.sec-k{font-size:.7rem;letter-spacing:.16em;white-space:nowrap}.sec-k::before,.sec-k::after{width:20px;margin:0 9px}}
+/* A section kicker must never be cut off. nowrap forced long headings such as
+   "FROM IDEA TO WORKING PRODUCT" onto one line, and html{overflow-x:clip} then
+   hid the overflow instead of scrolling, so the text was simply chopped. */
+@media(max-width:600px){.sec-k{font-size:.7rem;letter-spacing:.14em;white-space:normal;line-height:1.65}.sec-k::before,.sec-k::after{width:20px;margin:0 9px}}
+@media(max-width:400px){.sec-k{font-size:.66rem;letter-spacing:.1em}.sec-k::before,.sec-k::after{width:13px;margin:0 6px}}
+/* On the narrowest screens the rules orphan onto a line of their own once the
+   heading wraps, which reads as a stray dash. Centred text alone is cleaner. */
+@media(max-width:360px){.sec-k::before,.sec-k::after{display:none}}
 .wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px;margin-top:44px;text-align:center}
 .wwd-grid .icon{font-size:1.9rem;margin-bottom:14px}
-.wwd-grid h4{font-size:.72rem;font-weight:700;letter-spacing:.16em;margin-bottom:10px}
+.wwd-grid h3{font-size:.72rem;font-weight:700;letter-spacing:.16em;margin-bottom:10px}
 .wwd-grid p{font-size:.8rem;color:var(--dim)}
 @media(max-width:900px){.wwd-grid{grid-template-columns:repeat(2,1fr)}}
 
@@ -205,10 +234,17 @@ button.wcard{display:block;width:100%;padding:0;border:0;background:none;color:i
 .w2-sub{color:var(--dim);font-size:1rem;margin-top:16px;max-width:44ch}
 .w2-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .lcell{display:flex;flex-direction:column;gap:12px}
-.lcap{display:flex;align-items:baseline;gap:9px;min-height:3rem}
+.lcap{display:flex;flex-direction:column;gap:5px;min-height:5rem}
+.lcap-top{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 .wd-kicker{display:block;font-family:var(--brand);font-weight:700;font-size:.62rem;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:9px}
-.lcap .l-title{font-family:var(--display);font-weight:700;font-size:1.16rem;color:#fff}
-.lcap .l-en{color:var(--red);font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.1em;white-space:nowrap}
+/* Reserve two lines for every project title. A title that wraps in one card and
+   not its neighbour used to push that card's body down and break the row, and
+   the length that triggers it differs per language, so policing copy length in
+   three dictionaries would never hold. Reserving the space fixes it everywhere. */
+.lcap .l-title{font-family:var(--display);font-weight:700;font-size:1.1rem;line-height:1.2;color:#fff;min-height:2.4em}
+.lcap .l-en{color:#ea4b62;font-family:var(--display);font-weight:700;font-size:.74rem;letter-spacing:.05em;line-height:1.2;text-transform:uppercase}
+[dir="rtl"] .lcap .l-en{letter-spacing:0}
+.l-result{color:var(--dim);font-size:.8rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .l-ex{font-size:.75rem;color:var(--dim)}
 .l-ex b{color:var(--bone);font-weight:600}
 button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;background:var(--lcard-bg,#1A1013);cursor:pointer;color:inherit;font:inherit;transition:border-color .25s,transform .3s}
@@ -227,12 +263,12 @@ button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:
 .l-arr{width:30px;height:30px;border:1px solid rgba(200,16,46,.55);border-radius:7px;display:grid;place-items:center;color:var(--red);transition:background .2s;flex:none}
 .lcard:hover .l-arr{background:rgba(200,16,46,.2)}
 @media(max-width:900px){.w2-grid{grid-template-columns:repeat(2,1fr)}.w2-hero{width:230px;opacity:.55}}
-@media(max-width:560px){.w2-grid{grid-template-columns:repeat(2,1fr);gap:12px}.lcell{gap:8px}.lcap{gap:5px;min-height:2.5rem}.lcap .l-title{font-size:.86rem}.lcap .l-en{font-size:.56rem;letter-spacing:.06em}button.lcard{padding-bottom:34px}.l-cta{font-size:.68rem;padding:8px 10px}.l-arr{width:22px;height:22px}}
+@media(max-width:560px){.w2-grid{grid-template-columns:repeat(2,1fr);gap:12px}.lcell{gap:8px}.lcap{gap:4px;min-height:5.2rem}.lcap .l-title{font-size:.86rem}.lcap .l-en{font-size:.66rem;letter-spacing:.03em}.l-result{font-size:.7rem}button.lcard{padding-bottom:34px}.l-cta{font-size:.68rem;padding:8px 10px}.l-arr{width:22px;height:22px}}
 .wdetail{margin-top:24px;padding:28px 30px;border-radius:14px;border:1px solid var(--line);background:var(--panel);position:relative}
 .wdetail[hidden]{display:none}
 .wdetail-close{position:absolute;top:14px;inset-inline-end:14px;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;font-size:1.15rem;line-height:1;display:grid;place-content:center;transition:color .2s,border-color .2s}
 .wdetail-close:hover{color:var(--hot);border-color:rgba(200,16,46,.55)}
-.wdetail h4{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
+.wdetail h3{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding-inline-end:44px}
 .wd-sub{font-family:var(--body);font-size:.82rem;font-weight:600;letter-spacing:.02em;color:var(--bone);opacity:.72;margin-top:10px}
 .wd-model-wrap{position:relative;margin-top:16px}
 .wd-model{width:100%;height:clamp(260px,42vh,380px);background:transparent;border:1px solid var(--line);border-radius:14px;--poster-color:transparent;display:block}
@@ -319,6 +355,9 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
 .foot .contact span{display:inline-flex;align-items:center;white-space:nowrap}
 .foot .contact a{color:var(--dim);transition:color .2s}
 .foot .contact a:hover{color:var(--hot)}
+.foot-legal{display:flex;justify-content:center;gap:0 16px;flex-wrap:wrap;margin-top:6px;font-size:.76rem}
+.foot-legal a{color:var(--dim);transition:color .2s;display:inline-flex;align-items:center;min-height:36px;padding:0 6px}
+.foot-legal a:hover{color:var(--hot)}
 .foot .contact .icon{margin-inline-end:.5em;flex:none}
 .socials{display:flex;gap:16px}
 .socials a{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--dim);font-size:.8rem;transition:all .2s}
@@ -356,3 +395,231 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 26px}
   .js .wcard{transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .6s ease; will-change:transform}
   .btn:hover{transform:scale(1.05)}
 }
+
+/* ---------------- standalone service / case-study pages ----------------
+   Additive only: these selectors are used by /services/* and /work/* and by
+   nothing on the home page, so adding them cannot change how it renders. */
+.pg{padding-top:52px;padding-bottom:20px}
+.pg-crumb{font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:18px}
+.pg-crumb a{color:var(--hot)}
+.pg-crumb a:hover{text-decoration:underline}
+.pg-crumb span{color:var(--line);padding:0 .25em}
+.pg-h1{font-family:var(--display);font-weight:700;font-size:clamp(1.85rem,4.3vw,3rem);line-height:1.09;letter-spacing:.01em;max-width:22ch}
+.pg-h1 em{font-style:normal;color:var(--hot)}
+.pg-sub{margin-top:14px;font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.pg-lead{color:var(--dim);max-width:64ch;margin-top:18px;font-size:1.02rem}
+.pg-cta-row{margin-top:30px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.pg-sec{margin-top:62px}
+.pg-prose{padding:30px 30px;margin-top:20px}
+.pg-prose p{color:var(--dim);max-width:76ch}
+.pg-prose p+p{margin-top:14px}
+.pg-prose b{color:var(--bone)}
+.pg-hero{display:block;width:100%;height:auto;margin-top:30px;border-radius:16px;border:1px solid var(--line)}
+.pg-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+.pg-facts div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.pg-facts i{display:block;font-style:normal;font-family:var(--display);font-weight:600;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--hot)}
+.pg-facts b{display:block;margin-top:7px;font-weight:400;font-size:.88rem;color:var(--bone)}
+.pg-rels{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:20px}
+.pg-rel{display:block;padding:24px 24px;transition:border-color .25s,transform .25s}
+.pg-rel:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
+.pg-rel b{display:block;font-family:var(--display);font-weight:700;font-size:1.02rem;color:var(--bone)}
+.pg-rel span{display:block;margin-top:9px;color:var(--dim);font-size:.88rem}
+.pg-rel-go{display:block;margin-top:14px;font-style:normal;font-family:var(--display);font-weight:600;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hot)}
+.pg-end{padding:36px 30px;margin-top:56px;text-align:center}
+.pg-end h2{font-family:var(--display);font-weight:700;font-size:clamp(1.25rem,2.5vw,1.85rem)}
+.pg-end p{color:var(--dim);margin-top:12px}
+.pg-end p:last-child{margin-top:22px}
+.pg-pager{display:flex;gap:16px;margin-top:44px;border-top:1px solid var(--line);padding-top:26px}
+.pg-pager a{display:flex;align-items:center;gap:14px;flex:1;padding:18px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;transition:border-color .25s,transform .25s}
+.pg-pager a:hover{border-color:rgba(200,16,46,.55);transform:translateY(-2px)}
+.pg-pager .pg-next{justify-content:flex-end;text-align:right}
+.pg-pager i{display:block;font-style:normal;font-family:var(--display);font-weight:600;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.pg-pager b{display:block;margin-top:5px;font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--bone)}
+.pg-arr{font-size:1.2rem;line-height:1;color:var(--hot);flex-shrink:0}
+@media(max-width:760px){
+  .pg-facts{grid-template-columns:repeat(2,1fr)}
+  .pg-pager{flex-direction:column}
+  .pg-pager .pg-next{justify-content:flex-start;text-align:left;flex-direction:row-reverse}
+}
+
+/* Touch sizing for the standalone pages: the breadcrumb and the arrow link are
+   the only controls small enough to miss on a phone, so give them a real target
+   without changing how they look on a pointer device. */
+.pg .arrow-link{display:inline-block}
+@media(max-width:900px){
+  .pg-crumb{margin-bottom:10px}
+  .pg-crumb a{display:inline-block;padding:12px 2px}
+  .pg .arrow-link{padding:12px 0}
+  .pg-cta-row{gap:18px}
+}
+
+/* ---------------- case-study project rail ----------------
+   Four cards, the current one lit. Hover or keyboard-focus expands one and
+   eases the others back. Pure CSS on real links, so it degrades to a plain
+   row of cards with no script and honours reduced-motion. */
+.pg-ring{display:flex;gap:12px;margin-top:22px}
+/* Equal thumbnails, no width games. Every card answers hover the same way the
+   rest of the site's cards do: lift, full colour, scarlet edge. The selected one
+   is unmistakable at rest: full colour, scarlet edge, the bar, and a soft glow. */
+.pg-ring-i{position:relative;display:block;flex:1 1 0;min-width:0;height:220px;border-radius:16px;overflow:hidden;
+  border:1px solid var(--line);background-image:var(--shot);background-size:cover;background-position:center;
+  filter:grayscale(.35) brightness(.6);
+  transition:filter .25s ease,border-color .25s ease,transform .25s ease,box-shadow .25s ease}
+.pg-ring-i::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(14,8,10,.15) 30%,rgba(14,8,10,.93) 100%)}
+.pg-ring-i:hover,.pg-ring-i:focus-visible{filter:grayscale(0) brightness(1);border-color:var(--red);transform:translateY(-4px)}
+.pg-ring-i.is-on{filter:grayscale(0) brightness(.98);border-color:var(--red);
+  box-shadow:0 0 0 1px rgba(200,16,46,.35),0 10px 28px rgba(200,16,46,.16)}
+.pg-ring-i.is-on:hover{transform:none}
+.pg-ring-cat,.pg-ring-t{position:relative;z-index:2;display:block;padding-inline:16px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg-ring-cat{position:absolute;bottom:44px;left:0;right:0;font-family:var(--display);font-weight:600;
+  font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:#FF5A70;
+  text-shadow:0 1px 6px rgba(0,0,0,.95)}
+.pg-ring-t{position:absolute;bottom:16px;left:0;right:0;font-family:var(--display);font-weight:700;
+  font-size:1rem;color:var(--bone);text-shadow:0 1px 8px rgba(0,0,0,.9)}
+@media(max-width:760px){
+  .pg-ring{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .pg-ring-i{height:132px;filter:grayscale(0) brightness(.75)}
+  .pg-ring-i:hover{transform:none}
+  .pg-ring-i.is-on{filter:grayscale(0) brightness(.95)}
+  .pg-ring-cat{bottom:42px;font-size:.55rem}
+  /* long project names should wrap rather than clip on a narrow card */
+  .pg-ring-t{bottom:10px;font-size:.82rem;white-space:normal;line-height:1.22;max-height:2.5em}
+}
+@media(prefers-reduced-motion:reduce){.pg-ring-i{transition:none}}
+
+/* ---------------- case-study page transitions ----------------
+   Moving between projects is a real navigation, which normally means a white
+   blink and a jump to the top. A cross-document view transition keeps the rail
+   and the heading anchored while the body crossfades, so switching project
+   feels like the page changed rather than like the browser reloaded.
+   Progressive enhancement: browsers without it simply navigate as before. */
+@view-transition{navigation:auto}
+/* Switching project: the rail stays put, ONLY the scarlet indicator slides to
+   the new card, and the content below makes one short, quiet exchange. The
+   earlier version also morphed every card and crossfaded their photos, which
+   read as smear; restraint is the design. */
+.pg-ring{view-transition-name:project-rail}
+main.pg{view-transition-name:pg-main}
+::view-transition-old(pg-main){animation:pgOut .22s cubic-bezier(.55,0,.7,.3) both}
+::view-transition-new(pg-main){animation:pgIn .34s .06s cubic-bezier(.2,.8,.3,1) both}
+@keyframes pgOut{to{opacity:0;transform:translateY(-10px)}}
+@keyframes pgIn{from{opacity:0;transform:translateY(14px)}}
+::view-transition-group(rail-indicator){animation-duration:.38s;animation-timing-function:cubic-bezier(.22,.9,.3,1)}
+.pg-ring-bar{position:absolute;inset:auto 0 0 0;height:3px;background:var(--red);z-index:3;view-transition-name:rail-indicator}
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+
+/* the rail sits above the story now, so it needs its own breathing room */
+.pg-ring{margin-top:26px;margin-bottom:6px}
+
+/* the current project's screenshot gets a scarlet frame */
+.pg-hero{border:1px solid var(--line)}
+
+/* the live model on a case-study page: same component as the home page cards */
+.pg-model{margin-top:26px}
+.pg-model .wd-model-wrap{margin-top:0}
+.pg-model .wd-model{height:clamp(300px,52vh,460px)}
+.pg-media + .wd-model-hint,.pg-model .wd-model-hint{margin-top:12px;color:var(--dim);font-size:.86rem;text-align:center}
+
+/* ---------------- work process ----------------
+   Two tracks side by side so the difference between a pilot and a full system
+   is visible at a glance, with the timing on each step rather than implied. */
+.pr-tracks{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+.pr-track{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px 26px}
+.pr-track:last-child{border-color:rgba(200,16,46,.34)}
+.pr-name{font-family:var(--display);font-weight:700;font-size:1.06rem;color:var(--bone)}
+.pr-note{color:var(--dim);font-size:.88rem;margin-top:7px}
+.pr-steps{list-style:none;margin-top:22px;counter-reset:pr}
+.pr-step{counter-increment:pr;position:relative;padding-inline-start:44px;padding-bottom:24px}
+/* the numbered node, and the line that joins it to the next one */
+.pr-step::before{content:counter(pr);position:absolute;inset-inline-start:0;top:0;width:28px;height:28px;
+  border-radius:50%;border:1px solid rgba(200,16,46,.55);background:var(--panel-2);color:var(--hot);
+  font-family:var(--display);font-weight:700;font-size:.76rem;display:grid;place-items:center}
+.pr-step::after{content:"";position:absolute;inset-inline-start:13.5px;top:32px;bottom:2px;width:1px;
+  background:linear-gradient(180deg,rgba(200,16,46,.5),rgba(200,16,46,.08))}
+.pr-step:last-child{padding-bottom:0}
+.pr-step:last-child::after{display:none}
+.pr-when{display:block;font-family:var(--display);font-weight:600;font-size:.6rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--hot)}
+.pr-what{display:block;margin-top:4px;font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--bone)}
+.pr-why{display:block;margin-top:5px;color:var(--dim);font-size:.86rem;line-height:1.55}
+@media(max-width:860px){.pr-tracks{grid-template-columns:1fr}.pr-track{padding:24px 20px}}
+
+/* case-study media: the still and the live model share a row, as on the home page */
+.pg-media{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;margin-top:26px}
+.pg-media .pg-hero{margin-top:0;width:100%;height:100%;object-fit:cover;order:2}
+.pg-media .wd-model-wrap{order:1}
+.pg-media .wd-model-wrap{margin-top:0}
+.pg-media .wd-model{height:100%;min-height:300px}
+.pg-model{margin-top:0}
+@media(max-width:760px){
+  .pg-media{grid-template-columns:1fr}
+  .pg-media .pg-hero{height:auto}
+  .pg-media .wd-model{height:clamp(260px,44vh,360px)}
+}
+
+/* JS-free language switcher for the standalone pages. The home page dropdown
+   needs site.js, which these pages do not load, so this is three plain links
+   styled to sit where the dropdown sits. */
+.lang-static{display:inline-flex;align-items:center;gap:2px;margin-inline-start:14px;flex-shrink:0;
+  direction:ltr;border:1px solid var(--line);border-radius:8px;padding:3px}
+.lang-static a,.lang-static .lang-on{font-family:var(--display);font-weight:600;font-size:.68rem;
+  letter-spacing:.06em;padding:7px 9px;border-radius:6px;line-height:1}
+.lang-static a{color:var(--dim);transition:color .2s,background-color .2s}
+.lang-static a:hover{color:var(--hot);background:var(--panel)}
+.lang-static .lang-on{color:var(--bone);background:var(--panel-2)}
+@media(max-width:900px){.lang-static{margin-inline-start:auto}
+  /* real tap targets on a phone */
+  .lang-static a,.lang-static .lang-on{padding:12px 11px}}
+
+/* rail-nav.js fallback: same exit and entry the native transition performs */
+main.pg{will-change:auto}
+main.pg.pg-leave{animation:pgOut .2s cubic-bezier(.55,0,.7,.3) both}
+main.pg.pg-enter{opacity:0;transform:translateY(14px)}
+main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-bezier(.2,.8,.3,1)}
+
+/* ---------------- visual blocks on the standalone pages ----------------
+   Chips, an icon strip and tiles carry what used to be paragraphs, because a
+   scanning client reads shapes before sentences. */
+.pg-chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
+.pg-chip{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 12px;
+  transition:border-color .25s,transform .25s}
+.pg-chip:hover{border-color:rgba(200,16,46,.45);transform:translateY(-2px)}
+.pg-chip .icon{font-size:1.7rem}
+.pg-chip b{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.04em;color:var(--bone)}
+.pg-chips-note{margin-top:14px;color:var(--dim);font-size:.86rem;text-align:center}
+.pg-tech{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:26px;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 22px;margin-top:22px}
+.pg-tech .tech-ico{height:26px}
+@media(max-width:480px){.pg-tech{gap:18px}.pg-tech .tech-ico{height:20px}}
+
+/* client credit, sitting under the result paragraph and sharing its alignment */
+.wd-client,.pg-client{margin-top:14px;font-family:var(--display);font-weight:600;font-size:.84rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.wd-client a,.pg-client a{color:var(--hot);display:inline-flex;align-items:baseline;gap:6px;padding:6px 0;vertical-align:baseline}
+/* the external-link arrow lives in CSS, not the text: a neutral "↗" inside an RTL
+   paragraph gets bidi-reordered away from the name; baseline-align it so it sits
+   on the same line as the letters instead of floating above them */
+.wd-client a::after,.pg-client a::after{content:"↗";font-size:.92em;letter-spacing:0}
+.wd-client a:hover,.pg-client a:hover{text-decoration:underline}
+[dir="rtl"] .wd-client{letter-spacing:0}
+
+/* Floating proposal button, mobile only. The nav CTA is hidden under 900px, so
+   until now a phone had no proposal action until the foot of the page. Sits in
+   the corner opposite WhatsApp, same size, same elevation. */
+/* stacked right above WhatsApp: one corner holds every action, the other side
+   of the view stays clean */
+.proposal-float{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));inset-inline-end:calc(22px + env(safe-area-inset-right));
+  z-index:70;height:48px;padding:0 18px;border-radius:999px;background:var(--red);display:none;align-items:center;gap:9px;
+  font-family:var(--display);font-weight:600;font-size:.76rem;letter-spacing:.08em;color:#fff;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);
+  opacity:0;transform:translateY(80px);transition:transform .35s cubic-bezier(.2,.8,.3,1),opacity .35s ease}
+.proposal-float svg{width:19px;height:19px;flex-shrink:0;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* only on phones, only once the visitor is actually reading, and never on top
+   of the form it points at */
+.proposal-float.is-in{opacity:1;transform:none}
+@media(max-width:900px){.proposal-float{display:flex}}
+@media(max-width:360px){.proposal-float{font-size:.7rem;padding:0 14px;height:44px}}
+@media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}}
