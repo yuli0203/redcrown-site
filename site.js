@@ -192,7 +192,7 @@ const I18N = {
 };
 const RTL = new Set(['he']);
 const rm = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
-const PAGE_LANG = document.documentElement.getAttribute('data-page-lang') || 'en';
+const PAGE_LANG = document.documentElement.getAttribute('data-page-lang') || document.documentElement.lang || 'en';
 // Every language owns a crawlable URL. Search engines index one language per
 // URL, so a language that only exists as a JS state on "/" is invisible to them.
 const LANG_HOME = { en: '/', he: '/he/', ru: '/ru/' };
