@@ -9,6 +9,9 @@ html[dir="rtl"] .campaign-page :where(ul,ol){padding-inline-start:0;padding-inli
 html[dir="rtl"] .campaign-page :where(input:not([type="email"]),textarea,select,button){direction:rtl;text-align:right}
 html[dir="rtl"] .campaign-page input[type="email"]{direction:ltr;text-align:left}
 html[dir="rtl"] .campaign-page :where(.brand,.brand span,.wd-model-wrap,model-viewer){direction:ltr}
+html[dir="rtl"] .campaign-page :where(.trust,.trust>.wrap,#solutions,.case,.journey-head,.journey-step,.journey-outcome,.contact-intro,.contact-form){text-align:right}
+html[dir="rtl"] .campaign-page .journey-head{margin-inline:0}
+html[dir="rtl"] .campaign-page .journey-head .section-lead{margin-inline:0}
 @media(max-width:820px){.top nav a:not(:last-child){display:none}.hero,.case,.contact{grid-template-columns:1fr}.hero{padding-top:42px}.cards,.steps{grid-template-columns:1fr}.proof{padding:22px}section{padding:52px 0}.contact{padding:24px}.wrap{width:min(100% - 28px,1120px)}}
 
 /* Cinematic campaign treatment */
