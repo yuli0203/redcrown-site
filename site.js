@@ -288,8 +288,15 @@ if (PAGE_LANG !== 'en'){
 // Google Ads > Goals > Conversions > (action) > Tag setup > Use Google tag > event snippet.
 const ADS_CONVERSIONS = {
   formSubmit: 'AW-18313532220/H3CjCKq279QcELymyZxE',
-  phoneClick: 'AW-18313532220/zWKzCPjS89QcELymyZxE'
+  contactClick: 'AW-18313532220/zWKzCPjS89QcELymyZxE'
 };
+function conversionContext(extra){
+  const landingField = document.querySelector('[name="landing_page"]');
+  return Object.assign({
+    landing_page: landingField?.value || location.pathname,
+    page_path: location.pathname
+  }, extra || {});
+}
 function trackConversion(key, params){
   const id = ADS_CONVERSIONS[key];
   if (typeof gtag !== 'function' || !id || id.includes('XXXX')) return;
@@ -308,8 +315,9 @@ if (cform) {
     try {
       const r = await fetch(cform.action, { method:'POST', body:new FormData(cform), headers:{'Accept':'application/json'} });
       if (r.ok) {
+        const project = cform.elements.project?.value || '';
         cform.reset(); ok.hidden = false;
-        trackConversion('formSubmit');
+        trackConversion('formSubmit', conversionContext({ project_type: project }));
       } else { err.hidden = false; }
     } catch (_) { err.hidden = false; }
     btn.disabled = false;
@@ -318,7 +326,9 @@ if (cform) {
 
 // phone + WhatsApp clicks count as a conversion (contact started from the site)
 document.querySelectorAll('a[href^="tel:"], a[href*="wa.me/"]').forEach(a => {
-  a.addEventListener('click', () => trackConversion('phoneClick'));
+  a.addEventListener('click', () => trackConversion('contactClick', conversionContext({
+    contact_method: a.href.includes('wa.me/') ? 'whatsapp' : 'phone'
+  })));
 });
 
 // selected work: a thumbnail opens its detail panel below the grid; only one open at a time
@@ -364,6 +374,7 @@ document.querySelectorAll('.founder-flip').forEach(function(b){
 
 /* ---------------- custom cursor (dot + trailing ring) ---------------- */
 (function(){
+  if (document.body.classList.contains('campaign-page')) return; // campaign pages keep the reliable native cursor
   const fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   if (!fine) return;                       // touch / coarse pointers keep the native cursor
   const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
