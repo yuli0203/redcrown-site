@@ -22,6 +22,30 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://redcrowninteractive.com/he/vr-development/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://redcrowninteractive.com/he/training-simulations/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://redcrowninteractive.com/he/interactive-3d/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://redcrowninteractive.com/he/research-software/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://redcrowninteractive.com/ru/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://redcrowninteractive.com/"/>
     <xhtml:link rel="alternate" hreflang="he" href="https://redcrowninteractive.com/he/"/>
