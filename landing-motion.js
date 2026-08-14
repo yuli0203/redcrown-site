@@ -3,7 +3,7 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var targets = document.querySelectorAll(
     '#solutions .section-title,#solutions .section-lead,.card,.case>img,.case>div,' +
-    '.decision-head,.decision-grid article,.decision-cta,.journey-head,.journey-step,.journey-outcome,.contact-intro,.contact-form'
+    '.decision-head,.decision-grid article,.decision-cta,.journey-head,.journey-step,.journey-outcome'
   );
   targets.forEach(function (el, index) {
     el.classList.add('motion-reveal');
