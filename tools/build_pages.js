@@ -210,6 +210,14 @@ function serviceBody(p) {
         out.push(`    <div class="panel pcard"><h3>${esc(it.h)}</h3><p>${it.p}</p></div>`);
       }
       out.push('  </div>');
+    } else if (b.kind === 'service-details') {
+      out.push(`  <h2 class="sec-k pg-sec">${esc(b.head)}</h2>`);
+      for (const it of b.items) {
+        out.push(`  <section class="panel pg-prose" id="${esc(it.id)}">`);
+        out.push(`    <h3>${esc(it.h)}</h3><p>${esc(it.p)}</p>`);
+        out.push(`    <p><a class="arrow-link" href="${esc(it.href)}">${esc(it.link)} &rarr;</a></p>`);
+        out.push('  </section>');
+      }
     } else if (b.kind === 'prose') {
       out.push(`  <h2 class="sec-k pg-sec">${b.head}</h2>`);
       out.push('  <div class="panel pg-prose">');
@@ -312,6 +320,10 @@ function workBody(p) {
   const svc = bySlug[p.service];
   if (svc) {
     out.push('  <h2 class="sec-k pg-sec">THE SERVICE BEHIND IT</h2>');
+    if (p.serviceIntro) {
+      out.push(`  <p class="pg-lead">${esc(p.serviceIntro)}</p>`);
+      out.push(`  <p><a class="arrow-link" href="${hrefOf(svc)}#${esc(p.serviceAnchor)}">Explore our AR &amp; MR development services &rarr;</a></p>`);
+    }
     out.push('  <div class="pg-rels">');
     out.push([
       `      <a class="panel pg-rel" href="${hrefOf(svc)}">`,
