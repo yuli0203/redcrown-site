@@ -64,7 +64,7 @@ const I18N = {
   },
   he: {
     "float.cta":"לייעוץ חינם",
-    "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR ב-Unity | Red Crown Interactive",
+    "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive",
     "a11y.skip":"דלג לתוכן","nav.home":"בית","nav.services":"שירותים","nav.tech":"טכנולוגיות","nav.work":"עבודות","nav.about":"אודות","nav.faq":"שאלות נפוצות","nav.contact":"צור קשר","nav.cta":"לייעוץ חינם",
     "hero.title":"<em>פיתוח VR, <span style=\"white-space:nowrap\">תלת-ממד</span> ואפליקציות</em><br>חדשנות לארגון שלכם",
     "hero.plat":"פיתוח בהתאמה אישית למחקר, לתעשייה ולסטארטאפים <em>· נייד · מחשב · מציאות מדומה</em>",
