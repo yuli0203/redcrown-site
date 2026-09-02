@@ -19,9 +19,9 @@ const SERVICES = [
     serviceType: ['AR/VR development', 'End-to-End Product Design', '3D Art & Animation', 'Mobile and desktop app development'],
     blocks: [
       { kind: 'cards', head: 'THREE PLATFORMS, ONE STUDIO', items: [
-        { h: 'XR / VR / AR', p: 'Simulations, labs and training in VR, AR and mixed reality, with hand, gesture and controller interaction chosen to fit the task. Built on Meta Quest 3.' },
-        { h: 'Mobile', p: 'Commercial and utility apps for iOS and Android, drawing on products that served millions of users.' },
-        { h: 'PC', p: 'Complex real-time systems: research tools, simulations and high-performance 3D software, with scientific computing and machine learning behind them.' },
+        { h: 'XR / VR / AR', p: "Custom VR, AR and MR experiences for a wide range of virtual and augmented reality headsets. We combine 3D design with natural interactions through controllers or hand tracking to create immersive experiences and interactive products." },
+        { h: 'Mobile', p: "Custom iOS and Android apps, drawing on the founder’s experience with products that served millions of users. We also build mobile AR experiences with ARKit, ARCore and Unity AR Foundation." },
+        { h: 'PC', p: "Custom applications for PCs and workstations: interactive systems, simulations and 3D tools. We bring user interfaces, data and complex calculations together in one clear, easy-to-use product." },
       ]},
       { kind: 'cards', head: 'END-TO-END PRODUCT DESIGN', items: [
         { h: 'Concept & UI/UX Design', p: 'We shape the concept, user journey and visual language together with the technical plan. For AR/VR, interface design includes the surrounding 3D space, how people reach and handle objects, and how guidance supports the task.' },
