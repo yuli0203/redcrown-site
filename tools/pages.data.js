@@ -12,21 +12,26 @@ const SERVICES = [
   {
     slug: '',                       // lives at /services/ rather than a sub-path
     nav: 'Services',
-    title: 'Unity Development for XR, Mobile & PC | Red Crown Interactive',
-    desc: 'One studio for interactive software across XR, mobile and desktop: guided VR experiments, mixed reality on the real bench, and research tools, built in Unity from concept to deployment.',
-    h1: ['Interactive software for ', 'science and engineering'],
-    lead: 'We build software that turns complex scientific and engineering work into something people can see and handle, across headsets, phones and desktops, and we take it from concept through to a system that runs every week.',
-    serviceType: 'Interactive software development',
+    title: 'AR/VR Development, 3D Art & Product Design | Red Crown Interactive',
+    desc: 'End-to-end product design and Unity development: AR/VR immersive experiences, high-end 3D art and animation, and mobile and desktop apps from an Israeli studio.',
+    h1: ['Design and development for ', 'immersive experiences'],
+    lead: 'Red Crown Interactive brings design and technology together: concept, UI/UX, 3D art and Unity development for businesses, startups and research organizations. We build immersive experiences, interactive simulations, and mobile and desktop products from idea to deployment.',
+    serviceType: ['AR/VR development', 'End-to-End Product Design', '3D Art & Animation', 'Mobile and desktop app development'],
     blocks: [
       { kind: 'cards', head: 'THREE PLATFORMS, ONE STUDIO', items: [
         { h: 'XR / VR / AR', p: 'Simulations, labs and training in VR, AR and mixed reality, with hand, gesture and controller interaction chosen to fit the task. Built on Meta Quest 3.' },
         { h: 'Mobile', p: 'Commercial and utility apps for iOS and Android, drawing on products that served millions of users.' },
         { h: 'PC', p: 'Complex real-time systems: research tools, simulations and high-performance 3D software, with scientific computing and machine learning behind them.' },
       ]},
+      { kind: 'cards', head: 'END-TO-END PRODUCT DESIGN', items: [
+        { h: 'Concept & UI/UX Design', p: 'We shape the concept, user journey and visual language together with the technical plan. For AR/VR, interface design includes the surrounding 3D space, how people reach and handle objects, and how guidance supports the task.' },
+        { h: '3D Asset Creation', p: 'We create high-end 3D models, animation and visual effects in the studio, integrating the artwork into the working product. The enzyme model and Robi instructor shown in our portfolio are examples of our in-house 3D work.' },
+        { h: 'Immersive Experiences', p: 'Design and code work together in Unity: hand tracking, physics-based object interaction and controller input chosen for the experience. We balance visual clarity, comfort and the demands of the target device.' },
+      ]},
       { kind: 'chips', head: 'WHAT WE ACTUALLY DO', note: 'Led hands-on by the founder, a senior engineer and designer. For larger work, a selected team operates under her lead.', items: [
         { icon: 'bulb',   t: 'Concept & design' },
         { icon: 'gear',   t: 'Development' },
-        { icon: 'cube',   t: '3D art & animation' },
+        { icon: 'cube',   t: '3D Art & Animation' },
         { icon: 'gauge',  t: 'Optimisation' },
         { icon: 'wrench', t: 'Support & updates' },
       ]},
@@ -66,7 +71,7 @@ const SERVICES = [
       ] },
       { kind: 'related', head: 'SELECTED WORK', items: ['enzymatic-lab-ar', 'fugacity-vr-lab', 'livemol-research-tool', 'meta-quest-classroom'] },
     ],
-    cta: { h: 'Got a course, a lab, or a procedure to rebuild?', p: 'Tell us what you want to build, even if it is still a rough idea.' },
+    cta: { h: 'Have an app, immersive experience or simulation in mind?', p: 'Tell us what you want to build, even if it is still a rough idea.' },
   },
 ];
 
@@ -87,6 +92,7 @@ const WORK = [
     story: [
       ['The challenge', 'In the biochemistry lab, students run a batch enzyme reactor experiment but never see the molecular world driving it. The enzyme stays invisible, chirality is taught from flat diagrams, and the polarimeter reading changes without a clear reason why. It all stays abstract.'],
       ['The solution', 'We built an augmented reality learning module for Meta Quest 3 that places the molecular world right on the student’s real desk, with no controllers and no prior experience needed. Robi, a friendly bilingual robot instructor, guides students as they compare molecules by hand, rotate the enzyme, watch the reaction unfold step by step, and even fire polarized light at molecules to see how structure shapes the result. Students stay seated at their own desk and see the real room around them the whole time, which keeps motion sickness to a minimum.'],
+      ['The Design & Optimization', 'The in-house 3D model is placed on a real table, keeping the physical room visible and reducing the need for artificial movement. Physics-based hand interactions let students pick up molecules, rotate models and zoom in on scientific structures. We used polygon count reduction, baked lighting and reduced draw calls to lower geometry complexity and real-time rendering work, alongside gesture tuning to refine how hand input controls the virtual objects. The design brings 3D art, spatial orientation and interaction together on Meta Quest 3.'],
       ['The result', 'What was invisible at the bench becomes tangible. Students move inside structures they could never see, handle them with their own hands, and build every concept by doing and deciding rather than by reading a flat diagram. Built and in use at the Wolfson Faculty of Chemical Engineering, Technion.'],
     ],
     facts: [['Platform', 'Meta Quest 3, mixed reality passthrough'], ['Interaction', 'Hand tracking, no controllers'], ['Built with', 'Unity'], ['In use at', 'Wolfson Faculty of Chemical Engineering, Technion']],
@@ -108,6 +114,7 @@ const WORK = [
     story: [
       ['The challenge', 'How do you teach an abstract thermodynamic concept like fugacity to a whole class at once, consistently and safely, without each student getting a different experience?'],
       ['The solution', 'An hour-long virtual reality experiment where students operate the lab equipment themselves, heating the material, moving the piston, opening valves, and reading the pressure, guided by a virtual instructor. Up to 12 devices run in parallel, each paired with the instructor’s tablet. Movement inside the experiment is deliberately designed to keep motion sickness to a minimum, so a full hour in the headset stays comfortable for an entire class.'],
+      ['The Design & Optimization', 'The VR experience uses teleportation and dedicated navigation controls designed to reduce unnecessary movement and minimize motion sickness during an approximately one-hour session. Robi, our in-house 3D virtual instructor, provides spoken guidance. Polygon count reduction, baked lighting and reduced draw calls lower geometry complexity and real-time rendering work, while gesture tuning refines hand-based actions alongside controller input on Meta Quest 3.'],
       ['The result', 'The whole class goes through the same precise, safe experience together, instructors see exactly where each group is and collect the session data, and an abstract concept becomes a tangible, guided experiment. In use in the Thermodynamics B course at the Technion.'],
     ],
     facts: [['Platform', 'Meta Quest 3'], ['Scale', 'Up to 12 headsets in parallel'], ['Session', 'Around one hour, guided'], ['In use at', 'Thermodynamics B, Technion']],
@@ -129,6 +136,7 @@ const WORK = [
     story: [
       ['The challenge', 'Researchers needed to build and modify molecular structures and see results immediately, instead of waiting for one calculation at a time and guessing what would change.'],
       ['The solution', 'We built an interactive 3D tool where the researcher builds and edits a molecule, and a Python compute server runs the quantum chemistry calculation, using established engines including ASE, tblite, Open Babel and Sella, and returns the result onto the model in front of them, without leaving the flow.'],
+      ['The Design & Optimization', 'The Unity client keeps molecular editing and real-time 3D visualization in one interface, while a separate Python compute server handles the heavy quantum chemistry calculations. This separation keeps the interface responsive as computation runs, and returns results onto the structure the researcher is already working with. The platform is in development for PC; AR is a later-stage direction.'],
       ['The result', 'Research becomes fast, visual, and intuitive, and the researcher stays inside the structure while the calculation runs, instead of waiting on one job at a time. Built for the Wolfson Faculty of Chemical Engineering at the Technion.'],
     ],
     facts: [['Platform', 'Desktop'], ['Behind it', 'Python compute server, quantum chemistry engines (ASE, tblite, Open Babel, Sella)'], ['Built with', 'Unity'], ['Built for', 'Wolfson Faculty of Chemical Engineering, Technion']],
@@ -150,6 +158,7 @@ const WORK = [
     story: [
       ['The challenge', 'The Technion wanted a classroom that runs immersive virtual reality for many groups at once, reliably, without staff losing every lesson to technical issues.'],
       ['The solution', 'We consulted end to end, from early planning and hardware selection through classroom layout, device configuration, deployment, testing, and the instructors’ workflows. Up to 12 Meta Quest 3 headsets, each with a paired tablet.'],
+      ['The Design & Optimization', 'The classroom layout provides dedicated seating and sufficient interaction space, with charging, storage and instructor supervision planned together. Paired tablets make group progress and session data accessible to instructors. Network readiness, application distribution and operational procedures were considered alongside testing under realistic multi-user conditions; this project concerns deployment and workflow rather than 3D graphics optimization.'],
       ['The result', 'A classroom that simply works, where instructors follow each group, support students, and collect data every session. The technology stays in the background, and teaching stays center stage.'],
     ],
     facts: [['Scale', 'Up to 12 headsets with paired tablets'], ['Scope', 'Advisory, from hardware selection through handover'], ['Includes', 'Instructor workflows and testing'], ['Location', 'Technion']],

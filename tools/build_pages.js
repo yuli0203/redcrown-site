@@ -298,7 +298,7 @@ function workBody(p) {
   out.push('  </div>');
 
   p.story.forEach(([headTxt, body], i) => {
-    out.push(`  <h2 class="sec-k pg-sec">${headTxt.toUpperCase()}</h2>`);
+    out.push(`  <h2 class="sec-k pg-sec">${esc(headTxt.toUpperCase())}</h2>`);
     const last = i === p.story.length - 1;
     // the credit sits inside the result panel, directly below its paragraph
     // and sharing its left edge. "Developed at", not "client": this work was

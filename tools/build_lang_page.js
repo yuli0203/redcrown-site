@@ -25,12 +25,12 @@ const LANGS = {
   },
   he: {
     dir: 'rtl', ogLocale: 'he_IL', url: '/he/',
-    description: 'סטודיו לפיתוח אפליקציות ותוכנה אינטראקטיבית ב-Unity: אפליקציות מובייל ומחשב, תלת-ממד, VR ו-XR. למעלה מעשור ניסיון בפיתוח בזמן אמת עבור הטכניון וחברות מובילות.',
-    ogTitle: 'פיתוח אפליקציות, תלת-ממד ו-VR ב-Unity | Red Crown Interactive',
-    ogDescription: 'סטודיו לפיתוח אפליקציות ברמה גבוהה: מובייל, מחשב, תלת-ממד ו-VR ב-Unity.',
-    twitterTitle: 'פיתוח אפליקציות ותוכנה אינטראקטיבית ב-Unity',
-    twitterDescription: 'סטודיו לפיתוח אפליקציות ברמה גבוהה: מובייל, מחשב, תלת-ממד ו-VR ב-Unity.',
-    orgDescription: 'סטודיו לפיתוח תוכנה אינטראקטיבית למובייל, למחשב ול-XR, למדע, הנדסה וחינוך. פיתוח ב-Unity באיכות בינלאומית.',
+    description: 'סטודיו פרימיום לפיתוח AR/VR, המתמחה באמנות תלת־ממד ברמה גבוהה, סימולציות אינטראקטיביות ואופטימיזציה מתקדמת למעקב ידיים.',
+    ogTitle: 'פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive',
+    ogDescription: 'סטודיו פרימיום לפיתוח AR/VR, המתמחה באמנות תלת־ממד ברמה גבוהה, סימולציות אינטראקטיביות ואופטימיזציה מתקדמת למעקב ידיים.',
+    twitterTitle: 'פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive',
+    twitterDescription: 'סטודיו פרימיום לפיתוח AR/VR, המתמחה באמנות תלת־ממד ברמה גבוהה, סימולציות אינטראקטיביות ואופטימיזציה מתקדמת למעקב ידיים.',
+    orgDescription: 'Red Crown Interactive הוא סטודיו פרימיום בישראל לפיתוח AR/VR ולעיצוב תלת־ממד. אנחנו משלבים הנדסת תוכנה מדויקת, אמנות תלת־ממד ועיצוב חוויית משתמש ליצירת חוויות אינטראקטיביות, סימולציות ואפליקציות למובייל ולמחשב ב־Unity.',
     // Without this map the Hebrew page kept every alt/aria string in English
     // (a screen reader read the page in Hebrew, then announced each image in
     // English) and, because the same map also drives the document-wide text
