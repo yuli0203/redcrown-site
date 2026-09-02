@@ -16,7 +16,7 @@ const SERVICES = [
     desc: 'End-to-end product design and Unity development: AR/VR immersive experiences, high-end 3D art and animation, and mobile and desktop apps from an Israeli studio.',
     h1: ['Design and development for ', 'immersive experiences'],
     lead: 'Red Crown Interactive brings design and technology together: concept, UI/UX, 3D art and Unity development for businesses, startups and research organizations. We build immersive experiences, interactive simulations, and mobile and desktop products from idea to deployment.',
-    serviceType: ['AR/VR development', 'End-to-End Product Design', '3D Art & Animation', 'Mobile and desktop app development'],
+    serviceType: ['Augmented Reality Development', 'Virtual Reality Development', 'Mixed Reality Development', 'Unity 3D Development', 'End-to-End Product Design', '3D Art & Animation', 'Mobile App Development', 'Desktop App Development'],
     blocks: [
       { kind: 'cards', head: 'THREE PLATFORMS, ONE STUDIO', items: [
         { h: 'XR / VR / AR', p: "Custom VR, AR and MR experiences for a wide range of virtual and augmented reality headsets. We combine 3D design with natural interactions through controllers or hand tracking to create immersive experiences and interactive products." },
