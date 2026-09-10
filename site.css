@@ -619,6 +619,8 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 .wd-client a::after,.pg-client a::after{content:"↗";font-size:.92em;letter-spacing:0}
 .wd-client a:hover,.pg-client a:hover{text-decoration:underline}
 [dir="rtl"] .wd-client{letter-spacing:0}
+html[lang="he"] .wd-client{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:.35em;font-family:Arial,sans-serif;line-height:1.6;text-transform:none}
+html[lang="he"] .wd-client a{font:inherit;direction:ltr;unicode-bidi:isolate}
 
 /* Floating proposal button, mobile only. The nav CTA is hidden under 900px, so
    until now a phone had no proposal action until the foot of the page. Sits in
