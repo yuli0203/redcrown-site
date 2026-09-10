@@ -55,7 +55,7 @@ function head(p) {
     provider: {
       '@type': ['Organization', 'ProfessionalService'], name: 'Red Crown Interactive',
       url: SITE + '/', logo: `${SITE}/assets/logo-kit/redcrown-solid.png`,
-      email: 'hello@redcrowninteractive.com', telephone: '+972-58-576-0550',
+      email: 'hello@redcrowninteractive.com', telephone: '+972-77-360-9992',
       address: { '@type': 'PostalAddress', addressLocality: 'Haifa', addressCountry: 'IL' },
     },
   };

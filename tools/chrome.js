@@ -32,8 +32,8 @@ const NAV = [
 const CONTACT = {
   place: 'Haifa, Israel',
   email: 'hello@redcrowninteractive.com',
-  phone: '+972-58-576-0550',
-  phoneHref: 'tel:+972585760550',
+  phone: '+972-77-360-9992',
+  phoneHref: 'tel:+972773609992',
   whatsapp: 'https://wa.me/972585760550?text=Hi%21%20I%27m%20interested%20in%20app%20development%20services',
   linkedin: 'https://www.linkedin.com/company/red-crown-interactive',
 };

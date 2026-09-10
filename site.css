@@ -173,6 +173,11 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 }
 
 /* ---------------- platform cards ---------------- */
+.services-intro{margin-top:72px;text-align:center}
+.services-intro h2,html[lang="he"] .work-heading{font-family:var(--display);font-size:clamp(1.55rem,3vw,2.5rem);line-height:1.12;letter-spacing:.025em}
+html[lang="he"] .work-heading{text-align:center;color:var(--bone);margin:0}
+html[lang="he"] .work-kicker{margin-bottom:26px}
+.services-intro p{max-width:720px;margin:15px auto 0;color:var(--dim);font-size:.94rem}
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
 .pcard{padding:34px 30px;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;align-items:flex-start}
 .pcard:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
@@ -181,11 +186,13 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 .pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
 .pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot-text);margin-top:auto}
 @media(max-width:900px){.cards3{grid-template-columns:1fr}}
+@media(max-width:560px){.services-intro{margin-top:52px;padding:0 20px}}
 
 /* ---------------- what we do ---------------- */
 .wwd{margin-top:26px;padding:40px 40px}
 .sec-k{text-align:center;font-family:var(--brand);font-size:.82rem;font-weight:400;margin:0;letter-spacing:.4em;color:var(--bone);position:relative}
 .sec-k::before,.sec-k::after{content:"";display:inline-block;width:56px;height:1px;background:var(--red);vertical-align:middle;margin:0 18px}
+.sec-k.services-heading{margin-top:40px}
 /* A section kicker must never be cut off. nowrap forced long headings such as
    "FROM IDEA TO WORKING PRODUCT" onto one line, and html{overflow-x:clip} then
    hid the overflow instead of scrolling, so the text was simply chopped. */
