@@ -173,12 +173,14 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 }
 
 /* ---------------- platform cards ---------------- */
-.services-intro{margin-top:72px;text-align:center}
+.services-intro{margin-top:40px;text-align:center}
 .services-intro h2,html[lang="he"] .work-heading{font-family:var(--display);font-size:clamp(1.55rem,3vw,2.5rem);line-height:1.12;letter-spacing:.025em}
 html[lang="he"] .work-heading{text-align:center;color:var(--bone);margin:0}
+html[lang="he"] .journey-heading{margin-top:40px}
 html[lang="he"] .work-kicker{margin-bottom:26px}
 .services-intro p{max-width:720px;margin:15px auto 0;color:var(--dim);font-size:.94rem}
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
+@media(min-width:901px){html[lang="he"] .services-five{grid-template-columns:repeat(6,minmax(0,1fr))}html[lang="he"] .services-five>.pcard{grid-column:span 2}html[lang="he"] .services-five>.pcard:nth-child(4){grid-column:2 / span 2}html[lang="he"] .services-five>.pcard:nth-child(5){grid-column:4 / span 2}}
 .pcard{padding:34px 30px;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;align-items:flex-start}
 .pcard:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
 .pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
@@ -186,7 +188,7 @@ html[lang="he"] .work-kicker{margin-bottom:26px}
 .pcard p{color:var(--dim);font-size:.88rem;margin:10px 0 18px}
 .pcard a{font-size:.72rem;font-weight:600;letter-spacing:.18em;color:var(--hot-text);margin-top:auto}
 @media(max-width:900px){.cards3{grid-template-columns:1fr}}
-@media(max-width:560px){.services-intro{margin-top:52px;padding:0 20px}}
+@media(max-width:560px){.services-intro{padding:0 20px}}
 
 /* ---------------- what we do ---------------- */
 .wwd{margin-top:26px;padding:40px 40px}
@@ -209,6 +211,7 @@ html[lang="he"] .work-kicker{margin-bottom:26px}
 
 /* ---------------- work ---------------- */
 #work{margin-top:26px}
+html[lang="he"] #work{margin-top:40px}
 .work-sub{text-align:center;color:var(--dim);font-size:.9rem;max-width:56ch;margin:14px auto 26px}
 .work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .wsoon{width:100%;aspect-ratio:4/3;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);display:grid;place-content:center;justify-items:center;gap:14px;transition:border-color .25s}
@@ -272,6 +275,7 @@ button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:
 .l-cta{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;color:#fff;font-family:var(--display);font-weight:700;font-size:.8rem}
 .l-arr{width:30px;height:30px;border:1px solid rgba(200,16,46,.55);border-radius:7px;display:grid;place-items:center;color:var(--red);transition:background .2s;flex:none}
 .lcard:hover .l-arr{background:rgba(200,16,46,.2)}
+html[lang="he"] .l-cta{justify-content:flex-end}
 @media(max-width:900px){.w2-grid{grid-template-columns:repeat(2,1fr)}.w2-hero{width:230px;opacity:.55}}
 @media(max-width:560px){.w2-grid{grid-template-columns:repeat(2,1fr);gap:12px}.lcell{gap:8px}.lcap{gap:4px;min-height:5.2rem}.lcap .l-title{font-size:.86rem}.lcap .l-en{font-size:.66rem;letter-spacing:.03em}.l-result{font-size:.7rem}button.lcard{padding-bottom:34px}.l-cta{font-size:.68rem;padding:8px 10px}.l-arr{width:22px;height:22px}}
 .wdetail{margin-top:24px;padding:28px 30px;border-radius:14px;border:1px solid var(--line);background:var(--panel);position:relative}
