@@ -626,3 +626,10 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 @media(max-width:900px){.proposal-float{display:flex}}
 @media(max-width:360px){.proposal-float{font-size:.7rem;padding:0 14px;height:44px}}
 @media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}}
+
+/* Keep the offer legible and the detailed studio profile below the hero. */
+.hero .plat{font-size:.875rem;line-height:1.7;letter-spacing:.05em}
+html[lang="he"] .hero .plat{letter-spacing:0}
+.hero .plat em{display:block;white-space:normal;font-size:.875rem;letter-spacing:.02em}
+.hero p{font-size:1rem;line-height:1.75;max-width:43ch}
+.about-lead .studio-profile{padding-inline-start:18px;border-inline-start:2px solid var(--hot);color:var(--bone);font-size:1rem;line-height:1.75}
