@@ -1,0 +1,26 @@
+/* Shared progressive enhancement; the original grid remains the fallback. */
+#work:has(.project-carousel){overflow-anchor:none}
+.project-carousel{position:relative;margin:0 -12px;padding:12px 0 0;overflow:hidden}
+.project-carousel .swiper{overflow:visible;padding:18px 0 20px;touch-action:pan-y}
+/* The flat wrapper must not intercept hits on cards recessed in 3D space. */
+.project-carousel .swiper-wrapper{display:flex;gap:0;align-items:flex-start;pointer-events:none}
+.project-carousel .swiper-slide{height:auto;display:flex;flex-direction:column;gap:16px;flex-shrink:0;pointer-events:auto}
+.project-carousel .lcap{order:2;min-height:0;align-items:center;text-align:center;opacity:1;color:var(--dim)}
+.project-carousel .lcap .l-title{min-height:0;font-size:clamp(.9rem,1.7vw,1.2rem)}
+.project-carousel .lcap-top{align-items:center}
+.project-carousel .l-result,.project-carousel .l-cta,.project-carousel .l-en{display:none}
+.project-carousel button.lcard{order:1;aspect-ratio:4/5;padding:0;border-radius:18px;border-color:rgba(255,255,255,.14);box-shadow:0 16px 32px rgba(0,0,0,.24);transition:border-color .3s;transform:none!important}
+.project-carousel .swiper-slide-active .lcard{border-color:#ec3555}
+.project-carousel .swiper-slide-active .lcap{opacity:1}
+.project-carousel .carousel-controls{display:flex;align-items:center;justify-content:center;gap:24px;margin:12px 0 24px}
+.project-carousel .carousel-arrow{display:grid;place-items:center;width:46px;height:46px;border:1px solid rgba(240,234,228,.22);border-radius:50%;background:#1a1013;color:#f0eae4;cursor:pointer;font:24px Arial,sans-serif;transition:border-color .2s,background .2s}
+.project-carousel .carousel-arrow:hover{border-color:#ec3555;background:#2a111a}
+.project-carousel :is(.lcard,.carousel-arrow):focus-visible{outline:3px solid #fff;outline-offset:3px}
+.project-carousel .carousel-arrow svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.project-carousel .carousel-count{min-width:50px;text-align:center;font-size:14px;color:var(--dim);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.project-carousel .carousel-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:600px){.project-carousel{margin-inline:-8px}.project-carousel button.lcard{border-radius:12px}.project-carousel .carousel-controls{margin-top:4px}}
+@media(prefers-reduced-motion:reduce){.project-carousel *{transition:none!important}}
+
+.project-carousel .lcard>picture{position:absolute;inset:0;display:block}
+.project-carousel .lcard .lart{width:100%;height:100%;object-fit:contain}

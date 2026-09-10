@@ -67,7 +67,7 @@ const I18N = {
     "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive",
     "a11y.skip":"דלג לתוכן","nav.home":"בית","nav.services":"שירותים","nav.tech":"תהליך","nav.work":"עבודות","nav.about":"אודות","nav.faq":"שאלות נפוצות","nav.contact":"צרו קשר","nav.cta":"לייעוץ חינם",
     "hero.title":"<em>פיתוח תוכנה בהתאמה אישית</em><br>מרעיונות נועזים<br>למוצרים שכיף להשתמש בהם",
-    "hero.plat":"אפליקציות למובייל ולמחשב, תלת־ממד אינטראקטיבי ופתרונות מציאות מדומה (VR) ורבודה (AR).",
+    "hero.plat":"אפליקציות למובייל ולמחשב, תלת־ממד אינטראקטיבי<br>ופתרונות מציאות מדומה (VR) ורבודה (AR).",
     "hero.lead":"Red Crown Interactive הוא בית תוכנה וסטודיו לעיצוב מוצרים דיגיטליים למחקר, לתעשייה ולסטארטאפים. אנחנו מחברים עומק הנדסי עם יצירתיות ועיצוב, ומלווים אתכם מה־MVP ועד למוצר מלא.",
     "work.intro":"כל מודל תלת-ממד כאן נלקח מתוך פרויקט אמיתי שבנינו. סובבו, התקרבו ושחקו איתו בעצמכם, ותראו עבודה אמיתית שלנו מקרוב.",
     "hero.ctaPrimary":"לייעוץ חינם",
@@ -88,7 +88,7 @@ const I18N = {
     "work.cat.mr":"מציאות רבודה","work.cat.vr":"מציאות מדומה","work.cat.pc":"אפליקציה למחשב","work.cat.hw":"חומרה והטמעה","work.viewcta":"לפרויקט","work.exkicker":"מקרה בוחן",
     "work.card.vr.title":"מעבדת VR","work.card.vr.tag":"VR מודרך","work.card.vr.result":"תרגול ניסוי עם מדריך וירטואלי וניטור למדריך.",
     "work.card.ar.title":"מעבדת AR","work.card.ar.tag":"מעקב ידיים","work.card.ar.result":"חקירת מולקולות על השולחן באמצעות הידיים.",
-    "work.card.ml.title":"אפליקציה למחקר מולקולרי","work.card.ml.tag":"ML בזמן אמת","work.card.ml.result":"עריכת מולקולות והצגת תוצאות חישוב בתלת־ממד.",
+    "work.card.ml.title":"אפליקציית PC למחקר מולקולרי","work.card.ml.tag":"ML בזמן אמת","work.card.ml.result":"עריכת מולקולות והצגת תוצאות חישוב בתלת־ממד.",
     "work.card.class.title":"כיתת Meta Quest","work.card.class.tag":"חומרה","work.card.class.result":"הקמה והטמעה של כיתה עם עד 12 משקפיים.",
     "work.ar.metric":"אינטראקציה בידיים, בלי שלטים","work.vr.metric":"חוויה מודרכת בת כשעה","work.ml.metric":"חישוב מדעי בזמן אמת","work.class.metric":"עד 12 מכשירים בו-זמנית",
     "work.ar.title":"מודל לימודי למעבדה אנזימטית",
@@ -119,7 +119,7 @@ const I18N = {
     "faq.q4":"האם אתם עובדים עם אוניברסיטאות ומכוני מחקר?","faq.a4":"כן. חלק ניכר מהעבודה שלנו הוא עבור מוסדות אקדמיים ומחקר, כולל הטכניון. אנחנו מרגישים בבית עם תוכן מדעי והנדסי, עם דרישות בטיחות ועם כיתות רב-משתתפים.",
     "faq.q5":"מי בונה את הפרויקט בפועל?","faq.a5":"הפרויקט מובל ונבנה בידי המייסדת, מהנדסת ומעצבת בכירה, מקצה לקצה, ואתם מדברים ישירות עם מי שגם מתכננת וגם בונה, בלי מתווכים. לפרויקטים בהיקף גדול ניתן לגייס צוות מקצועי, בגיוס קפדני ובסטנדרט גבוה, שעובד תחת ההובלה והפיקוח שלה, כך שהאיכות נשמרת לכל אורך הדרך.",
     "faq.q6":"אפשר להתחיל בקטן או עם רעיון ראשוני בלבד?","faq.a6":"בהחלט. גם רעיון ראשוני הוא התחלה מצוינת. אפשר להתחיל בקטן, בפיילוט או באב-טיפוס, ולגדול משם בביטחון.",
-    "cta.title":"מה הייתם בונים<br>אם הטכנולוגיה <em>לא הייתה המגבלה?</em>","cta.lead":"ספרו לנו מה אתם רוצים להשיג, ונחשוב יחד איך להפוך את זה למשהו שאנשים באמת יכולים להשתמש בו. תדברו ישירות עם מי שגם בונה, ובדרך כלל נחזור אליכם תוך יום עסקים אחד.","cta.btn":"ספרו לנו על הרעיון",
+    "cta.title":"מה הייתם בונים<br>אם הטכנולוגיה <em>לא הייתה המגבלה?</em>","cta.lead":"ספרו לנו מה אתם רוצים להשיג, ונחשוב יחד איך להפוך את זה למוצר שאנשים באמת יכולים להשתמש בו. תדברו ישירות עם מי שגם בונה, ובדרך כלל נחזור אליכם תוך יום עסקים אחד.","cta.btn":"ספרו לנו על הרעיון",
     "form.name":"שם","form.email":"אימייל","form.company":"חברה (אופציונלי)",
     "form.project":"מה אתם בונים?","form.opt.choose":"בחרו סוג פרויקט","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.web":"אתרים / ווב","form.opt.unsure":"עדיין לא בטוח",
     "form.message":"הודעה","form.send":"שליחה",
@@ -350,11 +350,13 @@ workCards.forEach(card=>{
   const panel = document.getElementById(card.getAttribute('aria-controls'));
   if (!panel) return;
   card.addEventListener('click', ()=>{
+    if (card.closest('.project-carousel')) return; // The local carousel controls selection without scrolling.
     const willOpen = card.getAttribute('aria-expanded') !== 'true';
     workCards.forEach(c=>setCardOpen(c,false));
     if (willOpen) setCardOpen(card,true);
   });
   panel.querySelector('.wdetail-close').addEventListener('click', ()=>{
+    if (card.closest('.project-carousel')) return;
     setCardOpen(card,false);
     card.focus();
   });
@@ -362,6 +364,7 @@ workCards.forEach(card=>{
 document.addEventListener('keydown', e=>{
   if (e.key !== 'Escape') return;
   workCards.forEach(card=>{
+    if (card.closest('.project-carousel')) return;
     if (card.getAttribute('aria-expanded')==='true'){ setCardOpen(card,false); card.focus(); }
   });
 });
@@ -373,6 +376,61 @@ document.querySelectorAll('.founder-flip').forEach(function(b){
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
 });
+
+/* Hebrew homepage roadmap: scroll-linked progress, with a readable no-JS fallback. */
+(function(){
+  const track = document.querySelector('html[lang="he"] .home-roadmap');
+  if (!track) return;
+  const steps = [...track.querySelectorAll('.roadmap-step')];
+  const shell = track.closest('.roadmap-shell');
+  const fill = shell.querySelector('.roadmap-rail i');
+  const traveler = shell.querySelector('.roadmap-rail b');
+  const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let pending = false;
+  let visible = true;
+  let centers = [];
+  function measure(){
+    centers = steps.map(step => step.offsetTop + step.offsetHeight / 2);
+    schedule();
+  }
+  function update(){
+    pending = false;
+    if (preference.matches || !visible) return;
+    const rect = track.getBoundingClientRect();
+    const reached = Math.max(0, Math.min(rect.height, innerHeight * .62 - rect.top));
+    // Read geometry first; animate only the two decorative layers on scroll.
+    const current = centers.reduce((last, center, index) => center <= reached ? index : last, -1);
+    fill.style.transform = `scaleY(${reached / Math.max(1, rect.height)})`;
+    traveler.style.transform = `translate3d(0,${reached}px,0)`;
+    steps.forEach((step, index) => {
+      step.classList.toggle('is-active', index <= current);
+      step.classList.toggle('is-current', index === current);
+      if (centers[index] < innerHeight * .88 - rect.top) step.classList.add('is-revealed');
+    });
+  }
+  function schedule(){
+    if (!pending && !preference.matches){ pending = true; requestAnimationFrame(update); }
+  }
+  function configure(){
+    track.classList.toggle('has-motion', !preference.matches);
+    shell.classList.toggle('has-motion', !preference.matches);
+    if (preference.matches){
+      fill.style.transform = '';
+      traveler.style.transform = '';
+      steps.forEach(step => step.classList.remove('is-active','is-current','is-revealed'));
+    } else measure();
+  }
+  window.addEventListener('scroll', schedule, {passive:true});
+  window.addEventListener('resize', measure, {passive:true});
+  window.addEventListener('load', schedule, {once:true});
+  preference.addEventListener('change', configure);
+  if ('ResizeObserver' in window) new ResizeObserver(measure).observe(track);
+  if ('IntersectionObserver' in window) new IntersectionObserver(entries => {
+    visible = entries[0].isIntersecting;
+    if (visible) schedule();
+  }, {rootMargin:'100px'}).observe(track);
+  configure();
+})();
 
 /* ---------------- custom cursor (dot + trailing ring) ---------------- */
 (function(){

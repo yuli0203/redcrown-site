@@ -34,6 +34,7 @@
   };
 
   var LIB = '/vendor/model-viewer.min.js';
+  var budgeted = document.documentElement.lang === 'he' && !!document.querySelector('.services-intro');
 
   /* ---------- build the card markup from the config ---------- */
 
@@ -46,14 +47,14 @@
     var mv = document.createElement('model-viewer');
     mv.className = 'wd-model';
     mv.setAttribute('dir', 'ltr');            // a 3D viewport is never right-to-left
-    mv.setAttribute('src', cfg.src);
+    if (!budgeted) mv.setAttribute('src', cfg.src);
     mv.setAttribute('alt', wrap.getAttribute('data-alt') || '');
     mv.setAttribute('camera-controls', '');
     mv.setAttribute('disable-zoom', '');
     mv.setAttribute('disable-pan', '');
     mv.setAttribute('touch-action', 'pan-y');
-    if (cfg.autoRotate) { mv.setAttribute('auto-rotate', ''); mv.setAttribute('rotation-per-second', cfg.autoRotate); }
-    if (cfg.autoplay) mv.setAttribute('autoplay', '');
+    if (cfg.autoRotate) { if (!budgeted) mv.setAttribute('auto-rotate', ''); mv.setAttribute('rotation-per-second', cfg.autoRotate); }
+    if (cfg.autoplay && !budgeted) mv.setAttribute('autoplay', '');
     mv.setAttribute('interaction-prompt', 'none');
     mv.setAttribute('environment-image', 'neutral');
     mv.setAttribute('tone-mapping', 'neutral');
@@ -193,12 +194,13 @@
       var w = mv.closest('.wd-model-wrap');
       if (w.__wired) return; w.__wired = 1;
       var go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
-      try { mv.loading = 'eager'; } catch (_) {}
+      if (!budgeted) try { mv.loading = 'eager'; } catch (_) {}
       if (mv.loaded) go(); else mv.addEventListener('load', go);
     });
   }
 
   function loadModelViewers() {
+    if (budgeted) { scheduleModel(); return; }
     document.querySelectorAll('.wd-model-wrap[data-model]').forEach(buildCard);
     if (window.__mvLoaded) {
       if (window.customElements && customElements.get('model-viewer')) wireCards();
@@ -209,6 +211,138 @@
     s.type = 'module'; s.src = LIB;
     document.head.appendChild(s);
     if (window.customElements) customElements.whenDefined('model-viewer').then(wireCards);
+  }
+
+  /* Hebrew homepage: serial warming in project order, after scrolling settles.
+     Idle scheduling controls when work starts, not a hard CPU/GPU percentage.
+     Keep loaded viewers for reuse; only one model is prepared at a time. */
+  var modelTimer = 0, idleJob = 0, loadingModel = false, libraryJob = null;
+  var quietUntil = 0, visibleModels = new Set();
+  var modelWraps = [];
+  if (budgeted) document.querySelectorAll('#work .lcard[aria-controls]').forEach(function (card) {
+    var panel = document.getElementById(card.getAttribute('aria-controls'));
+    var wrap = panel && panel.querySelector('.wd-model-wrap[data-model]');
+    if (wrap && modelWraps.indexOf(wrap) < 0) modelWraps.push(wrap);
+  });
+  var modelMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function selectedModel() {
+    return modelWraps.find(function (w) {
+      return w.isConnected && !w.__modelState;
+    });
+  }
+  function syncModelMotion() {
+    modelWraps.forEach(function (w) {
+      var mv = w.querySelector('model-viewer'), cfg = MODELS[w.getAttribute('data-model')];
+      if (!mv || !cfg) return;
+      var active = visibleModels.has(w) && !w.closest('[hidden]') && !document.hidden && !modelMotion.matches;
+      mv.toggleAttribute('auto-rotate', !!(active && cfg.autoRotate));
+      if (cfg.autoplay && mv.loaded) {
+        if (active && mv.paused && mv.play) mv.play();
+        else if (!active && mv.pause) mv.pause();
+      }
+    });
+  }
+  function ensureModelLibrary() {
+    if (customElements.get('model-viewer')) return Promise.resolve();
+    if (libraryJob) return libraryJob;
+    libraryJob = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      var timer = setTimeout(function () { s.remove(); reject(new Error('Model library timeout')); }, 30000);
+      s.type = 'module'; s.src = LIB;
+      s.onerror = function () { clearTimeout(timer); s.remove(); reject(new Error('Model library unavailable')); };
+      customElements.whenDefined('model-viewer').then(function () { clearTimeout(timer); resolve(); });
+      document.head.appendChild(s);
+    }).catch(function (error) { libraryJob = null; throw error; });
+    return libraryJob;
+  }
+  function modelError(w) {
+    w.__modelState = 'error';
+    w.setAttribute('aria-busy','false');
+    var load = w.querySelector('.wd-model-loading');
+    if (!load) { buildCard(w); load = w.querySelector('.wd-model-loading'); }
+    load.textContent = '';
+    var retry = document.createElement('button');
+    retry.type = 'button'; retry.className = 'btn btn-line';
+    retry.textContent = 'המודל לא נטען. נסו שוב';
+    retry.style.pointerEvents = 'auto';
+    retry.addEventListener('click',function () {
+      w.__modelState = null;
+      // model-viewer's asset cache can retain a rejected request for the URL.
+      w.__modelRetry = Date.now();
+      load.innerHTML = '<span class="wd-spinner"></span>';
+      scheduleModel();
+    });
+    load.appendChild(retry);
+  }
+  function scheduleModel() {
+    if (!budgeted) return;
+    clearTimeout(modelTimer);
+    if (idleJob) { cancelIdleCallback(idleJob); idleJob = 0; }
+    if (document.readyState !== 'complete' || document.hidden || loadingModel || !selectedModel()) return;
+    modelTimer = setTimeout(function () {
+      function ready() {
+        idleJob = 0;
+        // Yield DOM changes to a frame and recheck selection/scroll activity there.
+        requestAnimationFrame(startModel);
+      }
+      if ('requestIdleCallback' in window) idleJob = requestIdleCallback(ready,{timeout:1500});
+      else ready();
+    }, Math.max(300, quietUntil - performance.now()));
+  }
+  function startModel() {
+    var w = selectedModel();
+    if (loadingModel || document.hidden || !w) return;
+    if (performance.now() < quietUntil) { scheduleModel(); return; }
+    if (!customElements.get('model-viewer')) {
+      loadingModel = true;
+      ensureModelLibrary().catch(function () { modelError(w); }).finally(function () {
+        loadingModel = false; scheduleModel();
+      });
+      return;
+    }
+    loadingModel = true; w.__modelState = 'loading';
+    w.setAttribute('aria-busy','true');
+    buildCard(w); wireCards();
+    var mv = w.querySelector('model-viewer'), done = false;
+    function finish(ok) {
+      if (done) return; done = true;
+      clearTimeout(timer);
+      mv.removeEventListener('load',loaded); mv.removeEventListener('error',failed);
+      if (ok) { w.__modelState = 'loaded'; w.setAttribute('aria-busy','false'); }
+      else { mv.removeAttribute('src'); modelError(w); }
+      loadingModel = false;
+      quietUntil = Math.max(quietUntil,performance.now()+1000);
+      syncModelMotion(); scheduleModel();
+    }
+    function loaded() { finish(true); }
+    function failed() { finish(false); }
+    var timer = setTimeout(failed,60000);
+    mv.addEventListener('load',loaded); mv.addEventListener('error',failed);
+    mv.setAttribute('loading','eager');
+    var source = MODELS[w.getAttribute('data-model')].src;
+    if (w.__modelRetry) source += (source.indexOf('?') < 0 ? '?' : '&') + 'retry=' + w.__modelRetry;
+    mv.setAttribute('src',source);
+  }
+  function watchBudgetedModels() {
+    if ('IntersectionObserver' in window) {
+      var visible = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) visibleModels.add(e.target); else visibleModels.delete(e.target); });
+        syncModelMotion();
+      });
+      modelWraps.forEach(function (w) { visible.observe(w); });
+    } else modelWraps.forEach(function (w) { visibleModels.add(w); });
+    var changes = new MutationObserver(function () { syncModelMotion(); scheduleModel(); });
+    document.querySelectorAll('#work > .wdetail').forEach(function (panel) {
+      changes.observe(panel,{attributes:true,attributeFilter:['hidden']});
+    });
+    window.addEventListener('scroll',function () {
+      quietUntil = Math.max(quietUntil,performance.now()+300);
+      scheduleModel();
+    },{passive:true});
+    document.addEventListener('visibilitychange',function () { syncModelMotion(); scheduleModel(); });
+    modelMotion.addEventListener('change',syncModelMotion);
+    window.addEventListener('load',scheduleModel,{once:true});
+    scheduleModel();
   }
 
   document.addEventListener('input', function (e) {
@@ -228,6 +362,7 @@
   }, true);
 
   function watchInline() {
+    if (budgeted) { watchBudgetedModels(); return; }
     // A case study shows its model inline, whether it sits beside the screenshot
     // in .pg-media or on its own in .pg-model. The home page does the same when a
     // case study starts open, so an already-visible model must build on load
