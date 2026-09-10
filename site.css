@@ -279,7 +279,11 @@ button.lcard{position:relative;display:block;width:100%;padding:0 0 42px;border:
 .wd-zoom-ctl{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(14,8,10,.55);border:1px solid var(--line);border-radius:999px;padding:6px 13px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .wd-zoom{width:132px;accent-color:var(--hot);cursor:pointer}
 .wd-zoom-ic{color:var(--dim);font-size:.95rem;width:10px;text-align:center;user-select:none}
-.wd-model-loading{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;transition:opacity .35s}
+.wd-model-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;pointer-events:none;transition:opacity .35s}
+.wd-model-loading[hidden]{display:none}
+.wd-model-status{font-size:14px;color:var(--bone);text-align:center;direction:inherit}
+.wd-model-retry{pointer-events:auto;padding:8px 16px;border:1px solid var(--hot);border-radius:8px;background:var(--bg);color:var(--bone);font:inherit;cursor:pointer}
+.wd-model-retry[hidden],.model-error .wd-spinner{display:none}
 .wd-model-wrap.loaded .wd-model-loading{opacity:0}
 .wd-spinner{width:34px;height:34px;border-radius:50%;border:2.5px solid rgba(240,234,228,.16);border-top-color:var(--hot);animation:wd-spin .8s linear infinite}
 @keyframes wd-spin{to{transform:rotate(360deg)}}
@@ -625,4 +629,12 @@ main.pg{transition:opacity .34s cubic-bezier(.2,.8,.3,1),transform .34s cubic-be
 .proposal-float.is-in{opacity:1;transform:none}
 @media(max-width:900px){.proposal-float{display:flex}}
 @media(max-width:360px){.proposal-float{font-size:.7rem;padding:0 14px;height:44px}}
-@media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}}
+@media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}
+
+/* Keep the offer legible and the detailed studio profile below the hero. */
+.hero .plat{font-size:1rem;line-height:1.7;letter-spacing:.05em}
+.hero .plat span{display:inline-block}
+html[lang="he"] .hero .plat{letter-spacing:0}
+.hero .plat em{display:block;white-space:normal;font-size:.875rem;letter-spacing:.02em}
+.hero p{font-size:1rem;line-height:1.75;max-width:43ch}
+.about-lead .studio-profile{padding-inline-start:18px;border-inline-start:2px solid var(--hot);color:var(--bone);font-size:1rem;line-height:1.75}

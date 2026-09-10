@@ -25,11 +25,11 @@ const LANGS = {
   },
   he: {
     dir: 'rtl', ogLocale: 'he_IL', url: '/he/',
-    description: 'בית תוכנה וסטודיו לעיצוב מוצרים דיגיטליים ברמת פרימיום בישראל. פיתוח אפליקציות למובייל ולמחשב, עם מומחיות ב־AR/VR/XR ובתלת־ממד אינטראקטיבי.',
-    ogTitle: 'פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive',
-    ogDescription: 'בית תוכנה וסטודיו לעיצוב מוצרים דיגיטליים ברמת פרימיום בישראל. פיתוח אפליקציות למובייל ולמחשב, עם מומחיות ב־AR/VR/XR ובתלת־ממד אינטראקטיבי.',
-    twitterTitle: 'פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive',
-    twitterDescription: 'בית תוכנה וסטודיו לעיצוב מוצרים דיגיטליים ברמת פרימיום בישראל. פיתוח אפליקציות למובייל ולמחשב, עם מומחיות ב־AR/VR/XR ובתלת־ממד אינטראקטיבי.',
+    description: 'חדשנות לארגון שלכם: פיתוח מציאות רבודה (AR), מציאות מדומה (VR), אפליקציות ותלת-ממד אינטראקטיבי. אפיון, עיצוב ופיתוח למחקר, להדרכה ולתעשייה.',
+    ogTitle: 'פיתוח AR ו-VR, אפליקציות ותלת-ממד | Red Crown Interactive',
+    ogDescription: 'חדשנות לארגון שלכם: פיתוח מציאות רבודה (AR), מציאות מדומה (VR), אפליקציות ותלת-ממד אינטראקטיבי. אפיון, עיצוב ופיתוח למחקר, להדרכה ולתעשייה.',
+    twitterTitle: 'פיתוח AR ו-VR, אפליקציות ותלת-ממד | Red Crown Interactive',
+    twitterDescription: 'חדשנות לארגון שלכם: פיתוח מציאות רבודה (AR), מציאות מדומה (VR), אפליקציות ותלת-ממד אינטראקטיבי. אפיון, עיצוב ופיתוח למחקר, להדרכה ולתעשייה.',
     orgDescription: 'Red Crown Interactive הוא בית תוכנה וסטודיו לעיצוב מוצרים דיגיטליים ברמת פרימיום, המשלב פיתוח אפליקציות למובייל ולמחשב עם מומחיות ב־AR/VR/XR ובתלת־ממד אינטראקטיבי.',
     // Without this map the Hebrew page kept every alt/aria string in English
     // (a screen reader read the page in Hebrew, then announced each image in

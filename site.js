@@ -3,9 +3,9 @@ const I18N = {
     "float.cta":"GET A PROPOSAL",
     "doc.title":"App, 3D & VR/AR/XR Development in Unity | Red Crown Interactive",
     "a11y.skip":"Skip to content","nav.home":"HOME","nav.services":"SERVICES","nav.tech":"TECHNOLOGIES","nav.work":"WORK","nav.about":"ABOUT","nav.faq":"FAQ","nav.contact":"CONTACT","nav.cta":"GET A PROPOSAL",
-    "hero.title":"<em>AR/VR/XR, 3D</em><br>&amp; APP DEVELOPMENT",
-    "hero.plat":"MOBILE<s>·</s>PC<s>·</s>XR <em>· ENGINEERING, 3D &amp; DEPLOYMENT UNDER ONE ROOF</em>",
-    "hero.lead":"Red Crown Interactive is a premium software development and digital product design studio in Israel, combining mobile and desktop app development with expertise in AR/VR/XR and interactive 3D.",
+    "hero.title":"<em>INNOVATION</em><br>FOR YOUR ORGANIZATION",
+    "hero.plat":"AR &amp; VR DEVELOPMENT <em>· MOBILE · PC · INTERACTIVE 3D</em>",
+    "hero.lead":"How could people learn, explore or work differently? We turn your idea into an interactive product, from design and development to deployment.",
     "hero.ctaPrimary":"GET A PROJECT PROPOSAL",
     "hero.ctaSecondary":"VIEW OUR WORK &nbsp;→",
     "svc.xr.title":"XR / VR / AR","svc.xr.desc":"Custom VR, AR and MR experiences for a wide range of virtual and augmented reality headsets. We combine 3D design with natural interactions through controllers or hand tracking to create immersive experiences and interactive products.","svc.xr.link":"EXPLORE XR →",
@@ -39,6 +39,7 @@ const I18N = {
     "work.class.body":"<p><b>The challenge.</b> The Technion wanted a classroom that runs immersive virtual reality for many groups at once, reliably, without staff losing every lesson to technical issues.</p><p><b>The solution.</b> We consulted end to end, from early planning and hardware selection through classroom layout, device configuration, deployment, testing, and the instructors' workflows. Up to 12 Meta Quest 3 headsets, each with a paired tablet.</p><p><b>The result.</b> A classroom that simply works, where instructors follow each group, support students, and collect data every session. The technology stays in the background, and teaching stays center stage.</p><p class=\"wd-client\">Developed at <a href=\"https://dana.net.technion.ac.il/\" target=\"_blank\" rel=\"noopener\">Dana Research Group</a></p>",
     "about.kicker":"ABOUT",
     "about.h":"A decade of shipping real-time 3D",
+    "about.studio":"Red Crown Interactive is a premium software development and digital product design studio in Israel, combining mobile and desktop app development with expertise in AR/VR/XR and interactive 3D.",
     "about.p":"Red Crown Interactive is a development studio led by Julia Pavlov, a software engineer specializing in real-time 3D, with more than a decade of experience across XR, medical technology, gaming, and defense. Depending on each project's needs, the studio assembles and manages development, 3D, and design teams, so every project is built as a complete whole, from code to visuals. We build systems where precision, stability, and performance matter as much as the experience.",
     "about.xpk":"Founder's experience",
     "tech.k":"TECHNOLOGIES","tech.dev":"Development","tech.design":"Design",
@@ -64,13 +65,13 @@ const I18N = {
   },
   he: {
     "float.cta":"לייעוץ חינם",
-    "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive",
+    "doc.title":"פיתוח AR ו-VR, אפליקציות ותלת-ממד | Red Crown Interactive",
     "a11y.skip":"דלג לתוכן","nav.home":"בית","nav.services":"שירותים","nav.tech":"טכנולוגיות","nav.work":"עבודות","nav.about":"אודות","nav.faq":"שאלות נפוצות","nav.contact":"צור קשר","nav.cta":"לייעוץ חינם",
-    "hero.title":"<em>פיתוח AR/VR/XR, <span style=\"white-space:nowrap\">תלת-ממד</span> ואפליקציות</em><br>עיצוב וטכנולוגיה במוצר אחד",
-    "hero.plat":"פיתוח בהתאמה אישית למחקר, לתעשייה ולסטארטאפים <em>· נייד · מחשב · מציאות מדומה</em>",
-    "hero.lead":"Red Crown Interactive הוא בית תוכנה וסטודיו לעיצוב מוצרים דיגיטליים ברמת פרימיום, המשלב פיתוח אפליקציות למובייל ולמחשב עם מומחיות ב־AR/VR/XR ובתלת־ממד אינטראקטיבי.",
+    "hero.title":"<em>חדשנות לארגון שלכם</em><br>מרעיון לחוויה עובדת",
+    "hero.plat":"<span>פיתוח מציאות רבודה (AR)</span> <span>ומציאות מדומה (VR)</span><em>אפליקציות · תלת-ממד אינטראקטיבי</em>",
+    "hero.lead":"איך תרצו שאנשים ילמדו, יחקרו או יעבדו אחרת? נפתח עבורכם מוצר אינטראקטיבי שמחבר עיצוב וטכנולוגיה, מהרעיון ועד ההטמעה בארגון.",
     "work.intro":"כל מודל תלת-ממד כאן נלקח מתוך פרויקט אמיתי שבנינו. סובבו, התקרבו ושחקו איתו בעצמכם, ותראו עבודה אמיתית שלנו מקרוב.",
-    "hero.ctaPrimary":"לייעוץ חינם",
+    "hero.ctaPrimary":"בואו נבדוק את הרעיון",
     "hero.ctaSecondary":"ראו מה כבר בנינו &nbsp;←",
     "svc.xr.title":"להכניס אנשים לתוך החוויה","svc.xr.desc":"פיתוח חוויות VR, AR ו־MR למגוון רחב של משקפי מציאות מדומה ורבודה. שילוב עיצוב תלת־ממד ואינטראקציות טבעיות באמצעות שלטים או מעקב ידיים, ליצירת חוויות אימרסיביות ומוצרים אינטראקטיביים.","svc.xr.link":"גלו עוד ←",
     "svc.mobile.title":"להביא את המוצר לכל מקום","svc.mobile.desc":"פיתוח אפליקציות ל־iOS ול־Android, מתוך ניסיון של המייסדת במוצרים ששירתו מיליוני משתמשים. לצד אפליקציות מובייל, אנחנו מפתחים חוויות AR עם ARKit, ARCore ו־AR Foundation ב־Unity.","svc.mobile.link":"גלו עוד ←",
@@ -101,8 +102,9 @@ const I18N = {
     "work.class.title":"מערך כיתת VR פיזית עם Meta Quest",
     "work.class.sub":"כיתת VR פיזית | Meta Quest 3 | כלי מדריך",
     "work.class.body":"<p><b>האתגר.</b> הטכניון רצה כיתה שמפעילה מציאות מדומה סוחפת לקבוצות רבות בו-זמנית, בצורה אמינה, בלי שהצוות יבזבז כל שיעור על תקלות.</p><p><b>הפתרון.</b> ליווינו את התהליך מקצה לקצה, מהתכנון המוקדם ובחירת החומרה ועד פריסת הכיתה, הגדרת המכשירים, הבדיקות ותהליכי העבודה של המדריכים. עד 12 מכשירי Meta Quest 3, כל אחד עם טאבלט מלווה.</p><p><b>עיצוב ואופטימיזציה.</b> תכנון הכיתה משלב ישיבה ייעודית ומרחב מתאים לאינטראקציה עם טעינה, אחסון ופיקוח של המדריכים. טאבלטים מלווים מציגים את התקדמות הקבוצות ואת נתוני המפגש. הליווי כלל מוכנות רשת, הפצת יישומים ותהליכי תפעול, לצד בדיקות בתנאי שימוש של כמה קבוצות במקביל.</p><p><b>התוצאה.</b> כיתה שפשוט עובדת, שבה המדריכים עוקבים אחרי כל קבוצה, תומכים בסטודנטים ואוספים נתונים בכל מפגש. הטכנולוגיה נשארת ברקע, וההוראה בקדמת הבמה.</p><p class=\"wd-client\">פותח ב-<a href=\"https://dana.net.technion.ac.il/\" target=\"_blank\" rel=\"noopener\">Dana Research Group</a></p>",
-    "about.kicker":"מומחיות בכירה שנשארת קרובה לפרויקט",
-    "about.h":"מי שמבינה את האתגר שלכם היא גם זו שמובילה את הפתרון",
+    "about.kicker":"מומחיות בפיתוח מוצרים אינטראקטיביים",
+    "about.h":"אחריות מקצועית מהאפיון ועד ההטמעה",
+    "about.studio":"Red Crown Interactive הוא בית תוכנה וסטודיו לעיצוב מוצרים דיגיטליים ברמת פרימיום, המשלב פיתוח אפליקציות למובייל ולמחשב עם מומחיות ב־AR/VR/XR ובתלת־ממד אינטראקטיבי. פיתוח בהתאמה אישית למחקר, לתעשייה ולסטארטאפים, לנייד, למחשב ולמציאות מדומה.",
     "about.p":"Red Crown Interactive נוסדה מתוך יותר מעשור של ניסיון בבניית תוכנה מורכבת בתעשייה, במחקר וב-XR, כדי לתת ללקוחות דרך ישירה יותר להפוך רעיון למוצר. הוויזואליה, האינטראקציה והקוד מתוכננים כאן תחת ראייה אחת, כך שהתוצאה לא מרגישה כמו אוסף חלקים שחוברו בסוף. הסטודיו מתאים לכל פרויקט את הפתרון הדרוש לו, ומבחינתכם יש כתובת אחת מהרעיון ועד ההטמעה. בראש כל פרויקט עומדת יוליה פבלוב, מהנדסת תוכנה המתמחה בתלת-ממד בזמן אמת, ומי שמלווה אתכם בהתחלה נשארת איתכם עד הסוף.",
     "about.xpk":"הניסיון של המייסדת",
     "tech.k":"טכנולוגיות","tech.dev":"פיתוח","tech.design":"עיצוב",
@@ -166,6 +168,7 @@ const I18N = {
     "work.class.body":"<p><b>Задача.</b> Технион хотел класс, который надёжно запускает иммерсивную виртуальную реальность сразу для многих групп, без того чтобы персонал терял каждый урок на технические неполадки.</p><p><b>Решение.</b> Мы сопровождали внедрение от начала до конца: от раннего планирования и выбора оборудования до планировки класса, настройки устройств, развёртывания, тестирования и рабочих процессов преподавателей. До 12 гарнитур Meta Quest 3, каждая со своим планшетом.</p><p><b>Результат.</b> Класс, который просто работает, где преподаватели следят за каждой группой, помогают студентам и собирают данные на каждом занятии. Технология остаётся на заднем плане, а преподавание в центре внимания.</p><p class=\"wd-client\">Разработано в <a href=\"https://dana.net.technion.ac.il/\" target=\"_blank\" rel=\"noopener\">Dana Research Group</a></p>",
     "about.kicker":"О НАС",
     "about.h":"Десять лет разработки 3D в реальном времени",
+    "about.studio":"Red Crown Interactive — студия разработки программного обеспечения и дизайна цифровых продуктов в Израиле: мобильные и настольные приложения, AR/VR/XR и интерактивное 3D.",
     "about.p":"Red Crown Interactive это студия разработки под руководством Юлии Павловой, инженера-программиста, специализирующегося на 3D реального времени, с более чем десятилетним опытом в XR, медицинских технологиях, играх и обороне. В зависимости от задач проекта студия собирает и ведёт команды разработки, 3D и дизайна, так что каждый проект создаётся как единое целое, от кода до визуала. Мы строим системы, где точность, стабильность и производительность важны не меньше, чем впечатление.",
     "about.xpk":"Опыт основателя",
     "tech.k":"Технологии","tech.dev":"Разработка","tech.design":"Дизайн",
@@ -213,7 +216,8 @@ function applyLang(lang, persist){
     const v = dict[el.getAttribute('data-i18n-placeholder')];
     if (v != null) el.setAttribute('placeholder', v);
   });
-  if (dict['doc.title']) document.title = dict['doc.title'];
+  // Standalone service and campaign pages own their specific document title.
+  if (document.querySelector('[data-i18n="hero.title"]') && dict['doc.title']) document.title = dict['doc.title'];
   // Show the active language on the toggle; keep only the others in the menu.
   const active = document.querySelector('.lang-menu button[data-lang="'+lang+'"]');
   const slot = document.querySelector('.lang-cur');
