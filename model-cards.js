@@ -34,6 +34,26 @@
   };
 
   var LIB = '/vendor/model-viewer.min.js';
+  var libraryAttempt = 0;
+
+  function modelText(key) {
+    var lang = (document.documentElement.lang || 'en').split('-')[0];
+    var labels = {
+      he: { loading: 'טוען מודל תלת-ממד...', slow: 'הטעינה מתארכת. אפשר לנסות שוב.', error: 'לא הצלחנו לטעון את המודל.', retry: 'ניסיון נוסף' },
+      en: { loading: 'Loading 3D model...', slow: 'Loading is taking longer. You can try again.', error: 'The model could not load.', retry: 'Try again' },
+      ru: { loading: 'Загрузка 3D-модели...', slow: 'Загрузка занимает больше времени. Можно повторить.', error: 'Не удалось загрузить модель.', retry: 'Повторить' }
+    };
+    return (labels[lang] || labels.en)[key];
+  }
+
+  function modelNotice(wrap, key) {
+    if (wrap.classList.contains('loaded')) return;
+    var text = wrap.querySelector('.wd-model-status');
+    var retry = wrap.querySelector('.wd-model-retry');
+    if (text) text.textContent = modelText(key);
+    if (retry) retry.hidden = false;
+    if (key === 'error') wrap.classList.add('model-error');
+  }
 
   /* ---------- build the card markup from the config ---------- */
 
@@ -46,7 +66,9 @@
     var mv = document.createElement('model-viewer');
     mv.className = 'wd-model';
     mv.setAttribute('dir', 'ltr');            // a 3D viewport is never right-to-left
-    mv.setAttribute('src', cfg.src);
+    var modelSrc = cfg.src;
+    if (wrap.__retryCount) modelSrc += (modelSrc.indexOf('?') < 0 ? '?' : '&') + 'retry=' + wrap.__retryCount;
+    mv.setAttribute('src', modelSrc);
     mv.setAttribute('alt', wrap.getAttribute('data-alt') || '');
     mv.setAttribute('camera-controls', '');
     mv.setAttribute('disable-zoom', '');
@@ -78,7 +100,7 @@
     var ctl = document.createElement('div');
     ctl.className = 'wd-zoom-ctl';
     ctl.setAttribute('dir', 'ltr');           // minus on the left, plus on the right, in every language
-    ctl.innerHTML = '<span class="wd-zoom-ic">–</span>' +
+    ctl.innerHTML = '<span class="wd-zoom-ic">-</span>' +
       '<input class="wd-zoom" type="range" min="0" max="100" value="40" aria-label="' +
       (wrap.getAttribute('data-zoom-label') || 'Zoom the 3D model') + '">' +
       '<span class="wd-zoom-ic">+</span>';
@@ -86,8 +108,34 @@
 
     var load = document.createElement('div');
     load.className = 'wd-model-loading';
-    load.innerHTML = '<span class="wd-spinner"></span>';
+    load.innerHTML = '<span class="wd-spinner" aria-hidden="true"></span>';
+    var status = document.createElement('span');
+    status.className = 'wd-model-status';
+    status.setAttribute('dir', 'auto');
+    status.setAttribute('role', 'status');
+    status.textContent = modelText('loading');
+    load.appendChild(status);
+    var retry = document.createElement('button');
+    retry.type = 'button';
+    retry.className = 'wd-model-retry';
+    retry.hidden = true;
+    retry.textContent = modelText('retry');
+    retry.addEventListener('click', function () {
+      clearTimeout(wrap.__loadTimer);
+      wrap.replaceChildren();
+      wrap.classList.remove('model-error', 'loaded');
+      wrap.__built = 0; wrap.__wired = 0;
+      wrap.__retryCount = (wrap.__retryCount || 0) + 1;
+      loadModelViewers();
+    });
+    load.appendChild(retry);
     wrap.appendChild(load);
+    mv.addEventListener('error', function () {
+      if (!mv.isConnected) return;
+      clearTimeout(wrap.__loadTimer);
+      modelNotice(wrap, 'error');
+    });
+    wrap.__loadTimer = setTimeout(function () { modelNotice(wrap, 'slow'); }, 15000);
   }
 
   /* ---------- zoom: slider drives field of view, and opens up translucency ---------- */
@@ -159,7 +207,14 @@
     document.querySelectorAll('.wd-model-wrap model-viewer').forEach(function (mv) {
       var w = mv.closest('.wd-model-wrap');
       if (w.__wired) return; w.__wired = 1;
-      var go = function () { w.classList.add('loaded'); applyModelZoom(w); robiEyes(mv); };
+      var go = function () {
+        if (!mv.isConnected) return;
+        clearTimeout(w.__loadTimer);
+        w.classList.remove('model-error');
+        w.classList.add('loaded');
+        w.querySelector('.wd-model-loading').hidden = true;
+        applyModelZoom(w); robiEyes(mv);
+      };
       try { mv.loading = 'eager'; } catch (_) {}
       if (mv.loaded) go(); else mv.addEventListener('load', go);
     });
@@ -173,7 +228,16 @@
     }
     window.__mvLoaded = 1;
     var s = document.createElement('script');
-    s.type = 'module'; s.src = LIB;
+    s.type = 'module';
+    s.src = LIB + (libraryAttempt++ ? '?retry=' + libraryAttempt : '');
+    s.addEventListener('error', function () {
+      window.__mvLoaded = 0;
+      s.remove();
+      document.querySelectorAll('.wd-model-wrap[data-model]').forEach(function (wrap) {
+        clearTimeout(wrap.__loadTimer);
+        modelNotice(wrap, 'error');
+      });
+    });
     document.head.appendChild(s);
     if (window.customElements) customElements.whenDefined('model-viewer').then(wireCards);
   }
@@ -200,7 +264,7 @@
     // case study starts open, so an already-visible model must build on load
     // rather than wait for a click that will never come for a panel nobody opens.
     var inline = [].slice.call(document.querySelectorAll(
-      '.pg-media .wd-model-wrap[data-model], .pg-model .wd-model-wrap[data-model]'));
+      '.hero-stage .wd-model-wrap[data-model], .pg-media .wd-model-wrap[data-model], .pg-model .wd-model-wrap[data-model]'));
     [].forEach.call(document.querySelectorAll('.wdetail:not([hidden]) .wd-model-wrap[data-model]'), function (n) {
       if (inline.indexOf(n) < 0) inline.push(n);
     });

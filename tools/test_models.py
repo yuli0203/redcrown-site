@@ -25,6 +25,8 @@ GL = ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"
 
 # page, how to reveal the cards, how many cards that page should have
 CASES = [
+    ("/he/vr-development/", "inline", 1),
+    ("/he/training-simulations/", "inline", 1),
     ("/",     "cards", 4),
     ("/he/",  "cards", 4),
     ("/ru/",  "cards", 4),
@@ -63,7 +65,7 @@ def main():
                         if (b) b.click();
                     }""")
                 else:
-                    pg.evaluate("document.querySelector('.pg-media, .pg-model').scrollIntoView()")
+                    pg.evaluate("document.querySelector('.hero-stage, .pg-media, .pg-model').scrollIntoView()")
 
                 # the custom element must get defined, i.e. the library really loaded
                 pg.wait_for_function("!!(window.customElements && customElements.get('model-viewer'))",
@@ -88,6 +90,7 @@ def main():
                       alts: mv.map(m => (m.getAttribute('alt') || '').slice(0, 18)),
                       sliders: wraps.filter(w => w.querySelector('.wd-zoom')).length,
                       badges: wraps.filter(w => w.querySelector('.wd-model-badge')).length,
+                      expectedBadges: wraps.filter(w => w.hasAttribute('data-badge')).length,
                       ltr: mv.every(m => m.getAttribute('dir') === 'ltr'),
                     };
                 }""")
@@ -113,8 +116,8 @@ def main():
                     bad.append("no model finished loading")
                 if info["sliders"] != info["wraps"]:
                     bad.append("missing zoom slider on %d card(s)" % (info["wraps"] - info["sliders"]))
-                if info["badges"] != info["wraps"]:
-                    bad.append("missing badge on %d card(s)" % (info["wraps"] - info["badges"]))
+                if info["badges"] != info["expectedBadges"]:
+                    bad.append("missing declared model badge")
                 if not info["ltr"]:
                     bad.append("a viewer is not forced to dir=ltr")
                 if any(not s or not s.startswith("/assets/models/") for s in info["srcs"]):
@@ -137,6 +140,26 @@ def main():
             except Exception as ex:
                 print("  [ERR ] %-32s %s" % (path, str(ex).splitlines()[0][:90]))
                 fails.append("%s: %s" % (path, str(ex).splitlines()[0][:90]))
+            finally:
+                pg.close()
+        # Both a blocked library and a blocked model must recover in place.
+        for blocked in ["**/vendor/model-viewer.min.js*", "**/meta_quest_3_opt.glb*"]:
+            pg = b.new_page(viewport={"width": 1280, "height": 900})
+            try:
+                pg.route(blocked, lambda route: route.abort())
+                pg.goto(base + "/he/vr-development/", wait_until="load")
+                retry = pg.get_by_role("button", name="ניסיון נוסף", exact=True)
+                retry.wait_for(state="visible", timeout=20000)
+                notice = pg.locator(".wd-model-status")
+                assert notice.is_visible(), "failure notice is hidden"
+                assert "לא הצלחנו" in notice.inner_text(), "missing failure message"
+                pg.unroute(blocked)
+                retry.click()
+                pg.wait_for_selector(".wd-model-wrap.loaded", timeout=60000)
+                assert not retry.is_visible(), "retry remains after successful recovery"
+                print("  [OK  ] model failure and retry: " + blocked)
+            except Exception as ex:
+                fails.append("retry %s: %s" % (blocked, str(ex).splitlines()[0][:90]))
             finally:
                 pg.close()
         b.close()
