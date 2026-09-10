@@ -119,8 +119,14 @@
     var disp = PAL[0].slice(), idx = 0, last = performance.now();
     var talking = true, phaseEnd = last + 2000, beatT = 0;
     var nextBlink = last + 1800, blinkStart = -1, pendingDouble = false;
+    // Hebrew homepage: do not update model materials behind offscreen sections.
+    var suspendOffscreen = document.documentElement.lang === 'he' && !!document.querySelector('.services-intro');
+    var inView = !suspendOffscreen, eyeRaf = 0, pausedAt = null;
+    var motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     function ease(t) { return t * t * (3 - 2 * t); }
-    (function frame(now) {
+    function frame(now) {
+      eyeRaf = 0;
+      if (suspendOffscreen && (!inView || document.hidden || motion.matches || !mv.isConnected)) return;
       var dt = Math.min((now - last) / 1000, 0.05); last = now;
       if (now > phaseEnd) { talking = !talking; phaseEnd = now + (talking ? 1400 + Math.random() * 2000 : 900 + Math.random() * 1800); }
       var target;
@@ -146,8 +152,35 @@
         var p = m.pbrMetallicRoughness;
         if (p && p.setBaseColorFactor) p.setBaseColorFactor([disp[0] * blinkMul, disp[1] * blinkMul, disp[2] * blinkMul, 1]);
       });
-      requestAnimationFrame(frame);
-    })(last);
+      eyeRaf = requestAnimationFrame(frame);
+    }
+    function syncEyes() {
+      var now = performance.now();
+      if (!inView || document.hidden || motion.matches) {
+        if (eyeRaf) cancelAnimationFrame(eyeRaf);
+        eyeRaf = 0;
+        if (pausedAt === null) pausedAt = now;
+        return;
+      }
+      if (pausedAt !== null) {
+        var pause = now - pausedAt;
+        phaseEnd += pause; nextBlink += pause;
+        if (blinkStart >= 0) blinkStart += pause;
+        last = now; pausedAt = null;
+      }
+      if (!eyeRaf) eyeRaf = requestAnimationFrame(frame);
+    }
+    if (suspendOffscreen) {
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          inView = entries[0].isIntersecting;
+          syncEyes();
+        }).observe(mv);
+      } else inView = true;
+      document.addEventListener('visibilitychange', syncEyes);
+      motion.addEventListener('change', syncEyes);
+      syncEyes();
+    } else frame(last);
   }
 
   /* ---------- load the library once, then wire every card ---------- */
