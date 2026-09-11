@@ -346,7 +346,11 @@ function build(lang) {
     if (val) html = html.replace(new RegExp(`("${key}": ")[^"]*(")`), () => `"${key}": ${jsonStr(val)}`);
   }
   for (const key of ['serviceType', 'knowsAbout']) {
-    if (cfg[key]) html = html.replace(new RegExp(`("${key}": )\\[[^\\]]*\\]`), () => `"${key}": ${jsonStr(cfg[key])}`);
+    if (!cfg[key]) continue;
+    const field = new RegExp(`("${key}": )\\[[^\\]]*\\]`);
+    if (field.test(html)) html = html.replace(field, () => `"${key}": ${jsonStr(cfg[key])}`);
+    else html = html.replace(/"areaServed": \[[^\]]*\],/,
+      m => `${m}${EOL}  "${key}": ${jsonStr(cfg[key])},`);
   }
   // alternateName has no English counterpart to replace, so insert it.
   if (cfg.alternateName && !html.includes('"alternateName"')) {
