@@ -123,6 +123,10 @@ INTEGRITY = r"""
   for (const el of document.querySelectorAll('body *')) {
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+    // A one-pixel clipped live region intentionally announces text only to
+    // assistive technology. It is not a visually truncated content block.
+    if (el.hasAttribute('aria-live') && cs.clipPath === 'inset(50%)' &&
+        el.clientWidth <= 1 && el.clientHeight <= 1) continue;
     if (cs.textOverflow === 'ellipsis') continue;              // clipped on purpose
     if (['auto', 'scroll'].includes(cs.overflowX)) continue;   // scrollable on purpose
     const own = [...el.childNodes].filter(n => n.nodeType === 3)
