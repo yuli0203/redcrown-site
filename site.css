@@ -260,6 +260,11 @@ html[lang="he"] .home-roadmap.has-motion .roadmap-step.is-active::before{backgro
 #work{margin-top:26px}
 html[lang="he"] #work{margin-top:40px}
 .work-sub{text-align:center;color:var(--dim);font-size:.9rem;max-width:56ch;margin:14px auto 26px}
+/* The Hebrew sentence is far longer than the English or Russian one, so at the
+   shared 56ch measure it wrapped to three lines while they sat on one. Widen
+   only the Hebrew page: 64ch is the exact two-line threshold, 68ch keeps a
+   line of headroom so a font fallback cannot push it back to three. */
+html[lang="he"] .work-sub{max-width:68ch}
 .work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .wsoon{width:100%;aspect-ratio:4/3;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);display:grid;place-content:center;justify-items:center;gap:14px;transition:border-color .25s}
 .wcard:hover .wsoon{border-color:rgba(200,16,46,.55)}
