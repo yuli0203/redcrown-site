@@ -324,6 +324,12 @@
     mv.setAttribute('src',source);
   }
   function watchBudgetedModels() {
+    // Build the cards before the serial loader reaches them. buildCard withholds
+    // the src while budgeted, so this costs no download -- but it puts the
+    // spinner on screen and gives the box its height. Without it the wrap has no
+    // children at all, so a visitor sees an empty 0-height gap until the loader's
+    // turn arrives, and the panel jumps when the model finally lands.
+    modelWraps.forEach(buildCard);
     if ('IntersectionObserver' in window) {
       var visible = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) { if (e.isIntersecting) visibleModels.add(e.target); else visibleModels.delete(e.target); });

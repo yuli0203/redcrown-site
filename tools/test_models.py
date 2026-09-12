@@ -117,7 +117,11 @@ def main():
                     bad.append("missing badge on %d card(s)" % (info["wraps"] - info["badges"]))
                 if not info["ltr"]:
                     bad.append("a viewer is not forced to dir=ltr")
-                if any(not s or not s.startswith("/assets/models/") for s in info["srcs"]):
+                # The Hebrew homepage warms models one at a time, so a card whose
+                # turn has not come yet carries no src on purpose -- its spinner is
+                # up and the download is deferred. Judge the srcs that are set: a
+                # relative path is the thing that 404s one directory down.
+                if any(not s.startswith("/assets/models/") for s in info["srcs"] if s):
                     bad.append("model src not root-absolute: %s" % info["srcs"])
                 if any(not a for a in info["alts"]):
                     bad.append("a viewer has no alt text")
