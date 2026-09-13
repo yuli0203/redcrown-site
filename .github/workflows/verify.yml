@@ -19,6 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - run: node --test tools/test_contact_form.js
       # Fails if a translation key is missing, if alt/aria text was left in
       # English, if a path would 404 one directory down, or if the committed
       # page no longer matches a fresh render of index.html + site.js.

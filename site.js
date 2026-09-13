@@ -303,7 +303,12 @@ function trackConversion(key, params){
   const id = ADS_CONVERSIONS[key];
   if (typeof gtag !== 'function' || !id || id.includes('XXXX')) return;
   // beacon transport so the hit survives tel:/wa.me navigation away from the page
-  gtag('event', 'conversion', Object.assign({ send_to: id, transport_type: 'beacon' }, params));
+  // Analytics failure must never make a delivered message look unsuccessful.
+  try {
+    gtag('event', 'conversion', Object.assign({ send_to: id, transport_type: 'beacon' }, params));
+  } catch (_) {
+    console.warn('Google Ads conversion could not be queued.');
+  }
 }
 
 // contact form (AJAX submit to Web3Forms)
@@ -313,16 +318,22 @@ if (cform) {
     e.preventDefault();
     const ok = cform.querySelector('.form-ok'), err = cform.querySelector('.form-err');
     const btn = cform.querySelector('button[type=submit]');
+    if (btn.disabled) return;
     ok.hidden = true; err.hidden = true; btn.disabled = true;
     try {
-      const r = await fetch(cform.action, { method:'POST', body:new FormData(cform), headers:{'Accept':'application/json'} });
-      if (r.ok) {
-        const project = cform.elements.project?.value || '';
+      const body = new FormData(cform);
+      // The HTML redirect is a no-JS fallback. AJAX needs the API JSON response
+      // to confirm delivery before showing success and recording a conversion.
+      body.delete('redirect');
+      const r = await fetch(cform.action, { method:'POST', body, headers:{'Accept':'application/json'} });
+      const result = await r.json();
+      if (r.ok && result.success === true) {
+        const context = conversionContext({ project_type: cform.elements.project?.value || '' });
         cform.reset(); ok.hidden = false;
-        trackConversion('formSubmit', conversionContext({ project_type: project }));
+        trackConversion('formSubmit', context);
       } else { err.hidden = false; }
     } catch (_) { err.hidden = false; }
-    btn.disabled = false;
+    finally { btn.disabled = false; }
   });
 }
 
