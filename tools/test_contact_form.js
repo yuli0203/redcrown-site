@@ -29,7 +29,12 @@ function setup({ response = { ok: true, json: async () => ({ success: true }) },
       querySelectorAll: () => [],
     },
     location: { pathname: '/he/vr-development/' },
-    FormData: class { constructor(target) { assert.equal(target, form); } },
+    FormData: class extends Map {
+      constructor(target) {
+        super([['redirect', 'https://example.test/?sent=1'], ['project', 'XR']]);
+        assert.equal(target, form);
+      }
+    },
     fetch: async (...args) => {
       calls.push(args);
       if (fetchError) throw fetchError;
@@ -56,6 +61,12 @@ test('accepted message emits one form conversion with its original project conte
   assert.equal(h.events[0][2].send_to, 'AW-18313532220/H3CjCKq279QcELymyZxE');
   assert.equal(h.events[0][2].project_type, 'XR');
   assert.equal(h.events[0][2].landing_page, '/he/vr-development/');
+});
+test('AJAX request omits the native-form redirect and keeps the submitted fields', async () => {
+  const h = setup(); await h.submit();
+  const body = h.calls[0][1].body;
+  assert.equal(body.has('redirect'), false);
+  assert.equal(body.get('project'), 'XR');
 });
 for (const [label, options] of [
   ['HTTP rejection', { response: { ok: false, json: async () => ({ success: false }) } }],

@@ -321,7 +321,11 @@ if (cform) {
     if (btn.disabled) return;
     ok.hidden = true; err.hidden = true; btn.disabled = true;
     try {
-      const r = await fetch(cform.action, { method:'POST', body:new FormData(cform), headers:{'Accept':'application/json'} });
+      const body = new FormData(cform);
+      // The HTML redirect is a no-JS fallback. AJAX needs the API JSON response
+      // to confirm delivery before showing success and recording a conversion.
+      body.delete('redirect');
+      const r = await fetch(cform.action, { method:'POST', body, headers:{'Accept':'application/json'} });
       const result = await r.json();
       if (r.ok && result.success === true) {
         const context = conversionContext({ project_type: cform.elements.project?.value || '' });
