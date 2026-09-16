@@ -143,6 +143,11 @@ for p in PAGES:
         context['solutions_title'] = "מתחילים מהתוצאה שאתם צריכים"
         context['solutions_lead'] = "נבין מה המשתמש צריך לעשות, להבין או לתרגל. רק אחר כך נבחר אם הפתרון הנכון הוא מחשב, נייד, מציאות מדומה או מערכת משולבת."
     html = TEMPLATE.format(**context, uses=uses, bullets=bullets, project_options=project_options, description=escape(description), wa=wa)
+    if p['slug'] == 'interactive-3d':
+        # Reuse the enzyme demo on the campaign's existing project screenshot.
+        html = html.replace('<section class="wrap case" id="case"><img ', '<section class="wrap case" id="case"><img data-project-video ', 1)
+        html = html.replace('<link rel="stylesheet" href="/site.css">', '<link rel="stylesheet" href="/site.css?v=20260916-campaign-video">', 1)
+        html = html.replace('<script src="/landing-motion.js', '<script src="/project-video.js?v=20260916" defer></script><script src="/landing-motion.js', 1)
     # Accessibility attributes are applied centrally so every generated campaign
     # page shares the same landmarks and assistive-technology announcements.
     html = html.replace('<main>', '<main id="main" tabindex="-1">', 1)
