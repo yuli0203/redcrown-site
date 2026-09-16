@@ -142,7 +142,20 @@ for p in PAGES:
     else:
         context['solutions_title'] = "מתחילים מהתוצאה שאתם צריכים"
         context['solutions_lead'] = "נבין מה המשתמש צריך לעשות, להבין או לתרגל. רק אחר כך נבחר אם הפתרון הנכון הוא מחשב, נייד, מציאות מדומה או מערכת משולבת."
+    if p['slug'] in {'interactive-3d', 'vr-development'}:
+        context['contact_title'] = 'מה תרצו שהלקוחות או הצוות שלכם יוכלו לעשות?'
+        context['contact_lead'] = 'השאירו פרטים ותארו בקצרה את האתגר. בשיחה נבחן למי המוצר מיועד, מה חשוב להוכיח ואיזה צעד ראשון מתאים להיקף ולתקציב שלכם.'
+        context['solutions_title'] = 'איפה חוויה אינטראקטיבית יכולה לקדם אתכם?'
+        context['solutions_lead'] = 'בחרו את האתגר שקרוב לשלכם — ומשם נוכל להתחיל את השיחה.'
+        context['case_bullets'] = '<li>ליווי רובי, מדריך וירטואלי לאורך הניסוי</li><li>הפעלה של ציוד המעבדה וקריאת תוצאות</li><li>שימוש במסגרת הוראה בטכניון</li>'
+        if p['slug'] == 'interactive-3d':
+            bullets = ''.join('<li>' + x + '</li>' for x in ['המחשה שהלקוח יכול לנסות בעצמו', 'עיצוב ופיתוח באותו צוות, עם כתובת אחת לפרויקט', 'אפשרות להתחיל בתרחיש ממוקד ולהרחיב בהמשך'])
+            context['case_outcome'] = 'המשתמשים יכולים לשנות את נקודת המבט, לבדוק את הריאקציה בקצב שלהם ולקשר בין מבנה מולקולרי להתנהגות שלו.'
+            context['case_bullets'] = '<li>סיבוב והגדלה באמצעות מחוות ידיים</li><li>שליטה בקצב ההדגמה של הריאקציה</li><li>קריינות והדרכה בעברית ובאנגלית</li>'
     html = TEMPLATE.format(**context, uses=uses, bullets=bullets, project_options=project_options, description=escape(description), wa=wa)
+    if p['slug'] in {'interactive-3d', 'vr-development'}:
+        html = html.replace('מערכת אמיתית, לא הבטחה שיווקית', 'מעבדת הפוגסיות: ניסוי שלם במציאות מדומה', 1) if p['slug'] == 'vr-development' else html
+        html = html.replace('בדיקת התאמה לפרויקט</button>', 'בואו נדבר על הפרויקט</button>', 1)
     if p['slug'] == 'interactive-3d':
         html = html.replace('class="campaign-page"', 'class="campaign-page campaign-showcase"', 1)
         html = html.replace('</head>', '<link rel="stylesheet" href="/landing-showcase.css?v=20260916"></head>', 1)

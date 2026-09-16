@@ -342,8 +342,8 @@ function workBody(p) {
   }
 
   out.push('  <div class="panel pg-end">');
-  out.push('    <h2>Want something like this for your course or team?</h2>');
-  out.push('    <p>Tell us what you want to build, even if it is still a rough idea.</p>');
+  out.push(p.video ? '    <h2>What would you like your users to experience?</h2>' : '    <h2>Want something like this for your course or team?</h2>');
+  out.push(p.video ? '    <p>Tell us who it is for and what they need to understand or do. We’ll help identify a practical first step, the right platform and the questions to resolve before development.</p>' : '    <p>Tell us what you want to build, even if it is still a rough idea.</p>');
   out.push('    <p><a class="btn btn-red" href="/#contact">GET A PROJECT PROPOSAL</a></p>');
   out.push('  </div>');
   if (p.video) out.push('<h2 class="sec-k pg-sec">MORE FROM OUR PORTFOLIO</h2>', ring(p));
