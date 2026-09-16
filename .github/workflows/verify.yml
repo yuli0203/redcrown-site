@@ -24,6 +24,8 @@ jobs:
         env:
           CONTACT_SCRIPT: he/vr-development/vr-landing.js
       - run: node tools/test_vr_fallback.cjs
+      - run: python tools/test_campaign_pages.py
+      - run: python tools/build_he_landing_pages.py --check
       # Fails if a translation key is missing, if alt/aria text was left in
       # English, if a path would 404 one directory down, or if the committed
       # page no longer matches a fresh render of index.html + site.js.
@@ -31,6 +33,18 @@ jobs:
       # Fails if any service/case-study page differs from a fresh render of
       # tools/pages.data.js, so edited content cannot ship half-applied.
       - run: node tools/build_pages.js --check
+
+  campaign-device-matrix:
+    name: Campaign pages work on mobile and desktop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: playwright install --with-deps chromium webkit
+      - run: python tools/verify_no_break.py --campaigns-only
 
   device-matrix:
     name: No elements break across devices

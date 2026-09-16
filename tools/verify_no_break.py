@@ -19,7 +19,7 @@ Runs automatically from .githooks/pre-push before every push.
 
 Exit codes: 0 = all clear (or tooling unavailable -> warn & allow), 1 = breakage.
 """
-import os, sys, threading, functools, contextlib
+import os, sys, threading, functools, contextlib, argparse
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -61,6 +61,16 @@ MATRIX = [
 ]
 
 DESKTOP = {"1440 HE": 1440, "1440 VR": 1440, "1440 EN": 1440, "1280 RU": 1280}
+
+CAMPAIGN_SLUGS = ["training-simulations", "interactive-3d", "research-software",
+                  "medical-prototypes", "startup-mvp-poc"]
+CAMPAIGN_MATRIX = []
+for slug in CAMPAIGN_SLUGS:
+    CAMPAIGN_MATRIX.extend([
+        (f"iPhone SE {slug}", "webkit", "iPhone SE", f"/he/{slug}/"),
+        (f"1440 {slug}", "chromium", None, f"/he/{slug}/"),
+    ])
+    DESKTOP[f"1440 {slug}"] = 1440
 
 AUTOSCROLL = """async () => {
   await new Promise(res => { let y=0; const s=()=>{ window.scrollTo(0,y);
@@ -201,12 +211,17 @@ def start_server():
     return httpd, httpd.server_address[1]
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--campaigns-only", action="store_true",
+                        help="Check all five service landing pages in mobile WebKit and desktop Chromium")
+    args = parser.parse_args()
+    matrix = CAMPAIGN_MATRIX if args.campaigns_only else MATRIX
     httpd, port = start_server()
     base = f"http://127.0.0.1:{port}"
     failures = []
     try:
         with sync_playwright() as p:
-            for label, engine, device, path in MATRIX:
+            for label, engine, device, path in matrix:
                 cerr, perr = [], []
                 try:
                     b = getattr(p, engine).launch()

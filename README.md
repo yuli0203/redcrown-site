@@ -21,11 +21,20 @@ redirect page at the old path — see `services/vr-development/index.html` and
 query string so Google Ads `gclid`/UTM parameters survive.
 
 ## Hebrew campaign pages
-`he/<slug>/index.html` is generated: edit `tools/build_he_landing_pages.py`, then
-run `python tools/build_he_landing_pages.py`. Each page links to the other
+`he/<slug>/index.html` is generated: edit the service content in
+`tools/service_landing_pages.py` and the layout in
+`tools/templates/service-landing.html`, then run
+`python tools/build_he_landing_pages.py`. Each service page links to the other
 campaign pages, and `/he/` links into them, so none is orphaned.
 
 The VR landing page uses `tools/templates/vr-development.html` as its HTML
 source, with `he/vr-development/vr-landing.css` and `vr-landing.js` for its
 design and interactions. Edit the template, then run the same Python generator
 to keep `he/vr-development/index.html` in sync.
+
+All campaign pages share the VR stylesheet and interaction script. Service-only
+layout rules live in `landing-services.css`. The service renderer also reuses the
+approved VR navigation, expertise, form, footer and ambient animation markup.
+Run `python tools/build_he_landing_pages.py --check` and
+`python tools/test_campaign_pages.py` to verify generated output, metadata,
+local links, form fields and structured data without sending contact requests.
