@@ -1,5 +1,6 @@
 """Check generated campaigns' SEO, navigation and contact contracts offline."""
 from collections import Counter
+from copy import deepcopy
 from html.parser import HTMLParser
 import json
 from pathlib import Path
@@ -7,6 +8,7 @@ from urllib.parse import urlsplit
 import unittest
 
 from build_he_landing_pages import PAGES, render_all
+from landing_pages import TEMPLATE_PATH, render
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -36,6 +38,31 @@ class Page(HTMLParser):
 
 
 class CampaignContracts(unittest.TestCase):
+    def test_new_catalog_entry_needs_no_template_or_renderer_changes(self):
+        page = deepcopy(next(p for p in PAGES if p['style'] == 'service'))
+        page['slug'] = 'test-landing-page'
+        page['title'] = 'Test service'
+        html = render(page, [*PAGES, page])
+        parsed = Page(html)
+        canonical = next(a['href'] for t, a in parsed.tags if t == 'link' and a.get('rel') == 'canonical')
+        self.assertEqual(canonical, 'https://redcrowninteractive.com/he/test-landing-page/')
+        landing = next(a['value'] for t, a in parsed.tags if t == 'input' and a.get('name') == 'landing_page')
+        self.assertEqual(landing, page['slug'])
+        self.assertIn('<title>Test service | Red Crown Interactive</title>', html)
+
+    def test_shared_template_changes_reach_every_page(self):
+        source = TEMPLATE_PATH.read_text(encoding='utf-8')
+        marker = 'shared-footer-test-marker'
+        updated = source.replace('class="footer-main"', f'class="footer-main" data-test="{marker}"')
+        self.assertNotEqual(source, updated)
+        rendered = render_all(template_source=updated)
+        self.assertEqual(set(rendered), {page['slug'] for page in PAGES})
+        self.assertIn('vr-development', rendered)
+        for slug, html in rendered.items():
+            with self.subTest(page=slug):
+                self.assertEqual(html.count(marker), 1)
+        self.assertEqual(list(TEMPLATE_PATH.parent.glob('*.html')), [TEMPLATE_PATH])
+
     def test_generated_pages_are_current(self):
         for slug, html in render_all().items():
             with self.subTest(page=slug):

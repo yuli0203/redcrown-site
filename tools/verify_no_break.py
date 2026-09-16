@@ -21,6 +21,7 @@ Exit codes: 0 = all clear (or tooling unavailable -> warn & allow), 1 = breakage
 """
 import os, sys, threading, functools, contextlib, argparse
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from landing_pages import PAGES
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -62,8 +63,7 @@ MATRIX = [
 
 DESKTOP = {"1440 HE": 1440, "1440 VR": 1440, "1440 EN": 1440, "1280 RU": 1280}
 
-CAMPAIGN_SLUGS = ["training-simulations", "interactive-3d", "research-software",
-                  "medical-prototypes", "startup-mvp-poc"]
+CAMPAIGN_SLUGS = [page["slug"] for page in PAGES]
 CAMPAIGN_MATRIX = []
 for slug in CAMPAIGN_SLUGS:
     CAMPAIGN_MATRIX.extend([
@@ -213,7 +213,7 @@ def start_server():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--campaigns-only", action="store_true",
-                        help="Check all five service landing pages in mobile WebKit and desktop Chromium")
+                        help="Check all landing pages in mobile WebKit and desktop Chromium")
     args = parser.parse_args()
     matrix = CAMPAIGN_MATRIX if args.campaigns_only else MATRIX
     httpd, port = start_server()

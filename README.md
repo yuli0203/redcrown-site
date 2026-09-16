@@ -21,20 +21,24 @@ redirect page at the old path — see `services/vr-development/index.html` and
 query string so Google Ads `gclid`/UTM parameters survive.
 
 ## Hebrew campaign pages
-`he/<slug>/index.html` is generated: edit the service content in
-`tools/service_landing_pages.py` and the layout in
-`tools/templates/service-landing.html`, then run
-`python tools/build_he_landing_pages.py`. Each service page links to the other
-campaign pages, and `/he/` links into them, so none is orphaned.
+All six landing pages, including VR, are generated from one HTML template:
+`tools/templates/landing-page.html`. The template contains the shared page and
+named components for the hero, projects, form, footer, icons and other sections.
+An edit to this template is applied to every page by the same renderer.
 
-The VR landing page uses `tools/templates/vr-development.html` as its HTML
-source, with `he/vr-development/vr-landing.css` and `vr-landing.js` for its
-design and interactions. Edit the template, then run the same Python generator
-to keep `he/vr-development/index.html` in sync.
+Page-specific copy, SEO metadata, project images, models and FAQ answers live in
+`tools/landing-pages.json`. To add a landing page, add a catalog entry with its
+own slug and content. The generator discovers it automatically. The `style`,
+`stage`, `projects`, `related` and `next_step` settings preserve the approved
+layout variations without separate page templates.
 
-All campaign pages share the VR stylesheet and interaction script. Service-only
-layout rules live in `landing-services.css`. The service renderer also reuses the
-approved VR navigation, expertise, form, footer and ambient animation markup.
+Run `python tools/build_he_landing_pages.py` after changing content or markup.
+Do not hand-edit generated `he/<slug>/index.html` files. Shared styles and
+interactions remain in `he/vr-development/vr-landing.css` and `vr-landing.js`;
+service layout adjustments live in `landing-services.css`.
+
 Run `python tools/build_he_landing_pages.py --check` and
-`python tools/test_campaign_pages.py` to verify generated output, metadata,
-local links, form fields and structured data without sending contact requests.
+`python tools/test_campaign_pages.py` to check generated output, metadata,
+links, form fields, structured data and shared-template propagation. Tests do
+not send contact requests. `tools/landing_pages.py` contains only rendering
+logic; `tools/build_he_landing_pages.py` is the command-line entry point.
