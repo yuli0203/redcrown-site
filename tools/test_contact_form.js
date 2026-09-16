@@ -6,9 +6,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-const source = fs.readFileSync(path.join(__dirname, '../site.js'), 'utf8');
-const tracking = source.slice(source.indexOf('// Google Ads conversion tracking'),
-  source.indexOf('// selected work:'));
+const sourceFile = process.env.CONTACT_SCRIPT || 'site.js';
+const source = fs.readFileSync(path.join(__dirname, '..', sourceFile), 'utf8');
+const trackingEnd = source.includes('// selected work:') ? source.indexOf('// selected work:') : source.indexOf('const params');
+const tracking = source.slice(source.indexOf('const ADS_CONVERSIONS'), trackingEnd);
 
 function setup({ response = { ok: true, json: async () => ({ success: true }) },
   fetchError, tagError, noTag = false, delayed = false } = {}) {

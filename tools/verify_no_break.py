@@ -47,6 +47,7 @@ MATRIX = [
     ("Pixel 7",     "chromium", "Pixel 7",    "/"),      # 412px
     ("iPad Mini",   "webkit",   "iPad Mini",  "/"),      # 768px
     ("iPhone SE HE","webkit",   "iPhone SE",  "/he/"),   # Hebrew RTL
+    ("iPhone SE VR","webkit",   "iPhone SE",  "/he/vr-development/"),
     ("iPhone SE RU","webkit",   "iPhone SE",  "/ru/"),   # Russian (longest words)
     ("360 EN",      "chromium", "Galaxy S9+", "/"),      # 360-400 band, where sec-k wraps
     ("412 RU",      "chromium", "Pixel 7",    "/ru/"),   # Russian at a common Android width
@@ -54,11 +55,12 @@ MATRIX = [
     # one line too far is invisible to every mobile entry above. device=None runs
     # a plain desktop viewport.
     ("1440 HE",     "chromium", None,         "/he/"),
+    ("1440 VR",     "chromium", None,         "/he/vr-development/"),
     ("1440 EN",     "chromium", None,         "/"),
     ("1280 RU",     "chromium", None,         "/ru/"),
 ]
 
-DESKTOP = {"1440 HE": 1440, "1440 EN": 1440, "1280 RU": 1280}
+DESKTOP = {"1440 HE": 1440, "1440 VR": 1440, "1440 EN": 1440, "1280 RU": 1280}
 
 AUTOSCROLL = """async () => {
   await new Promise(res => { let y=0; const s=()=>{ window.scrollTo(0,y);
@@ -211,7 +213,7 @@ def main():
                     opts = (p.devices[device] if device
                             else {"viewport": {"width": DESKTOP[label], "height": 900}})
                     ctx = b.new_context(**opts,
-                                        locale=("he-IL" if path == "/he/" else "en-US"))
+                                        locale=("he-IL" if path.startswith("/he/") else "en-US"))
                     pg = ctx.new_page()
                     pg.on("console", lambda m: cerr.append(m.text) if m.type == "error" else None)
                     pg.on("pageerror", lambda e: perr.append(str(e)))

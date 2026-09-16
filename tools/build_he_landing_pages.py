@@ -1,29 +1,16 @@
 from pathlib import Path
 from html import escape
-import json
 
 ROOT = Path(__file__).resolve().parents[1]
 
 PAGES = [
-    dict(slug="vr-development", title="פיתוח VR ומציאות מדומה לעסקים", eyebrow="פיתוח VR, AR ו־MR בהתאמה לארגון", description="פיתוח VR לארגונים ולעסקים: סימולציות הדרכה, מעבדות וירטואליות והמחשת מוצר למשקפי Meta Quest 3, מהאפיון ועד ההטמעה. שיחת היתכנות ללא התחייבות.", lead="הפכו הדרכה, המחשה או ניסוי מורכב לחוויה שאנשים יכולים להבין, לתרגל ולהפעיל. נבנה מערכת יציבה מהאפיון ועד ההטמעה - לא רק הדגמת טכנולוגיה.", project="VR / מציאות משולבת", project_type="XR", hero="/assets/lioness/vr.webp", hero_model="/assets/models/meta_quest_3_opt.glb", image="/assets/work-vr-fugacity.jpg?v=20260814", case="מעבדה וירטואלית פעילה, שפותחה עבור הטכניון, ומאפשרת לסטודנטים לתרגל ניסוי מורכב בסביבה בטוחה ומבוקרת.", bullets=["פיתוח למשקפי מציאות מדומה ומציאות משולבת", "חיבור למערכות, נתונים ותהליכים קיימים", "פיילוט ממוקד לפני הרחבה מלאה"], uses=[("הדרכה ותרגול","תרחישים אינטראקטיביים עם משוב, מדידה ושליטה למדריכים."),("המחשת מוצר","הצגת מערכות, חללים ותהליכים שאי אפשר להביא לחדר."),("מחקר וניסויים","סביבה מבוקרת לאיסוף נתונים ולשחזור עקבי של תרחישים.")]),
+    dict(slug="vr-development", title="פיתוח VR ו־AR לארגונים בישראל", eyebrow="מציאות מדומה · מציאות רבודה · מציאות משולבת"),
     dict(slug="training-simulations", title="סימולציות הדרכה לעובדים", eyebrow="תרגול מורכב בלי לסכן אנשים, ציוד או זמן ייצור", lead="אפשרו לעובדים לתרגל החלטות ותהליכים שוב ושוב, ולמדריכים לראות התקדמות - בלי לעצור עבודה ובלי לסכן אנשים או ציוד.", project="סימולציות והדרכה", project_type="XR", hero="/assets/lioness/vr.webp", hero_model="/assets/models/meta_quest_3_opt.glb", image="/assets/work-class-setup.jpg?v=20260814", case="מערכת כיתתית פעילה שפותחה עבור הטכניון, עם עד 12 משקפיים, הפעלה מרוכזת וכלים למדריך.", bullets=["תרחישים, ניקוד ומשוב לפי יעדי ההדרכה", "מערכת ניהול והפעלה למדריכים", "הטמעה מדורגת בארגון"], uses=[("בטיחות ותפעול","תרגול מצבי קיצון ונהלים בלי לעצור קו או לסכן עובד."),("הכשרת עובדים","חזרה עקבית על תהליך עד להשגת רמת ביצוע נדרשת."),("מעבדות וכיתות","הפעלה סימולטנית, שליטה בתוכן ותמיכה במדריך.")]),
     dict(slug="interactive-3d", title="פיתוח תוכנה אינטראקטיבית בתלת־ממד", eyebrow="גרפיקה והנדסת תוכנה שנבנות כמוצר אחד", lead="הפכו מידע, מוצר או תהליך מורכב לכלי חזותי שאפשר להבין ולהפעיל. נבנה את הקוד, הממשק והתלת־ממד כמוצר אחד, יציב ומהיר.", project="תלת־ממד ותוכנה", project_type="PC", hero="/assets/lioness/pc.webp", hero_model="/assets/models/robi_opt.glb", image="/assets/work-ar-enzymatic.jpg?v=20260814", case="מערכת אינטראקטיבית שמחברת מודל תלת־ממדי, חישוב מדעי וחוויית שימוש ברורה.", bullets=["ארכיטקטורה שניתנת להרחבה", "אופטימיזציה לחומרת היעד", "חיבור למידע, שירותים וחישובים"], uses=[("הדמיה הנדסית","הפיכת מידע ומבנים מורכבים לכלי שאפשר לחקור ולהפעיל."),("קונפיגורטורים","הצגת אפשרויות מוצר ותוצאות באופן חזותי ואינטראקטיבי."),("כלים מקצועיים","ממשקים תלת־ממדיים לעבודה, בדיקה, תכנון וקבלת החלטות.")]),
     dict(slug="research-software", title="פיתוח תוכנה למחקר והנדסה", eyebrow="ממודל מדעי לכלי שאנשים באמת יכולים להשתמש בו", lead="אפשרו לחוקרים לחקור, להשוות ולהסביר תוצאות בלי להילחם בכלי העבודה. נחבר חישוב, נתונים ותלת־ממד למערכת מדויקת ונוחה לשימוש.", project="תוכנה למחקר", project_type="PC", hero="/assets/lioness/pc.webp", hero_model="/assets/models/caffeine2_opt.glb", image="/assets/work-ml-livemol.jpg?v=20260814", case="כלי מחקר חזותי שמחבר חישוב מדעי ותצוגת מולקולות אינטראקטיבית בסביבת עבודה אחת.", bullets=["חיבור בין חישוב מדעי לממשק אינטראקטיבי", "כלים למעבדות, מוסדות וחברות הנדסיות", "תכנון לניסוי, הדגמה או שימוש מתמשך"], uses=[("כלי מחקר חזותיים","הצגת תוצאות ומודלים בצורה שאפשר לחקור, להשוות ולהסביר."),("מערכות ניסוי","שליטה בפרוטוקול, תרחישים ואיסוף נתונים באופן עקבי."),("המחשה מדעית","הפיכת חישובים מורכבים לחוויה ברורה לחוקרים ולבעלי עניין.")]),
     dict(slug="medical-prototypes", title="פיתוח אבות־טיפוס רפואיים", eyebrow="מ־MedTech מורכב לאב־טיפוס שאפשר לראות, להפעיל ולבחון", lead="הפכו רעיון למכשור רפואי, תוכנה קלינית או הדמיה מדעית לאב־טיפוס אינטראקטיבי שאפשר לבחון עם אנשי מקצוע - לפני שמשקיעים במערכת מלאה.", project="אבות־טיפוס רפואיים", project_type="PC", hero="/assets/lioness/pc.webp", hero_model="/assets/models/enzym_opt.glb", image="/assets/codex-epd-philips.png?v=20260814", case="ניסיון אישי בפיתוח CODEX EPD ב־Philips - מערכת רפואית תלת־ממדית מורכבת שתומכת בעבודה קלינית מדויקת דרך המחשה אינטראקטיבית של מידע אנטומי.", bullets=["אב־טיפוס פונקציונלי לבדיקת זרימת העבודה", "תלת־ממד והמחשה מדעית למידע רפואי מורכב", "בסיס הנדסי ברור להמשך פיתוח המוצר"], uses=[("כשהרעיון חייב להפוך למשהו שאפשר לבדוק","בונים את התרחיש המרכזי כאב־טיפוס פעיל, כדי לקבל משוב מאנשי מקצוע לפני פיתוח מלא."),("כשהמידע הרפואי מורכב מדי למסך שטוח","מחברים נתונים, אנטומיה ותלת־ממד לממשק שמאפשר להבין יחסים מרחביים ולפעול בביטחון."),("כשצריך ליישר קו בין רפואה, מוצר והנדסה","יוצרים מערכת מוחשית שמאפשרת לצוותים לבדוק יחד החלטות, מגבלות וסדרי עדיפויות.")]),
     dict(slug="startup-mvp-poc", title="פיתוח MVP ו־POC לסטארטאפים", eyebrow="מרעיון למוצר שאפשר להדגים, לבדוק ולקדם", lead="הפכו רעיון למוצר עובד שממחיש את הערך המרכזי מול לקוחות, שותפים ומשקיעים - בלי לבנות מוקדם מדי מערכת גדולה ויקרה.", project="MVP / POC לסטארטאפים", project_type="PC", hero="/assets/lioness/pc.webp", hero_model="/assets/models/robi_opt.glb", image="/assets/work-ml-livemol.jpg?v=20260814", case="LiveMol נבנה עבור הטכניון: רעיון למוצר תוכנה חזותי שהפך לכלי אינטראקטיבי עובד, המחבר חישוב, תלת־ממד וחוויית משתמש במערכת אחת.", bullets=["תרחיש מרכזי עובד במקום מצגת בלבד", "ארכיטקטורה שמתאימה לשלב ולתקציב", "בסיס ברור ללמידה, גיוס והמשך פיתוח"], uses=[("כשצריך להוכיח שהרעיון עובד","בונים POC ממוקד שבודק את הסיכון הטכנולוגי או חוויית השימוש החשובה ביותר."),("כשצריך להציג מוצר ולא רק חזון","יוצרים MVP שאפשר להדגים ללקוחות, שותפים ומשקיעים ולקבל עליו משוב אמיתי."),("כשצריך להתקדם מהר בלי לצבור חוב מיותר","מגדירים מה חייב להיכנס לגרסה הראשונה ומה נכון להשאיר לשלב הבא.")]),
 ]
-
-# Pages answering the questions people search for get an FAQ block plus FAQPage
-# schema. Answers restate only what the home page FAQ already commits to.
-FAQ_TITLES = {"vr-development": "שאלות נפוצות על פיתוח VR"}
-FAQS = {
-    "vr-development": [
-        ("מה כולל פיתוח VR לארגון?", "אפיון התרחיש והמשתמשים, עיצוב חוויית משתמש ותלת־ממד, פיתוח ב־Unity, בדיקות על המשקפיים, הטמעה והדרכה. אפשר להתחיל בפיילוט ממוקד ולהרחיב בהמשך."),
-        ("לאילו משקפי VR אתם מפתחים?", "אנחנו מפתחים בעיקר ל־Meta Quest 3, כולל מציאות משולבת (MR), וגם לנייד, למחשב ול־WebGL כשזה מתאים יותר. נבחר יחד את הפלטפורמה שמתאימה לקהל ולמטרה."),
-        ("כמה עולה פיתוח VR?", "העלות תלויה בהיקף, בפלטפורמה ובמורכבות התוכן. אחרי שיחה קצרה נותנים הערכת מחיר ברורה ושקופה לפני שמתחילים, בלי הפתעות."),
-        ("איך יודעים אם VR הוא הפתרון הנכון עבורנו?", "בשיחת ההיתכנות בודקים מה המשתמשים צריכים לעשות, להבין או לתרגל. אם מחשב, נייד או Web יתאימו יותר ממציאות מדומה, נגיד זאת."),
-    ],
-}
 
 TEMPLATE = '''<!doctype html><html lang="he" dir="rtl" data-page-lang="he"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0e080a">
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18313532220"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('js',new Date());gtag('config','AW-18313532220');</script>
@@ -42,8 +29,12 @@ TEMPLATE = '''<!doctype html><html lang="he" dir="rtl" data-page-lang="he"><head
 <script src="/site.js?v=20260814-1"></script><script src="/model-cards.js?v=20260912-spinner" defer></script><script src="/landing-motion.js?v=20260813-3" defer></script><script src="/crown-particles.js" defer></script><script>const q=new URLSearchParams(location.search);for(const n of ['utm_source','utm_campaign','utm_content','gclid']){{const e=document.querySelector(`[name="${{n}}"]`);if(e)e.value=q.get(n)||''}}window.addEventListener('DOMContentLoaded',()=>window.RCModels?.load())</script><script data-goatcounter="https://redcrowninteractive.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></body></html>'''
 
 for p in PAGES:
+    # This landing page has its own art-directed template.
+    if p["slug"] == "vr-development":
+        (ROOT / "he/vr-development").mkdir(parents=True, exist_ok=True)
+        (ROOT / "he/vr-development/index.html").write_text((ROOT / "tools/templates/vr-development.html").read_text(encoding="utf-8"), encoding="utf-8")
+        continue
     situations = {
-        "vr-development": [("כשהתרגול האמיתי מסוכן או יקר", "מאפשרים לאנשים להתנסות, לטעות ולחזור על תרחיש מורכב בסביבה בטוחה ומבוקרת."), ("כשהמוצר מורכב מדי למצגת", "נותנים ללקוח להיכנס למערכת, להבין אותה ולחוות אותה גם כשאי אפשר להביא אותה לחדר."), ("כשניסוי חייב להיות עקבי ומדיד", "משחזרים את אותו תרחיש, שולטים בתנאים ואוספים נתונים בצורה מסודרת.")],
         "training-simulations": [("כשאי אפשר לעצור את העבודה כדי לתרגל", "מתרגלים תהליך מורכב בלי להשבית קו, לסכן עובד או לפגוע בציוד."), ("כשהעובדים מכירים את הנוהל אך מתקשים לבצע", "הופכים ידע תאורטי להתנסות פעילה עם משוב וחזרה עד לביצוע בטוח."), ("כשהמדריך צריך לדעת מי באמת מוכן", "רואים התקדמות, מזהים טעויות וממקדים את ההדרכה במקום שבו היא נחוצה.")],
         "interactive-3d": [("כשקשה להבין מידע מורכב על מסך שטוח", "הופכים מבנים, נתונים ותהליכים לכלי חזותי שאפשר לחקור ולהפעיל."), ("כשהלקוח צריך לראות מוצר לפני שהוא קיים", "מאפשרים לבחון אפשרויות ולהבין את התוצאה לפני ייצור או התקנה."), ("כשהצוות צריך כלי מקצועי, לא עוד הדמיה", "מחברים תלת־ממד, חישוב וממשק למערכת שעוזרת לבצע עבודה ולקבל החלטות.")],
         "research-software": [("לראות את מה שהנתונים עדיין לא מגלים", "להפוך תוצאות ומודלים לתמונה חיה שאפשר לחקור - ולזהות בה קשרים שקשה לראות בטבלאות."), ("להגיע לתוצאה שאפשר לסמוך עליה", "לחזור על אותו ניסוי בתנאים ברורים, להשוות תוצאות ולדעת בדיוק מה השתנה."), ("להפוך מורכבות לרגע של הבנה", "לתת לחוקרים, לשותפים ולמקבלי החלטות לחקור את המודל יחד ולהבין מדוע התוצאה חשובה.")],
@@ -51,7 +42,6 @@ for p in PAGES:
         "startup-mvp-poc": [("כשצריך להוכיח שהרעיון עובד", "בונים POC ממוקד שבודק את הסיכון הטכנולוגי או חוויית השימוש החשובה ביותר."), ("כשצריך להציג מוצר ולא רק חזון", "יוצרים MVP שאפשר להדגים ללקוחות, שותפים ומשקיעים ולקבל עליו משוב אמיתי."), ("כשצריך להתקדם מהר בלי לצבור חוב מיותר", "מגדירים מה חייב להיכנס לגרסה הראשונה ומה נכון להשאיר לשלב הבא.")],
     }[p['slug']]
     case_outcomes = {
-        "vr-development": "במקום רק לצפות בהסבר, הסטודנטים מבצעים את התהליך בעצמם ויכולים ללמוד גם מטעויות בסביבה מבוקרת.",
         "training-simulations": "המדריך מפעיל תרגול כיתתי מרוכז, והלומדים מתנסים באותו תרחיש בלי לאבד שליטה על הקצב והתוכן.",
         "interactive-3d": "המשתמש לא רק רואה מודל - הוא חוקר מידע, מפעיל תהליכים ומקבל החלטות בתוך אותו כלי.",
         "research-software": "החוקר יכול לעבור מחישוב לתצוגה ולחקירה אינטראקטיבית בלי לפצל את העבודה בין כלים מנותקים.",
@@ -77,15 +67,15 @@ for p in PAGES:
     context['ar_service_note'] = '<p>אנו מתמחים בפיתוח סימולציות בטכנולוגיות מציאות רבודה (AR), מציאות מדומה (VR) ומציאות מעורבת (MR) עבור משקפי Meta Quest 3 ומכשירים ניידים.</p>' if p['slug'] == 'training-simulations' else ''
     # Every campaign page links to the others, so none is an orphan that search
     # engines only reach through the sitemap.
+    related_pages = [o for o in PAGES if o['slug'] != p['slug']]
     related = ''.join(
         f'<a class="card related-card" href="/he/{o["slug"]}/"><h3>{escape(o["title"])}</h3><p>{escape(o["eyebrow"])}</p><b>לפרטים ←</b></a>'
-        for o in PAGES if o['slug'] != p['slug'])
+        for o in related_pages)
     context['related_section'] = f'<section class="wrap related" id="related" aria-labelledby="related-title"><h2 class="section-title" id="related-title">שירותים נוספים שלנו</h2><p class="section-lead">פתרונות נוספים שאנחנו מפתחים לארגונים, למחקר ולסטארטאפים. <a href="/he/">לכל השירותים ←</a></p><div class="cards">{related}</div></section>'
-    faq = FAQS.get(p['slug'], [])
-    context['faq_section'] = ('<section class="wrap faq-section" id="faq" aria-labelledby="faq-title"><h2 class="section-title" id="faq-title">' + escape(FAQ_TITLES[p['slug']]) + '</h2><div class="faq-list">' + ''.join(f'<details class="faq-item"><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in faq) + '</div></section>') if faq else ''
-    context['faq_schema'] = ('<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "he", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}, ensure_ascii=False) + '</script>') if faq else ''
+    context['faq_section'] = ''
+    context['faq_schema'] = ''
     context['image_alt'] = "מסך CODEX EPD מניסיון קודם בפיתוח ב־Philips" if p['slug'] == 'medical-prototypes' else ("מוצר LiveMol אינטראקטיבי בפיתוח Red Crown Interactive" if p['slug'] == 'startup-mvp-poc' else "פרויקט רלוונטי של Red Crown Interactive")
-    context['hero_model_key'] = {'vr-development': 'quest3', 'training-simulations': 'quest3', 'interactive-3d': 'robi', 'research-software': 'caffeine', 'medical-prototypes': 'enzym', 'startup-mvp-poc': 'robi'}[p['slug']]
+    context['hero_model_key'] = {'training-simulations': 'quest3', 'interactive-3d': 'robi', 'research-software': 'caffeine', 'medical-prototypes': 'enzym', 'startup-mvp-poc': 'robi'}[p['slug']]
     context['hero_visual'] = f'<div class="stage-ring ring-a"></div><div class="stage-ring ring-b"></div><div class="wd-model-wrap" data-model="{context["hero_model_key"]}" data-alt="מודל תלת־ממד אינטראקטיבי עבור {escape(p["project"])}" data-zoom-label="הגדלה והקטנה של מודל התלת־ממד"></div><div class="stage-floor"></div><div class="stage-label"><b>3D בזמן אמת</b><span>גררו כדי לסובב</span></div>'
     if p['slug'] == 'startup-mvp-poc':
         context['hero_visual'] = '''<div class="mvp-product-visual" aria-label="תהליך אינטראקטיבי מרעיון ל-MVP עובד">
@@ -108,7 +98,7 @@ for p in PAGES:
           </div>
         </div><div class="stage-label mvp-label"><b>מיקוד · הוכחה · מוצר עובד</b><span>בונים רק את מה שמקדם את ההחלטה הבאה</span></div>'''
     context['case_outcome'] = case_outcomes[p['slug']]
-    context['fit_promise'] = "אם VR אינו הפתרון הנכון, נגיד זאת" if p['slug'] in {'vr-development', 'training-simulations'} else "אם פלטפורמה אחרת מתאימה יותר, נגיד זאת"
+    context['fit_promise'] = "אם VR אינו הפתרון הנכון, נגיד זאת" if p['slug'] == 'training-simulations' else "אם פלטפורמה אחרת מתאימה יותר, נגיד זאת"
     context['journey_eyebrow'] = "מהרעיון למערכת שעובדת בשטח"
     context['journey_step3_title'] = "פיילוט ממוקד"
     context['journey_step3_text'] = "חוויה מרכזית שמאפשרת לראות, לנסות וללמוד מוקדם."
@@ -142,7 +132,7 @@ for p in PAGES:
     else:
         context['solutions_title'] = "מתחילים מהתוצאה שאתם צריכים"
         context['solutions_lead'] = "נבין מה המשתמש צריך לעשות, להבין או לתרגל. רק אחר כך נבחר אם הפתרון הנכון הוא מחשב, נייד, מציאות מדומה או מערכת משולבת."
-    if p['slug'] in {'interactive-3d', 'vr-development'}:
+    if p['slug'] == 'interactive-3d':
         context['contact_title'] = 'מה תרצו שהלקוחות או הצוות שלכם יוכלו לעשות?'
         context['contact_lead'] = 'השאירו פרטים ותארו בקצרה את האתגר. בשיחה נבחן למי המוצר מיועד, מה חשוב להוכיח ואיזה צעד ראשון מתאים להיקף ולתקציב שלכם.'
         context['solutions_title'] = 'איפה חוויה אינטראקטיבית יכולה לקדם אתכם?'
@@ -153,8 +143,7 @@ for p in PAGES:
             context['case_outcome'] = 'המשתמשים יכולים לשנות את נקודת המבט, לבדוק את הריאקציה בקצב שלהם ולקשר בין מבנה מולקולרי להתנהגות שלו.'
             context['case_bullets'] = '<li>סיבוב והגדלה באמצעות מחוות ידיים</li><li>שליטה בקצב ההדגמה של הריאקציה</li><li>קריינות והדרכה בעברית ובאנגלית</li>'
     html = TEMPLATE.format(**context, uses=uses, bullets=bullets, project_options=project_options, description=escape(description), wa=wa)
-    if p['slug'] in {'interactive-3d', 'vr-development'}:
-        html = html.replace('מערכת אמיתית, לא הבטחה שיווקית', 'מעבדת הפוגסיות: ניסוי שלם במציאות מדומה', 1) if p['slug'] == 'vr-development' else html
+    if p['slug'] == 'interactive-3d':
         html = html.replace('בדיקת התאמה לפרויקט</button>', 'בואו נדבר על הפרויקט</button>', 1)
     if p['slug'] == 'interactive-3d':
         html = html.replace('class="campaign-page"', 'class="campaign-page campaign-showcase"', 1)
@@ -165,29 +154,6 @@ for p in PAGES:
         html = html.replace(p['case'], 'לומדה שפותחה בטכניון: מודלים מולקולריים, מחוות ידיים ורובי המדריך הווירטואלי נפגשים בחוויית מציאות מעורבת. לחצו על הסרטון וראו את המערכת בפעולה.', 1)
         # Reuse the enzyme demo on the campaign's existing project screenshot.
         html = html.replace('<section class="wrap case" id="case"><img ', '<section class="wrap case" id="case"><img data-project-video ', 1)
-        html = html.replace('<link rel="stylesheet" href="/site.css">', '<link rel="stylesheet" href="/site.css?v=20260916-campaign-video">', 1)
-        html = html.replace('<script src="/landing-motion.js', '<script src="/project-video.js?v=20260916" defer></script><script src="/landing-motion.js', 1)
-    if p['slug'] == 'vr-development':
-        # Keep the existing fugacity case study and add the complementary MR project.
-        enzyme_case = (
-            '<section class="wrap case" id="enzyme-case" aria-labelledby="enzyme-case-title">'
-            '<img data-project-video src="/assets/work-ar-enzymatic.jpg?v=20260814" '
-            'alt="מודל האנזים על שולחן אמיתי במציאות מעורבת, לצד רובי המדריך הווירטואלי" loading="lazy">'
-            '<div><div class="eyebrow">פרויקט נוסף · מציאות מעורבת (MR) ומעקב ידיים</div>'
-            '<h2 class="section-title" id="enzyme-case-title">העולם המולקולרי מגיע לשולחן שלכם</h2>'
-            '<p class="section-lead">לומדת מציאות מעורבת שפותחה עבור הפקולטה להנדסה כימית בטכניון ל־Meta Quest 3. '
-            'החדר האמיתי נשאר גלוי, ועל השולחן מופיעים מודלים מולקולריים שאפשר לחקור בידיים, ללא שלטים.</p>'
-            '<p class="case-outcome"><strong>מה זה מאפשר</strong>להפוך מושגים מופשטים לחוויה שאפשר להפעיל: '
-            'לסובב ולהגדיל את האנזים, לצפות בריאקציה ולבחון כיצד מולקולות משפיעות על אור מקוטב.</p>'
-            '<ul><li>אינטראקציות ידיים מבוססות פיזיקה</li>'
-            '<li>רובי, מדריך וירטואלי עם קריינות בעברית ובאנגלית</li>'
-            '<li>מודולים עצמאיים לחקירה, ניסוי ולמידה</li></ul>'
-            '<p><a class="arrow-link" href="/work/enzymatic-lab-ar/">לפרויקט האנזים המלא ←</a></p>'
-            '</div></section>'
-        )
-        case_start = html.index('<section class="wrap case" id="case">')
-        case_end = html.index('</section>', case_start) + len('</section>')
-        html = html[:case_end] + '\n' + enzyme_case + html[case_end:]
         html = html.replace('<link rel="stylesheet" href="/site.css">', '<link rel="stylesheet" href="/site.css?v=20260916-campaign-video">', 1)
         html = html.replace('<script src="/landing-motion.js', '<script src="/project-video.js?v=20260916" defer></script><script src="/landing-motion.js', 1)
     # Accessibility attributes are applied centrally so every generated campaign

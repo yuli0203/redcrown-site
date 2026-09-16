@@ -24,3 +24,8 @@ query string so Google Ads `gclid`/UTM parameters survive.
 `he/<slug>/index.html` is generated: edit `tools/build_he_landing_pages.py`, then
 run `python tools/build_he_landing_pages.py`. Each page links to the other
 campaign pages, and `/he/` links into them, so none is orphaned.
+
+The VR landing page uses `tools/templates/vr-development.html` as its HTML
+source, with `he/vr-development/vr-landing.css` and `vr-landing.js` for its
+design and interactions. Edit the template, then run the same Python generator
+to keep `he/vr-development/index.html` in sync.
