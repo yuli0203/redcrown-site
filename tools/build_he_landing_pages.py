@@ -148,6 +148,29 @@ for p in PAGES:
         html = html.replace('<section class="wrap case" id="case"><img ', '<section class="wrap case" id="case"><img data-project-video ', 1)
         html = html.replace('<link rel="stylesheet" href="/site.css">', '<link rel="stylesheet" href="/site.css?v=20260916-campaign-video">', 1)
         html = html.replace('<script src="/landing-motion.js', '<script src="/project-video.js?v=20260916" defer></script><script src="/landing-motion.js', 1)
+    if p['slug'] == 'vr-development':
+        # Keep the existing fugacity case study and add the complementary MR project.
+        enzyme_case = (
+            '<section class="wrap case" id="enzyme-case" aria-labelledby="enzyme-case-title">'
+            '<img data-project-video src="/assets/work-ar-enzymatic.jpg?v=20260814" '
+            'alt="מודל האנזים על שולחן אמיתי במציאות מעורבת, לצד רובי המדריך הווירטואלי" loading="lazy">'
+            '<div><div class="eyebrow">פרויקט נוסף · מציאות מעורבת (MR) ומעקב ידיים</div>'
+            '<h2 class="section-title" id="enzyme-case-title">העולם המולקולרי מגיע לשולחן שלכם</h2>'
+            '<p class="section-lead">לומדת מציאות מעורבת שפותחה עבור הפקולטה להנדסה כימית בטכניון ל־Meta Quest 3. '
+            'החדר האמיתי נשאר גלוי, ועל השולחן מופיעים מודלים מולקולריים שאפשר לחקור בידיים, ללא שלטים.</p>'
+            '<p class="case-outcome"><strong>מה זה מאפשר</strong>להפוך מושגים מופשטים לחוויה שאפשר להפעיל: '
+            'לסובב ולהגדיל את האנזים, לצפות בריאקציה ולבחון כיצד מולקולות משפיעות על אור מקוטב.</p>'
+            '<ul><li>אינטראקציות ידיים מבוססות פיזיקה</li>'
+            '<li>רובי, מדריך וירטואלי עם קריינות בעברית ובאנגלית</li>'
+            '<li>מודולים עצמאיים לחקירה, ניסוי ולמידה</li></ul>'
+            '<p><a class="arrow-link" href="/work/enzymatic-lab-ar/">לפרויקט האנזים המלא ←</a></p>'
+            '</div></section>'
+        )
+        case_start = html.index('<section class="wrap case" id="case">')
+        case_end = html.index('</section>', case_start) + len('</section>')
+        html = html[:case_end] + '\n' + enzyme_case + html[case_end:]
+        html = html.replace('<link rel="stylesheet" href="/site.css">', '<link rel="stylesheet" href="/site.css?v=20260916-campaign-video">', 1)
+        html = html.replace('<script src="/landing-motion.js', '<script src="/project-video.js?v=20260916" defer></script><script src="/landing-motion.js', 1)
     # Accessibility attributes are applied centrally so every generated campaign
     # page shares the same landmarks and assistive-technology announcements.
     html = html.replace('<main>', '<main id="main" tabindex="-1">', 1)
