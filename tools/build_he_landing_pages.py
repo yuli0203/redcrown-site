@@ -144,6 +144,12 @@ for p in PAGES:
         context['solutions_lead'] = "נבין מה המשתמש צריך לעשות, להבין או לתרגל. רק אחר כך נבחר אם הפתרון הנכון הוא מחשב, נייד, מציאות מדומה או מערכת משולבת."
     html = TEMPLATE.format(**context, uses=uses, bullets=bullets, project_options=project_options, description=escape(description), wa=wa)
     if p['slug'] == 'interactive-3d':
+        html = html.replace('class="campaign-page"', 'class="campaign-page campaign-showcase"', 1)
+        html = html.replace('</head>', '<link rel="stylesheet" href="/landing-showcase.css?v=20260916"></head>', 1)
+        html = html.replace('<span class="quiet">ללא התחייבות', '<a class="showcase-demo-link" href="#case">צפו במה שבנינו ↓</a><span class="quiet">ללא התחייבות', 1)
+        html = html.replace('מערכת אמיתית, לא הבטחה שיווקית', 'ממודל תלת־ממדי לחוויה בידיים שלכם', 1)
+        html = html.replace('ניסיון רלוונטי · תלת־ממד ותוכנה', 'מתוך העבודות שלנו · לומדת האנזים', 1)
+        html = html.replace(p['case'], 'לומדה שפותחה בטכניון: מודלים מולקולריים, מחוות ידיים ורובי המדריך הווירטואלי נפגשים בחוויית מציאות מעורבת. לחצו על הסרטון וראו את המערכת בפעולה.', 1)
         # Reuse the enzyme demo on the campaign's existing project screenshot.
         html = html.replace('<section class="wrap case" id="case"><img ', '<section class="wrap case" id="case"><img data-project-video ', 1)
         html = html.replace('<link rel="stylesheet" href="/site.css">', '<link rel="stylesheet" href="/site.css?v=20260916-campaign-video">', 1)

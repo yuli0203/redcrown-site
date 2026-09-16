@@ -113,8 +113,9 @@ function head(p) {
     '<script type="application/ld+json">',
     JSON.stringify(crumbs, null, 2),
     '</script>',
+    ...(p.video ? ['<link rel="stylesheet" href="/landing-showcase.css?v=20260916">'] : []),
     '</head>',
-    '<body>',
+    p.video ? '<body class="enzyme-showcase">' : '<body>',
   ].join(EOL);
 }
 
@@ -287,8 +288,9 @@ function workBody(p) {
   out.push(breadcrumb(p));
   out.push(`  <h1 class="pg-h1">${esc(p.h1[0])}<em>${esc(p.h1[1])}</em></h1>`);
   out.push(`  <p class="pg-sub">${esc(p.sub)}</p>`);
-  out.push(ring(p));
+  if (!p.video) out.push(ring(p));
   out.push(`  <p class="pg-lead">${esc(p.lead)}</p>`);
+  if (p.video) out.push('  <div class="showcase-actions"><a class="btn btn-red" href="#project-demo">EXPLORE THE EXPERIENCE ↓</a><a class="arrow-link" href="/#contact">LET’S BUILD YOUR PROJECT →</a></div><div class="showcase-heading" id="project-demo"><span>THE EXPERIENCE</span><p>Explore the model. Watch it come to life.</p></div>');
   // Screenshot and live model side by side, the same pairing the home page uses,
   // so neither dominates and the still can be compared against the real thing.
   out.push('  <div class="pg-media">');
@@ -305,7 +307,9 @@ function workBody(p) {
   for (const [k, v] of p.facts) out.push(`    <div><i>${esc(k)}</i><b>${esc(v)}</b></div>`);
   out.push('  </div>');
 
+  if (p.video) out.push('<div class="showcase-story">');
   p.story.forEach(([headTxt, body], i) => {
+    if (p.video) out.push('<section class="showcase-chapter">');
     out.push(`  <h2 class="sec-k pg-sec">${esc(headTxt.toUpperCase())}</h2>`);
     const last = i === p.story.length - 1;
     // the credit sits inside the result panel, directly below its paragraph
@@ -315,7 +319,9 @@ function workBody(p) {
       ? `<p class="pg-client">Developed at <a href="${p.client.url}" target="_blank" rel="noopener">${esc(p.client.name)}</a></p>`
       : '';
     out.push(`  <div class="panel pg-prose"><p>${body}</p>${cred}</div>`);
+    if (p.video) out.push('</section>');
   });
+  if (p.video) out.push('</div>');
 
   const svc = bySlug[p.service];
   if (svc) {
@@ -340,6 +346,7 @@ function workBody(p) {
   out.push('    <p>Tell us what you want to build, even if it is still a rough idea.</p>');
   out.push('    <p><a class="btn btn-red" href="/#contact">GET A PROJECT PROPOSAL</a></p>');
   out.push('  </div>');
+  if (p.video) out.push('<h2 class="sec-k pg-sec">MORE FROM OUR PORTFOLIO</h2>', ring(p));
   out.push(pager(p));
   out.push('</main>');
   return out.join(EOL);
