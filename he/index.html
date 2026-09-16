@@ -230,16 +230,16 @@
     <p class="sec-k work-kicker rv">טעימה מפרויקטים שבנינו</p>
     <div class="w2-grid">
       <div class="lcell rv">
-        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.vr.title">מעבדת VR</span></span><span class="l-result" data-i18n="work.card.vr.result">תרגול ניסוי עם מדריך וירטואלי וניטור למדריך.</span></div>
-        <button type="button" class="lcard" data-project="vr" aria-expanded="true" aria-controls="wd-vr">
-          <picture><source srcset="../assets/lioness/vr.webp" type="image/webp"><img class="lart" src="../assets/lioness/vr.png" alt="פרויקטים במציאות מדומה" width="584" height="760" loading="lazy"></picture>
+        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.ar.title">מעבדת AR</span></span><span class="l-result" data-i18n="work.card.ar.result">חקירת מולקולות על השולחן באמצעות הידיים.</span></div>
+        <button type="button" class="lcard" data-project="ar" aria-expanded="true" aria-controls="wd-ar">
+          <picture><source srcset="../assets/lioness/ar.webp" type="image/webp"><img class="lart" src="../assets/lioness/ar.png" alt="פרויקטים במציאות משולבת" width="580" height="760" loading="lazy"></picture>
           <span class="l-cta" aria-hidden="true"><b class="l-arr">→</b></span>
         </button>
       </div>
       <div class="lcell rv">
-        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.ar.title">מעבדת AR</span></span><span class="l-result" data-i18n="work.card.ar.result">חקירת מולקולות על השולחן באמצעות הידיים.</span></div>
-        <button type="button" class="lcard" data-project="ar" aria-expanded="false" aria-controls="wd-ar">
-          <picture><source srcset="../assets/lioness/ar.webp" type="image/webp"><img class="lart" src="../assets/lioness/ar.png" alt="פרויקטים במציאות משולבת" width="580" height="760" loading="lazy"></picture>
+        <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.vr.title">מעבדת VR</span></span><span class="l-result" data-i18n="work.card.vr.result">תרגול ניסוי עם מדריך וירטואלי וניטור למדריך.</span></div>
+        <button type="button" class="lcard" data-project="vr" aria-expanded="false" aria-controls="wd-vr">
+          <picture><source srcset="../assets/lioness/vr.webp" type="image/webp"><img class="lart" src="../assets/lioness/vr.png" alt="פרויקטים במציאות מדומה" width="584" height="760" loading="lazy"></picture>
           <span class="l-cta" aria-hidden="true"><b class="l-arr">→</b></span>
         </button>
       </div>
@@ -259,7 +259,7 @@
       </div>
     </div>
 
-    <div class="wdetail" id="wd-ar" hidden>
+    <div class="wdetail" id="wd-ar">
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="סגירת פרטי הפרויקט">&times;</button>
       <span class="wd-kicker" data-i18n="work.exkicker">מקרה בוחן</span><h3 data-i18n="work.ar.title">מודל לימודי למעבדה אנזימטית</h3>
       <div class="wd-sub" data-i18n="work.ar.sub">מציאות רבודה | מעקב ידיים | מדריך וירטואלי</div>
@@ -272,7 +272,7 @@
       <div class="wd-body" data-i18n="work.ar.body"><p><b>האתגר.</b> במעבדת הביוכימיה הסטודנטים מריצים ניסוי עם ריאקטור אנזימים, אבל אף פעם לא רואים את העולם המולקולרי שמאחוריו. האנזים נשאר בלתי נראה, הכיראליות נלמדת משרטוטים שטוחים, וקריאת הפולרימטר משתנה בלי שברור למה. הכול נשאר מופשט.</p><p><b>הפתרון.</b> בנינו מודול למידה במציאות רבודה ל-Meta Quest 3 שמניח את העולם המולקולרי ממש על שולחן המעבדה, בלי שלטים ובלי צורך בניסיון קודם. רובי, מדריך רובוט ידידותי שמדבר עברית ואנגלית, מלווה את הסטודנטים כשהם משווים מולקולות בידיים, מסובבים את האנזים, צופים בתגובה מתרחשת צעד אחר צעד, ואפילו יורים אור מקוטב על מולקולות כדי לראות איך המבנה משפיע על התוצאה. הסטודנטים יושבים ליד השולחן שלהם ורואים את החדר האמיתי סביבם לאורך כל הזמן, מה שמצמצם למינימום תחושת בחילה.</p><p><b>עיצוב ואופטימיזציה.</b> המודל התלת־ממדי שבנינו מוצב על שולחן אמיתי, כך שהחדר נשאר גלוי ופוחת הצורך בתנועה מלאכותית. אינטראקציות ידיים מבוססות פיזיקה מאפשרות להרים מולקולות, לסובב מודלים ולהתקרב למבנים. שילבנו הפחתת מספר פוליגונים (polygon count reduction), תאורה אפויה (baked lighting) וצמצום קריאות ציור (reduced draw calls) להפחתת עומס הרינדור, לצד כוונון מחוות ידיים (gesture tuning) ב־Meta Quest 3.</p><p><b>התוצאה.</b> מה שהיה בלתי נראה במעבדה הופך למוחשי. הסטודנטים צוללים אל תוך מבנים שאי אפשר לראות, נוגעים בהם וחווים אותם מבפנים, וכל מושג נבנה דרך עשייה והחלטה ולא מתוך תרשים שטוח. נבנה ומשמש בפקולטה להנדסה כימית ע"ש וולפסון בטכניון.</p><p class="wd-client"><span>פותח עבור</span> <a href="https://dana.net.technion.ac.il/" target="_blank" rel="noopener">Dana Research Group</a></p></div>
     </div>
 
-    <div class="wdetail" id="wd-vr">
+    <div class="wdetail" id="wd-vr" hidden>
       <button type="button" class="wdetail-close" data-i18n-aria="work.close" aria-label="סגירת פרטי הפרויקט">&times;</button>
       <span class="wd-kicker" data-i18n="work.exkicker">מקרה בוחן</span><h3 data-i18n="work.vr.title">ניסוי VR סוחף בפוגסיות</h3>
       <div class="wd-sub" data-i18n="work.vr.sub">מציאות מדומה | מחוות ידיים | שלטים</div>
