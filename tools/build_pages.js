@@ -94,7 +94,7 @@ function head(p) {
     '<link rel="icon" type="image/svg+xml" href="/favicon.svg">',
     '<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">',
     '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
-    `<link rel="stylesheet" href="${up}site.css">`,
+    `<link rel="stylesheet" href="${up}site.css${p.video ? '?v=20260916-shared-video' : ''}">`,
     `<link rel="canonical" href="${urlOf(p)}">`,
     '<meta property="og:type" content="website">',
     '<meta property="og:site_name" content="Red Crown Interactive">',
@@ -292,7 +292,7 @@ function workBody(p) {
   // Screenshot and live model side by side, the same pairing the home page uses,
   // so neither dominates and the still can be compared against the real thing.
   out.push('  <div class="pg-media">');
-  out.push(`    <img class="pg-hero" src="${up}${p.image.src}" alt="${esc(p.image.alt)}" width="1200" height="900">`);
+  out.push(`    <img class="pg-hero" src="${up}${p.image.src}" alt="${esc(p.image.alt)}" width="1200" height="900"${p.video ? ' data-project-video' : ''}>`);
   if (p.model) {
     out.push(`    <div class="wd-model-wrap" data-model="${p.model.key}"` +
              `${EOL}         data-alt="${esc(p.model.alt)}"` +
@@ -360,6 +360,7 @@ const tail = p => [
   '});',
   '</script>',
   `<script src="${upOf(p)}model-cards.js?v=20260912-spinner" defer></script>`,
+  ...(p.video ? [`<script src="${upOf(p)}project-video.js?v=20260916" defer></script>`] : []),
   `<script src="${upOf(p)}rail-nav.js" defer></script>`,
   `<script src="${upOf(p)}float.js" defer></script>`,
   '</body>',

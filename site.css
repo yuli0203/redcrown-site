@@ -626,6 +626,7 @@ main.pg{view-transition-name:pg-main}
 .pg-media{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;margin-top:26px}
 .pg-media .pg-hero{margin-top:0;width:100%;height:100%;object-fit:cover;order:2}
 .pg-media .wd-model-wrap{order:1}
+.pg-media .wd-video-frame{order:2}
 .pg-media .wd-model-wrap{margin-top:0}
 .pg-media .wd-model{height:100%;min-height:300px}
 .pg-model{margin-top:0}

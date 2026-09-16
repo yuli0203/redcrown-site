@@ -82,6 +82,7 @@ const SERVICES = [
 const WORK = [
   {
     slug: 'enzymatic-lab-ar',
+    video: true,
     client: { name: 'Dana Research Group', url: 'https://dana.net.technion.ac.il/' },
     model: { key: 'enzym', alt: 'Interactive 3D enzymatic lab model built for Meta Quest, drag to rotate',
              badge: '◆ Meta Quest 3 · AR',
