@@ -30,7 +30,7 @@ const NAV = [
 ];
 
 const CONTACT = {
-  place: 'Haifa, Israel',
+  place: 'Gutwirth Science Park, Haifa, Israel',
   email: 'hello@redcrowninteractive.com',
   phone: '+972-77-360-9992',
   phoneHref: 'tel:+972773609992',
@@ -109,7 +109,7 @@ function footer(opts) {
   return ['', '<footer>', '  <div class="foot">', logo(up, EOL),
     '    <div class="foot-right">',
     '      <div class="contact">',
-    `        <span>${ICON.pin}<span>${CONTACT.place}</span></span>`,
+    `        <span>${ICON.pin}<a href="https://www.google.com/maps/search/?api=1&amp;query=%D7%A4%D7%90%D7%A8%D7%A7%20%D7%92%D7%95%D7%98%D7%95%D7%95%D7%99%D7%A8%D7%98%2C%20%D7%97%D7%99%D7%A4%D7%94%2C%20%D7%99%D7%A9%D7%A8%D7%90%D7%9C" target="_blank" rel="noopener noreferrer">${CONTACT.place}</a></span>`,
     `        <span>${ICON.mail}<a href="mailto:${CONTACT.email}">${CONTACT.email}</a></span>`,
     `        <span dir="ltr">${ICON.phone}<a href="${CONTACT.phoneHref}">${CONTACT.phone}</a></span>`,
     `        <span dir="ltr">${ICON.wa}<a href="${CONTACT.whatsapp}" target="_blank" rel="noopener">WhatsApp</a></span>`,
