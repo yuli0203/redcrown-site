@@ -200,7 +200,9 @@ html[lang="he"] .work-heading{text-align:center;color:var(--bone);margin:0}
 html[lang="he"] .journey-heading{margin-top:40px}
 html[lang="he"] .work-kicker{margin-bottom:26px}
 .services-intro p{max-width:720px;margin:15px auto 0;color:var(--dim);font-size:.94rem}
-html[lang="he"] .services-intro p{max-width:900px;line-height:1.85}
+html[lang="he"] .services-intro p{max-width:72ch;line-height:1.85}
+html[lang="he"] .services-intro p+p{margin-top:22px}
+html[lang="he"] .services-intro .why-lead strong{margin-bottom:0}
 html[lang="he"] .services-intro p>strong{display:block;margin-bottom:12px}
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
 @media(min-width:901px){html[lang="he"] .services-five{grid-template-columns:repeat(6,minmax(0,1fr))}html[lang="he"] .services-five>.pcard{grid-column:span 2}html[lang="he"] .services-five>.pcard:nth-child(4){grid-column:2 / span 2}html[lang="he"] .services-five>.pcard:nth-child(5){grid-column:4 / span 2}}
