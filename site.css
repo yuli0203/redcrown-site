@@ -721,12 +721,3 @@ html[lang="he"] .wd-client a{font:inherit;direction:ltr;unicode-bidi:isolate}
 .form-success .form-booking{border-top:1px solid var(--line);margin-top:28px;padding-top:24px}
 .form-success .btn{margin-top:18px;white-space:normal}
 @media(max-width:480px){.contact-form .form-success{padding:30px 18px}}
-
-/* Hebrew process introduction: readable RTL paragraphs before the roadmap. */
-.process-intro{max-width:820px;margin:24px auto 32px;padding-inline:24px;text-align:start;color:var(--dim);font-size:1rem;line-height:1.9}
-.process-intro p{margin:0}
-.process-intro p+p{margin-top:24px}
-.process-intro strong{display:block;margin-bottom:8px;color:var(--bone);font-weight:700}
-.process-intro .process-bridge{margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
-.process-intro .process-bridge strong{margin-bottom:0}
-@media(max-width:560px){.process-intro{padding-inline:0;margin-block:20px 28px;line-height:1.85}.process-intro p+p{margin-top:20px}}
