@@ -727,8 +727,6 @@ html[lang="he"] #work > .work-sub{max-width:100%}
 html[lang="he"] #work > .work-sub p+p{max-width:900px;margin-inline:auto}
 .keep-together{white-space:nowrap}
 
-.wd-demo-note{max-width:66ch;margin:22px auto 18px;padding-inline:8px;color:var(--dim);font-size:.82rem;line-height:1.9;text-align:center;text-wrap:pretty}
-.wd-demo-note strong{display:block;margin-bottom:5px;color:var(--bone);font-weight:600}
 
 /* Free introductory meeting label on the first roadmap card. */
 .roadmap-free-badge{position:absolute;top:-13px;left:18px;z-index:2;display:block;padding:6px 13px;border:1px solid #f03f5c;border-radius:6px;background:#a40d27;color:#fff;font-size:.78rem;font-weight:700;line-height:1.4;white-space:nowrap;transform:rotate(-7deg);box-shadow:0 3px 12px rgba(0,0,0,.24)}
