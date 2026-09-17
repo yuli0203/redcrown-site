@@ -22,5 +22,8 @@
 @media(max-width:600px){.project-carousel{margin-inline:-8px}.project-carousel button.lcard{border-radius:12px}.project-carousel .carousel-controls{margin-top:4px}}
 @media(prefers-reduced-motion:reduce){.project-carousel *{transition:none!important}}
 
+/* Blend the artwork's black backing into the original warm card surface. */
+button.lcard{isolation:isolate;background:var(--lcard-bg,#1A1013)}
+button.lcard>picture{mix-blend-mode:lighten}
 .project-carousel .lcard>picture{position:absolute;inset:0;display:block}
 .project-carousel .lcard .lart{width:100%;height:100%;object-fit:contain}

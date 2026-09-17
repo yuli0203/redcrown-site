@@ -113,8 +113,16 @@ html[lang="he"] .logo i{font-family:'Chakra Petch',sans-serif;font-size:9px;line
 /* RTL (Hebrew): the hero image is mirrored, so flip the hologram to the other side */
 [dir="rtl"] .holo{right:auto;left:39%}
 @media(max-width:900px){[dir="rtl"] .holo{left:77%;right:auto}}
-/* Narrow Hebrew desktop: keep the projection above the portrait/text overlap. */
-@media(min-width:901px) and (max-width:1100px){html[lang="he"] .holo{top:14px;left:48%;width:80px;height:80px}}
+/* Stack the Hebrew hero before its headline crowds the portrait. */
+@media(min-width:901px) and (max-width:1100px){
+  html[lang="he"] .hero{display:block;min-height:0}
+  html[lang="he"] .hero-bg{position:relative;inset:auto;height:360px;background-position:66% top}
+  html[lang="he"] .hero-bg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(180deg,transparent,var(--black))}
+  html[lang="he"] .hero-scrim{display:none}
+  html[lang="he"] .hero-txt{padding:28px 28px 44px;max-width:none}
+  html[lang="he"] .hero .plat{letter-spacing:.14em}
+  html[lang="he"] .holo{width:180px;height:180px;top:88px;left:77%;right:auto;transform:translate(-50%,-50%)}
+}
 /* interactive particle crown in the contact CTA */
 /* The crown reacts to touch, so a long press on it should feel like pressing a
    control, not like grabbing text. Without this iOS starts a selection in the
@@ -192,6 +200,8 @@ html[lang="he"] .work-heading{text-align:center;color:var(--bone);margin:0}
 html[lang="he"] .journey-heading{margin-top:40px}
 html[lang="he"] .work-kicker{margin-bottom:26px}
 .services-intro p{max-width:720px;margin:15px auto 0;color:var(--dim);font-size:.94rem}
+html[lang="he"] .services-intro p{max-width:900px;line-height:1.85}
+html[lang="he"] .services-intro p>strong{display:block;margin-bottom:12px}
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
 @media(min-width:901px){html[lang="he"] .services-five{grid-template-columns:repeat(6,minmax(0,1fr))}html[lang="he"] .services-five>.pcard{grid-column:span 2}html[lang="he"] .services-five>.pcard:nth-child(4){grid-column:2 / span 2}html[lang="he"] .services-five>.pcard:nth-child(5){grid-column:4 / span 2}}
 .pcard{padding:34px 30px;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;align-items:flex-start}
