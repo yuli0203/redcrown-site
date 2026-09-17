@@ -721,3 +721,8 @@ html[lang="he"] .wd-client a{font:inherit;direction:ltr;unicode-bidi:isolate}
 .form-success .form-booking{border-top:1px solid var(--line);margin-top:28px;padding-top:24px}
 .form-success .btn{margin-top:18px;white-space:normal}
 @media(max-width:480px){.contact-form .form-success{padding:30px 18px}}
+
+/* Give the Technion introduction a full desktop line. */
+html[lang="he"] #work > .work-sub{max-width:100%}
+html[lang="he"] #work > .work-sub p+p{max-width:900px;margin-inline:auto}
+.keep-together{white-space:nowrap}
