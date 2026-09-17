@@ -705,4 +705,16 @@ html[lang="he"] .wd-client a{font:inherit;direction:ltr;unicode-bidi:isolate}
 /* Show after scrolling and hide while the contact section is visible. */
 .proposal-float.is-in{opacity:1;transform:none}
 @media(max-width:360px){.proposal-float{font-size:.7rem;padding:0 14px;height:44px}}
-@media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}}
+@media(prefers-reduced-motion:reduce){.proposal-float{transition:opacity .2s ease;transform:none}}
+
+/* Replace delivered forms with a branded confirmation and optional booking. */
+.contact-form.is-sent > :not(.form-ok){display:none!important}
+.contact-form .form-success[hidden]{display:none}
+.contact-form .form-success{color:var(--bone);text-align:center;padding:42px 24px;border:1px solid rgba(200,16,46,.4);border-radius:20px;background:radial-gradient(ellipse at top,rgba(118,35,47,.28),transparent 65%),var(--black);width:100%;align-self:center}
+.form-success-mark{width:72px;height:60px;color:var(--hot);margin:0 auto 20px;display:block}
+.form-success-brand{font-family:var(--brand);font-size:.7rem;letter-spacing:.2em;color:var(--bone)}
+.form-success h3{font-family:var(--display);font-size:clamp(1.65rem,3vw,2.4rem);line-height:1.2;margin:18px 0}
+.form-success p{line-height:1.75;color:var(--dim)}
+.form-success .form-booking{border-top:1px solid var(--line);margin-top:28px;padding-top:24px}
+.form-success .btn{margin-top:18px;white-space:normal}
+@media(max-width:480px){.contact-form .form-success{padding:30px 18px}}

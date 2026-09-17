@@ -13,13 +13,14 @@ const tracking = source.slice(source.indexOf('const ADS_CONVERSIONS'), trackingE
 
 function setup({ response = { ok: true, json: async () => ({ success: true }) },
   fetchError, tagError, noTag = false, delayed = false } = {}) {
-  const ok = { hidden: true }, err = { hidden: true }, btn = { disabled: false };
+  const ok = { hidden: true, focused: false, focus() { this.focused = true; } }, err = { hidden: true }, btn = { disabled: false };
   let handler, finish;
   const calls = [], events = [], warnings = [];
   const form = {
     action: 'https://example.test/submit',
     elements: { project: { value: 'XR' } },
     resets: 0,
+    classList: { add(value) { this[value] = true; } },
     querySelector: selector => ({ '.form-ok': ok, '.form-err': err, 'button[type=submit]': btn })[selector],
     addEventListener: (event, fn) => { if (event === 'submit') handler = fn; },
     reset() { this.resets++; this.elements.project.value = ''; },
@@ -56,6 +57,10 @@ function setup({ response = { ok: true, json: async () => ({ success: true }) },
 test('accepted message emits one form conversion with its original project context', async () => {
   const h = setup(); await h.submit();
   assert.equal(h.form.resets, 1);
+  if (sourceFile === 'site.js') {
+    assert.equal(h.form.classList['is-sent'], true);
+    assert.equal(h.ok.focused, true);
+  }
   assert.equal(h.ok.hidden, false); assert.equal(h.err.hidden, true);
   assert.equal(h.btn.disabled, false); assert.equal(h.events.length, 1);
   assert.equal(h.events[0][0], 'event'); assert.equal(h.events[0][1], 'conversion');

@@ -58,6 +58,7 @@ const I18N = {
     "form.project":"What are you building?","form.opt.choose":"Select project type","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Mobile","form.opt.pc":"PC / Desktop","form.opt.web":"Web","form.opt.unsure":"Not sure yet",
     "form.message":"Message","form.send":"Send message",
     "form.ph.name":"Your name","form.ph.email":"you@company.com","form.ph.company":"Your company","form.ph.message":"Tell us about your project, even a rough idea is a great start.",
+    "form.thanksTitle":"Thank you. Your next chapter starts here.","form.thanksBody":"Your message has been sent. We look forward to hearing more about your idea.","form.bookPrompt":"Can’t wait? Book a meeting now.","form.bookAction":"Book a meeting",
     "form.success":"Thanks! I'll get back to you soon.","form.error":"Something went wrong. Please email hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved.",
     "foot.privacy":"Privacy Policy","foot.terms":"Terms of Use","foot.a11y":"Accessibility Statement"
@@ -124,6 +125,7 @@ const I18N = {
     "form.project":"מה אתם בונים?","form.opt.choose":"בחרו סוג פרויקט","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.web":"אתרים / ווב","form.opt.unsure":"עדיין לא בטוח",
     "form.message":"הודעה","form.send":"שליחה",
     "form.ph.name":"השם שלכם","form.ph.email":"you@company.com","form.ph.company":"החברה שלכם","form.ph.message":"ספרו לנו על הפרויקט, גם רעיון ראשוני הוא התחלה מצוינת.",
+    "form.thanksTitle":"תודה. מכאן מתחיל הדבר הבא.","form.thanksBody":"ההודעה שלכם נשלחה בהצלחה. אנחנו מצפים לשמוע עוד על הרעיון שלכם.","form.bookPrompt":"לא יכולים לחכות? אתם יכולים לקבוע פגישה כבר עכשיו.","form.bookAction":"לקביעת פגישה",
     "form.success":"תודה! אחזור אליכם בקרוב.","form.error":"משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות.",
     "foot.privacy":"מדיניות פרטיות","foot.terms":"תנאי שימוש","foot.a11y":"הצהרת נגישות"
@@ -187,6 +189,7 @@ const I18N = {
     "form.project":"Что вы создаёте?","form.opt.choose":"Выберите тип проекта","form.opt.xr":"XR / VR / AR","form.opt.mobile":"Мобайл","form.opt.pc":"PC / Десктоп","form.opt.web":"Веб","form.opt.unsure":"Пока не уверен",
     "form.message":"Сообщение","form.send":"Отправить",
     "form.ph.name":"Ваше имя","form.ph.email":"you@company.com","form.ph.company":"Ваша компания","form.ph.message":"Расскажите о проекте, даже черновая идея станет отличным началом.",
+    "form.thanksTitle":"Спасибо. Здесь начинается новая глава.","form.thanksBody":"Ваше сообщение отправлено. Будем рады узнать больше о вашей идее.","form.bookPrompt":"Не хотите ждать? Запланируйте встречу прямо сейчас.","form.bookAction":"Назначить встречу",
     "form.success":"Спасибо! Я скоро свяжусь с вами.","form.error":"Что-то пошло не так. Напишите на hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены.",
     "foot.privacy":"Политика конфиденциальности","foot.terms":"Условия использования","foot.a11y":"Заявление о доступности"
@@ -330,6 +333,8 @@ if (cform) {
       if (r.ok && result.success === true) {
         const context = conversionContext({ project_type: cform.elements.project?.value || '' });
         cform.reset(); ok.hidden = false;
+        cform.classList.add('is-sent');
+        ok.focus({ preventScroll: true });
         trackConversion('formSubmit', context);
       } else { err.hidden = false; }
     } catch (_) { err.hidden = false; }
