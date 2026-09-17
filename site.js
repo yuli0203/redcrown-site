@@ -125,7 +125,7 @@ const I18N = {
     "form.project":"מה אתם בונים?","form.opt.choose":"בחרו סוג פרויקט","form.opt.xr":"XR / VR / AR","form.opt.mobile":"מובייל","form.opt.pc":"מחשב","form.opt.web":"אתרים / ווב","form.opt.unsure":"עדיין לא בטוח",
     "form.message":"הודעה","form.send":"שליחה",
     "form.ph.name":"השם שלכם","form.ph.email":"you@company.com","form.ph.company":"החברה שלכם","form.ph.message":"ספרו לנו על הפרויקט, גם רעיון ראשוני הוא התחלה מצוינת.",
-    "form.thanksTitle":"תודה. מכאן מתחיל הדבר הבא.","form.thanksBody":"ההודעה שלכם נשלחה בהצלחה. אנחנו מצפים לשמוע עוד על הרעיון שלכם.","form.bookPrompt":"לא יכולים לחכות? אתם יכולים לקבוע פגישה כבר עכשיו.","form.bookAction":"לקביעת פגישה",
+    "form.thanksTitle":"תודה. מכאן מתחיל הדבר הבא.","form.thanksBody":"ההודעה שלכם נשלחה בהצלחה. אנחנו מצפים לשמוע עוד על הרעיון שלכם.","form.bookPrompt":"אתם יכולים לקבוע פגישה כבר עכשיו.","form.bookAction":"לקביעת פגישה",
     "form.success":"תודה! אחזור אליכם בקרוב.","form.error":"משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות.",
     "foot.privacy":"מדיניות פרטיות","foot.terms":"תנאי שימוש","foot.a11y":"הצהרת נגישות"
