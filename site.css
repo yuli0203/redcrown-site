@@ -274,7 +274,7 @@ html[lang="he"] #work{margin-top:40px}
    shared 56ch measure it wrapped to three lines while they sat on one. Widen
    only the Hebrew page: 64ch is the exact two-line threshold, 68ch keeps a
    line of headroom so a font fallback cannot push it back to three. */
-html[lang="he"] .work-sub{max-width:68ch}
+html[lang="he"] .work-sub{max-width:900px;line-height:1.85;font-size:.94rem}
 .work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .wsoon{width:100%;aspect-ratio:4/3;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);display:grid;place-content:center;justify-items:center;gap:14px;transition:border-color .25s}
 .wcard:hover .wsoon{border-color:rgba(200,16,46,.55)}
