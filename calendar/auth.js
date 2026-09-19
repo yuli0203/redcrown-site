@@ -64,8 +64,8 @@
     $('#auth-password-help').hidden = !register;
     message(ready ? '' : unavailable);
   }
-  $('#auth-open').addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
-  $('.footer-signin')?.addEventListener('click', () => $('#auth-open').click());
+  $('#auth-open')?.addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
+  $('.footer-signin')?.addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
   $('#main-signin')?.addEventListener('click', () => {
     if (auth?.currentUser) { location.assign('/calendar/preview/'); return; }
     if (emailPanel) {
@@ -141,7 +141,7 @@
   });
   function renderUser(user) {
     if ($('.footer-signin')) $('.footer-signin').textContent = user ? 'Calendar workspace' : 'Sign in / Create account';
-    $('#auth-open').hidden = Boolean(user);
+    if ($('#auth-open')) $('#auth-open').hidden = Boolean(user);
     $('#auth-account').hidden = !user;
     $('#auth-identity').textContent = user?.displayName || user?.email || 'Your account';
     $('#auth-identity').title = user?.email || '';
