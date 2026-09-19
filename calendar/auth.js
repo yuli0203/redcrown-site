@@ -16,6 +16,7 @@
   }
   const form = $('#auth-form');
   let sdk, auth, ready = false, busy = false, creating = false;
+  window.CrownAuth={token:()=>auth?.currentUser?.getIdToken(),current:()=>auth?.currentUser};
   let microsoftEnabled = false;
   let unavailable = 'Loading sign-in...';
   const message = text => { $('#auth-message').textContent = text; if ($('#workspace-auth-status')) $('#workspace-auth-status').textContent = text; };
@@ -131,6 +132,7 @@
     run(async () => {
       if (!auth.currentUser) return;
       await sdk.reload(auth.currentUser);
+      await auth.currentUser.getIdToken(true);
       renderUser(auth.currentUser);
       if (auth.currentUser.emailVerified) { message('Your email is verified.'); return; }
       await sdk.sendEmailVerification(auth.currentUser);
@@ -178,6 +180,7 @@
       // Do not persist sessions indefinitely on shared computers.
       await sdk.setPersistence(auth, sdk.browserSessionPersistence);
       await auth.authStateReady();
+      await window.CrownAPI?.ready;
       sdk.onAuthStateChanged(auth, renderUser);
       ready = true; message(''); updateControls();
     } catch {

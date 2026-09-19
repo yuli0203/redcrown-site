@@ -1,16 +1,18 @@
-(() => {
+(async () => {
   'use strict';
   const $ = selector => document.querySelector(selector);
-  const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
+  const cloud=await window.CrownAPI.ready;let serverVersion=0;
+  const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,notice:120,horizon:60,interval:15,dailyLimit:0,location:'',accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
   let uid = null, logo = '', photo = '', revision = 0, meetings = [], editingId = null, removed = null, savedData = {};
   const dialog = $('#configure-meeting-dialog');
-  const meetingFields = ['title','description','duration','before','after'];
+  const meetingFields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location'];
   const nav = [...document.querySelectorAll('.product-nav a')].map(link => ({link,href:link.getAttribute('href'),text:link.textContent}));
   const key = () => `crown-calendar-workspace-v1:${uid}`;
-  const fields = ['title','description','duration','before','after','accent','background','text'];
+  const fields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location','accent','background','text'];
   let displayName = '';
   const slug = value => value.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'') || 'your-name';
   function shareLink(meeting) {
+    if(cloud && savedData.slug && savedData.published) {const url=new URL('/calendar/meet/',location.origin);url.searchParams.set('user',savedData.slug);if(meeting)url.searchParams.set('meeting',meeting.id);return url.href;}
     const name = savedData.pageName || displayName || 'Your name';
     const url = new URL('/calendar/meet/',location.origin);
     url.searchParams.set('user',slug(name)); url.searchParams.set('page',meeting ? slug(meeting.title) : 'meetings');
@@ -20,19 +22,22 @@
   }
   function updateShare() {
     const url=shareLink(); $('#meeting-page-link').value=url; $('#preview-meeting-page').href=url;
-    $('#copy-meeting-page').disabled=!uid;
+    $('#copy-meeting-page').disabled=!uid || (cloud && !savedData.published);
+    $('#publish-page').disabled=!cloud;$('#publish-page').textContent=savedData.published?'Unpublish booking page':'Publish booking page';
+    $('#publish-status').textContent=cloud ? (savedData.published?'Your booking page is live.':'Draft - save your settings, then publish.') : 'Publishing requires the booking service to be connected.';
+    if(cloud){$('#share-help').textContent='A permanent booking link. Saved changes appear here automatically.';$('#meeting-storage-help').textContent='Meetings and scheduling rules are saved to your account.';$('#style-storage-help').textContent='Style is saved to your account and appears on your booking page.';}
     $('#meeting-share-status').textContent=location.hostname==='127.0.0.1' || location.hostname==='localhost' ? 'Local preview: this address only opens on this computer until the site is published.' : '';
   }
   async function copyLink(meeting) {
     const version=revision;
-    try { await navigator.clipboard.writeText(shareLink(meeting)); if(version===revision) $('#meeting-share-status').textContent='Preview link copied.'; }
+    try { await navigator.clipboard.writeText(shareLink(meeting)); if(version===revision) $('#meeting-share-status').textContent=cloud?'Booking link copied.':'Preview link copied.'; }
     catch { if(version===revision) { $('#meeting-page-link').value=shareLink(meeting); $('#meeting-page-link').focus(); $('#meeting-page-link').select(); $('#meeting-share-status').textContent='Select and copy the link above.'; } }
   }
   $('#copy-meeting-page').addEventListener('click',()=>copyLink());
-  $('#save-meeting-page-name').addEventListener('click',()=>{
+  $('#save-meeting-page-name').addEventListener('click',async()=>{
     const name=$('#meeting-page-name').value.trim();
     if(!name) { $('#meeting-share-status').textContent='Enter your name first.'; return; }
-    if(persist({pageName:name},'#meeting-share-status')) { renderMeetings(); $('#meeting-share-status').textContent='Page name saved.'; }
+    if(await persist({pageName:name},'#meeting-share-status')) { renderMeetings(); $('#meeting-share-status').textContent='Page name saved.'; }
   });
   function preview() {
     const sample = meetings[0] || defaults;
@@ -48,9 +53,11 @@
     const portrait = $('#booking-photo-preview'); portrait.hidden = !photo;
     if (photo) portrait.src = photo; else portrait.removeAttribute('src');
   }
-  function load() {
+  async function load() {
+    const version=revision;
     let stored = {};
     try { stored = JSON.parse(localStorage.getItem(key()) || '{}') || {}; } catch {}
+    if(cloud){const result=await window.CrownAPI.request('/workspace');if(version!==revision)return;serverVersion=result.version;if(result.data)stored=result.data;}
     savedData = typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
     stored = savedData;
     $('#meeting-page-name').value=typeof stored.pageName==='string' ? stored.pageName : displayName;
@@ -71,13 +78,17 @@
     $('#booking-photo').value = '';
     $('#booking-logo').value = '';
     $('#meeting-settings-status').textContent = ''; $('#style-settings-status').textContent = '';
-    renderMeetings(); preview();
+    window.CrownSettings.apply(savedData);renderMeetings(); preview();
   }
-  function persist(changes, status) {
+  async function persist(changes, status) {
     if (!uid) return false;
     const next = {...savedData, ...changes};
-    try { localStorage.setItem(key(),JSON.stringify(next)); savedData = next; return true; }
-    catch { $(status).textContent = 'Could not save. Browser storage may be full.'; return false; }
+    const version=revision;
+    try {
+      if(cloud){const result=await window.CrownAPI.request('/workspace',{method:'PUT',data:{data:next,version:serverVersion}});if(version!==revision)return false;savedData=result.data;serverVersion=result.version;}
+      else {localStorage.setItem(key(),JSON.stringify(next));savedData=next;}
+      return true;
+    }catch(error){if(version===revision)$(status).textContent=error.message || 'Could not save. Please retry.';return false;}
   }
   function renderMeetings() {
     updateShare();
@@ -93,9 +104,9 @@
       details.append(title,meta);
       const actions=document.createElement('div'); actions.className='meeting-type-actions';
       const edit=document.createElement('button'); edit.type='button'; edit.className='auth-button'; edit.textContent='Edit'; edit.setAttribute('aria-label',`Edit ${meeting.title}`); edit.addEventListener('click',()=>openMeeting(meeting));
-      const remove=document.createElement('button'); remove.type='button'; remove.className='auth-link'; remove.textContent='Remove'; remove.setAttribute('aria-label',`Remove ${meeting.title}`); remove.addEventListener('click',()=>{
+      const remove=document.createElement('button'); remove.type='button'; remove.className='auth-link'; remove.textContent='Remove'; remove.setAttribute('aria-label',`Remove ${meeting.title}`); remove.addEventListener('click',async()=>{
         const index=meetings.findIndex(m=>m.id===meeting.id), next=meetings.filter(m=>m.id!==meeting.id);
-        if (!persist({meetings:next},'#meeting-list-status')) return;
+        if (!await persist({meetings:next},'#meeting-list-status')) return;
         removed={meeting,index}; meetings=next; renderMeetings(); preview();
         $('#meeting-list-status').textContent=`${meeting.title} removed.`; $('#undo-remove-meeting').hidden=false;
       });
@@ -107,7 +118,7 @@
   function openMeeting(meeting) {
     if (!uid) return;
     editingId=meeting?.id || null;
-    for (const field of meetingFields) $(`#booking-${field}`).value=(meeting || defaults)[field];
+    for (const field of meetingFields) $(`#booking-${field}`).value=(meeting || defaults)[field] ?? defaults[field];
     $('#configure-meeting-title').textContent=meeting ? 'Configure meeting' : 'Add meeting';
     $('#meeting-settings-status').textContent=''; $('#booking-title').setCustomValidity(''); dialog.showModal(); $('#booking-title').focus();
   }
@@ -115,30 +126,48 @@
   $('#close-meeting-dialog').addEventListener('click',()=>dialog.close());
   $('#cancel-meeting-dialog').addEventListener('click',()=>dialog.close());
   dialog.addEventListener('close',()=>{editingId=null; for (const field of meetingFields) $(`#booking-${field}`).value=defaults[field];});
-  $('#meeting-settings-form').addEventListener('submit',event=>{
+  $('#meeting-settings-form').addEventListener('submit',async event=>{
     event.preventDefault(); if (!uid) return;
     $('#booking-title').setCustomValidity($('#booking-title').value.trim() ? '' : 'Enter a meeting name.');
     if (!$('#meeting-settings-form').reportValidity()) return;
     const meeting={id:editingId || crypto.randomUUID()};
     for (const field of meetingFields) meeting[field]=typeof defaults[field]==='number' ? Number($(`#booking-${field}`).value) : $(`#booking-${field}`).value.trim();
     const next=editingId ? meetings.map(m=>m.id===editingId ? meeting : m) : [...meetings,meeting];
-    if (!persist({meetings:next},'#meeting-settings-status')) return;
-    meetings=next; renderMeetings(); preview(); dialog.close(); $('#meeting-list-status').textContent='Meeting saved on this browser.';
+    if (!await persist({meetings:next},'#meeting-settings-status')) return;
+    meetings=next; renderMeetings(); preview(); dialog.close(); $('#meeting-list-status').textContent=cloud?'Meeting saved to your account.':'Meeting saved on this browser.';
   });
   $('#booking-title').addEventListener('input',()=>$('#booking-title').setCustomValidity(''));
-  $('#undo-remove-meeting').addEventListener('click',()=>{
+  $('#undo-remove-meeting').addEventListener('click',async()=>{
     if (!uid || !removed) return;
     const next=[...meetings]; next.splice(Math.min(removed.index,next.length),0,removed.meeting);
-    if (!persist({meetings:next},'#meeting-list-status')) return;
+    if (!await persist({meetings:next},'#meeting-list-status')) return;
     meetings=next;removed=null;$('#undo-remove-meeting').hidden=true;$('#meeting-list-status').textContent='Meeting restored.';renderMeetings();preview();
   });
-  $('#style-settings-form').addEventListener('submit',event=>{
+  $('#style-settings-form').addEventListener('submit',async event=>{
     event.preventDefault(); if (!uid || !$('#style-settings-form').reportValidity()) return;
     const changes={logo,photo,meetings};
     for (const field of ['accent','background','text']) changes[field]=$(`#booking-${field}`).value;
-    if (persist(changes,'#style-settings-status')) { renderMeetings(); $('#style-settings-status').textContent='Style saved on this browser.'; }
+    if (await persist(changes,'#style-settings-status')) { renderMeetings(); $('#style-settings-status').textContent=cloud?'Style saved to your account.':'Style saved on this browser.'; }
   });
   for (const field of fields) $(`#booking-${field}`).addEventListener('input',() => { preview(); $('#meeting-settings-status').textContent = ''; $('#style-settings-status').textContent = ''; });
+  $('#availability-settings-form').addEventListener('submit',async event=>{
+    event.preventDefault();if(!uid||!event.target.reportValidity())return;
+    try{const settings=window.CrownSettings.read();if(await persist(settings,'#schedule-status')){renderMeetings();$('#schedule-status').textContent=cloud?'Availability saved to your account.':'Availability saved locally. Connect the booking service to accept bookings.';}}catch(error){$('#schedule-status').textContent=error.message;}
+  });
+  $('#publish-page').addEventListener('click',async()=>{
+    if(!cloud||!uid)return;
+    if(await persist({published:!savedData.published},'#publish-status'))renderMeetings();
+  });
+  async function upcoming(){
+    if(!cloud||!uid)return;const version=revision;$('#upcoming-bookings').hidden=false;
+    try{const result=await window.CrownAPI.request('/bookings');if(version!==revision)return;const list=$('#upcoming-bookings-list');list.replaceChildren();
+      for(const booking of result.bookings){const row=document.createElement('article');row.className='meeting-type-row';const text=document.createElement('div');const title=document.createElement('h3');title.textContent=booking.data.title;const meta=document.createElement('p');meta.className='sync-small';meta.textContent=`${new Date(booking.start).toLocaleString()} - ${booking.data.name} - ${booking.status}`;text.append(title,meta);row.append(text);
+       if(booking.status==='pending'){const retry=document.createElement('button');retry.className='auth-button';retry.textContent='Retry confirmation';retry.addEventListener('click',async()=>{retry.disabled=true;try{await window.CrownAPI.request(`/bookings/${booking.id}/retry`,{method:'POST',data:{}});await upcoming();}catch(e){$('#upcoming-bookings-status').textContent=e.message;retry.disabled=false;}});row.append(retry);}
+       else if(['confirmed','cancelling'].includes(booking.status)){const manage=document.createElement('a');manage.className='auth-button';manage.textContent='Manage booking';manage.href=`/calendar/meet/?booking=${booking.id}#${booking.manageToken}`;manage.target='_blank';manage.rel='noopener';row.append(manage);}list.append(row);
+      }$('#upcoming-bookings-status').textContent=result.bookings.length?'':'No upcoming bookings yet.';
+    }catch(e){if(version===revision)$('#upcoming-bookings-status').textContent=e.message;}
+  }
+  $('#refresh-bookings').addEventListener('click',upcoming);
   const imageVersions = {logo:0,photo:0};
   for (const kind of ['logo','photo']) {
     const name=kind==='logo' ? 'Logo' : 'Profile photo';
@@ -151,7 +180,9 @@
         const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
         const image=new Image();image.src=data;await image.decode();
         if(version!==imageVersions[kind] || accountRevision!==revision || !uid) return;
-        if(kind==='logo') logo=data; else photo=data;
+        const canvas=document.createElement('canvas'),ratio=Math.min(1,640/image.width,640/image.height);canvas.width=Math.max(1,Math.round(image.width*ratio));canvas.height=Math.max(1,Math.round(image.height*ratio));canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);const optimized=canvas.toDataURL('image/webp',.82);
+        if(optimized.length>400000)throw new Error('Image is too large.');
+        if(kind==='logo') logo=optimized; else photo=optimized;
         preview();status.textContent=`${name} preview updated. Save style to keep it.`;
       } catch {if(version===imageVersions[kind] && accountRevision===revision) status.textContent='This image could not be opened. Choose another file.';}
     });
@@ -160,15 +191,16 @@
       $(`#booking-${kind}`).value='';preview();$('#style-settings-status').textContent=`${name} removed from preview. Save style to keep this change.`;
     });
   }
-  document.addEventListener('crown-auth-change',event => {
+  document.addEventListener('crown-auth-change',async event => {
     if (uid === event.detail.uid) return;
     if (dialog.open) dialog.close();
+    $('#upcoming-bookings').hidden=true;$('#upcoming-bookings-list').replaceChildren();
     uid = event.detail.uid; displayName=event.detail.displayName || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
     $('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();
     for (const selector of ['#meeting-settings','#style-settings','.workspace-footer','#workspace-auth-status']) $(selector).hidden = !uid;
     nav.forEach(({link,href,text},i) => { link.setAttribute('href',uid ? ['#sync-availability','#meeting-settings','#style-settings'][i] : href); link.textContent=uid ? ['Sync calendars','Meetings page','Your style'][i] : text; });
     $('#workspace-auth-status').textContent='';
-    if (uid) load(); else { for (const field of fields) $(`#booking-${field}`).value=defaults[field]; logo=''; photo=''; $('#booking-logo').value=''; $('#booking-photo').value=''; preview(); }
+    if (uid) {try{await load();await upcoming();}catch(error){$('#meeting-list-status').textContent=error.message;}} else { for (const field of fields) $(`#booking-${field}`).value=defaults[field]; logo=''; photo=''; $('#booking-logo').value=''; $('#booking-photo').value=''; preview(); }
   });
 })();

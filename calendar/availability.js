@@ -1,5 +1,6 @@
-(() => {
+(async () => {
   'use strict';
+  if(await window.CrownAPI?.ready) return;
   const $ = selector => document.querySelector(selector);
   const panel = $('#sync-availability');
   if (!panel) return;

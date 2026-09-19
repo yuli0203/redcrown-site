@@ -105,6 +105,7 @@
   }
   function changeMonth(delta) {
     month=new Date(month.getFullYear(),month.getMonth()+delta,1);selected=new Date(month);draw();
+    document.dispatchEvent(new CustomEvent('crown-calendar-month',{detail:{start:+month,end:+new Date(month.getFullYear(),month.getMonth()+1,1)}}));
   }
   $('#busy-previous-month').addEventListener('click',()=>changeMonth(-1));
   $('#busy-next-month').addEventListener('click',()=>changeMonth(1));

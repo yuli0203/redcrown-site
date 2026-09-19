@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  if(!location.hash || (new URLSearchParams(location.search).has('booking') || new URLSearchParams(location.search).has('reschedule')))return;
   const $=selector=>document.querySelector(selector);
   try {
     if(location.hash.length>100000) throw new Error();
