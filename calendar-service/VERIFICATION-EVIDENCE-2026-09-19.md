@@ -32,4 +32,12 @@ This is an implementation review, not an independent security certification or a
 ## Host mail follow-up
 
 After the host approved sending permission, only the booking destination connection has mail_enabled=1; the availability-only account remains 0. The automatic scheduled worker submitted both previously unnotified confirmed bookings. Both now have notification_state=accepted and notification_sent_at=1789816028673. Inbox receipt is checked separately; API acceptance alone is not delivery proof.
-`nInbox verification: both automatic New Event messages are visible with Inbox labels in julia@redcrowninteractive.com at 14:07 Israel time, including the Serjio booking. This establishes actual host receipt for these two bookings; it does not establish guest or Outlook receipt.
+Inbox verification: both automatic New Event messages are visible with Inbox labels in julia@redcrowninteractive.com at 14:07 Israel time, including the Serjio booking. This establishes actual host receipt for these two bookings; it does not establish guest or Outlook receipt.
+
+## Controlled booking delivery and cancellation
+
+The disposable notification test on September 22 at 14:30-15:15 Asia/Jerusalem was created through the public booking flow. Google listed both authorized test attendees. The personal Gmail invitation was observed in Inbox; the user subsequently confirmed receipt at the additional Technion address. This is evidence for this test, not a guarantee of delivery to every mailbox.
+
+Cancelled this test through its management page on September 19. The UI confirmed Meeting cancelled. The production public slots endpoint then returned the exact original start/end interval (1790076600000 / 1790079300000), proving that cancellation released this slot. The real September 23 meeting was not changed.
+
+The Google Data Access draft was restored with gmail.send and a 937-character justification. Save remains disabled without the required YouTube demonstration URL. No review submission has been made.

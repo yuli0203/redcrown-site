@@ -40,7 +40,7 @@ Source: `src/providers.js`, `providerConfig`, Google branch.
 | `https://www.googleapis.com/auth/calendar.events.freebusy` | Query busy intervals on selected accessible calendars to exclude conflicts. The documented FreeBusy endpoint does not accept `calendar.events` alone. |
 | `https://www.googleapis.com/auth/calendar.events` | Read selected-calendar event details for the host preview and fallback conflict checking; create booking events and invitations in a selected writable calendar; remove booked events when cancelled or rescheduled. Read-only access cannot create/cancel bookings. Owned-only access would omit shared calendars the host can edit. |
 
-The optional https://www.googleapis.com/auth/gmail.send scope is now used only when the host enables notifications for the saved booking destination account. It sends confirmation mail from that mailbox to itself and grants no inbox reading. Availability-only accounts do not request this scope. The live console draft includes it and the updated justification below, but Save is disabled until a demo URL is supplied. No new user grant was approved during this review.
+The optional https://www.googleapis.com/auth/gmail.send scope is now used only when the host enables notifications for the saved booking destination account. It sends confirmation mail from that mailbox to itself and grants no inbox reading. Availability-only accounts do not request this scope. The live console draft includes it and the updated justification below, but Save is disabled until a demo URL is supplied. The host subsequently approved this permission for the booking destination; actual host inbox receipt was observed.
 
 Draft sensitive-scope justification (937 characters):
 
@@ -57,7 +57,7 @@ Use test accounts and invented attendee data; do not record tokens, secrets, pri
 5. Open the public booking page as a guest, choose an available slot, and book using test participant addresses.
 6. Show the resulting provider event, invitation recipients, and host-only event preview.
 7. Show Enable booking emails for the saved destination, the complete separate Gmail send consent, and actual receipt of the automatic host notification. Show that availability-only connections do not request mail access.
-7. Demonstrate cancellation/rescheduling and disconnecting access, plus the support route for privacy/deletion requests.
+8. Demonstrate cancellation/rescheduling and disconnecting access, plus the support route for privacy/deletion requests.
 
 No video or verification submission has been created yet. Google must be able to inspect working functionality when reviewing; a localhost-only app is not a completed submission package.
 
