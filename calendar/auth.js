@@ -54,7 +54,7 @@
   }
   function setMode(register) {
     creating = register;
-    $('#auth-title').textContent = register ? 'Create your account' : 'Sign in to Crown Calendar';
+    $('#auth-title').textContent = register ? 'Create your account' : 'Sign in to Red Crown Calendar';
     $('#auth-submit').textContent = register ? 'Create account' : 'Sign in';
     $('#auth-switch').textContent = register ? 'Already have an account? Sign in' : 'New here? Create an account';
     $('#auth-password').autocomplete = register ? 'new-password' : 'current-password';
