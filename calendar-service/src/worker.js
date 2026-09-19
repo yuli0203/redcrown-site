@@ -1,3 +1,4 @@
+import { recordWorkspaceUsage } from './analytics.js';
 import { sendBookingNotifications } from './notifications.js';
 import { remindersReady, sendReminders } from './reminders.js';
 import { assert, Problem, validateWorkspace, slots, dateRange, localDate } from './scheduling.js';
@@ -43,7 +44,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   let authRequest=request;
   if(navigation){assert(request.headers.get('Origin')===env.PUBLIC_ORIGIN,'Start calendar connection from the scheduling page.',403);assert(request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded'),'Invalid connection request.');const input=await body(request,16000,true);assert(typeof input.idToken==='string'&&input.idToken.length<12000,'Sign in to connect a calendar.',401);authRequest=new Request(request.url,{headers:{Authorization:`Bearer ${input.idToken}`}});}
   const user=await authenticate(authRequest,env);assert(user.verified===true,'Verify your email before using your calendar workspace.',403);await rateLimit(env,`user:${user.uid}`,90);
-  if(path==='/workspace'&&method==='GET'){const row=await one(db,'SELECT * FROM profiles WHERE uid=?',user.uid);return json({data:row?JSON.parse(row.data):null,version:row?.version||0});}
+  if(path==='/workspace'&&method==='GET'){try{await recordWorkspaceUsage(user,env);}catch{console.warn('Usage metric unavailable');}const row=await one(db,'SELECT * FROM profiles WHERE uid=?',user.uid);return json({data:row?JSON.parse(row.data):null,version:row?.version||0});}
   if(path==='/workspace'&&method==='PUT'){
    const input=await body(request),data=validateWorkspace(input.data);assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
    if(data.published)assert(user.verified,'Verify your email before publishing a booking page.',403);
@@ -87,4 +88,4 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
  return async(request,env)=>{const response=await handle(request,env);const headers=new Headers(response.headers);headers.set('Vary','Origin');if(request.headers.get('Origin')===env.PUBLIC_ORIGIN){headers.set('Access-Control-Allow-Origin',env.PUBLIC_ORIGIN);headers.set('Access-Control-Allow-Methods','GET, POST, PUT, DELETE, OPTIONS');headers.set('Access-Control-Allow-Headers','Authorization, Content-Type, X-Booking-Token');headers.set('Access-Control-Max-Age','600');}return new Response(response.body,{status:response.status,headers});};
 }
 const handler=createHandler();
-export default {fetch:handler,async scheduled(event,env){await sendReminders(env);await sendBookingNotifications(env);await env.DB.batch([env.DB.prepare('DELETE FROM oauth_states WHERE expires<?').bind(Date.now()),env.DB.prepare('DELETE FROM rate_limits WHERE expires<?').bind(Date.now())]);}};
+export default {fetch:handler,async scheduled(event,env){await sendReminders(env);await sendBookingNotifications(env);await env.DB.batch([env.DB.prepare('DELETE FROM usage_sessions WHERE day<?').bind(new Date(Date.now()-90*86400000).toISOString().slice(0,10)),env.DB.prepare('DELETE FROM oauth_states WHERE expires<?').bind(Date.now()),env.DB.prepare('DELETE FROM rate_limits WHERE expires<?').bind(Date.now())]);}};
