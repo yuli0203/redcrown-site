@@ -1,20 +1,19 @@
 # Google verification preparation
 
-Checked 19 September 2026. This is a preparation document, not a completed verification or deployment.
+Checked 19 September 2026 after production deployment. Calendar permission verification is still pending. See LAUNCH-READINESS.md for release gates.
 
 ## Observed console state
 
-- Project: `crown-calendar-89e18`.
-- Audience: External, **In production**, 2 users / 100-user cap. This was already the setting; no publishing status was changed during this review.
-- Branding: `Crown Calendar`; homepage, privacy policy and terms links blank; developer contact field empty. Support email is the existing project account.
-- Data Access: no scopes declared in any of the three tables, although the running backend requests calendar scopes.
-- Verification Center therefore says verification is not required for data access. This does NOT establish that the backend's actual calendar scopes are verified. Its scope inventory needs to match the implementation before submission.
-- Branding is not verified. An attempted name-only edit could not be saved because required homepage/privacy/contact fields are incomplete. The draft was discarded; no branding change was saved.
-- Public `/calendar/` and `/calendar/legal/` both returned HTTP 404. Local generated policy pages exist and `node tools/build-legal.cjs --check` passes.
+- Project: crown-calendar-89e18. External audience, In production, unverified user cap still applies.
+- Red Crown Calendar branding is verified and published. Homepage, privacy, terms and developer contact are saved.
+- Public calendar and legal pages return HTTP 200.
+- Actual identity and calendar scopes below are now declared; justification is saved.
+- calendar.events remains unverified. Submission is blocked by the missing demonstration video; Confirm is disabled. No scope-review submission has been completed.
+- Support email is the eligible project account; public support is hello@redcrowninteractive.com.
 
 ## Prepared branding values
 
-Apply these only after the public pages are intentionally published, reachable without sign-in, and reviewed for accuracy:
+These branding values are now saved (the eligible Google support selector still uses the project account):
 
 | Field | Value |
 | --- | --- |
