@@ -62,3 +62,6 @@
 .scheduling-destination{margin-top:24px;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.scheduling-destination h2{font-size:17px;font-weight:500}.scheduling-destination>p{margin:8px 0 16px}.scheduling-destination label{display:block;font-size:12px;margin-bottom:8px}.destination-controls{display:flex;align-items:center;gap:12px}.destination-controls select{flex:1;min-width:0}.destination-controls button{flex-shrink:0}#destination-status:empty{display:none}#destination-status{margin-top:10px}@media(max-width:560px){.destination-controls{align-items:stretch;flex-direction:column}.scheduling-destination{padding:18px}}
 
 #booking-readiness-list{padding-left:22px;margin:22px 0}#booking-readiness-list li{margin:14px 0;line-height:1.6}#booking-readiness-list button{margin-left:10px}
+/* Keep one photo preview visible while positioning it. */
+#profile-form:has(#profile-crop-controls:not([hidden])) .profile-portrait,#profile-form:has(#profile-crop-controls:not([hidden])) #adjust-booking-photo{display:none}
+#profile-crop-canvas{user-select:none;-webkit-user-select:none;outline-offset:5px}
