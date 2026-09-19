@@ -1,0 +1,55 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const vm = require('node:vm');
+const fs = require('node:fs');
+class Element {
+  constructor(tag='div') { this.tag=tag; this.children=[]; this.events={}; this.hidden=false; this.textContent=''; this.disabled=false; this.classList={toggle(){}}; }
+  append(...nodes) { this.children.push(...nodes); }
+  replaceChildren(...nodes) { this.children=nodes; }
+  addEventListener(name, callback) { this.events[name]=callback; }
+  setAttribute() {}
+}
+function harness() {
+  const nodes=new Map(), events={}, storage=new Map(), calls=[];
+  const find=id => { if(!nodes.has(id)) nodes.set(id,new Element()); return nodes.get(id); };
+  let oauth, identity='one', failure=false, pending;
+  const document={querySelector:find, querySelectorAll:()=>[], createElement:tag=>new Element(tag), body:new Element(), hidden:false, addEventListener:(name,cb)=>events[name]=cb,head:{append:s=>s.onload()}};
+  const google={accounts:{oauth2:{hasGrantedAllScopes:()=>true,initTokenClient:config=>{oauth=config;return {requestAccessToken(){}};}}}};
+  const response=value=>({ok:true,json:async()=>value});
+  const context={document,window:{google},google,URLSearchParams,AbortSignal,Date,Map,Number,JSON,Array,Error,Boolean,String,setInterval(){},setTimeout(){return 1;},clearTimeout(){},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},fetch:async(url,options)=>{
+    calls.push({url,options});
+    if(url.includes('auth-config')) return response({calendar:{googleClientId:'test-client',googleEnabled:true}});
+    if(url.includes('userinfo')) return response({sub:identity,email:`${identity}@example.test`});
+    if(url.includes('calendarList')) return response({items:[{id:`${identity}-work`,summary:'Work',primary:true},{id:`${identity}-home`,summary:'Home'}]});
+    if(pending) await pending;
+    const items=JSON.parse(options.body).items;
+    return response({calendars:Object.fromEntries(items.map((item,i)=>[item.id,failure?{errors:[{reason:'notFound'}]}:{busy:[{start:'2026-09-20T09:00:00Z',end:i?'2026-09-20T11:00:00Z':'2026-09-20T10:00:00Z'}]}]))});
+  }};
+  vm.runInNewContext(fs.readFileSync('calendar/availability.js','utf8'),context);
+  const tick=()=>new Promise(resolve=>setImmediate(resolve));
+  return {find,storage,calls,tick,signin:id=>events['crown-auth-change']({detail:{uid:id}}), async connect(id='one') {identity=id;find('#connect-google-calendar').events.click();await oauth.callback({access_token:'secret-test-token',expires_in:3600});await tick();}, select(index){const card=find('#calendar-accounts').children[0];const input=card.children[1].children[index+1].children[0]; input.checked=true;input.events.change();}, fail(){failure=true;},delay(p){pending=p;}};
+}
+test('Multiple accounts, calendar selections, overlapping busy intervals and token isolation',async()=>{
+ const h=harness();await h.tick();h.signin('user-a');await h.connect();
+ assert.equal(h.find('#calendar-accounts').children.length,1);
+ h.select(0);await h.tick();h.select(1);await h.tick();
+ assert.match(h.find('#sync-summary-text').textContent,/2 selected calendars checked. 1 busy periods/);
+ await h.connect('two');assert.equal(h.find('#calendar-accounts').children.length,2);
+ assert.ok(![...h.storage.values()].join('').includes('secret-test-token'));
+ h.signin('user-b');assert.equal(h.find('#calendar-accounts').children.length,0);
+ h.signin('user-a');assert.equal(h.find('#calendar-accounts').children.length,2);
+ await h.find('#refresh-availability').events.click();assert.match(h.find('#sync-message').textContent,/Reconnect/);
+ h.signin(null);assert.equal(h.find('#sync-availability').hidden,true);
+});
+test('A per-calendar API error cannot be reported as free availability',async()=>{
+ const h=harness();await h.tick();h.signin('user-a');await h.connect();h.fail();h.select(0);await h.tick();
+ assert.match(h.find('#sync-message').textContent,/incomplete/);assert.equal(h.find('#busy-preview').hidden,true);
+ assert.match(h.find('#sync-summary-text').textContent,/not been checked/);
+});
+test('A response arriving after sign-out does not restore private calendar data',async()=>{
+ const h=harness();await h.tick();h.signin('user-a');await h.connect();
+ let resolve;h.delay(new Promise(r=>resolve=r));h.select(0);h.signin(null);resolve();await h.tick();
+ assert.equal(h.find('#calendar-accounts').children.length,0);assert.equal(h.find('#busy-periods').children.length,0);
+ assert.equal(h.find('#sync-availability').hidden,true);
+});
+

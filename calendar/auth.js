@@ -5,6 +5,7 @@
   const authSurface = dialog || $('.entry-card');
   const emailPanel = $('#auth-email-panel');
   function showAuth() {
+    if (auth?.currentUser && $('#sync-availability')) { $('#sync-availability').scrollIntoView({block:'start'}); return; }
     if (dialog) dialog.showModal();
     else authSurface.scrollIntoView({block:'center'});
   }
@@ -137,6 +138,7 @@
     });
   });
   function renderUser(user) {
+    if ($('.footer-signin')) $('.footer-signin').textContent = user ? 'Calendar workspace' : 'Sign in / Create account';
     $('#auth-open').hidden = Boolean(user);
     $('#auth-account').hidden = !user;
     $('#auth-identity').textContent = user?.displayName || user?.email || 'Your account';
