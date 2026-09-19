@@ -17,13 +17,13 @@
   const response=await fetch(api.base+path,{method,headers,credentials:'omit',cache:'no-store',...(data?{body:JSON.stringify(data)}:{}),signal:AbortSignal.timeout(60000)});
   const result=await response.json().catch(()=>({error:'The scheduling service is unavailable.'}));if(!response.ok)throw Object.assign(Error(result.error||'Please retry.'),{status:response.status,connectionId:result.connectionId});return result;
  };
- api.connect=async provider=>{
+ api.connect=async (provider,mailConnectionId=null)=>{
   if(!['google','microsoft'].includes(provider))throw Error('Unknown calendar provider.');
   const token=await window.CrownAuth?.token();if(!token)throw Error('Sign in to connect your calendar.');
   // Navigation establishes the API cookie without third-party cookie access.
   // Credentials go in the POST body, never in the URL or browser storage.
   const form=document.createElement('form');form.method='POST';form.action=api.base+'/connect/'+provider+'/navigate';form.hidden=true;
-  const input=document.createElement('input');input.type='hidden';input.name='idToken';input.value=token;form.append(input);document.body.append(form);form.submit();form.remove();
+  const input=document.createElement('input');input.type='hidden';input.name='idToken';input.value=token;form.append(input);if(mailConnectionId){const mail=document.createElement('input');mail.type='hidden';mail.name='mailConnectionId';mail.value=mailConnectionId;form.append(mail);}document.body.append(form);form.submit();form.remove();
  };
  window.CrownAPI=api;
 })();

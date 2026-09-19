@@ -14,8 +14,9 @@ test('Native mail is send-only, addressed to the authenticated mailbox, and enco
  const ms=hostMailRequest({...c,provider:'microsoft'},mail);assert.deepEqual(ms.body.message.toRecipients,[{emailAddress:{address:c.email}}]);
  assert.throws(()=>hostMailRequest({...c,email:'host@example.test\r\nBcc: x@y.test'},mail));
  const env={GOOGLE_CLIENT_ID:'id',GOOGLE_CLIENT_SECRET:'secret',MICROSOFT_CLIENT_ID:'id',MICROSOFT_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:'key'};
- assert.match(providerConfig('google',env).scope,/gmail.send/);assert.ok(!providerConfig('google',env).scope.includes('gmail.read'));
- assert.match(providerConfig('microsoft',env).scope,/Mail.Send/);assert.ok(!providerConfig('microsoft',env).scope.includes('Mail.Read'));
+ assert.ok(!providerConfig('google',env).scope.includes('gmail.send'));assert.ok(!providerConfig('microsoft',env).scope.includes('Mail.Send'));
+ assert.match(providerConfig('google',env,{mail:true}).scope,/gmail.send/);assert.ok(!providerConfig('google',env).scope.includes('gmail.read'));
+ assert.match(providerConfig('microsoft',env,{mail:true}).scope,/Mail.Send/);assert.ok(!providerConfig('microsoft',env).scope.includes('Mail.Read'));
 });
 test('Mail API handles Graph empty accepted response, revoked permission, throttling and uncertain submissions',async()=>{
  const c={email:'host@example.test',provider:'microsoft'},m={subject:'Meeting',text:'Test'},getToken=async()=>'token';

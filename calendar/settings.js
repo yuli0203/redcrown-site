@@ -22,7 +22,16 @@
   }catch(error){$('#schedule-status').textContent=error.message;}finally{button.disabled=false;}
  });
  let accounts=[],destination=null;
- function renderDestinations(){const select=$('#schedule-destination');select.replaceChildren();const empty=make('option','Choose a calendar for new bookings');empty.value='';select.append(empty);for(const account of accounts)for(const calendar of account.calendars.filter(c=>c.selected&&c.writable)){const option=make('option',`${account.email} / ${calendar.name}`);option.value=JSON.stringify({connectionId:account.id,calendarId:calendar.id});select.append(option);}const saved=destination?JSON.stringify(destination):'';if(saved&&![...select.options].some(o=>o.value===saved)){const missing=make('option','Saved calendar unavailable - reconnect or select another');missing.value=saved;missing.disabled=true;select.append(missing);}select.value=saved;}
+ function renderDestinations(){const select=$('#schedule-destination');select.replaceChildren();const empty=make('option','Choose a calendar for new bookings');empty.value='';select.append(empty);for(const account of accounts)for(const calendar of account.calendars.filter(c=>c.selected&&c.writable)){const option=make('option',`${account.email} / ${calendar.name}`);option.value=JSON.stringify({connectionId:account.id,calendarId:calendar.id});select.append(option);}const saved=destination?JSON.stringify(destination):'';if(saved&&![...select.options].some(o=>o.value===saved)){const missing=make('option','Saved calendar unavailable - reconnect or select another');missing.value=saved;missing.disabled=true;select.append(missing);}select.value=saved;renderMail();}
+ const mailStatus=make('p'),mailButton=make('button');mailStatus.className='sync-small';mailStatus.setAttribute('role','status');mailButton.type='button';mailButton.className='auth-button';
+ $('#destination-status').after(mailStatus,mailButton);mailStatus.hidden=true;mailButton.hidden=true;
+ function renderMail(){
+  const account=accounts.find(a=>a.id===destination?.connectionId),he=document.documentElement.lang.startsWith('he');
+  mailStatus.hidden=!account;mailButton.hidden=!account||account.mailEnabled||account.provider==='ical';
+  mailStatus.textContent=!account?'':account.mailEnabled?(he?'התראות על הזמנות יישלחו מחשבון יומן ההזמנות אל עצמו.':'Booking notifications are enabled for this destination account.'):(he?'רק חשבון יומן ההזמנות זקוק להרשאת שליחת אימייל. יומנים לבדיקת זמינות אינם זקוקים לה.':'Only the booking destination account needs email sending permission. Availability calendars do not.');
+  mailButton.textContent=he?'הפעלת התראות באימייל':'Enable booking emails';
+ }
+ mailButton.addEventListener('click',async()=>{const account=accounts.find(a=>a.id===destination?.connectionId);if(!account)return;mailButton.disabled=true;try{await window.CrownAPI.connect(account.provider,account.id);}catch(e){mailStatus.textContent=e.message;}finally{mailButton.disabled=false;}});
  document.addEventListener('crown-calendars-change',e=>{accounts=e.detail.accounts;renderDestinations();});
  window.CrownSettings={apply,read,getAccountEmails(){return accounts.filter(account=>account.provider!=='ical').map(account=>account.email);},setDestination(value){destination=value;renderDestinations();}};
 })();

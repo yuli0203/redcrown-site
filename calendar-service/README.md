@@ -83,9 +83,9 @@ Local live evidence, 2026-09-19: Google authorization completed; the primary cal
 
 ## Host booking notifications from connected accounts
 
-Apply migration 0008 before deploying. Confirmed bookings send a plain-text notification from the connected booking destination account to itself. No Resend configuration is needed for these notifications. Google/Microsoft calendar invitations to guests remain separate.
+Apply migrations 0008 and 0009 before deploying. Confirmed bookings send a plain-text notification from the connected booking destination account to itself. No Resend configuration is needed for these notifications. Google/Microsoft calendar invitations to guests remain separate.
 
-Enable Gmail API in the Google OAuth project and include gmail.send in its consent configuration and sensitive-scope verification. Microsoft connections request delegated Mail.Send. Existing hosts must reconnect and explicitly approve sending permission. Organization policy can require administrator approval. Mail permission never authorizes inbox reads. ICS-only connections cannot send mail.
+Enable Gmail API in the Google OAuth project and include gmail.send in its consent configuration and sensitive-scope verification. Microsoft connections request delegated Mail.Send. Availability-only connections do not request email scopes. Hosts enable email sending separately for the saved booking destination account and explicitly approve permission. The callback must return the same destination account. Organization policy can require administrator approval. Mail permission never authorizes inbox reads. ICS-only connections cannot send mail.
 
 The recipient is derived exclusively from the authenticated calendar connection, never guest input. A database claim prevents concurrent duplicate submissions. Accepted means provider acceptance, not verified inbox delivery. Rate limits and pre-submission token failures retry on the minute cron. Ambiguous submissions (network errors, server failures or interrupted sends) are marked uncertain and are not automatically resent, because these APIs offer no idempotency key. Rejected permissions require reconnection. Cancelled, pending and past bookings are excluded. Previously unnotified upcoming bookings become eligible after reconnecting.
 
