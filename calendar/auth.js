@@ -18,7 +18,7 @@
   let sdk, auth, ready = false, busy = false, creating = false;
   let microsoftEnabled = false;
   let unavailable = 'Loading sign-in...';
-  const message = text => { $('#auth-message').textContent = text; };
+  const message = text => { $('#auth-message').textContent = text; if ($('#workspace-auth-status')) $('#workspace-auth-status').textContent = text; };
   const updateControls = () => {
     authSurface.querySelectorAll('[data-auth-action], input').forEach(control => { control.disabled = !ready || busy; });
     $('#auth-google').disabled = busy;

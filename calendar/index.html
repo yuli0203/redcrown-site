@@ -11,15 +11,15 @@
 <link rel="stylesheet" href="/calendar/theme.css">
 <script src="/calendar/theme.js"></script>
 <script defer src="/calendar/auth.js"></script>
-<script defer src="/calendar/availability.js"></script>
+<script defer src="/calendar/availability.js"></script><script defer src="/calendar/workspace.js"></script>
 <link rel="stylesheet" href="/calendar/availability.css">
 </head>
 <body class="product-home">
 <a class="skip" href="#main">Skip to content</a>
 <header><a class="brand" href="/calendar/" aria-label="Crown Calendar home"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="32" height="32" alt=""><span>Crown Calendar</span></a><nav class="product-nav" aria-label="Product navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#questions">FAQ</a></nav><div class="header-actions"><span class="free-label">Free, limitless scheduling</span><button id="theme-toggle" class="auth-button theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><button id="auth-open" class="auth-button">Sign in</button><div id="auth-account" hidden><span id="auth-identity"></span><button id="auth-verify" class="auth-link" hidden>Verify email</button><button id="auth-signout" class="auth-button">Sign out</button></div></div></header>
-<main id="main" class="product-main">
+<p id="workspace-auth-status" class="workspace-auth-status" role="status" hidden></p><main id="main" class="product-main">
 <section id="sync-availability" class="sync-section" hidden aria-labelledby="sync-title">
-<div class="sync-heading"><div><p class="product-label">YOUR WORKSPACE</p><h1 id="sync-title">Sync availability</h1><p>Bring your calendars together. Choose which calendars count as busy time.</p></div><button id="add-calendar" class="auth-button" aria-expanded="false" aria-controls="calendar-providers">+ Add calendar account</button></div>
+<div class="sync-heading"><div><p class="product-label">01 / CALENDARS</p><h1 id="sync-title">Sync calendars</h1><p>Bring your calendars together. Choose which calendars count as busy time.</p></div><button id="add-calendar" class="auth-button" aria-expanded="false" aria-controls="calendar-providers">+ Add calendar account</button></div>
 <div id="calendar-providers" class="provider-picker" hidden><h2>Connect a calendar account</h2><p>You can connect more than one account, including accounts different from your sign-in.</p><button id="connect-google-calendar" class="auth-button" disabled>Connect Google Calendar</button><button class="auth-button" disabled>Microsoft Outlook - coming soon</button><p class="sync-small">Google will ask to read your calendar list and availability. We do not edit events.</p></div>
 <p id="sync-message" role="status" aria-live="polite"></p>
 <div id="calendar-accounts"></div>
@@ -28,6 +28,33 @@
 <details id="busy-preview" hidden><summary>View busy periods</summary><p class="sync-small">Times are shown in your device time zone. Event titles and guest lists are not downloaded.</p><ul id="busy-periods"></ul></details>
 <p class="sync-small sync-footnote">Preview: selections are saved on this browser. Reconnect after reloading to refresh access. Availability refreshes while this page is open; background sync and booking conflict checks are not connected yet.</p>
 </section>
+<section id="meeting-settings" class="workspace-section" hidden aria-labelledby="meeting-settings-title">
+<div class="section-title"><span>02 / MEETINGS</span><h2 id="meeting-settings-title">Configure your meetings page</h2></div>
+<p class="sync-small">Set up how guests will book time with you.</p>
+<form id="meeting-settings-form" class="settings-grid">
+<label>Page title<input id="booking-title" maxlength="80" required value="Book a meeting"></label>
+<label>Meeting length (minutes)<input id="booking-duration" type="number" min="1" max="480" step="1" required value="30"></label>
+<label class="settings-wide">Welcome message<textarea id="booking-description" maxlength="500" rows="3">Choose a time that works for you.</textarea></label>
+<label>Buffer before (minutes)<input id="booking-before" type="number" min="0" max="240" step="1" required value="0"></label>
+<label>Buffer after (minutes)<input id="booking-after" type="number" min="0" max="240" step="1" required value="15"></label>
+<div class="settings-wide settings-actions"><button class="primary" type="submit">Save meeting settings</button><span id="meeting-settings-status" role="status"></span></div>
+</form>
+<p class="sync-small">Saved as a draft on this browser. Public booking pages and availability rules are not live yet.</p>
+</section>
+<section id="style-settings" class="workspace-section" hidden aria-labelledby="style-settings-title">
+<div class="section-title"><span>03 / STYLE</span><h2 id="style-settings-title">Configure your style</h2></div>
+<p class="sync-small">Choose your booking page colors and logo.</p>
+<div class="style-layout"><form id="style-settings-form" class="settings-grid">
+<label>Accent color<input id="booking-accent" type="color" value="#c8102e"></label>
+<label>Background color<input id="booking-background" type="color" value="#ffffff"></label>
+<label>Text color<input id="booking-text" type="color" value="#271c22"></label>
+<label class="settings-wide">Your logo<input id="booking-logo" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP. Up to 1 MB.</small></label>
+<button id="remove-booking-logo" type="button" class="auth-link">Remove logo</button>
+<div class="settings-wide settings-actions"><button class="primary" type="submit">Save style</button><span id="style-settings-status" role="status"></span></div>
+</form><div class="booking-style-preview" id="booking-style-preview"><small>BOOKING PAGE PREVIEW</small><img id="booking-logo-preview" hidden alt="Your booking logo"><h3 id="booking-preview-title">Book a meeting</h3><p id="booking-preview-description">Choose a time that works for you.</p><p id="booking-preview-duration">30 minute meeting</p><span class="preview-time">09:00</span><span class="preview-time">10:30</span><p class="sync-small">Visual preview only</p></div></div>
+<p class="sync-small">Style is saved for this account on this browser.</p>
+</section>
+
 <section class="product-intro" id="features" aria-labelledby="product-title">
 <p class="product-label">A FREE TOOL BY RED CROWN INTERACTIVE</p>
 <h1 id="product-title">Free, limitless scheduling.</h1>
@@ -83,5 +110,5 @@
 <div class="footer-base"><span>© Red Crown Interactive</span><span>Crown Calendar · Product preview</span><a href="#main">Back to top ↑</a></div>
 </footer>
 
-</body>
+<footer class="workspace-footer" hidden><span>Crown Calendar by Red Crown Interactive</span><a href="/legal/">Privacy &amp; legal</a></footer></body>
 </html>
