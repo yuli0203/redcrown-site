@@ -14,16 +14,22 @@
   if (typeof module !== 'undefined') module.exports={dayBounds,dayIntervals};
   if (typeof document === 'undefined') return;
   const $ = selector => document.querySelector(selector);
-  let intervals=[], rangeStart=0, rangeEnd=0, selected=null, month=null;
+  let intervals=[], rangeStart=0, rangeEnd=0, selected=null, month=null, synced=false;
   const time = stamp => new Date(stamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
   const label = date => date.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   const monthIndex = date => date.getFullYear()*12+date.getMonth();
   function drawDay() {
     $('#busy-day-title').textContent=label(selected);
+    const list=$('#busy-day-intervals'); list.replaceChildren();
+    if (!synced) {
+      $('#busy-day-coverage').textContent='Availability not synced yet.';
+      const empty=document.createElement('p'); empty.className='sync-small';
+      empty.textContent='Connect a calendar account, choose sub-calendars and save your selection. If already connected, refresh availability. Unavailable times will appear here after a successful sync.';
+      list.append(empty); return;
+    }
     const bounds=dayBounds(selected);
     const from=Math.max(bounds.start,rangeStart), to=Math.min(bounds.end,rangeEnd);
     $('#busy-day-coverage').textContent=`Checked ${time(from)} - ${to === bounds.end ? '24:00' : time(to)}. Unavailable times below.`;
-    const list=$('#busy-day-intervals'); list.replaceChildren();
     const items=dayIntervals(intervals,selected,rangeStart,rangeEnd);
     if (!items.length) {
       const empty=document.createElement('p'); empty.className='sync-small'; empty.textContent='No synced busy periods in this checked time range. This does not yet confirm bookable availability.'; list.append(empty); return;
@@ -47,7 +53,7 @@
       const items=checked ? dayIntervals(intervals,date,rangeStart,rangeEnd) : [];
       const button=document.createElement('button'); button.type='button'; button.textContent=day; button.disabled=!checked;
       button.setAttribute('aria-pressed',String(+selected===+date));
-      button.setAttribute('aria-label',`${label(date)}: ${!checked ? 'outside synced range' : items.length ? `${items.length} busy periods` : 'no synced busy periods'}`);
+      button.setAttribute('aria-label',`${label(date)}: ${!synced ? 'availability not synced' : !checked ? 'outside synced range' : items.length ? `${items.length} busy periods` : 'no synced busy periods'}`);
       if(items.length) button.className='has-busy';
       button.addEventListener('click',()=>{selected=date;draw();grid.children[(month.getDay()+6)%7+day-1].focus({preventScroll:true});});
       grid.append(button);
@@ -62,13 +68,21 @@
   $('#busy-previous-month').addEventListener('click',()=>changeMonth(-1));
   $('#busy-next-month').addEventListener('click',()=>changeMonth(1));
   window.CrownBusyPreview={
-    clear() { intervals=[];rangeStart=0;rangeEnd=0;$('#synced-calendar-preview').hidden=true;$('#busy-date-grid').replaceChildren();$('#busy-day-intervals').replaceChildren(); },
+    clear() {
+      intervals=[]; synced=false;
+      rangeStart=dayBounds(new Date()).start;
+      const end=new Date(rangeStart);end.setDate(end.getDate()+30);rangeEnd=+end;
+      selected=new Date(rangeStart);month=new Date(selected.getFullYear(),selected.getMonth(),1);
+      $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone} - sync calendars to see unavailable times`;
+      $('#synced-calendar-preview').hidden=false;draw();
+    },
     update(items,start,end) {
-      intervals=items.map(item=>({...item}));rangeStart=start;rangeEnd=end;
+      intervals=items.map(item=>({...item}));rangeStart=start;rangeEnd=end;synced=true;
       if(!selected || dayBounds(selected).end<=start || +selected>=end) selected=new Date(dayBounds(new Date(start)).start);
       month=new Date(selected.getFullYear(),selected.getMonth(),1);
       $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone} - ${new Date(start).toLocaleDateString()} to ${new Date(end).toLocaleDateString()}`;
       $('#synced-calendar-preview').hidden=false;draw();
     }
   };
+  window.CrownBusyPreview.clear();
 })();
