@@ -16,7 +16,6 @@
   "Choose accounts and sub-calendars to check for conflicts, with one calendar for new bookings.": "בחרו חשבונות ותתי-יומנים לבדיקת התנגשויות, ויומן שבו יישמרו פגישות חדשות.",
   "Your booking page": "עמוד הפגישות שלכם",
   "Choose your booking page colors and logo.": "התאימו את הצבעים והלוגו של עמוד הפגישות למותג שלכם.",
-  "Currently in preview. Live booking links and calendar sync are still in development.": "המוצר בגרסת פיתוח. הזמינות של חיבורים וקביעת פגישות תלויה בהשלמת הגדרת השירות.",
   "Your calendar starts here.": "היומן שלכם מתחיל כאן.",
   "Sign in or create your free account.": "היכנסו או צרו חשבון בחינם.",
   "Continue with Google": "המשך עם Google",
@@ -44,10 +43,8 @@
   "Try the local preview ↗": "נסו את הדגמת היומן ↗",
   "Share a booking link": "משתפים קישור לקביעת פגישה",
   "Let guests choose a time without creating an account of their own.": "האורחים בוחרים מועד פנוי ללא צורך ביצירת חשבון.",
-  "Public booking links coming next": "קישורי פגישות זמינים לאחר הגדרת השירות",
   "CALENDARS & AVAILABILITY": "יומנים וזמינות",
   "Keep your schedule together.": "כל הזמינות שלכם, במקום אחד.",
-  "Google Calendar and Microsoft Outlook are the first planned connections. Holiday preferences will help you set days off without blocking each date manually.": "חיבור ליומן Google ול-Outlook מאפשר לרכז את הזמינות ולמנוע התנגשויות. אפשר להגדיר ימי חופש וחגים שבהם לא ניתן להזמין פגישות. זמינות החיבורים תלויה בהשלמת ההגדרה.",
   "Planned": "בתהליך הגדרה",
   "Holidays & days off": "חגים וימי חופש",
   "WE WOULD LIKE TO HEAR FROM YOU": "נשמח לשמוע מכם",
@@ -98,5 +95,10 @@
   "We could not confirm delivery. Your message is still here. Please try again later or email hello@redcrowninteractive.com.": "לא הצלחנו לאשר שההודעה נשלחה. התוכן נשמר כאן. נסו שוב מאוחר יותר או כתבו אל hello@redcrowninteractive.com.",
   "Please enter at least 10 characters.": "יש להזין לפחות 10 תווים.",
   "Please enter your name.": "יש להזין שם.",
-  "Opens our secure payment page. Choose your tip amount there.": "ייפתח עמוד התשלום שבו תוכלו לבחור את סכום הטיפ."
+  "Opens our secure payment page. Choose your tip amount there.": "ייפתח עמוד התשלום שבו תוכלו לבחור את סכום הטיפ.",
+  "Public beta. Google Calendar sync and booking links are available. Microsoft calendar support is being completed.": "גרסת בטא ציבורית. סנכרון Google Calendar וקישורים לקביעת פגישות זמינים. התמיכה ביומני Microsoft נמצאת בהשלמה.",
+  "Guests can book without an account": "אפשר לקבוע פגישה ללא חשבון",
+  "Connect Google Calendar and choose which calendars block busy times. Microsoft Outlook support is coming soon.": "חברו את Google Calendar ובחרו אילו יומנים חוסמים זמנים תפוסים. התמיכה ב-Microsoft Outlook תתווסף בהמשך.",
+  "Available in beta": "זמין בגרסת בטא",
+  "Coming soon": "בקרוב"
 }
