@@ -148,10 +148,21 @@
 <details><summary>Can I choose my colors and logo?</summary><p>Booking-page customization is planned: choose your colors and upload your logo to match your brand. These controls are not available in the preview yet.</p></details>
 <details><summary>Who is behind the tool?</summary><p>Red Crown Interactive builds apps and interactive software. Red Crown Calendar is a free tool from the studio. <a href="/">Learn about Red Crown Interactive ↗</a></p></details>
 </div></section>
+<section class="product-section calendar-feedback" id="feedback" aria-labelledby="feedback-title">
+<div><div class="section-title"><span>WE WOULD LIKE TO HEAR FROM YOU</span><h2 id="feedback-title">Help us make it better.</h2></div><p>Suggest an improvement, share feedback, or ask about another Red Crown product or an idea you would like us to build.</p><p>Prefer email? <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></p></div>
+<form id="calendar-feedback-form" action="https://api.web3forms.com/submit" method="POST">
+<input type="hidden" name="access_key" value="35f8e692-deb5-4865-86a3-7a4be79eb90b"><input type="hidden" name="subject" value="Red Crown Calendar - feedback and product inquiry"><input type="hidden" name="from_name" value="Red Crown Calendar contact form"><input type="checkbox" name="botcheck" hidden tabindex="-1" autocomplete="off">
+<div class="feedback-fields"><label>Your name<input name="name" autocomplete="name" maxlength="100" required></label><label>Your email<input name="email" type="email" autocomplete="email" maxlength="254" required></label></div>
+<label>What would you like to discuss?<select name="topic" required><option value="">Choose a topic</option><option>Suggest an improvement</option><option>Share feedback or report a problem</option><option>Ask a question about Red Crown Calendar</option><option>Ask about another product or a new project</option></select></label>
+<label>Your message<textarea name="message" rows="5" minlength="10" maxlength="5000" required placeholder="Tell us what you have in mind."></textarea></label>
+<p class="feedback-note">We use your details to respond to your message. Submissions are processed by Web3Forms. Please do not include passwords, calendar access tokens, or private booking links. <a href="/calendar/legal/#privacy">Privacy Policy</a></p>
+<button class="primary" type="submit">Send message</button><p id="feedback-status" role="status" aria-live="polite"></p>
+</form></section>
+<script defer src="/calendar/feedback.js"></script>
 <footer class="full-footer">
 <div class="footer-columns"><div class="footer-studio"><a class="brand" href="/"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="38" height="38" alt=""><span>Red Crown Interactive</span></a><p>Free scheduling by Red Crown Interactive.<br>We build apps, websites and interactive experiences.</p><a href="/#contact" class="studio-link">Need an app for your business? ↗</a></div>
 <div><h2>Red Crown Calendar</h2><a href="#features" data-workspace-href="#sync-availability" data-workspace-label="Connected calendars">Features</a><a href="#how-it-works" data-workspace-href="#meeting-settings" data-workspace-label="Your booking page">How it works</a><a href="/calendar/preview/" data-workspace-href="#style-settings" data-workspace-label="Booking page style">Calendar preview</a><button class="footer-signin" type="button">Sign in / Create account</button></div>
-<div><h2>Help</h2><a href="#questions" data-workspace-href="/#contact" data-workspace-label="Get help">Questions &amp; answers</a><a href="#connection-heading" data-workspace-href="#sync-availability" data-workspace-label="Calendar connections">Calendar connections</a><a href="/calendar/legal/#support">Calendar support</a></div>
+<div><h2>Help</h2><a href="#questions" data-workspace-href="/#contact" data-workspace-label="Get help">Questions &amp; answers</a><a href="#connection-heading" data-workspace-href="#sync-availability" data-workspace-label="Calendar connections">Calendar connections</a><a href="#feedback">Feedback &amp; contact</a><a href="/calendar/legal/#support">Calendar support</a></div>
 <div><h2>Our studio</h2><a href="/">Red Crown Interactive</a><a href="/services/">What we build</a><a href="/#work">Our work</a><a href="/legal/">Studio policies</a></div></div>
 <!-- shared-legal-footer:start -->
 <link rel="stylesheet" href="/shared/legal.css">
