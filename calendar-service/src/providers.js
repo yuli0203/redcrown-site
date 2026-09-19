@@ -31,7 +31,7 @@ function safeGraphNext(url){if(!url)return null;assert(url.startsWith(`${graph}/
 function eventTime(value,zone){return value?.date?Number(Temporal.PlainDate.from(value.date).toZonedDateTime({timeZone:zone,plainTime:'00:00'}).epochMilliseconds):Date.parse(value?.dateTime ? /Z$|[+-]\d\d:\d\d$/.test(value.dateTime)?value.dateTime:value.dateTime+'Z' : '');}
 export async function readAvailability(connections,start,end,env,{details=false,timezone='UTC'}={}){
  const busy=[],events=[];
- for(const connection of connections){const selected=JSON.parse(connection.calendars).filter(c=>c.selected);if(!selected.length)continue;const token=await tokenFor(connection,env);
+ for(const connection of connections){try{const selected=JSON.parse(connection.calendars).filter(c=>c.selected);if(!selected.length)continue;const token=await tokenFor(connection,env);
   if(connection.provider==='google'){
    for(let i=0;i<selected.length;i+=50){const batch=selected.slice(i,i+50),data=await request(`${google}/freeBusy`,token,{method:'POST',body:JSON.stringify({timeMin:new Date(start).toISOString(),timeMax:new Date(end).toISOString(),items:batch.map(c=>({id:c.id}))})});for(const c of batch){const result=data.calendars?.[c.id];assert(result&&Array.isArray(result.busy)&&!result.errors?.length,`Availability for ${c.name} could not be checked. Reconnect or deselect this calendar.`,503);for(const b of result.busy)busy.push({start:Date.parse(b.start),end:Date.parse(b.end)});}}
    if(!details)continue;
@@ -43,6 +43,7 @@ export async function readAvailability(connections,start,end,env,{details=false,
     url=connection.provider==='google'?(page.nextPageToken?`${base}&pageToken=${encodeURIComponent(page.nextPageToken)}`:null):safeGraphNext(page['@odata.nextLink']);
    }assert(!url,'Calendar returned too many events. Choose a smaller date range.',503);}catch(error){if(connection.provider==='microsoft')throw error;/* Google busy data remains authoritative when private details are unavailable. */}
   }
+ }catch(error){error.connectionId=connection.id;throw error;}
  }
  assert(busy.every(b=>Number.isFinite(b.start)&&Number.isFinite(b.end)&&b.start<b.end),'Invalid busy data.',503);return {busy,events};
 }

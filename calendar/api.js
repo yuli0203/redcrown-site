@@ -15,7 +15,7 @@
   const headers={};if(data)headers['Content-Type']='application/json';if(bookingToken)headers['X-Booking-Token']=bookingToken;
   if(!publicRequest){const token=await window.CrownAuth?.token();if(!token)throw Error('Sign in to continue.');headers.Authorization=`Bearer ${token}`;}
   const response=await fetch(api.base+path,{method,headers,credentials:'omit',cache:'no-store',...(data?{body:JSON.stringify(data)}:{}),signal:AbortSignal.timeout(60000)});
-  const result=await response.json().catch(()=>({error:'The scheduling service is unavailable.'}));if(!response.ok)throw Object.assign(Error(result.error||'Please retry.'),{status:response.status});return result;
+  const result=await response.json().catch(()=>({error:'The scheduling service is unavailable.'}));if(!response.ok)throw Object.assign(Error(result.error||'Please retry.'),{status:response.status,connectionId:result.connectionId});return result;
  };
  api.connect=async provider=>{
   if(!['google','microsoft'].includes(provider))throw Error('Unknown calendar provider.');

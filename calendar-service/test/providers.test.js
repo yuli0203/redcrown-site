@@ -7,7 +7,7 @@ const response=(value,status=200)=>new Response(JSON.stringify(value),{status,he
 test('Google refresh credentials stay encrypted and busy failures block availability',async t=>{
  const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64'),PUBLIC_ORIGIN:'http://localhost'},connection={id:'c',uid:'u',provider:'google',refresh_token:await encrypt('refresh',env),calendars:JSON.stringify([{id:'work',name:'Work',selected:true}])};
  t.mock.method(globalThis,'fetch',async url=>String(url).includes('oauth2')?response({access_token:'access'}):response({calendars:{work:{errors:[{reason:'forbidden'}]}}}));
- await assert.rejects(readAvailability([connection],Date.now(),Date.now()+86400000,env),/Work could not be checked/);env.DB.close();
+ await assert.rejects(readAvailability([connection],Date.now(),Date.now()+86400000,env),error=>error.connectionId==='c'&&/Work could not be checked/.test(error.message));env.DB.close();
 });
 test('Google all-day event names use the calendar time zone and private details can fail safely',async t=>{
  const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64'),PUBLIC_ORIGIN:'http://localhost'},connection={id:'c',uid:'u',provider:'google',refresh_token:await encrypt('refresh',env),calendars:JSON.stringify([{id:'work',name:'Work',selected:true}])};

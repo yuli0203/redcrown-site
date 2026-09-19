@@ -80,7 +80,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    const booking=await one(db,'SELECT * FROM bookings WHERE id=? AND uid=?',path.split('/')[2],user.uid);assert(booking,'Booking not found.',404);await finalizeBooking(booking,env,provider);return json({status:booking.status});
   }
   throw new Problem('Not found.',404);
- }catch(error){return json({error:error instanceof Problem?error.message:'The request could not be completed. Please retry.'},error instanceof Problem?error.status:500);}
+ }catch(error){return json({...((path==='/availability'&&error.connectionId)?{connectionId:error.connectionId}:{}),error:error instanceof Problem?error.message:'The request could not be completed. Please retry.'},error instanceof Problem?error.status:500);}
 }
  return async(request,env)=>{const response=await handle(request,env);const headers=new Headers(response.headers);headers.set('Vary','Origin');if(request.headers.get('Origin')===env.PUBLIC_ORIGIN){headers.set('Access-Control-Allow-Origin',env.PUBLIC_ORIGIN);headers.set('Access-Control-Allow-Methods','GET, POST, PUT, DELETE, OPTIONS');headers.set('Access-Control-Allow-Headers','Authorization, Content-Type, X-Booking-Token');headers.set('Access-Control-Max-Age','600');}return new Response(response.body,{status:response.status,headers});};
 }
