@@ -42,7 +42,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   const navigation=method==='POST'&&/^\/connect\/(google|microsoft)\/navigate$/.test(path);
   let authRequest=request;
   if(navigation){assert(request.headers.get('Origin')===env.PUBLIC_ORIGIN,'Start calendar connection from the scheduling page.',403);assert(request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded'),'Invalid connection request.');const input=await body(request,16000,true);assert(typeof input.idToken==='string'&&input.idToken.length<12000,'Sign in to connect a calendar.',401);authRequest=new Request(request.url,{headers:{Authorization:`Bearer ${input.idToken}`}});}
-  const user=await authenticate(authRequest,env);await rateLimit(env,`user:${user.uid}`,90);
+  const user=await authenticate(authRequest,env);assert(user.verified===true,'Verify your email before using your calendar workspace.',403);await rateLimit(env,`user:${user.uid}`,90);
   if(path==='/workspace'&&method==='GET'){const row=await one(db,'SELECT * FROM profiles WHERE uid=?',user.uid);return json({data:row?JSON.parse(row.data):null,version:row?.version||0});}
   if(path==='/workspace'&&method==='PUT'){
    const input=await body(request),data=validateWorkspace(input.data);assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
