@@ -11,12 +11,21 @@
 <link rel="stylesheet" href="/calendar/theme.css">
 <script src="/calendar/theme.js"></script>
 <script defer src="/calendar/api.js"></script><script defer src="/calendar/auth.js?v=reminders-1"></script>
-<script defer src="/calendar/busy-calendar.js"></script><script defer src="/calendar/cloud-calendars.js"></script><script defer src="/calendar/availability.js"></script><script defer src="/calendar/settings.js"></script><script defer src="/calendar/workspace.js?v=reminders-1"></script>
+<script defer src="/calendar/busy-calendar.js"></script><script defer src="/calendar/cloud-calendars.js"></script><script defer src="/calendar/availability.js"></script><script defer src="/calendar/settings.js"></script><script defer src="/calendar/workspace.js?v=profile-1"></script>
 <link rel="stylesheet" href="/calendar/availability.css">
 </head>
 <body class="product-home">
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="/calendar/" aria-label="Red Crown Calendar home"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="32" height="32" alt=""><span>Red Crown Calendar</span></a><nav class="product-nav" aria-label="Product navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#questions">FAQ</a></nav><div class="header-actions"><span class="free-label">Free, limitless scheduling</span><button id="theme-toggle" class="auth-button theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><button id="auth-open" class="auth-button">Sign in</button><div id="auth-account" hidden><span id="auth-identity"></span><button id="auth-verify" class="auth-link" hidden>Verify email</button><button id="auth-signout" class="auth-button">Sign out</button></div></div></header>
+<header><a class="brand" href="/calendar/" aria-label="Red Crown Calendar home"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="32" height="32" alt=""><span>Red Crown Calendar</span></a><nav class="product-nav" aria-label="Product navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#questions">FAQ</a></nav><div class="header-actions"><span class="free-label">Free, limitless scheduling</span><button id="theme-toggle" class="auth-button theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><button id="auth-open" class="auth-button">Sign in</button><div id="auth-account" hidden><button id="open-profile" class="profile-trigger" type="button" aria-label="Open your profile" aria-haspopup="dialog"><img id="header-profile-photo" hidden alt=""><span id="header-profile-initial" class="profile-initial" aria-hidden="true"></span><span id="auth-identity"></span></button><button id="auth-verify" class="auth-link" hidden>Verify email</button><button id="auth-signout" class="auth-button">Sign out</button></div></div></header>
+<dialog id="profile-dialog" aria-labelledby="profile-title">
+<div class="meeting-dialog-heading"><h2 id="profile-title">Your profile</h2><button id="close-profile" class="auth-button" type="button" aria-label="Close profile">&#215;</button></div>
+<p class="sync-small">Your photo appears in the top bar and on your booking page.</p>
+<form id="profile-form" class="settings-grid">
+<div class="settings-wide profile-portrait"><img id="profile-photo-preview" hidden alt="Profile photo preview"><span id="profile-photo-initial" class="profile-initial" aria-hidden="true"></span></div>
+<label class="settings-wide">Your profile photo<input id="booking-photo" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP. Up to 1 MB. Displayed as a circle.</small></label>
+<button id="remove-booking-photo" type="button" class="auth-link">Remove profile photo</button>
+<div class="settings-wide settings-actions"><button class="primary" type="submit">Save profile</button><button id="cancel-profile" class="auth-link" type="button">Cancel</button></div><p id="profile-status" class="sync-small settings-wide" role="status"></p>
+</form></dialog>
 <p id="workspace-auth-status" class="workspace-auth-status" role="status" hidden></p><main id="main" class="product-main">
 <section id="sync-availability" class="sync-section" hidden aria-labelledby="sync-title">
 <div class="sync-heading"><div><p class="product-label">01 / CALENDARS</p><h1 id="sync-title">Sync calendars</h1><p>Bring your calendars together. Choose which calendars count as busy time.</p></div><button id="add-calendar" class="auth-button" aria-expanded="false" aria-controls="calendar-providers">+ Add calendar account</button></div>
@@ -70,15 +79,13 @@
 </section>
 <section id="style-settings" class="workspace-section" hidden aria-labelledby="style-settings-title">
 <div class="section-title"><span>03 / STYLE</span><h2 id="style-settings-title">Configure your style</h2></div>
-<p class="sync-small">Choose your booking page colors, logo and profile photo.</p>
+<p class="sync-small">Choose your booking page colors and logo.</p>
 <div class="style-layout"><form id="style-settings-form" class="settings-grid">
 <label>Accent color<input id="booking-accent" type="color" value="#c8102e"></label>
 <label>Background color<input id="booking-background" type="color" value="#ffffff"></label>
 <label>Text color<input id="booking-text" type="color" value="#271c22"></label>
 <label class="settings-wide">Your logo<input id="booking-logo" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP. Up to 1 MB.</small></label>
 <button id="remove-booking-logo" type="button" class="auth-link">Remove logo</button>
-<label class="settings-wide">Your profile photo<input id="booking-photo" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP. Up to 1 MB. Displayed as a circle.</small></label>
-<button id="remove-booking-photo" type="button" class="auth-link">Remove profile photo</button>
 <div class="settings-wide settings-actions"><button class="primary" type="submit">Save style</button><span id="style-settings-status" role="status"></span></div>
 </form><div class="booking-style-preview" id="booking-style-preview"><small>BOOKING PAGE PREVIEW</small><img id="booking-logo-preview" hidden alt="Your booking logo"><img id="booking-photo-preview" hidden alt="Your profile photo"><h3 id="booking-preview-title">Book a meeting</h3><p id="booking-preview-description">Choose a time that works for you.</p><p id="booking-preview-duration">30 minute meeting</p><span class="preview-time">09:00</span><span class="preview-time">10:30</span><p class="sync-small">Visual preview only</p></div></div>
 <p id="style-storage-help" class="sync-small">Style is saved for this account on this browser.</p>
@@ -92,7 +99,7 @@
 <div><span aria-hidden="true">01</span><h2>Your meeting lengths</h2><p>Choose a preset or set the exact number of minutes you need.</p></div>
 <div><span aria-hidden="true">02</span><h2>Your availability</h2><p>Working hours, breaks and time zones in one place.</p></div>
 <div><span aria-hidden="true">03</span><h2>Your calendars</h2><p>Choose accounts and sub-calendars to check for conflicts, with one calendar for new bookings.</p></div>
-<div><span aria-hidden="true">04</span><h2>Your booking page</h2><p>Choose your booking page colors, logo and profile photo.</p></div>
+<div><span aria-hidden="true">04</span><h2>Your booking page</h2><p>Choose your booking page colors and logo.</p></div>
 </div>
 <p class="product-status">Currently in preview. Live booking links and calendar sync are still in development.</p>
 </section>

@@ -57,8 +57,9 @@
     card.style.color = $('#booking-text').value;
     const image = $('#booking-logo-preview'); image.hidden = !logo;
     if (logo) image.src = logo; else image.removeAttribute('src');
-    const portrait = $('#booking-photo-preview'); portrait.hidden = !photo;
-    if (photo) portrait.src = photo; else portrait.removeAttribute('src');
+    const portrait = $('#booking-photo-preview'); portrait.hidden = !savedData.photo;
+    if (savedData.photo) portrait.src = savedData.photo; else portrait.removeAttribute('src');
+    renderProfile();
   }
   async function load() {
     const version=revision;
@@ -154,7 +155,7 @@
   });
   $('#style-settings-form').addEventListener('submit',async event=>{
     event.preventDefault(); if (!uid || !$('#style-settings-form').reportValidity()) return;
-    const changes={logo,photo,meetings};
+    const changes={logo,meetings};
     for (const field of ['accent','background','text']) changes[field]=$(`#booking-${field}`).value;
     if (await persist(changes,'#style-settings-status')) { renderMeetings(); $('#style-settings-status').textContent=cloud?'Style saved to your account.':'Style saved on this browser.'; }
   });
@@ -178,12 +179,26 @@
   }
   $('#refresh-bookings').addEventListener('click',upcoming);
   const imageVersions = {logo:0,photo:0};
+  const profileDialog=$('#profile-dialog');
+  function renderProfile(){
+    const initial=(displayName||userEmail||'You').trim().charAt(0).toUpperCase();
+    for(const [imageId,initialId,value] of [['header-profile-photo','header-profile-initial',savedData.photo],['profile-photo-preview','profile-photo-initial',photo]]){
+      const image=$('#'+imageId),fallback=$('#'+initialId);image.hidden=!value;fallback.hidden=!!value;fallback.textContent=initial;
+      if(value)image.src=value;else image.removeAttribute('src');
+    }
+  }
+  $('#open-profile').addEventListener('click',()=>{if(!uid)return;photo=savedData.photo||'';$('#booking-photo').value='';$('#profile-status').textContent='';renderProfile();profileDialog.showModal();});
+  $('#close-profile').addEventListener('click',()=>profileDialog.close());
+  $('#cancel-profile').addEventListener('click',()=>profileDialog.close());
+  profileDialog.addEventListener('close',()=>{imageVersions.photo++;photo=savedData.photo||'';$('#booking-photo').value='';renderProfile();});
+  $('#profile-form').addEventListener('submit',async event=>{event.preventDefault();if(!uid)return;const button=event.submitter;button.disabled=true;try{if(await persist({photo},'#profile-status')){preview();profileDialog.close();}}finally{button.disabled=false;}});
+
   for (const kind of ['logo','photo']) {
     const name=kind==='logo' ? 'Logo' : 'Profile photo';
     $(`#booking-${kind}`).addEventListener('change',async event=>{
       const file=event.target.files[0], version=++imageVersions[kind], accountRevision=revision;
       if(!file || !uid) return;
-      const status=$('#style-settings-status');
+      const status=$(kind==='photo'?'#profile-status':'#style-settings-status');
       if(!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size>1024*1024) { status.textContent='Choose a PNG, JPEG or WebP image under 1 MB.'; event.target.value=''; return; }
       try {
         const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
@@ -192,21 +207,21 @@
         const canvas=document.createElement('canvas'),ratio=Math.min(1,640/image.width,640/image.height);canvas.width=Math.max(1,Math.round(image.width*ratio));canvas.height=Math.max(1,Math.round(image.height*ratio));canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);const optimized=canvas.toDataURL('image/webp',.82);
         if(optimized.length>400000)throw new Error('Image is too large.');
         if(kind==='logo') logo=optimized; else photo=optimized;
-        preview();status.textContent=`${name} preview updated. Save style to keep it.`;
+        preview();status.textContent=`${name} preview updated. Save ${kind==='photo'?'profile':'style'} to keep it.`;
       } catch {if(version===imageVersions[kind] && accountRevision===revision) status.textContent='This image could not be opened. Choose another file.';}
     });
     $(`#remove-booking-${kind}`).addEventListener('click',()=>{
       imageVersions[kind]++; if(kind==='logo') logo=''; else photo='';
-      $(`#booking-${kind}`).value='';preview();$('#style-settings-status').textContent=`${name} removed from preview. Save style to keep this change.`;
+      $(`#booking-${kind}`).value='';preview();$(kind==='photo'?'#profile-status':'#style-settings-status').textContent=`${name} removed from preview. Save ${kind==='photo'?'profile':'style'} to keep this change.`;
     });
   }
   document.addEventListener('crown-auth-change',async event => {
     if (uid === event.detail.uid) return;
-    if (dialog.open) dialog.close();if(pageDialog.open)pageDialog.close();
+    if (dialog.open) dialog.close();if(pageDialog.open)pageDialog.close();if(profileDialog.open)profileDialog.close();
     $('#upcoming-bookings').hidden=true;$('#upcoming-bookings-list').replaceChildren();
     uid = event.detail.uid; displayName=event.detail.displayName || ''; userEmail=event.detail.email || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
-    $('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();
+    $('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();photo='';renderProfile();
     for (const selector of ['#meeting-settings','#style-settings','.workspace-footer','#workspace-auth-status']) $(selector).hidden = !uid;
     nav.forEach(({link,href,text},i) => { link.setAttribute('href',uid ? ['#sync-availability','#meeting-settings','#style-settings'][i] : href); link.textContent=uid ? ['Sync calendars','Meetings page','Your style'][i] : text; });
     $('#workspace-auth-status').textContent='';
