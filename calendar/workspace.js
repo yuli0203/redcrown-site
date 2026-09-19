@@ -270,6 +270,12 @@
     }
   }
   $('#open-profile').addEventListener('click',()=>{if(!uid)return;crop.clear();photo=savedData.photo||'';$('#booking-photo').value='';$('#profile-status').textContent='';renderProfile();profileDialog.showModal();});
+  $('#adjust-booking-photo').addEventListener('click',async()=>{
+    const value=photo||signInPhoto();if(!value){$('#profile-status').textContent='Upload a photo first, then drag it into position.';return;}
+    const version=++imageVersions.photo,accountRevision=revision;
+    try{const image=new Image();image.crossOrigin='anonymous';image.referrerPolicy='no-referrer';image.src=value;await image.decode();if(version!==imageVersions.photo||accountRevision!==revision||!profileDialog.open)return;crop.load(image);$('#profile-status').textContent='Drag to position your photo, then Save profile.';$('#profile-crop-canvas').focus();}
+    catch{crop.clear();$('#profile-status').textContent='Upload the original photo to adjust its position.';}
+  });
   $('#close-profile').addEventListener('click',()=>profileDialog.close());
   $('#cancel-profile').addEventListener('click',()=>profileDialog.close());
   profileDialog.addEventListener('close',()=>{imageVersions.photo++;crop.clear();photo=savedData.photo||'';$('#booking-photo').value='';renderProfile();});
