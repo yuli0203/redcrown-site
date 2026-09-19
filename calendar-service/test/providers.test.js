@@ -19,3 +19,10 @@ test('Google all-day event names use the calendar time zone and private details 
 test('Microsoft calendar pagination cannot send bearer tokens to another host',async t=>{
  t.mock.method(globalThis,'fetch',async()=>response({value:[],'@odata.nextLink':'https://example.test/steal'}));await assert.rejects(listCalendars('microsoft','access'),/Invalid provider pagination/);
 });
+
+test('Google calendars without freeBusy support use complete event reads and fail closed on pagination errors',async t=>{
+ const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64'),PUBLIC_ORIGIN:'http://localhost'},connection={id:'fallback',uid:'u',provider:'google',refresh_token:await encrypt('refresh',env),calendars:JSON.stringify([{id:'holidays',name:'Holidays',selected:true}])};let fail=false;
+ t.mock.method(globalThis,'fetch',async url=>{url=String(url);if(url.includes('oauth2'))return response({access_token:'access'});if(url.endsWith('freeBusy'))return response({calendars:{holidays:{errors:[{reason:'notFound'}]}}});if(url.includes('pageToken='))return fail?response({},403):response({kind:'calendar#events',items:[{summary:'Free holiday',transparency:'transparent',start:{date:'2026-09-22'},end:{date:'2026-09-23'}}]});return response({timeZone:'Asia/Jerusalem',nextPageToken:'next',items:[{summary:'Closed',start:{date:'2026-09-21'},end:{date:'2026-09-22'}}]});});
+ const data=await readAvailability([connection],Date.parse('2026-09-20'),Date.parse('2026-09-24'),env,{details:false});assert.deepEqual(data.busy,[{start:Date.parse('2026-09-20T21:00:00Z'),end:Date.parse('2026-09-21T21:00:00Z')}]);assert.equal(data.events.length,0);
+ fail=true;await assert.rejects(readAvailability([connection],Date.parse('2026-09-20'),Date.parse('2026-09-24'),env),/Holidays could not be checked/);env.DB.close();
+});
