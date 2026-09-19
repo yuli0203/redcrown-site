@@ -27,9 +27,9 @@
  $('#destination-status').after(mailStatus,mailButton);mailStatus.hidden=true;mailButton.hidden=true;
  function renderMail(){
   const account=accounts.find(a=>a.id===destination?.connectionId),he=document.documentElement.lang.startsWith('he');
-  mailStatus.hidden=!account;mailButton.hidden=!account||account.mailEnabled||account.provider==='ical';
+  mailStatus.hidden=!account;mailButton.hidden=!account||account.provider==='ical';
   mailStatus.textContent=!account?'':account.mailEnabled?(he?'התראות על הזמנות יישלחו מחשבון יומן ההזמנות אל עצמו.':'Booking notifications are enabled for this destination account.'):(he?'רק חשבון יומן ההזמנות זקוק להרשאת שליחת אימייל. יומנים לבדיקת זמינות אינם זקוקים לה.':'Only the booking destination account needs email sending permission. Availability calendars do not.');
-  mailButton.textContent=he?'הפעלת התראות באימייל':'Enable booking emails';
+  mailButton.textContent=account?.mailEnabled?(he?'בדיקת הרשאת אימייל':'Review email permission'):(he?'הפעלת התראות באימייל':'Enable booking emails');
  }
  mailButton.addEventListener('click',async()=>{const account=accounts.find(a=>a.id===destination?.connectionId);if(!account)return;mailButton.disabled=true;try{await window.CrownAPI.connect(account.provider,account.id);}catch(e){mailStatus.textContent=e.message;}finally{mailButton.disabled=false;}});
  document.addEventListener('crown-calendars-change',e=>{accounts=e.detail.accounts;renderDestinations();});
