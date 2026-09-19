@@ -36,7 +36,7 @@
 </section>
 <section id="meeting-settings" class="workspace-section" hidden aria-labelledby="meeting-settings-title">
 <div class="section-title"><span>02 / MEETINGS</span><h2 id="meeting-settings-title">Configure your meetings page</h2></div>
-<div class="meeting-share-panel"><label for="meeting-page-name">Your name on the meeting page</label><div class="meeting-share-controls"><input id="meeting-page-name" maxlength="60" placeholder="Your name"><button id="save-meeting-page-name" type="button" class="auth-button">Save name</button></div><p>This is your meeting page link to share:</p><div class="meeting-share-controls"><input id="meeting-page-link" aria-label="Your meeting page link" readonly><a id="preview-meeting-page" class="auth-button" target="_blank" rel="noopener">Preview</a><button id="copy-meeting-page" class="auth-button" type="button">Copy link</button></div><p id="meeting-share-status" class="sync-small" role="status"></p><p class="sync-small">Preview link with your saved meetings. Bookings are not live yet. Copy a new link after changes; previously shared previews do not update. Logos are not included.</p></div>
+<div class="meeting-share-panel"><label for="meeting-page-name">Your name on the meeting page</label><div class="meeting-share-controls"><input id="meeting-page-name" maxlength="60" placeholder="Your name"><button id="save-meeting-page-name" type="button" class="auth-button">Save name</button></div><p>This is your meeting page link to share:</p><div class="meeting-share-controls"><input id="meeting-page-link" aria-label="Your meeting page link" readonly><a id="preview-meeting-page" class="auth-button" target="_blank" rel="noopener">Preview</a><button id="copy-meeting-page" class="auth-button" type="button">Copy link</button></div><p id="meeting-share-status" class="sync-small" role="status"></p><p class="sync-small">Preview link with your saved meetings. Bookings are not live yet. Copy a new link after changes; previously shared previews do not update. Logos and profile photos are not included.</p></div>
 <div class="meeting-list-toolbar"><p class="sync-small">Create the meetings guests can book with you.</p><button id="add-meeting-type" class="auth-button" type="button">+ Add meeting</button></div>
 <div id="meeting-types-list"></div><p id="meeting-list-status" role="status" class="sync-small"></p>
 <button id="undo-remove-meeting" class="auth-link" type="button" hidden>Undo remove</button>
@@ -55,15 +55,17 @@
 </section>
 <section id="style-settings" class="workspace-section" hidden aria-labelledby="style-settings-title">
 <div class="section-title"><span>03 / STYLE</span><h2 id="style-settings-title">Configure your style</h2></div>
-<p class="sync-small">Choose your booking page colors and logo.</p>
+<p class="sync-small">Choose your booking page colors, logo and profile photo.</p>
 <div class="style-layout"><form id="style-settings-form" class="settings-grid">
 <label>Accent color<input id="booking-accent" type="color" value="#c8102e"></label>
 <label>Background color<input id="booking-background" type="color" value="#ffffff"></label>
 <label>Text color<input id="booking-text" type="color" value="#271c22"></label>
 <label class="settings-wide">Your logo<input id="booking-logo" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP. Up to 1 MB.</small></label>
 <button id="remove-booking-logo" type="button" class="auth-link">Remove logo</button>
+<label class="settings-wide">Your profile photo<input id="booking-photo" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP. Up to 1 MB. Displayed as a circle.</small></label>
+<button id="remove-booking-photo" type="button" class="auth-link">Remove profile photo</button>
 <div class="settings-wide settings-actions"><button class="primary" type="submit">Save style</button><span id="style-settings-status" role="status"></span></div>
-</form><div class="booking-style-preview" id="booking-style-preview"><small>BOOKING PAGE PREVIEW</small><img id="booking-logo-preview" hidden alt="Your booking logo"><h3 id="booking-preview-title">Book a meeting</h3><p id="booking-preview-description">Choose a time that works for you.</p><p id="booking-preview-duration">30 minute meeting</p><span class="preview-time">09:00</span><span class="preview-time">10:30</span><p class="sync-small">Visual preview only</p></div></div>
+</form><div class="booking-style-preview" id="booking-style-preview"><small>BOOKING PAGE PREVIEW</small><img id="booking-logo-preview" hidden alt="Your booking logo"><img id="booking-photo-preview" hidden alt="Your profile photo"><h3 id="booking-preview-title">Book a meeting</h3><p id="booking-preview-description">Choose a time that works for you.</p><p id="booking-preview-duration">30 minute meeting</p><span class="preview-time">09:00</span><span class="preview-time">10:30</span><p class="sync-small">Visual preview only</p></div></div>
 <p class="sync-small">Style is saved for this account on this browser.</p>
 </section>
 
