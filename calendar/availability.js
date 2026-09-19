@@ -23,6 +23,7 @@
   const element = (tag, text, className) => { const node = document.createElement(tag); if (text) node.textContent = text; if (className) node.className = className; return node; };
   function button(text, action) { const node = element('button',text,'auth-link'); node.type = 'button'; node.disabled = busy; node.addEventListener('click',action); return node; }
   function invalidate() {
+    window.CrownBusyPreview?.clear();
     $('#busy-preview').hidden = true;
     $('#busy-periods').replaceChildren();
     $('#sync-summary-text').textContent = 'Availability has not been checked for the current selection.';
@@ -155,6 +156,7 @@
       const list = $('#busy-periods'); list.replaceChildren();
       for (const interval of merged) list.append(element('li',`${new Date(interval.start).toLocaleString()} - ${new Date(interval.end).toLocaleString()}`));
       $('#busy-preview').hidden = !merged.length;
+      window.CrownBusyPreview?.update(merged, start.getTime(), end.getTime());
       message('Availability refreshed. This preview does not yet block times on booking pages.');
     } catch (error) { if (version === generation) { invalidate(); message(error.message || 'Availability could not be refreshed. Check your connection.'); } }
     finally { if (version === generation) { busy = false; render(); } }
