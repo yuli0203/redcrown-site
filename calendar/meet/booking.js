@@ -12,6 +12,8 @@
   if(query.has('booking')){await manage();return;}
   const slug=query.get('user');if(!slug)throw Error('This booking link is incomplete.');
   const host=await call('/public/'+encodeURIComponent(slug));
+  document.title=`Meet with ${host.pageName} | Red Crown Calendar`;
+  if(!query.get('meeting')){document.body.classList.add('booking-landing');$('#page-description').textContent='Choose a meeting type below. Available times are checked against the host calendar.';}
   if(query.has('reschedule')){originalGuest=await call(`/booking/${encodeURIComponent(query.get('reschedule'))}?token=${encodeURIComponent(location.hash.slice(1))}`);if(originalGuest.status!=='confirmed')throw Error('This booking is no longer available to reschedule. Return to its management link.');$('header>span').textContent='Reschedule a meeting';$('#page-description').textContent='Choose a new time. Your current booking stays reserved until the change is confirmed.';}
   for(const [key,variable] of [['accent','--page-accent'],['background','--page-bg'],['text','--page-text']])document.documentElement.style.setProperty(variable,host[key]);
   for(const kind of ['logo','photo'])if(host[kind]){const image=make('img');image.src=host[kind];image.alt=kind==='logo'?'Host logo':'Host profile photo';image.className='host-'+kind;$('#host-name').before(image);}
@@ -31,10 +33,10 @@
     const hostName=$('#host-name');hostName.textContent=host.pageName;identity.append(hostName);
     summary.prepend(back,logoPanel,identity);
     const help=make('div','','booking-sidebar-help');for(const [text,path] of [['Privacy','privacy'],['Booking help','support']]){const a=make('a',text);a.href='/calendar/legal/#'+path;help.append(a);}summary.append(help);
-    await showScheduler(card,meeting,slug,zone);}
+    await showScheduler(card,meeting,slug,zone,host.calendarDisplay);}
   }
  }catch(e){error(e.message);const retry=button('Try again',()=>location.reload());$('#page-error').append(document.createElement('br'),retry);}
- async function showScheduler(card,meeting,slug,initialZone){
+ async function showScheduler(card,meeting,slug,initialZone,calendarDisplay){
   card.querySelector('.booking-scheduler')?.remove();const panel=make('div','','booking-scheduler');card.append(panel);let revision=0;
   const today=new Date(),firstMonth=new Date(today.getFullYear(),today.getMonth(),1);let month=new Date(firstMonth),selectedDate='',currentSlots=[],guestDraft={...originalGuest};
   const dateKey=value=>`${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}`;
@@ -42,11 +44,13 @@
   const label=make('label','Your time zone'),zone=make('select');for(const item of [...new Set([initialZone,'UTC',...Intl.supportedValuesOf('timeZone')])]){const option=make('option',item.replaceAll('_',' '));option.value=item;zone.append(option);}zone.value=initialZone;label.append(zone);
   const controls=make('div','','booking-controls'),status=make('p','','booking-status'),grid=make('div','','booking-slot-grid'),days=make('div','','booking-month-grid'),formArea=make('div'),monthTitle=make('h3'),dayTitle=make('h3','Select an available date'),zoneNote=make('p','','booking-status');status.setAttribute('role','status');
   const previous=button('Previous month',()=>{month.setMonth(month.getMonth()-1);load();}),next=button('Next month',()=>{month.setMonth(month.getMonth()+1);load();}),nav=make('div','','booking-month-nav');previous.textContent='‹';previous.setAttribute('aria-label','Previous month');next.textContent='›';next.setAttribute('aria-label','Next month');nav.append(previous,monthTitle,next);
-  const weekdays=make('div','','booking-weekdays');for(const day of ['MON','TUE','WED','THU','FRI','SAT','SUN'])weekdays.append(make('span',day));weekdays.setAttribute('aria-hidden','true');
+  const weekStart=calendarDisplay==='saturday'?6:['israel','us'].includes(calendarDisplay)?0:1;
+  const formatLabel=make('label','Time format'),timeFormat=make('select');for(const [value,text] of [['24','24-hour'],['12','12-hour']]){const option=make('option',text);option.value=value;timeFormat.append(option);}timeFormat.value=calendarDisplay==='us'?'12':'24';formatLabel.append(timeFormat);
+  const weekdays=make('div','','booking-weekdays');for(let i=0;i<7;i++)weekdays.append(make('span',['SUN','MON','TUE','WED','THU','FRI','SAT'][(weekStart+i)%7]));weekdays.setAttribute('aria-hidden','true');
   const calendar=make('section','','booking-month'),times=make('section','','booking-times'),layout=make('div','','booking-calendar-layout');calendar.setAttribute('aria-label','Choose a meeting date');calendar.append(nav,weekdays,days);times.append(dayTitle,zoneNote,grid);layout.append(calendar,times);
-  controls.append(label);calendar.append(controls);const panelHeading=make('h2','Select a date and time','booking-panel-title');const retryAvailability=button('Retry availability',()=>load());retryAvailability.hidden=true;panel.append(panelHeading,status,retryAvailability,layout,formArea);zone.addEventListener('change',()=>{selectedDate='';load();});await load();
+  controls.append(label,formatLabel);timeFormat.addEventListener('change',()=>{days.querySelector('[aria-pressed=true]')?.click();});calendar.append(controls);const panelHeading=make('h2','Select a date and time','booking-panel-title');const retryAvailability=button('Retry availability',()=>load());retryAvailability.hidden=true;panel.append(panelHeading,status,retryAvailability,layout,formArea);zone.addEventListener('change',()=>{selectedDate='';load();});await load();
   async function load(){
-   step(2);layout.hidden=false;retryAvailability.hidden=true;const current=++revision;status.textContent='Checking availability...';panel.setAttribute('aria-busy','true');grid.replaceChildren();days.replaceChildren();formArea.replaceChildren();monthTitle.textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});previous.disabled=month<=firstMonth;
+   step(2);panelHeading.textContent='Select a date and time';layout.hidden=false;retryAvailability.hidden=true;const current=++revision;status.textContent='Checking availability...';panel.setAttribute('aria-busy','true');grid.replaceChildren();days.replaceChildren();formArea.replaceChildren();monthTitle.textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});previous.disabled=month<=firstMonth;
    const maxMonth=new Date(today);maxMonth.setDate(maxMonth.getDate()+(meeting.horizon||365));next.disabled=month.getFullYear()===maxMonth.getFullYear()&&month.getMonth()>=maxMonth.getMonth()||month>maxMonth;
    dayTitle.textContent='Select an available date';zoneNote.textContent=`Times shown in ${zone.value.replaceAll('_',' ')}.`;
    try{
@@ -55,10 +59,10 @@
     if(current!==revision||!panel.isConnected)return;currentSlots=result.slots;
     status.textContent=currentSlots.length?'Choose a date, then an available time.':'No available times this month. Try another month or contact the host.';
     const groups=new Map();for(const slot of currentSlots){const key=inZone(slot.start);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(slot);}
-    for(let i=0;i<(month.getDay()+6)%7;i++)days.append(make('span'));
-    function choose(key,b){step(2);selectedDate=key;grid.replaceChildren();formArea.replaceChildren();for(const item of days.querySelectorAll('button'))item.setAttribute('aria-pressed',String(item===b));dayTitle.textContent=new Date(key+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});for(const slot of groups.get(key)){const text=new Date(slot.start).toLocaleTimeString(undefined,{timeZone:zone.value,hour:'2-digit',minute:'2-digit'});const time=button(text,()=>{for(const item of grid.children)item.setAttribute('aria-pressed',String(item===time));bookingForm(slot);});grid.append(time);}}
+    for(let i=0;i<(month.getDay()-weekStart+7)%7;i++)days.append(make('span'));
+    function choose(key,b){step(2);selectedDate=key;grid.replaceChildren();formArea.replaceChildren();for(const item of days.querySelectorAll('button'))item.setAttribute('aria-pressed',String(item===b));dayTitle.textContent=new Date(key+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});for(const slot of groups.get(key)){const text=new Date(slot.start).toLocaleTimeString(undefined,{timeZone:zone.value,hour:'2-digit',minute:'2-digit',hour12:timeFormat.value==='12'});const time=button(text,()=>{for(const item of grid.children)item.setAttribute('aria-pressed',String(item===time));bookingForm(slot);});grid.append(time);}}
     let first=null,selected=null;
-    for(let day=1;day<=count;day++){const value=new Date(month.getFullYear(),month.getMonth(),day),key=dateKey(value),b=button(String(day),()=>choose(key,b));b.disabled=!groups.has(key);b.setAttribute('aria-label',`${value.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}${b.disabled?' - unavailable':' - available'}`);b.setAttribute('aria-pressed','false');days.append(b);if(!b.disabled&&!first)first={key,b};if(key===selectedDate&&!b.disabled)selected={key,b};}
+    for(let day=1;day<=count;day++){const value=new Date(month.getFullYear(),month.getMonth(),day),key=dateKey(value),b=button(String(day),()=>choose(key,b));b.disabled=!groups.has(key);b.setAttribute('aria-label',`${value.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}${b.disabled?' - unavailable':' - available'}`);b.setAttribute('aria-pressed','false');if(key===inZone(Date.now()))b.setAttribute('aria-current','date');days.append(b);if(!b.disabled&&!first)first={key,b};if(key===selectedDate&&!b.disabled)selected={key,b};}
     const pick=selected||first;if(pick)choose(pick.key,pick.b);
    }catch(e){if(current===revision){status.textContent=e.message;grid.replaceChildren();retryAvailability.hidden=false;}}finally{if(current===revision)panel.removeAttribute('aria-busy');}
   }
