@@ -11,7 +11,7 @@ Rows contain only UTC day, allowlisted authentication provider, and domain-separ
 In Cloudflare, open Workers & Pages > D1 > red-crown-calendar > Console and run the queries from analytics-report.sql. Or run from calendar-service:
 
 ```powershell
-npx wrangler d1 execute red-crown-calendar --remote --file analytics-report.sql
+npx wrangler d1 execute red-crown-calendar --remote --command "SELECT day, COUNT(DISTINCT user_key) AS active_users, COUNT(DISTINCT session_key) AS sessions FROM usage_sessions GROUP BY day ORDER BY day DESC"
 ```
 
 The first result is daily active verified users and sessions; the second groups unique users and sessions by password, Google, Microsoft or other sign-in method. Cross-day unique sessions are counted once in the second report. Account-level access to Cloudflare is required; there is no public analytics endpoint or in-app analytics dashboard.
