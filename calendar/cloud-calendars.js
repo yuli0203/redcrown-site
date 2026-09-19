@@ -15,11 +15,6 @@
   for(const account of accounts){
    const card=node('article','','calendar-account'),heading=node('div','','calendar-account-heading'),info=node('div');info.append(node('h2',account.email),node('p',`${account.provider==='ical'?'Calendar link (read only)':account.provider==='google'?'Google Calendar':'Microsoft Outlook'}${account.provider==='ical'?' - provider updates may be delayed':' - persistent connection'}`,'sync-small'));
    const actions=node('div','','calendar-account-actions');
-   if(account.provider!=='ical'){
-    const he=document.documentElement.lang.startsWith('he');
-    info.append(node('p',account.mailEnabled?(he?'התראות על הזמנות נשלחות מחשבון זה אל עצמו.':'Booking notifications are sent from this account to itself.'):(he?'יש לחבר מחדש כדי לאפשר שליחת התראות על הזמנות אל עצמכם. נדרשת הרשאת שליחה בלבד, ללא קריאת אימיילים.':'Reconnect to enable booking emails to yourself. Requires send-only permission, not inbox access.'),'sync-small'));
-    if(!account.mailEnabled)actions.append(button(he?'הפעלת התראות באימייל':'Enable booking emails',()=>connect(account.provider)));
-   }
    actions.append(button('Edit calendars',()=>edit(card,account)));
    if(reconnectNeeded.has(account.id))actions.append(button('Reconnect',()=>connect(account.provider)));
    const menu=node('details','','calendar-account-menu'),toggle=node('summary','⋯');toggle.setAttribute('aria-label',`More options for ${account.email}`);toggle.title='More options';
