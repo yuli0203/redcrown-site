@@ -24,3 +24,9 @@ test('DST gaps and repeated wall times are not silently shifted',()=>{
 test('Reject overlapping hours and unsafe page addresses',()=>{
  assert.throws(()=>validateWorkspace({weekly:{1:[['09:00','12:00'],['11:00','13:00']]}}));assert.throws(()=>validateWorkspace({slug:'../admin'}));assert.throws(()=>validateWorkspace({timezone:'Fake/Zone'}));
 });
+
+test('Display preference persists without changing bookable slots',()=>{
+ const base=workspace(),range=dateRange('2026-10-05',1,base.timezone),now=Date.parse('2026-10-01T00:00:00Z');
+ for(const calendarDisplay of ['global','israel','us','saturday']){const value=validateWorkspace({...base,calendarDisplay});assert.equal(value.calendarDisplay,calendarDisplay);assert.deepEqual(slots(value,meeting,[],range,now),slots(base,meeting,[],range,now));}
+ assert.throws(()=>validateWorkspace({...base,calendarDisplay:'invalid'}));
+});

@@ -35,3 +35,10 @@ test('Nonblocking and all-day events keep metadata without hiding busy periods',
  assert.ok(entries.some(e=>e.allDay && e.title==='Reminder'));
  assert.deepEqual(calendarEntries([], [{start:end,end:end+1000,title:'Tomorrow'}],date,start,end),[]);
 });
+
+test('Display presets align every weekday without changing calendar dates',()=>{
+ const {displayPresets,weekOffset}=require('../calendar/busy-calendar.js');
+ assert.equal(displayPresets.global.firstDay,1);assert.equal(displayPresets.israel.firstDay,0);assert.equal(displayPresets.us.hourCycle,'h12');assert.equal(displayPresets.saturday.firstDay,6);
+ for(const preset of Object.values(displayPresets))for(let day=0;day<7;day++)assert.equal((weekOffset(day,preset.firstDay)+preset.firstDay)%7,day);
+ assert.equal(weekOffset(new Date(2026,8,1).getDay(),0),2);assert.equal(weekOffset(new Date(2026,8,1).getDay(),1),1);
+});

@@ -1,5 +1,7 @@
 (() => {
   'use strict';
+  const displayPresets={global:{firstDay:1,hourCycle:'h23'},israel:{firstDay:0,hourCycle:'h23'},us:{firstDay:0,hourCycle:'h12'},saturday:{firstDay:6,hourCycle:'h23'}};
+  const weekOffset=(day,firstDay)=>(day-firstDay+7)%7;
   // Local day boundaries preserve 23/25-hour days across daylight saving changes.
   function dayBounds(date) {
     const start = new Date(date.getFullYear(),date.getMonth(),date.getDate());
@@ -21,11 +23,12 @@
     }
     return entries.sort((a,b)=>a.start-b.start || a.end-b.end);
   }
-  if (typeof module !== 'undefined') module.exports={dayBounds,dayIntervals,calendarEntries};
+  if (typeof module !== 'undefined') module.exports={dayBounds,dayIntervals,calendarEntries,displayPresets,weekOffset};
   if (typeof document === 'undefined') return;
   const $ = selector => document.querySelector(selector);
   let intervals=[], meetings=[], rangeStart=0, rangeEnd=0, selected=null, month=null, synced=false;
-  const time = stamp => new Date(stamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+  let display=displayPresets.global;
+  const time = stamp => new Date(stamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hourCycle:display.hourCycle});
   const label = date => date.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   function daySegments(date) {
     const bounds=dayBounds(date), start=Math.max(bounds.start,rangeStart), end=Math.min(bounds.end,rangeEnd);
@@ -53,7 +56,7 @@
       $('#busy-day-coverage').textContent='Availability has not been checked for this date.';
       const note=document.createElement('p');note.className='sync-small';note.textContent='This date is outside the checked month. Refresh availability to check it.';list.append(note);return;
     }
-    $('#busy-day-coverage').textContent=`Checked ${time(from)} - ${to === bounds.end ? '24:00' : time(to)}. Free and busy times below.`;
+    $('#busy-day-coverage').textContent=`Checked ${time(from)} - ${to === bounds.end ? (display.hourCycle==='h12'?'12:00 AM':'24:00') : time(to)}. Free and busy times below.`;
     const entries=calendarEntries(intervals,meetings,selected,rangeStart,rangeEnd);
     const items=[...entries,...daySegments(selected).filter(item=>!item.busy).map(item=>({...item,title:'Free'}))].sort((a,b)=>a.start-b.start);
     if (!items.length) {
@@ -61,7 +64,7 @@
     }
     for (const item of items) {
       const block=document.createElement('div'); block.className='busy-time-block'+(item.busy?'':' free-time-block');
-      const times=document.createElement('strong'); times.textContent=item.allDay || (item.start === bounds.start && item.end === bounds.end) ? 'All day' : `${time(item.start)} - ${item.end === bounds.end ? '24:00' : time(item.end)}`;
+      const times=document.createElement('strong'); times.textContent=item.allDay || (item.start === bounds.start && item.end === bounds.end) ? 'All day' : `${time(item.start)} - ${item.end === bounds.end ? (display.hourCycle==='h12'?'12:00 AM':'24:00') : time(item.end)}`;
       const text=document.createElement('span'); text.className='calendar-event-info';
       const name=document.createElement('strong');name.textContent=item.title || 'Busy';text.append(name);
       if(item.calendar) {const source=document.createElement('small');source.textContent=item.calendar+(item.busy?'':' - does not block availability');text.append(source);}
@@ -72,8 +75,10 @@
     const first=new Date(month.getFullYear(),month.getMonth(),1);
     const count=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();
     $('#busy-month-label').textContent=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+    const weekdays=$('#busy-weekdays');weekdays.replaceChildren();
+    const names=['SUN','MON','TUE','WED','THU','FRI','SAT'];for(let i=0;i<7;i++){const name=document.createElement('span');name.textContent=names[(display.firstDay+i)%7];weekdays.append(name);}
     const grid=$('#busy-date-grid'); grid.replaceChildren();
-    for(let i=0;i<(first.getDay()+6)%7;i++) {const spacer=document.createElement('span');spacer.className='calendar-spacer';grid.append(spacer);}
+    for(let i=0;i<weekOffset(first.getDay(),display.firstDay);i++) {const spacer=document.createElement('span');spacer.className='calendar-spacer';grid.append(spacer);}
     for(let day=0;day<count;day++) {
       const date=new Date(first);date.setDate(date.getDate()+day);
       const bounds=dayBounds(date), checked=synced && bounds.end>rangeStart && bounds.start<rangeEnd, parts=checked?daySegments(date):[];
@@ -98,7 +103,7 @@
       if(!checked) button.classList.add('day-unchecked');
       button.setAttribute('aria-pressed',String(+selected===+date));
       button.setAttribute('aria-label',`${label(date)}: ${status.textContent}${entries.length ? '. '+entries.map(item=>item.title).join(', ') : ''}. Show times`);
-      button.addEventListener('click',()=>{selected=date;draw();grid.children[(first.getDay()+6)%7+day].focus({preventScroll:true});});
+      button.addEventListener('click',()=>{selected=date;draw();grid.children[weekOffset(first.getDay(),display.firstDay)+day].focus({preventScroll:true});});
       grid.append(button);
     }
     drawDay();
@@ -110,6 +115,7 @@
   $('#busy-previous-month').addEventListener('click',()=>changeMonth(-1));
   $('#busy-next-month').addEventListener('click',()=>changeMonth(1));
   window.CrownBusyPreview={
+    setDisplay(preset){display=displayPresets[preset]||displayPresets.global;if(month)draw();},
     clear() {
       intervals=[]; meetings=[]; synced=false;
       rangeStart=dayBounds(new Date()).start;

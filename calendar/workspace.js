@@ -67,7 +67,7 @@
     try { stored = JSON.parse(localStorage.getItem(key()) || '{}') || {}; } catch {}
     if(cloud){const result=await window.CrownAPI.request('/workspace');if(version!==revision)return;serverVersion=result.version;if(result.data)stored=result.data;}
     savedData = typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
-    stored = savedData;
+    stored = savedData;window.CrownBusyPreview.setDisplay(stored.calendarDisplay||'global');
     $('#meeting-page-name').value=typeof stored.pageName==='string' ? stored.pageName : displayName;
     const validMeeting = m => m && typeof m.id === 'string' && typeof m.title === 'string' && m.title.trim() && m.title.length <= 80 && typeof m.description === 'string' && m.description.length <= 500 && Number.isInteger(m.duration) && m.duration >= 1 && m.duration <= 480 && ['before','after'].every(k => Number.isInteger(m[k]) && m[k] >= 0 && m[k] <= 240);
     meetings = Array.isArray(stored.meetings) ? stored.meetings.filter(validMeeting) : [];
@@ -178,6 +178,11 @@
     }catch(e){if(version===revision)$('#upcoming-bookings-status').textContent=e.message;}
   }
   $('#refresh-bookings').addEventListener('click',upcoming);
+  const displayDialog=$('#calendar-display-dialog');
+  $('#open-calendar-display').addEventListener('click',()=>{if(!uid)return;$('#calendar-display-preset').value=savedData.calendarDisplay||'global';$('#calendar-display-status').textContent='';displayDialog.showModal();});
+  $('#close-calendar-display').addEventListener('click',()=>displayDialog.close());
+  $('#cancel-calendar-display').addEventListener('click',()=>displayDialog.close());
+  $('#calendar-display-form').addEventListener('submit',async event=>{event.preventDefault();const preset=$('#calendar-display-preset').value;if(await persist({calendarDisplay:preset},'#calendar-display-status')){window.CrownBusyPreview.setDisplay(preset);displayDialog.close();}});
   const imageVersions = {logo:0,photo:0};
   const profileDialog=$('#profile-dialog');
   function renderProfile(){
@@ -217,7 +222,7 @@
   }
   document.addEventListener('crown-auth-change',async event => {
     if (uid === event.detail.uid) return;
-    if (dialog.open) dialog.close();if(pageDialog.open)pageDialog.close();if(profileDialog.open)profileDialog.close();
+    if (dialog.open) dialog.close();if(pageDialog.open)pageDialog.close();if(profileDialog.open)profileDialog.close();if(displayDialog.open)displayDialog.close();window.CrownBusyPreview.setDisplay('global');
     $('#upcoming-bookings').hidden=true;$('#upcoming-bookings-list').replaceChildren();
     uid = event.detail.uid; displayName=event.detail.displayName || ''; userEmail=event.detail.email || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
