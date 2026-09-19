@@ -49,7 +49,7 @@
     if(cloud&&savedData.published&&savedData.slug&&meeting?.enabled!==false)return;
     event.preventDefault();
     const list=$('#booking-readiness-list');list.replaceChildren();
-    const checks=[['Save a landing page name and address',Boolean(savedData.pageName&&savedData.slug),'#open-page-settings'],['Add at least one active meeting type',meetings.some(m=>m.enabled!==false),'#add-meeting-type'],['Choose a scheduling calendar for new bookings',Boolean(savedData.destination),'#schedule-destination']];
+    const checks=[['Landing page name and link',Boolean(savedData.pageName&&savedData.slug),'#open-page-settings'],['Add at least one active meeting type',meetings.some(m=>m.enabled!==false),'#add-meeting-type'],['Choose a scheduling calendar for new bookings',Boolean(savedData.destination),'#schedule-destination']];
     for(const [text,done,target] of checks){const item=document.createElement('li');item.textContent=(done?'Ready: ':'Needed: ')+text;if(!done){const action=document.createElement('button');action.type='button';action.className='auth-link';action.textContent='Configure';action.addEventListener('click',()=>{$('#booking-readiness-dialog').close();const control=$(target);control.scrollIntoView({block:'center'});control.focus();if(target!=='#schedule-destination')control.click();});item.append(' ',action);}list.append(item);}
     $('#booking-readiness-status').textContent=meeting?.enabled===false?'This meeting is paused. Enable it in your meeting list before accepting bookings.':!cloud?'The booking service is unavailable. Live booking cannot be opened.':'';
     $('#publish-and-open').disabled=!cloud||!checks.every(([,done])=>done)||meeting?.enabled===false;
@@ -114,6 +114,13 @@
     try { stored = JSON.parse(localStorage.getItem(key()) || '{}') || {}; } catch {}
     if(cloud){const result=await window.CrownAPI.request('/workspace');if(version!==revision)return;serverVersion=result.version;if(result.data)stored=result.data;}
     savedData = typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
+    if(!savedData.pageName||!savedData.slug){
+      const name=(savedData.pageName||displayName||'Your host').trim().slice(0,60);
+      const base=slug(name).replace(/[^a-z0-9-]/g,'').replace(/^-+|-+$/g,'').slice(0,40)||'meetings';
+      const changes={pageName:name,slug:savedData.slug||`${base}-${crypto.randomUUID().slice(0,8)}`};
+      if(!await persist(changes,'#meeting-settings-status'))return;
+      if(version!==revision)return;
+    }
     stored = savedData;window.CrownBusyPreview.setDisplay(stored.calendarDisplay||'global');
     $('#meeting-page-name').value=typeof stored.pageName==='string' ? stored.pageName : displayName;
     const validMeeting = m => m && typeof m.id === 'string' && typeof m.title === 'string' && m.title.trim() && m.title.length <= 80 && typeof m.description === 'string' && m.description.length <= 500 && Number.isInteger(m.duration) && m.duration >= 1 && m.duration <= 480 && ['before','after'].every(k => Number.isInteger(m[k]) && m[k] >= 0 && m[k] <= 240);
