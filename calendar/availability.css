@@ -38,3 +38,5 @@
 .free-time-block span{color:#389777}
 @media(max-width:800px){.busy-calendar-layout{grid-template-columns:1fr;gap:26px}.busy-day-panel{border-left:0;border-top:1px solid var(--line);padding:22px 0 0;min-height:0}}
 @media(max-width:500px){.synced-calendar-preview{padding:20px 16px}.busy-date-grid{gap:5px}.busy-date-grid button{min-height:48px;padding:5px}.busy-date-grid button strong{font-size:13px}.busy-date-grid button strong small{font-size:8px}}
+
+.busy-calendar-layout .month-nav button:hover{background:color-mix(in srgb,var(--accent) 12%,var(--panel))}.busy-date-grid button.day-unchecked:not([aria-pressed=true]){background:transparent;color:var(--muted)}

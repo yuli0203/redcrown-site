@@ -14,7 +14,7 @@
   if (typeof module !== 'undefined') module.exports={dayBounds,dayIntervals};
   if (typeof document === 'undefined') return;
   const $ = selector => document.querySelector(selector);
-  let intervals=[], rangeStart=0, rangeEnd=0, selected=null, synced=false;
+  let intervals=[], rangeStart=0, rangeEnd=0, selected=null, month=null, synced=false;
   const time = stamp => new Date(stamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
   const label = date => date.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   function daySegments(date) {
@@ -39,6 +39,10 @@
     }
     const bounds=dayBounds(selected);
     const from=Math.max(bounds.start,rangeStart), to=Math.min(bounds.end,rangeEnd);
+    if(from>=to) {
+      $('#busy-day-coverage').textContent='Availability has not been checked for this date.';
+      const note=document.createElement('p');note.className='sync-small';note.textContent='Calendar sync currently checks the next 30 days. This date is outside that range.';list.append(note);return;
+    }
     $('#busy-day-coverage').textContent=`Checked ${time(from)} - ${to === bounds.end ? '24:00' : time(to)}. Free and busy times below.`;
     const items=daySegments(selected);
     if (!items.length) {
@@ -51,27 +55,27 @@
     }
   }
   function draw() {
-    const first=new Date(dayBounds(new Date(rangeStart)).start);
-    const last=new Date(first);last.setDate(last.getDate()+29);
-    $('#busy-month-label').textContent=`${first.toLocaleDateString(undefined,{month:'short',day:'numeric'})} - ${last.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}`;
+    const first=new Date(month.getFullYear(),month.getMonth(),1);
+    const count=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();
+    $('#busy-month-label').textContent=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
     const grid=$('#busy-date-grid'); grid.replaceChildren();
     for(let i=0;i<(first.getDay()+6)%7;i++) {const spacer=document.createElement('span');spacer.className='calendar-spacer';grid.append(spacer);}
-    for(let day=0;day<30;day++) {
+    for(let day=0;day<count;day++) {
       const date=new Date(first);date.setDate(date.getDate()+day);
-      const bounds=dayBounds(date), parts=synced?daySegments(date):[];
+      const bounds=dayBounds(date), checked=synced && bounds.end>rangeStart && bounds.start<rangeEnd, parts=checked?daySegments(date):[];
       const busy=parts.filter(item=>item.busy), free=parts.filter(item=>!item.busy);
       const button=document.createElement('button');button.type='button';
       const title=document.createElement('strong');title.textContent=date.getDate();
-      if(day===0 || date.getDate()===1) {const monthLabel=document.createElement('small');monthLabel.textContent=date.toLocaleDateString(undefined,{month:'short'});title.prepend(monthLabel);}
       const status=document.createElement('span');status.className='day-availability';
-      status.textContent=!synced?'Not synced':!free.length?'Fully busy':!busy.length?'Free':`${busy.length} busy`;
+      status.textContent=!synced?'Not synced':!checked?'Not checked':!free.length?'Fully busy':!busy.length?'Free':`${busy.length} busy`;
       const track=document.createElement('span');track.className='day-timeline'+(!synced?' is-unknown':'');
       for(const part of parts) {
         const segment=document.createElement('span');segment.className=part.busy?'timeline-busy':'timeline-free';
         segment.style.left=`${(part.start-bounds.start)/(bounds.end-bounds.start)*100}%`;
         segment.style.width=`${(part.end-part.start)/(bounds.end-bounds.start)*100}%`;track.append(segment);
       }
-      button.append(title);if(synced) button.append(track);
+      button.append(title);if(checked) button.append(track);
+      if(!checked) button.classList.add('day-unchecked');
       button.setAttribute('aria-pressed',String(+selected===+date));
       button.setAttribute('aria-label',`${label(date)}: ${status.textContent}. Show times`);
       button.addEventListener('click',()=>{selected=date;draw();grid.children[(first.getDay()+6)%7+day].focus({preventScroll:true});});
@@ -79,18 +83,24 @@
     }
     drawDay();
   }
+  function changeMonth(delta) {
+    month=new Date(month.getFullYear(),month.getMonth()+delta,1);selected=new Date(month);draw();
+  }
+  $('#busy-previous-month').addEventListener('click',()=>changeMonth(-1));
+  $('#busy-next-month').addEventListener('click',()=>changeMonth(1));
   window.CrownBusyPreview={
     clear() {
       intervals=[]; synced=false;
       rangeStart=dayBounds(new Date()).start;
       const end=new Date(rangeStart);end.setDate(end.getDate()+30);rangeEnd=+end;
-      selected=new Date(rangeStart);
+      selected=new Date(rangeStart);month=new Date(selected.getFullYear(),selected.getMonth(),1);
       $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
       $('#synced-calendar-preview').hidden=false;draw();
     },
     update(items,start,end) {
       intervals=items.map(item=>({...item}));rangeStart=start;rangeEnd=end;synced=true;
       if(!selected || dayBounds(selected).end<=start || +selected>=end) selected=new Date(dayBounds(new Date(start)).start);
+      month=new Date(selected.getFullYear(),selected.getMonth(),1);
       $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone} - ${new Date(start).toLocaleDateString()} to ${new Date(end).toLocaleDateString()}`;
       $('#synced-calendar-preview').hidden=false;draw();
     }
