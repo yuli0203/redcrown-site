@@ -155,7 +155,7 @@
     }
     if ($('#signin-availability')) $('#signin-availability').textContent = user ? 'Signed in. The calendar currently saves meetings on this device only.' : (microsoftEnabled ? 'Google, Microsoft or email. No credit card required.' : 'Google or email. Microsoft sign-in is coming soon. No credit card required.');
     // This is a display/storage partition, not authorization. Future server APIs must verify ID tokens.
-    document.dispatchEvent(new CustomEvent('crown-auth-change', {detail:{uid:user?.uid || null}}));
+    document.dispatchEvent(new CustomEvent('crown-auth-change', {detail:{uid:user?.uid || null,displayName:user?.displayName || ''}}));
   }
   async function initialize() {
     updateControls();

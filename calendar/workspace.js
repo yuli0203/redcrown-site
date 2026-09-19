@@ -8,6 +8,32 @@
   const nav = [...document.querySelectorAll('.product-nav a')].map(link => ({link,href:link.getAttribute('href'),text:link.textContent}));
   const key = () => `crown-calendar-workspace-v1:${uid}`;
   const fields = ['title','description','duration','before','after','accent','background','text'];
+  let displayName = '';
+  const slug = value => value.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'') || 'your-name';
+  function shareLink(meeting) {
+    const name = savedData.pageName || displayName || 'Your name';
+    const url = new URL('/calendar/meet/',location.origin);
+    url.searchParams.set('user',slug(name)); url.searchParams.set('page',meeting ? slug(meeting.title) : 'meetings');
+    const data = {v:1,name,meetings:(meeting ? [meeting] : meetings).map(({title,description,duration})=>({title,description,duration})),accent:savedData.accent || defaults.accent,background:savedData.background || defaults.background,text:savedData.text || defaults.text};
+    url.hash = encodeURIComponent(JSON.stringify(data));
+    return url.href;
+  }
+  function updateShare() {
+    const url=shareLink(); $('#meeting-page-link').value=url; $('#preview-meeting-page').href=url;
+    $('#copy-meeting-page').disabled=!uid;
+    $('#meeting-share-status').textContent=location.hostname==='127.0.0.1' || location.hostname==='localhost' ? 'Local preview: this address only opens on this computer until the site is published.' : '';
+  }
+  async function copyLink(meeting) {
+    const version=revision;
+    try { await navigator.clipboard.writeText(shareLink(meeting)); if(version===revision) $('#meeting-share-status').textContent='Preview link copied.'; }
+    catch { if(version===revision) { $('#meeting-page-link').value=shareLink(meeting); $('#meeting-page-link').focus(); $('#meeting-page-link').select(); $('#meeting-share-status').textContent='Select and copy the link above.'; } }
+  }
+  $('#copy-meeting-page').addEventListener('click',()=>copyLink());
+  $('#save-meeting-page-name').addEventListener('click',()=>{
+    const name=$('#meeting-page-name').value.trim();
+    if(!name) { $('#meeting-share-status').textContent='Enter your name first.'; return; }
+    if(persist({pageName:name},'#meeting-share-status')) { renderMeetings(); $('#meeting-share-status').textContent='Page name saved.'; }
+  });
   function preview() {
     const sample = meetings[0] || defaults;
     $('#booking-preview-title').textContent = sample.title;
@@ -25,6 +51,7 @@
     try { stored = JSON.parse(localStorage.getItem(key()) || '{}') || {}; } catch {}
     savedData = typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
     stored = savedData;
+    $('#meeting-page-name').value=typeof stored.pageName==='string' ? stored.pageName : displayName;
     const validMeeting = m => m && typeof m.id === 'string' && typeof m.title === 'string' && m.title.trim() && m.title.length <= 80 && typeof m.description === 'string' && m.description.length <= 500 && Number.isInteger(m.duration) && m.duration >= 1 && m.duration <= 480 && ['before','after'].every(k => Number.isInteger(m[k]) && m[k] >= 0 && m[k] <= 240);
     meetings = Array.isArray(stored.meetings) ? stored.meetings.filter(validMeeting) : [];
     if (!Array.isArray(stored.meetings) && typeof stored.title === 'string' && stored.title.trim()) {
@@ -49,6 +76,7 @@
     catch { $(status).textContent = 'Could not save. Browser storage may be full.'; return false; }
   }
   function renderMeetings() {
+    updateShare();
     const list = $('#meeting-types-list'); list.replaceChildren();
     if (!meetings.length) {
       const empty = document.createElement('p'); empty.className='meeting-list-empty'; empty.textContent='No meetings yet. Add your first meeting to get started.'; list.append(empty);
@@ -67,7 +95,9 @@
         removed={meeting,index}; meetings=next; renderMeetings(); preview();
         $('#meeting-list-status').textContent=`${meeting.title} removed.`; $('#undo-remove-meeting').hidden=false;
       });
-      actions.append(edit,remove); row.append(details,actions); list.append(row);
+      const view=document.createElement('a'); view.className='auth-button'; view.textContent='Preview'; view.href=shareLink(meeting); view.target='_blank'; view.rel='noopener'; view.setAttribute('aria-label',`Preview ${meeting.title}`);
+      const share=document.createElement('button'); share.type='button'; share.className='auth-link'; share.textContent='Copy link'; share.setAttribute('aria-label',`Copy link for ${meeting.title}`); share.addEventListener('click',()=>copyLink(meeting));
+      actions.append(view,share,edit,remove); row.append(details,actions); list.append(row);
     }
   }
   function openMeeting(meeting) {
@@ -102,7 +132,7 @@
     event.preventDefault(); if (!uid || !$('#style-settings-form').reportValidity()) return;
     const changes={logo,meetings};
     for (const field of ['accent','background','text']) changes[field]=$(`#booking-${field}`).value;
-    if (persist(changes,'#style-settings-status')) $('#style-settings-status').textContent='Style saved on this browser.';
+    if (persist(changes,'#style-settings-status')) { renderMeetings(); $('#style-settings-status').textContent='Style saved on this browser.'; }
   });
   for (const field of fields) $(`#booking-${field}`).addEventListener('input',() => { preview(); $('#meeting-settings-status').textContent = ''; $('#style-settings-status').textContent = ''; });
   $('#booking-logo').addEventListener('change', async event => {
@@ -121,7 +151,8 @@
   document.addEventListener('crown-auth-change',event => {
     if (uid === event.detail.uid) return;
     if (dialog.open) dialog.close();
-    uid = event.detail.uid; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
+    uid = event.detail.uid; displayName=event.detail.displayName || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
+    $('#meeting-page-name').value='';
     $('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();
     for (const selector of ['#meeting-settings','#style-settings','.workspace-footer','#workspace-auth-status']) $(selector).hidden = !uid;
     nav.forEach(({link,href,text},i) => { link.setAttribute('href',uid ? ['#sync-availability','#meeting-settings','#style-settings'][i] : href); link.textContent=uid ? ['Sync calendars','Meetings page','Your style'][i] : text; });
