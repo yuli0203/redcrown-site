@@ -9,6 +9,9 @@
     const valid=m=>m && typeof m.title==='string' && m.title.length<=80 && typeof m.description==='string' && m.description.length<=500 && Number.isInteger(m.duration) && m.duration>=1 && m.duration<=480;
     if(!data.meetings.every(valid)) throw new Error();
     for(const [key,variable] of [['accent','--page-accent'],['background','--page-bg'],['text','--page-text']]) if(/^#[0-9a-f]{6}$/i.test(data[key])) document.documentElement.style.setProperty(variable,data[key]);
+    $('.preview-notice').textContent='This is an old static preview link, not a live booking page. Ask the host for their published booking link.';
+    const setup=document.createElement('a');setup.href='/calendar/#meeting-settings';setup.className='booking-button';setup.textContent='Host: open booking setup';$('.preview-notice').append(document.createElement('br'),setup);
+    $('.booking-progress').hidden=true;
     $('#host-name').textContent=`Meet with ${data.name}`;
     if(!data.meetings.length) $('#page-description').textContent='No meetings have been added to this preview yet.';
     const current=new URL(location.href),selected=current.searchParams.get('previewMeeting');
@@ -23,7 +26,7 @@
       card.append(title,duration,description);
       const link=document.createElement('a');link.className='booking-button';const url=new URL(current);
       if(selected===null){url.searchParams.set('previewMeeting',String(index));link.textContent='View meeting';}
-      else{url.searchParams.delete('previewMeeting');link.textContent='All meeting types';const note=document.createElement('p');note.className='booking-status';note.textContent='Online booking is not available yet. This is a preview of the meeting details.';card.append(note);}
+      else{url.searchParams.delete('previewMeeting');link.textContent='All meeting types';const note=document.createElement('p');note.className='booking-status';note.textContent='This snapshot cannot accept bookings. The host must publish the page and share its live link.';card.append(note);}
       link.href=url.href;card.append(link);$('#public-meetings').append(card);
     }
   } catch { $('#page-error').textContent='This preview link is incomplete or invalid. Ask the host for a new link.';$('#page-description').textContent=''; }

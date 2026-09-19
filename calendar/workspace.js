@@ -45,8 +45,25 @@
     url.hash = encodeURIComponent(JSON.stringify(data));
     return url.href;
   }
+  function bookingPageReady(event,meeting){
+    if(cloud&&savedData.published&&savedData.slug&&meeting?.enabled!==false)return;
+    event.preventDefault();
+    const list=$('#booking-readiness-list');list.replaceChildren();
+    const checks=[['Save a landing page name and address',Boolean(savedData.pageName&&savedData.slug),'#open-page-settings'],['Add at least one active meeting type',meetings.some(m=>m.enabled!==false),'#add-meeting-type'],['Choose a scheduling calendar for new bookings',Boolean(savedData.destination),'#schedule-destination']];
+    for(const [text,done,target] of checks){const item=document.createElement('li');item.textContent=(done?'Ready: ':'Needed: ')+text;if(!done){const action=document.createElement('button');action.type='button';action.className='auth-link';action.textContent='Configure';action.addEventListener('click',()=>{$('#booking-readiness-dialog').close();const control=$(target);control.scrollIntoView({block:'center'});control.focus();if(target!=='#schedule-destination')control.click();});item.append(' ',action);}list.append(item);}
+    $('#booking-readiness-status').textContent=meeting?.enabled===false?'This meeting is paused. Enable it in your meeting list before accepting bookings.':!cloud?'The booking service is unavailable. Live booking cannot be opened.':'';
+    $('#publish-and-open').disabled=!cloud||!checks.every(([,done])=>done)||meeting?.enabled===false;
+    $('#publish-and-open').dataset.meeting=meeting?.id||'';
+    $('#booking-readiness-dialog').showModal();
+  }
+  $('#preview-meeting-page').addEventListener('click',event=>bookingPageReady(event));
+  $('#close-booking-readiness').addEventListener('click',()=>$('#booking-readiness-dialog').close());
+  $('#publish-and-open').addEventListener('click',async event=>{
+    const button=event.currentTarget;button.disabled=true;
+    if(await persist({published:true},'#booking-readiness-status')){const meeting=meetings.find(m=>m.id===button.dataset.meeting);renderMeetings();location.assign(shareLink(meeting));}else button.disabled=false;
+  });
   function updateShare() {
-    const url=shareLink(); $('#meeting-page-link').value=url; $('#preview-meeting-page').href=url;
+    const url=shareLink(); $('#meeting-page-link').value=cloud&&!savedData.published?'Publish your page to get a booking link':url; $('#preview-meeting-page').href=cloud&&!savedData.published?'#meeting-settings':url;$('#preview-meeting-page').textContent='Open booking page';
     $('#copy-meeting-page').disabled=!uid || (cloud && !savedData.published);
     $('#publish-page').disabled=!cloud;$('#publish-page').textContent=savedData.published?'Unpublish booking page':'Publish booking page';
     $('#publish-status').textContent=cloud ? (savedData.published?'Your booking page is live.':'Draft - save your settings, then publish.') : 'Publishing requires the booking service to be connected.';
@@ -148,7 +165,7 @@
         removed={meeting,index}; meetings=next; renderMeetings(); preview();
         $('#meeting-list-status').textContent=`${meeting.title} removed.`; $('#undo-remove-meeting').hidden=false;
       });
-      const view=document.createElement('a'); view.className='auth-button'; view.textContent='Preview'; view.href=shareLink(meeting); view.target='_blank'; view.rel='noopener'; view.setAttribute('aria-label',`Preview ${meeting.title}`);
+      const view=document.createElement('a'); view.className='auth-button'; view.textContent='Preview'; view.href=shareLink(meeting); view.target='_blank'; view.rel='noopener'; view.setAttribute('aria-label',`Open booking page for ${meeting.title}`);view.textContent='Open booking page';view.addEventListener('click',event=>bookingPageReady(event,meeting));
       const share=document.createElement('button'); share.type='button'; share.className='auth-link'; share.textContent='Copy link';share.disabled=cloud&&(!savedData.published||meeting.enabled===false); share.setAttribute('aria-label',`Copy link for ${meeting.title}`); share.addEventListener('click',()=>copyLink(meeting));
       const toggle=document.createElement('button');toggle.type='button';toggle.className='auth-link';toggle.textContent=meeting.enabled===false?'Enable':'Pause';toggle.setAttribute('aria-label',`${toggle.textContent} ${meeting.title}`);toggle.addEventListener('click',async()=>{const next=meetings.map(m=>m.id===meeting.id?{...m,enabled:m.enabled===false}:m);if(await persist({meetings:next},'#meeting-list-status')){meetings=next;renderMeetings();}});if(meeting.enabled===false)meta.textContent+=' - Paused';
       actions.append(view,share,edit,toggle,remove); row.append(details,actions); list.append(row);
@@ -274,7 +291,7 @@
   }
   document.addEventListener('crown-auth-change',async event => {
     if (uid === event.detail.uid) return;
-    if (dialog.open) dialog.close();if(pageDialog.open)pageDialog.close();if(profileDialog.open)profileDialog.close();if(displayDialog.open)displayDialog.close();window.CrownBusyPreview.setDisplay('global');
+    if (dialog.open) dialog.close();if($('#booking-readiness-dialog').open)$('#booking-readiness-dialog').close();if(availabilityDialog.open)availabilityDialog.close();if(pageDialog.open)pageDialog.close();if(profileDialog.open)profileDialog.close();if(displayDialog.open)displayDialog.close();window.CrownBusyPreview.setDisplay('global');
     $('#upcoming-bookings').hidden=true;$('#upcoming-bookings-list').replaceChildren();
     uid = event.detail.uid; displayName=event.detail.displayName || ''; userEmail=event.detail.email || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
