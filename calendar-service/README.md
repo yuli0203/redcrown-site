@@ -21,7 +21,7 @@ Keep Porkbun DNS and the existing GitHub Pages website. This service is a separa
 
 1. Cloudflare CLI authorization completed on 2026-09-19. Use `npx wrangler whoami` to verify the current session.
 2. D1 database `red-crown-calendar` was created in the account specified in `wrangler.jsonc`; its binding is configured.
-3. Migrations 0001 and 0002 were applied remotely and verified with `npx wrangler d1 migrations list red-crown-calendar --remote` (no pending migrations).
+3. Migrations 0001, 0002 and 0003 were applied remotely and verified with `npx wrangler d1 migrations list red-crown-calendar --remote` (no pending migrations).
 4. Keep `PUBLIC_ORIGIN` exactly `https://redcrowninteractive.com` and `API_ORIGIN` set to the separate Worker origin. After live acceptance, add public `apiOrigin` to `calendar/auth-config.json`. The API allows only the configured website origin through CORS; authenticated calls use Firebase bearer tokens. Calendar OAuth starts with a top-level form POST so its HttpOnly cookie is first-party, including in browsers that block third-party cookies.
 5. Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `TOKEN_ENCRYPTION_KEY`, `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, `TURNSTILE_SITE_KEY`, and `TURNSTILE_SECRET` through Cloudflare secrets/configuration. Use `wrangler secret put NAME` for secrets. Never paste secrets into chat or public files.
 6. In the Google OAuth web client, register `https://red-crown-calendar-api.yuli0203.workers.dev/calendar/api/oauth/google/callback` (and `http://127.0.0.1:8770/calendar/api/oauth/google/callback` for local testing). The server requests calendar event access to read names and create/cancel bookings, plus the calendar list and identity. Refresh access is requested using the authorization-code flow. Google verification and production scope approval still need review.
@@ -30,7 +30,7 @@ Keep Porkbun DNS and the existing GitHub Pages website. This service is a separa
 9. Build-check with `npm run check`. Deploy the API independently; do not connect the public frontend until provider consent, secrets, Turnstile and acceptance testing are ready.
 10. Perform a live acceptance test with dedicated test calendars: connect two accounts, select sub-calendars, reload, create a meeting, publish, book as a guest, verify the calendar invitation, reschedule, cancel, revoke calendar access and verify bookings fail closed.
 
-The user chose to retain Porkbun DNS and GitHub Pages. Worker deployment is independent of both. No domain transfer, nameserver change or website replacement is required. Provider secrets and Turnstile configuration remain outstanding.
+The user chose to retain Porkbun DNS and GitHub Pages. Worker deployment is independent of both. No domain transfer, nameserver change or website replacement is required. Google and Microsoft provider secrets remain outstanding. The Worker, encryption secret and managed Turnstile widget for redcrowninteractive.com were configured on 2026-09-19. The public frontend is deliberately not switched to this backend until live acceptance passes.
 
 Cloudflare's free tier is a starting point, not unlimited infrastructure. Measure Worker CPU and D1 usage on live provider traffic before public launch. Free-tier requests can fail after quota exhaustion. Multi-account providers can also exceed Worker subrequest quotas; load testing and batching/caching are required before scaling beyond small workspaces.
 

@@ -24,7 +24,7 @@ Deployment dependencies: Cloudflare account/database binding, Google OAuth web c
 
 Fixed a cancellation/rescheduling race: a replacement now validates the original booking atomically through migration 0003, and cancellation claims an eligible booking before calling the provider. Interrupted cancellations expose a retry action, and successful cancellation removes the obsolete rescheduling link. Invitations include the guest management link. Deleted or disabled meeting links display an explanation instead of an empty page.
 
-Validation: 17 service tests, 11 calendar UI logic tests, and the Worker dry-run build passed. Sample-only browser booking and cancellation succeeded; the cancelled page has no remaining rescheduling action. The unavailable-meeting message was verified in the browser. No real provider invitations were sent. Migration 0003 is local and must be applied before deploying this change.
+Validation: 17 service tests, 11 calendar UI logic tests, and the Worker dry-run build passed. Sample-only browser booking and cancellation succeeded; the cancelled page has no remaining rescheduling action. The unavailable-meeting message was verified in the browser. No real provider invitations were sent. Migration 0003 was subsequently adapted to the D1 SQL parser and applied remotely.
 
 Resolved the daily-limit rescheduling issue in d9f79ac with a regression test. Live provider testing and credentials remain outstanding.
 
@@ -34,3 +34,8 @@ Resolved the daily-limit rescheduling issue in d9f79ac with a regression test. L
 Kept Porkbun DNS and GitHub Pages. Added restricted-origin CORS and first-party OAuth form navigation to a separate Worker. The frontend supports a configured API origin and fails closed during configured-service outages. Public errors no longer expose selected calendar names. Added refreshable calendar lists and destination-removal protection. Paused meeting types retain their state when edited. Public meeting cards link to individual booking pages with month navigation, selectable dates, times and explicit guest time zones.
 
 Validation: 21 service tests and 11 calendar UI logic tests pass. Worker dry-run passes. Browser checks cover month navigation, normal booking and the confirmation state with the isolated sample fixture. No real invitations have been sent. Remaining release gates are listed in README.
+
+
+## Independent API deployment
+
+The Worker was deployed to red-crown-calendar-api.yuli0203.workers.dev; production health and the exact allowed CORS origin were verified. Applied migration 0003 after replacing its CASE expression with an equivalent WHEN condition supported by the D1 migration parser. Installed an independent encryption key and a managed Turnstile widget for redcrowninteractive.com. Secrets are stored in Cloudflare and the Git-ignored .production.vars file. No DNS, registrar, GitHub Pages deployment, or public frontend API configuration was changed. Google/Microsoft credentials and live end-to-end acceptance remain blockers.
