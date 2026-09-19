@@ -2,7 +2,7 @@
 html[data-theme="light"]{color-scheme:light;--bg:#faf7f8;--panel:#fff;--line:#36212b20;--text:#271c22;--muted:#675761;--red:#bc1033;--accent:#a6193b}
 [data-theme="light"] :is(.entry-card,.steps-grid article,.connection-list,.support-grid>section){background:#fff;border-color:#dfcdd5}
 [data-theme="light"] .entry-card{box-shadow:0 10px 35px #58203109}
-[data-theme="light"] .full-footer{background:#f1e8ec;border-top-color:#dbc7d0}
+[data-theme="light"] .full-footer{--text:#f0eae4;--muted:#b3a4ab;--accent:#f27790;--line:#ffffff16;background:#160e12;color:var(--text);border-top-color:#58313f}
 [data-theme="light"] .auth-button{background:#fff;border-color:#c8aeb9}
 [data-theme="light"] .auth-button:hover{background:#f5e7ed}
 [data-theme="light"] .theme-toggle{background:transparent}
