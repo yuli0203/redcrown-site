@@ -124,10 +124,17 @@
       actions.append(view,share,edit,toggle,remove); row.append(details,actions); list.append(row);
     }
   }
+  function noticeLimits(){
+    const value=$('#booking-notice-value');value.max=43200/window.CrownNotice.factors[$('#booking-notice-unit').value];value.setCustomValidity('');
+  }
+  function setNotice(minutes){const display=window.CrownNotice.display(minutes);$('#booking-notice-value').value=display.value;$('#booking-notice-unit').value=display.unit;noticeLimits();}
+  $('#booking-notice-value').addEventListener('input',noticeLimits);
+  $('#booking-notice-unit').addEventListener('change',noticeLimits);
   function openMeeting(meeting) {
     if (!uid) return;
     editingId=meeting?.id || null;
     for (const field of meetingFields) $(`#booking-${field}`).value=(meeting || defaults)[field] ?? defaults[field];
+    setNotice(meeting?.notice??defaults.notice);
     $('#booking-reminderEmail').value=meeting?.reminderEmail || window.CrownAuth?.current?.()?.email || userEmail;reminderInputs();
     $('#configure-meeting-title').textContent=meeting ? 'Configure meeting' : 'Add meeting';
     $('#meeting-settings-status').textContent=''; $('#booking-title').setCustomValidity(''); dialog.showModal(); $('#booking-title').focus();
@@ -139,6 +146,7 @@
   $('#meeting-settings-form').addEventListener('submit',async event=>{
     event.preventDefault(); if (!uid) return;
     $('#booking-title').setCustomValidity($('#booking-title').value.trim() ? '' : 'Enter a meeting name.');
+    try{$('#booking-notice').value=window.CrownNotice.toMinutes(Number($('#booking-notice-value').value),$('#booking-notice-unit').value);}catch(error){$('#booking-notice-value').setCustomValidity(error.message);}
     if (!$('#meeting-settings-form').reportValidity()) return;
     const meeting={id:editingId || crypto.randomUUID(),enabled:editingId?meetings.find(m=>m.id===editingId)?.enabled!==false:true};
     for (const field of meetingFields) meeting[field]=typeof defaults[field]==='number' ? Number($(`#booking-${field}`).value) : $(`#booking-${field}`).value.trim();

@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/calendar/theme.css">
 <script src="/calendar/theme.js"></script>
 <script defer src="/calendar/api.js"></script><script defer src="/calendar/auth.js?v=reminders-1"></script>
-<script defer src="/calendar/busy-calendar.js"></script><script defer src="/calendar/cloud-calendars.js"></script><script defer src="/calendar/availability.js"></script><script defer src="/calendar/settings.js"></script><script defer src="/calendar/workspace.js?v=profile-1"></script>
+<script defer src="/calendar/busy-calendar.js"></script><script defer src="/calendar/cloud-calendars.js"></script><script defer src="/calendar/availability.js"></script><script defer src="/calendar/settings.js"></script><script defer src="/calendar/notice.js"></script><script defer src="/calendar/workspace.js?v=notice-1"></script>
 <link rel="stylesheet" href="/calendar/availability.css">
 </head>
 <body class="product-home">
@@ -67,7 +67,7 @@
 <label class="settings-wide">Welcome message<textarea id="booking-description" maxlength="500" rows="3">Choose a time that works for you.</textarea></label>
 <label>Buffer before (minutes)<input id="booking-before" type="number" min="0" max="240" step="1" required value="0"></label>
 <label>Buffer after (minutes)<input id="booking-after" type="number" min="0" max="240" step="1" required value="15"></label>
-<label>Minimum notice (minutes)<input id="booking-notice" type="number" min="0" max="43200" value="120" required></label>
+<div class="notice-setting"><label for="booking-notice-value">Minimum notice</label><div class="notice-inputs"><input id="booking-notice-value" type="number" min="0" max="720" step="1" value="2" required aria-describedby="booking-notice-help"><select id="booking-notice-unit" aria-label="Minimum notice unit"><option value="minutes">Minutes</option><option value="hours" selected>Hours</option><option value="days">Days</option></select></div><input id="booking-notice" type="hidden" value="120"><small id="booking-notice-help">How far ahead guests must book. 0 allows immediate booking. Up to 30 days.</small></div>
 <label>Booking window (days)<input id="booking-horizon" type="number" min="1" max="365" value="60" required></label>
 <label>Start times every (minutes)<input id="booking-interval" type="number" min="1" max="240" value="15" required></label>
 <label>Daily booking limit (0 = no limit)<input id="booking-dailyLimit" type="number" min="0" max="100" value="0" required></label>
