@@ -85,9 +85,15 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    const linked=await connections(db,user.uid);assert(linked.some(c=>JSON.parse(c.calendars).some(v=>v.selected)),'Select at least one calendar.');const profile=await one(db,'SELECT data FROM profiles WHERE uid=?',user.uid);return json({...await provider.readAvailability(linked,start,end,env,{details:true,timezone:profile?JSON.parse(profile.data).timezone:'UTC'}),start,end});
   }
   if(path==='/bookings'&&method==='GET'){
-   const bookings=await all(db,'SELECT * FROM bookings WHERE uid=? AND end>? ORDER BY start LIMIT 100',user.uid,Date.now());const results=[];
+   const bookings=await all(db,'SELECT * FROM bookings WHERE uid=? AND end>? AND removed_from_list_at IS NULL ORDER BY start LIMIT 100',user.uid,Date.now());const results=[];
    for(const b of bookings)results.push({id:b.id,start:b.start,end:b.end,status:b.status,data:JSON.parse(b.data),manageToken:await managementToken(b.id,env)});
    return json({bookings:results});
+  }
+  if(/^\/bookings\/[^/]+$/.test(path)&&method==='DELETE'){
+   const id=path.split('/')[2],booking=await one(db,'SELECT status FROM bookings WHERE id=? AND uid=?',id,user.uid);
+   assert(booking,'Booking not found.',404);assert(booking.status==='cancelled','Only cancelled meetings can be removed.',409);
+   await run(db,"UPDATE bookings SET removed_from_list_at=COALESCE(removed_from_list_at,?) WHERE id=? AND uid=? AND status='cancelled'",Date.now(),id,user.uid);
+   return json({removed:true});
   }
   if(path.startsWith('/bookings/')&&path.endsWith('/retry')&&method==='POST'){
    const booking=await one(db,'SELECT * FROM bookings WHERE id=? AND uid=?',path.split('/')[2],user.uid);assert(booking,'Booking not found.',404);await finalizeBooking(booking,env,provider);return json({status:booking.status});

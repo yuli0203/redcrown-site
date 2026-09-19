@@ -17,6 +17,18 @@ test('Public page excludes internal settings and ownership is enforced',async()=
 test('Concurrent overlapping bookings produce exactly one reservation',async()=>{const f=await fixture();const results=await Promise.all([f.api('/public/test-host/book','POST',f.request()),f.api('/public/test-host/book','POST',f.request())]);assert.deepEqual(results.map(r=>r.status).sort(),[201,409]);assert.equal(f.writes(),1);f.DB.close();});
 test('Pending provider failure retains reservation and same request can retry',async()=>{const f=await fixture(),request=f.request();f.fail(true);assert.equal((await f.api('/public/test-host/book','POST',request)).status,503);assert.equal((await f.api('/public/test-host/book','POST',f.request())).status,409);f.fail(false);const result=await f.api('/public/test-host/book','POST',request);assert.equal(result.status,201);const again=await f.api('/public/test-host/book','POST',request);assert.equal(again.data.id,result.data.id);assert.equal(again.data.manageToken,result.data.manageToken);assert.equal(f.writes(),2);f.DB.close();});
 test('Cancellation requires secret management token and releases slot',async()=>{const f=await fixture(),result=await f.api('/public/test-host/book','POST',f.request());assert.equal((await f.api(`/booking/${result.data.id}/cancel`,'POST',{token:'wrong'})).status,404);assert.equal((await f.api(`/booking/${result.data.id}/cancel`,'POST',{token:result.data.manageToken})).status,200);assert.equal((await f.api('/public/test-host/book','POST',f.request())).status,201);f.DB.close();});
+test('Only the owner can remove cancelled bookings, preserving retry and management history',async()=>{
+ const f=await fixture(),request=f.request(),result=await f.api('/public/test-host/book','POST',request),id=result.data.id;
+ assert.equal((await f.api(`/bookings/${id}`,'DELETE')).status,409);
+ await f.api(`/booking/${id}/cancel`,'POST',{token:result.data.manageToken});
+ assert.equal((await f.api(`/bookings/${id}`,'DELETE',undefined,'other')).status,404);
+ assert.equal((await f.api('/bookings')).data.bookings.length,1);
+ assert.equal((await f.api(`/bookings/${id}`,'DELETE')).status,200);
+ assert.equal((await f.api(`/bookings/${id}`,'DELETE')).status,200);
+ assert.equal((await f.api('/bookings')).data.bookings.length,0);
+ assert.equal((await f.api(`/booking/${id}?token=${result.data.manageToken}`)).data.status,'cancelled');
+ assert.equal((await f.api('/public/test-host/book','POST',request)).status,409);assert.equal(f.writes(),1);f.DB.close();
+});
 test('Optimistic save rejects stale settings',async()=>{const f=await fixture();assert.equal((await f.api('/workspace','PUT',{data:f.workspace,version:0})).status,409);assert.equal((await f.api('/workspace','PUT',{data:f.workspace,version:1})).status,200);f.DB.close();});
 test('Refresh token encryption authenticates ciphertext',async()=>{const env={TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,9).toString('base64')},value=await encrypt('private-refresh-token',env);assert.ok(!value.includes('private'));assert.equal(await decrypt(value,env),'private-refresh-token');await assert.rejects(decrypt(value,{TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,8).toString('base64')}));});
 test('Rescheduling confirms replacement and cancels original without freeing either during failure',async()=>{
