@@ -7,6 +7,7 @@
   const dialog = $('#configure-meeting-dialog');
   const meetingFields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location','reminderMinutes','reminderEmail'];
   const nav = [...document.querySelectorAll('.product-nav a')].map(link => ({link,href:link.getAttribute('href'),text:link.textContent}));
+  const footerLinks=[...document.querySelectorAll('.full-footer [data-workspace-href]')].map(link=>({link,href:link.getAttribute('href'),text:link.textContent}));
   const key = () => `crown-calendar-workspace-v1:${uid}`;
   const fields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location','accent','background','text'];
   let displayName = '', userEmail = '';
@@ -248,7 +249,8 @@
     uid = event.detail.uid; displayName=event.detail.displayName || ''; userEmail=event.detail.email || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
     $('#destination-status').textContent='';window.CrownSettings.setDestination(null);$('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();photo='';renderProfile();
-    for (const selector of ['#meeting-settings','#style-settings','.workspace-footer','#workspace-auth-status']) $(selector).hidden = !uid;
+    for (const selector of ['#meeting-settings','#style-settings','#workspace-auth-status']) $(selector).hidden = !uid;
+    footerLinks.forEach(({link,href,text})=>{link.href=uid?link.dataset.workspaceHref:href;link.textContent=uid?link.dataset.workspaceLabel:text;});
     nav.forEach(({link,href,text},i) => { link.setAttribute('href',uid ? ['#sync-availability','#meeting-settings','#style-settings'][i] : href); link.textContent=uid ? ['Sync calendars','Meetings page','Your style'][i] : text; });
     $('#workspace-auth-status').textContent='';
     if (uid) {try{await load();await upcoming();}catch(error){$('#meeting-list-status').textContent=error.message;}} else { for (const field of fields) $(`#booking-${field}`).value=defaults[field]; logo=''; photo=''; $('#booking-logo').value=''; $('#booking-photo').value=''; preview(); }
