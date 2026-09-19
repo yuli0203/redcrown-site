@@ -8,7 +8,7 @@ import { database } from './database.js';
 const here=fileURLToPath(new URL('.',import.meta.url)),root=resolve(here,'..'),port=Number(process.env.PORT||8770),vars=resolve(here,'.dev.vars');
 if(!existsSync(vars))writeFileSync(vars,`TOKEN_ENCRYPTION_KEY=${Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64')}\n`);
 const values=Object.fromEntries(readFileSync(vars,'utf8').split(/\r?\n/).filter(l=>l&&!l.startsWith('#')).map(l=>{const i=l.indexOf('=');return [l.slice(0,i),l.slice(i+1).replace(/^"|"$/g,'')];}));
-const env={...values,FIREBASE_PROJECT_ID:'crown-calendar-89e18',PUBLIC_ORIGIN:`http://127.0.0.1:${port}`,DB:database(resolve(here,'calendar.sqlite'))};
+const env={...values,FIREBASE_PROJECT_ID:'crown-calendar-89e18',PUBLIC_ORIGIN:`http://127.0.0.1:${port}`,API_ORIGIN:`http://127.0.0.1:${port}`,DB:database(resolve(here,'calendar.sqlite'))};
 const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2','.ico':'image/x-icon'};
 createServer(async(req,res)=>{try{
  const url=new URL(req.url,env.PUBLIC_ORIGIN);

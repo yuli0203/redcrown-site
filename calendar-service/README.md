@@ -1,6 +1,6 @@
 # Red Crown Calendar service
 
-This service adds durable settings, encrypted calendar connections and real booking endpoints to the existing static calendar UI. It is implemented and tested locally. It is not deployed or connected to real provider credentials yet.
+This service adds durable settings, encrypted calendar connections and real booking endpoints to the existing static calendar UI. The local scheduling flow is tested. Live provider credentials and acceptance testing remain required before enabling public bookings.
 
 ## Local development
 
@@ -17,20 +17,20 @@ An isolated test-only browser fixture is available with `node test/browser-fixtu
 
 ## Production setup remaining
 
-The existing website README specifies Cloudflare Pages. This service is a separate Worker using D1; route `/calendar/api/*` on the same domain to it. Keep the existing Pages site for other paths.
+Keep Porkbun DNS and the existing GitHub Pages website. This service is a separate Worker using D1 at `https://red-crown-calendar-api.yuli0203.workers.dev`. No nameserver change is needed. The root website README describes an earlier Pages plan; live DNS points to GitHub Pages.
 
 1. Cloudflare CLI authorization completed on 2026-09-19. Use `npx wrangler whoami` to verify the current session.
 2. D1 database `red-crown-calendar` was created in the account specified in `wrangler.jsonc`; its binding is configured.
-3. Both migrations were applied remotely and verified with `npx wrangler d1 migrations list red-crown-calendar --remote` (no pending migrations).
-4. Add a Worker route for `redcrowninteractive.com/calendar/api/*` in the correct zone. Keep `PUBLIC_ORIGIN` exactly `https://redcrowninteractive.com`.
+3. Migrations 0001 and 0002 were applied remotely and verified with `npx wrangler d1 migrations list red-crown-calendar --remote` (no pending migrations).
+4. Keep `PUBLIC_ORIGIN` exactly `https://redcrowninteractive.com` and `API_ORIGIN` set to the separate Worker origin. After live acceptance, add public `apiOrigin` to `calendar/auth-config.json`. The API allows only the configured website origin through CORS; authenticated calls use Firebase bearer tokens. Calendar OAuth starts with a top-level form POST so its HttpOnly cookie is first-party, including in browsers that block third-party cookies.
 5. Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `TOKEN_ENCRYPTION_KEY`, `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, `TURNSTILE_SITE_KEY`, and `TURNSTILE_SECRET` through Cloudflare secrets/configuration. Use `wrangler secret put NAME` for secrets. Never paste secrets into chat or public files.
-6. In the Google OAuth web client, register `https://redcrowninteractive.com/calendar/api/oauth/google/callback` (and `http://127.0.0.1:8770/calendar/api/oauth/google/callback` for local testing). The server requests calendar event access to read names and create/cancel bookings, plus the calendar list and identity. Refresh access is requested using the authorization-code flow. Google verification and production scope approval still need review.
+6. In the Google OAuth web client, register `https://red-crown-calendar-api.yuli0203.workers.dev/calendar/api/oauth/google/callback` (and `http://127.0.0.1:8770/calendar/api/oauth/google/callback` for local testing). The server requests calendar event access to read names and create/cancel bookings, plus the calendar list and identity. Refresh access is requested using the authorization-code flow. Google verification and production scope approval still need review.
 7. Register a Microsoft application supporting the intended personal and organization accounts, with delegated `User.Read`, `Calendars.ReadWrite` and `offline_access` permissions. Register the analogous `/oauth/microsoft/callback` URLs. Firebase Microsoft sign-in is a separate provider configuration and remains to be activated.
 8. Configure a Turnstile widget for the production domain. The production booking endpoint refuses bookings without configured protection. Local-only bypass requires both the configured origin and request origin to be localhost.
-9. Build-check with `npm run check`. Deploy only after secrets, route, provider consent and database configuration are ready.
+9. Build-check with `npm run check`. Deploy the API independently; do not connect the public frontend until provider consent, secrets, Turnstile and acceptance testing are ready.
 10. Perform a live acceptance test with dedicated test calendars: connect two accounts, select sub-calendars, reload, create a meeting, publish, book as a guest, verify the calendar invitation, reschedule, cancel, revoke calendar access and verify bookings fail closed.
 
-Hosting setup is blocked on identifying the existing website host. On 2026-09-19, the authorized Cloudflare account returned no Pages projects or zones. Public DNS uses Porkbun nameservers. This does not identify the website host, and no DNS changes or production deployment have been made. Confirm the host and domain routing before applying step 4. Provider secrets and Turnstile configuration remain outstanding.
+The user chose to retain Porkbun DNS and GitHub Pages. Worker deployment is independent of both. No domain transfer, nameserver change or website replacement is required. Provider secrets and Turnstile configuration remain outstanding.
 
 Cloudflare's free tier is a starting point, not unlimited infrastructure. Measure Worker CPU and D1 usage on live provider traffic before public launch. Free-tier requests can fail after quota exhaustion. Multi-account providers can also exceed Worker subrequest quotas; load testing and batching/caching are required before scaling beyond small workspaces.
 
@@ -58,3 +58,8 @@ Automated suites cover scheduling/DST, buffers, overrides, ownership, public dat
 Browser QA with the isolated provider fixture completed: meeting creation, saved availability, public booking, rescheduling and cancellation. Google/Microsoft live writes have not been exercised in this pass. The review is intentionally not labeled production-complete until the live acceptance gate passes.
 
 References: [Cloudflare D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/), [Worker limits](https://developers.cloudflare.com/workers/platform/limits/), [Firebase token verification](https://firebase.google.com/docs/auth/admin/verify-id-tokens), [Google server OAuth](https://developers.google.com/identity/protocols/oauth2/web-server), [Microsoft calendar view](https://learn.microsoft.com/en-us/graph/api/user-list-calendarview), [Hebcal API](https://www.hebcal.com/home/195/jewish-calendar-rest-api).
+
+
+## Release gate and rollback
+
+Before enabling `apiOrigin` on the website: apply all migrations; configure provider secrets and callback URLs; verify consent, reload persistence, selected calendars, booking, invitation delivery, cancellation and rescheduling with dedicated test accounts; configure Turnstile for the website hostname; verify Worker CPU and subrequest limits with real calendars. Revert the frontend configuration if authorization or booking fails. Do not roll back database migrations or delete pending reservations to recover provider failures. The existing website remains independent of the API deployment.

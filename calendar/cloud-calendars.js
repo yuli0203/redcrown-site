@@ -1,6 +1,6 @@
 (async()=>{
  'use strict';
- if(!await window.CrownAPI.ready)return;
+ if(!await window.CrownAPI.ready){if(window.CrownAPI.configured)document.addEventListener('crown-auth-change',e=>{document.querySelector('#sync-availability').hidden=!e.detail.uid;document.querySelector('#sync-message').textContent=window.CrownAPI.error;});return;}
  const $=s=>document.querySelector(s),api=window.CrownAPI;
  let uid=null,accounts=[],revision=0,refreshVersion=0,working=false,range=null;
  const node=(tag,text,cls)=>{const n=document.createElement(tag);n.textContent=text||'';if(cls)n.className=cls;return n;};
@@ -14,24 +14,24 @@
   for(const account of accounts){
    const card=node('article','','calendar-account'),heading=node('div','','calendar-account-heading'),info=node('div');info.append(node('h2',account.email),node('p',`${account.provider==='google'?'Google Calendar':'Microsoft Outlook'} - persistent connection`,'sync-small'));
    const actions=node('div','','calendar-account-actions');
-   actions.append(button('Edit calendars',()=>edit(card,account)),button('Reconnect',()=>connect(account.provider)),button('Remove',async()=>{await api.request('/connections/'+account.id,{method:'DELETE'});await load();await refresh();}));heading.append(info,actions);card.append(heading,node('p',`${account.calendars.filter(c=>c.selected).length} calendars selected`,'sync-small'));$('#calendar-accounts').append(card);
+   actions.append(button('Edit calendars',()=>edit(card,account)),button('Refresh list',async()=>{await api.request('/connections/'+account.id+'/refresh',{method:'POST',data:{}});await load();await refresh();}),button('Reconnect',()=>connect(account.provider)),button('Remove',async()=>{await api.request('/connections/'+account.id,{method:'DELETE'});await load();await refresh();}));heading.append(info,actions);card.append(heading,node('p',`${account.calendars.filter(c=>c.selected).length} calendars selected`,'sync-small'));const selected=node('p',account.calendars.filter(c=>c.selected).map(c=>c.name).join(' / ')||'Choose Edit calendars, then Save selection to start checking availability.','sync-small');card.append(selected);$('#calendar-accounts').append(card);
   }
   document.dispatchEvent(new CustomEvent('crown-calendars-change',{detail:{accounts}}));
  }
  function edit(card,account){
   if(card.querySelector('fieldset'))return;
   const field=node('fieldset');field.append(node('legend','Choose calendars to check for conflicts'));
-  for(const calendar of account.calendars){const label=node('label','','calendar-choice'),input=node('input');input.type='checkbox';input.value=calendar.id;input.checked=calendar.selected;label.append(input,node('span',calendar.name),node('small',calendar.writable?'Can add bookings':'Read only'));field.append(label);}
+  for(const calendar of account.calendars){const label=node('label','','calendar-choice'),input=node('input');input.type='checkbox';input.value=calendar.id;input.checked=calendar.selected;label.append(input,node('span',calendar.name),node('small',calendar.missing?'Unavailable - deselect or restore access':calendar.writable?'Can add bookings':'Read only'));field.append(label);}
   const controls=node('div','','calendar-edit-actions');controls.append(button('Save selection',async()=>{const selected=[...field.querySelectorAll('input:checked')].map(i=>i.value);await api.request('/connections/'+account.id,{method:'PUT',data:{selected}});await load();await refresh();}),button('Cancel',()=>field.remove()));field.append(controls);card.append(field);
  }
- async function connect(provider){working=true;render();try{const result=await api.request('/connect/'+provider,{method:'POST',data:{}});location.assign(result.url);}finally{working=false;render();}}
+ async function connect(provider){working=true;render();try{await api.connect(provider);}finally{working=false;render();}}
  async function load(){const current=revision,result=await api.request('/connections');if(current!==revision)return;accounts=result.accounts;render();}
  async function refresh(){
   if(!uid||working)return;const current=revision,requestVersion=++refreshVersion;
   if(!accounts.some(a=>a.calendars.some(c=>c.selected))){window.CrownBusyPreview.clear();message('Add a calendar account, then choose which calendars to sync.');return;}
   working=true;render();message('Checking calendars...');
   try{const now=new Date(),start=range?.start??+new Date(now.getFullYear(),now.getMonth(),1),end=range?.end??+new Date(now.getFullYear(),now.getMonth()+1,1);const result=await api.request(`/availability?start=${start}&end=${end}`);if(current!==revision||requestVersion!==refreshVersion)return;window.CrownBusyPreview.update(result.busy,start,end,result.events);$('#sync-summary-text').textContent=`Calendars checked at ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}.`;message('');}
-  catch(e){if(current===revision&&requestVersion===refreshVersion){window.CrownBusyPreview.clear();message(e.message);}}
+  catch(e){if(current===revision&&requestVersion===refreshVersion){window.CrownBusyPreview.clear();$('#sync-summary-text').textContent='Availability could not be checked. Refresh or reconnect the affected calendar.';message(e.message);}}
   finally{if(current===revision&&requestVersion===refreshVersion){working=false;render();}}
  }
  $('#add-calendar').addEventListener('click',()=>{$('#calendar-providers').hidden=!$('#calendar-providers').hidden;$('#add-calendar').setAttribute('aria-expanded',String(!$('#calendar-providers').hidden));});

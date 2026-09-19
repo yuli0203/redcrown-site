@@ -26,4 +26,11 @@ Fixed a cancellation/rescheduling race: a replacement now validates the original
 
 Validation: 17 service tests, 11 calendar UI logic tests, and the Worker dry-run build passed. Sample-only browser booking and cancellation succeeded; the cancelled page has no remaining rescheduling action. The unavailable-meeting message was verified in the browser. No real provider invitations were sent. Migration 0003 is local and must be applied before deploying this change.
 
-Remaining review item: rescheduling a booking on a day already at its daily booking limit currently counts the original booking against that limit. Live provider testing, credentials, and hosting configuration remain outstanding.
+Resolved the daily-limit rescheduling issue in d9f79ac with a regression test. Live provider testing and credentials remain outstanding.
+
+
+## Separate backend and booking-page review
+
+Kept Porkbun DNS and GitHub Pages. Added restricted-origin CORS and first-party OAuth form navigation to a separate Worker. The frontend supports a configured API origin and fails closed during configured-service outages. Public errors no longer expose selected calendar names. Added refreshable calendar lists and destination-removal protection. Paused meeting types retain their state when edited. Public meeting cards link to individual booking pages with month navigation, selectable dates, times and explicit guest time zones.
+
+Validation: 21 service tests and 11 calendar UI logic tests pass. Worker dry-run passes. Browser checks cover month navigation, normal booking and the confirmation state with the isolated sample fixture. No real invitations have been sent. Remaining release gates are listed in README.

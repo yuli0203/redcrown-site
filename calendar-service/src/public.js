@@ -3,10 +3,10 @@ import { body, hash, rateLimit } from './security.js';
 import { json, one, all, run, connections } from './worker.js';
 export async function managementToken(id,env){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(env.TOKEN_ENCRYPTION_KEY),{name:'HMAC',hash:'SHA-256'},false,['sign']);return [...new Uint8Array(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(`manage:${id}`)))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 async function publicHost(db,slug){const row=await one(db,'SELECT * FROM profiles WHERE slug=?',slug);assert(row,'Booking page not found.',404);const workspace=JSON.parse(row.data);assert(workspace.published,'This booking page is not published.',404);return {...row,workspace};}
-function publicData(workspace){return {pageName:workspace.pageName,timezone:workspace.timezone,slug:workspace.slug,accent:workspace.accent,background:workspace.background,text:workspace.text,logo:workspace.logo,photo:workspace.photo,meetings:workspace.meetings.filter(m=>m.enabled).map(({id,title,description,duration,location})=>({id,title,description,duration,location}))};}
+function publicData(workspace){return {pageName:workspace.pageName,timezone:workspace.timezone,slug:workspace.slug,accent:workspace.accent,background:workspace.background,text:workspace.text,logo:workspace.logo,photo:workspace.photo,meetings:workspace.meetings.filter(m=>m.enabled).map(({id,title,description,duration,location,notice,horizon})=>({id,title,description,duration,location,notice,horizon}))};}
 async function available(host,meeting,range,env,provider,previousId=null){
  const linked=await connections(env.DB,host.uid);assert(linked.some(c=>JSON.parse(c.calendars).some(v=>v.selected)),'The host needs to connect a calendar before bookings can be accepted.',503);
- const padding=8*3600000,external=await provider.readAvailability(linked,range.start-padding,range.end+padding,env);
+ const padding=8*3600000;let external;try{external=await provider.readAvailability(linked,range.start-padding,range.end+padding,env);}catch{throw new Problem('The host calendar could not be checked. Please try again later or contact the host.',503);}
  const reserved=await all(env.DB,"SELECT * FROM bookings WHERE uid=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND busy_start<? AND busy_end>?",host.uid,range.end+padding,range.start-padding);
  const busy=[...external.busy,...reserved.map(b=>({start:b.busy_start,end:b.busy_end}))];
  return slots(host.workspace,meeting,busy,range,Date.now(),reserved.filter(b=>b.meeting_id===meeting.id&&b.id!==previousId));
@@ -29,7 +29,7 @@ export async function publicRoutes(request,env,provider,path){
   if(parts[3]==='slots'&&method==='GET'){
    const meeting=host.workspace.meetings.find(m=>m.id===url.searchParams.get('meeting')&&m.enabled);assert(meeting,'Meeting not found.',404);
    const range=dateRange(url.searchParams.get('from'),Number(url.searchParams.get('days')||7),url.searchParams.get('timezone')||host.workspace.timezone);
-   assert(range.start>=Date.now()-2*86400000&&range.end<=Date.now()+367*86400000,'Choose dates within the booking window.');
+   assert(range.end>=Date.now()-86400000&&range.start<=Date.now()+367*86400000,'Choose dates within the booking window.');
    const previous=await rescheduleSource(db,host,meeting,url.searchParams.get('previousId'),request.headers.get('X-Booking-Token'));
    return json({slots:await available(host,meeting,range,env,provider,previous?.id),timezone:host.workspace.timezone});
   }
@@ -60,7 +60,7 @@ export async function publicRoutes(request,env,provider,path){
  if(path.startsWith('/booking/')){
   const id=path.split('/')[2],input=method==='POST'?await body(request,5000):null,token=input?.token||url.searchParams.get('token')||'';
   const booking=await one(db,'SELECT * FROM bookings WHERE id=?',id);assert(booking&&await hash(token)===booking.manage_hash,'Booking not found.',404);
-  if(method==='GET'){const data=JSON.parse(booking.data),profile=await one(db,'SELECT slug FROM profiles WHERE uid=?',booking.uid);return json({id,slug:profile?.slug,meetingId:booking.meeting_id,start:booking.start,end:booking.end,status:booking.status,title:data.title,name:data.name,location:data.location,timezone:data.timezone});}
+  if(method==='GET'){const data=JSON.parse(booking.data),profile=await one(db,'SELECT slug FROM profiles WHERE uid=?',booking.uid);return json({id,slug:profile?.slug,meetingId:booking.meeting_id,start:booking.start,end:booking.end,status:booking.status,title:data.title,name:data.name,email:data.email,notes:data.notes,location:data.location,timezone:data.timezone});}
   if(path.endsWith('/cancel')&&method==='POST'){
    if(booking.status==='cancelled')return json({status:'cancelled'});
    assert(booking.status==='confirmed'||booking.status==='cancelling','This booking is awaiting calendar confirmation. Contact the host.',409);

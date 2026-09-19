@@ -2,11 +2,15 @@
   "name": "red-crown-calendar-api",
   "account_id": "fb903435ac18bbd03f36ee53e45d45b2",
   "main": "src/worker.js",
+  "workers_dev": true,
+  "preview_urls": false,
   "compatibility_date": "2026-09-01",
   "triggers":{"crons":["*/15 * * * *"]},
   "vars": {
     "FIREBASE_PROJECT_ID": "crown-calendar-89e18",
-    "PUBLIC_ORIGIN": "https://redcrowninteractive.com"
+    "PUBLIC_ORIGIN": "https://redcrowninteractive.com",
+    "API_ORIGIN": "https://red-crown-calendar-api.yuli0203.workers.dev",
+    "GOOGLE_CLIENT_ID": "846983787-lhc0lbb3sujmdbqqfa5094febohqup6p.apps.googleusercontent.com"
   },
   "d1_databases": [{"binding":"DB","database_name":"red-crown-calendar","database_id":"06e4ca95-0243-4471-bd20-4782dbea0b3d","migrations_dir":"migrations"}]
 }

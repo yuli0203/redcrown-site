@@ -1,7 +1,7 @@
 (async () => {
   'use strict';
   const $ = selector => document.querySelector(selector);
-  const cloud=await window.CrownAPI.ready;let serverVersion=0;
+  await window.CrownAPI.ready;const cloud=window.CrownAPI.online||window.CrownAPI.configured;let serverVersion=0;
   const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,notice:120,horizon:60,interval:15,dailyLimit:0,location:'',accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
   let uid = null, logo = '', photo = '', revision = 0, meetings = [], editingId = null, removed = null, savedData = {};
   const dialog = $('#configure-meeting-dialog');
@@ -25,7 +25,7 @@
     $('#copy-meeting-page').disabled=!uid || (cloud && !savedData.published);
     $('#publish-page').disabled=!cloud;$('#publish-page').textContent=savedData.published?'Unpublish booking page':'Publish booking page';
     $('#publish-status').textContent=cloud ? (savedData.published?'Your booking page is live.':'Draft - save your settings, then publish.') : 'Publishing requires the booking service to be connected.';
-    if(cloud){$('#share-help').textContent='A permanent booking link. Saved changes appear here automatically.';$('#meeting-storage-help').textContent='Meetings and scheduling rules are saved to your account.';$('#style-storage-help').textContent='Style is saved to your account and appears on your booking page.';}
+    if(cloud){$('#share-help').textContent=savedData.published?'A permanent booking link. Saved changes appear here automatically.':'Draft preview only. Publish your page to enable permanent booking links.';$('#meeting-storage-help').textContent='Meetings and scheduling rules are saved to your account.';$('#style-storage-help').textContent='Style is saved to your account and appears on your booking page.';}
     $('#meeting-share-status').textContent=location.hostname==='127.0.0.1' || location.hostname==='localhost' ? 'Local preview: this address only opens on this computer until the site is published.' : '';
   }
   async function copyLink(meeting) {
@@ -111,8 +111,9 @@
         $('#meeting-list-status').textContent=`${meeting.title} removed.`; $('#undo-remove-meeting').hidden=false;
       });
       const view=document.createElement('a'); view.className='auth-button'; view.textContent='Preview'; view.href=shareLink(meeting); view.target='_blank'; view.rel='noopener'; view.setAttribute('aria-label',`Preview ${meeting.title}`);
-      const share=document.createElement('button'); share.type='button'; share.className='auth-link'; share.textContent='Copy link'; share.setAttribute('aria-label',`Copy link for ${meeting.title}`); share.addEventListener('click',()=>copyLink(meeting));
-      actions.append(view,share,edit,remove); row.append(details,actions); list.append(row);
+      const share=document.createElement('button'); share.type='button'; share.className='auth-link'; share.textContent='Copy link';share.disabled=cloud&&(!savedData.published||meeting.enabled===false); share.setAttribute('aria-label',`Copy link for ${meeting.title}`); share.addEventListener('click',()=>copyLink(meeting));
+      const toggle=document.createElement('button');toggle.type='button';toggle.className='auth-link';toggle.textContent=meeting.enabled===false?'Enable':'Pause';toggle.setAttribute('aria-label',`${toggle.textContent} ${meeting.title}`);toggle.addEventListener('click',async()=>{const next=meetings.map(m=>m.id===meeting.id?{...m,enabled:m.enabled===false}:m);if(await persist({meetings:next},'#meeting-list-status')){meetings=next;renderMeetings();}});if(meeting.enabled===false)meta.textContent+=' - Paused';
+      actions.append(view,share,edit,toggle,remove); row.append(details,actions); list.append(row);
     }
   }
   function openMeeting(meeting) {
@@ -130,7 +131,7 @@
     event.preventDefault(); if (!uid) return;
     $('#booking-title').setCustomValidity($('#booking-title').value.trim() ? '' : 'Enter a meeting name.');
     if (!$('#meeting-settings-form').reportValidity()) return;
-    const meeting={id:editingId || crypto.randomUUID()};
+    const meeting={id:editingId || crypto.randomUUID(),enabled:editingId?meetings.find(m=>m.id===editingId)?.enabled!==false:true};
     for (const field of meetingFields) meeting[field]=typeof defaults[field]==='number' ? Number($(`#booking-${field}`).value) : $(`#booking-${field}`).value.trim();
     const next=editingId ? meetings.map(m=>m.id===editingId ? meeting : m) : [...meetings,meeting];
     if (!await persist({meetings:next},'#meeting-settings-status')) return;

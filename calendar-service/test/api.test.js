@@ -65,3 +65,22 @@ test('Rescheduling at the daily limit replaces the count without allowing an ext
  assert.equal(moved.status,201);assert.equal((await f.api('/public/test-host/book','POST',f.request())).status,409);
  f.DB.close();
 });
+
+
+test('Public availability failures do not disclose private calendar names',async()=>{
+ const f=await fixture();f.provider.readAvailability=async()=>{throw Error('Private medical calendar unavailable');};
+ const result=await f.api(`/public/test-host/slots?meeting=intro&days=1&timezone=UTC&from=${new Date(f.start).toISOString().slice(0,10)}`);
+ assert.equal(result.status,503);assert.ok(!JSON.stringify(result.data).includes('medical'));f.DB.close();
+});
+
+
+test('Calendar refresh retains conflict selections and protects the booking destination',async()=>{
+ const f=await fixture();f.provider.tokenFor=async()=> 'test';f.provider.listCalendars=async()=>[{id:'new',name:'New calendar',writable:true,selected:false}];
+ assert.equal((await f.api('/connections/one','PUT',{selected:[]})).status,409);
+ assert.equal((await f.api('/connections/one','DELETE')).status,409);
+ const refresh=await f.api('/connections/one/refresh','POST',{});assert.equal(refresh.status,200);
+ assert.equal(refresh.data.calendars.find(c=>c.id==='primary').missing,true);assert.equal(refresh.data.calendars.find(c=>c.id==='primary').selected,true);
+ assert.equal(refresh.data.calendars.find(c=>c.id==='new').selected,false);
+ assert.equal((await f.api('/workspace','PUT',{data:{...f.workspace,published:false},version:1})).status,200);
+ f.DB.close();
+});

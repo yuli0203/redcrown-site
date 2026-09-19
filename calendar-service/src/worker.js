@@ -8,14 +8,15 @@ export const all=async(db,sql,...args)=>(await db.prepare(sql).bind(...args).all
 export const one=(db,sql,...args)=>db.prepare(sql).bind(...args).first();
 export const run=(db,sql,...args)=>db.prepare(sql).bind(...args).run();
 export const connections=(db,uid)=>all(db,'SELECT * FROM connections WHERE uid=?',uid);
-export function createHandler({authenticate=identity,provider=providers}={}){return async function handle(request,env){
+export function createHandler({authenticate=identity,provider=providers}={}){async function handle(request,env){
  const url=new URL(request.url),path=url.pathname.slice(prefix.length),method=request.method,db=env.DB;
  try {
   assert(url.pathname.startsWith(prefix+'/'),'Not found.',404);
+  const origin=request.headers.get('Origin');if(origin)assert(origin===env.PUBLIC_ORIGIN,'This origin is not allowed.',403);
+  if(method==='OPTIONS'){assert(['GET','POST','PUT','DELETE'].includes(request.headers.get('Access-Control-Request-Method')),'Method not allowed.',405);return new Response(null,{status:204});}
   if(path==='/health')return json({ready:Boolean(db),google:Boolean(env.GOOGLE_CLIENT_SECRET),microsoft:Boolean(env.MICROSOFT_CLIENT_SECRET),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
   assert(db,'The scheduling service is not configured yet.',503);
-  if(method==='OPTIONS')return new Response(null,{status:204});
-  const origin=request.headers.get('Origin');if(origin)assert(origin===env.PUBLIC_ORIGIN,'This origin is not allowed.',403);
+
   await rateLimit(env,`ip:${await hash(request.headers.get('CF-Connecting-IP')||'local')}`,120);
   if(path.startsWith('/oauth/')&&path.endsWith('/callback')){
    const providerName=path.split('/')[2],state=url.searchParams.get('state')||'',browser=request.headers.get('Cookie')?.match(/(?:^|; )crown_oauth=([^;]+)/)?.[1]||'';
@@ -35,12 +36,15 @@ export function createHandler({authenticate=identity,provider=providers}={}){ret
    return new Response(null,{status:303,headers:{Location:`${env.PUBLIC_ORIGIN}/calendar/?connected=1#sync-availability`,'Set-Cookie':'crown_oauth=; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=0','Cache-Control':'no-store'}});
   }
   if(path.startsWith('/public/')||path.startsWith('/booking/'))return await publicRoutes(request,env,provider,path);
-  const user=await authenticate(request,env);await rateLimit(env,`user:${user.uid}`,90);
+  const navigation=method==='POST'&&/^\/connect\/(google|microsoft)\/navigate$/.test(path);
+  let authRequest=request;
+  if(navigation){assert(request.headers.get('Origin')===env.PUBLIC_ORIGIN,'Start calendar connection from the scheduling page.',403);assert(request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded'),'Invalid connection request.');const input=await body(request,16000,true);assert(typeof input.idToken==='string'&&input.idToken.length<12000,'Sign in to connect a calendar.',401);authRequest=new Request(request.url,{headers:{Authorization:`Bearer ${input.idToken}`}});}
+  const user=await authenticate(authRequest,env);await rateLimit(env,`user:${user.uid}`,90);
   if(path==='/workspace'&&method==='GET'){const row=await one(db,'SELECT * FROM profiles WHERE uid=?',user.uid);return json({data:row?JSON.parse(row.data):null,version:row?.version||0});}
   if(path==='/workspace'&&method==='PUT'){
    const input=await body(request),data=validateWorkspace(input.data);assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
    if(data.published)assert(user.verified,'Verify your email before publishing a booking page.',403);
-   if(data.destination){const c=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',data.destination.connectionId,user.uid);assert(c&&JSON.parse(c.calendars).some(v=>v.id===data.destination.calendarId&&v.writable&&v.selected),'Choose a connected, writable calendar selected for conflict checks.');}
+   if(data.destination&&data.published){const c=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',data.destination.connectionId,user.uid);assert(c&&JSON.parse(c.calendars).some(v=>v.id===data.destination.calendarId&&v.writable&&v.selected),'Choose a connected, writable calendar selected for conflict checks.');}
    try {
     const result=input.version===0?await run(db,'INSERT INTO profiles(uid,slug,data,version,updated_at) VALUES(?,?,?,1,?) ON CONFLICT(uid) DO NOTHING',user.uid,data.slug||null,JSON.stringify(data),Date.now()):await run(db,'UPDATE profiles SET slug=?,data=?,version=version+1,updated_at=? WHERE uid=? AND version=?',data.slug||null,JSON.stringify(data),Date.now(),user.uid,input.version);
     assert(result.meta.changes===1,'Settings changed in another tab. Reload before saving.',409);
@@ -53,12 +57,14 @@ export function createHandler({authenticate=identity,provider=providers}={}){ret
    await run(db,'INSERT INTO oauth_states(state,uid,provider,verifier,browser_hash,expires) VALUES(?,?,?,?,?,?)',await hash(state),user.uid,name,verifier,await hash(browser),Date.now()+600000);
    const challenge=btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier))))).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
    const url=new URL(config.authorize);for(const [k,v] of Object.entries({client_id:config.clientId,redirect_uri:config.redirect,response_type:'code',scope:config.scope,state,code_challenge:challenge,code_challenge_method:'S256',...(name==='google'?{access_type:'offline',prompt:'consent select_account'}:{prompt:'select_account'})}))url.searchParams.set(k,v);
-   const response=json({url:url.href});response.headers.set('Set-Cookie',`crown_oauth=${browser}; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=600${env.PUBLIC_ORIGIN.startsWith('https:')?'; Secure':''}`);return response;
+   const response=navigation?new Response(null,{status:303,headers:{Location:url.href,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}}):json({url:url.href});response.headers.set('Set-Cookie',`crown_oauth=${browser}; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=600${new URL(request.url).protocol==='https:'?'; Secure':''}`);return response;
   }
   if(path.startsWith('/connections/')){
    const id=path.split('/')[2],connection=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',id,user.uid);assert(connection,'Connection not found.',404);
-   if(method==='PUT'){const input=await body(request,50000),calendars=JSON.parse(connection.calendars);assert(Array.isArray(input.selected)&&input.selected.every(id=>calendars.some(c=>c.id===id)),'Invalid calendar selection.');for(const c of calendars)c.selected=input.selected.includes(c.id);await run(db,'UPDATE connections SET calendars=? WHERE id=? AND uid=?',JSON.stringify(calendars),id,user.uid);return json({calendars});}
-   if(method==='DELETE'){assert(!await one(db,"SELECT id FROM bookings WHERE connection_id=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND end>?",id,Date.now()),'This calendar has upcoming bookings. Cancel them before removing it.',409);await run(db,'DELETE FROM connections WHERE id=? AND uid=?',id,user.uid);return json({removed:true});}
+   const profile=await one(db,'SELECT data FROM profiles WHERE uid=?',user.uid),settings=profile?JSON.parse(profile.data):null;
+   if(method==='POST'&&path.endsWith('/refresh')){const fresh=await provider.listCalendars(connection.provider,await provider.tokenFor(connection,env)),old=JSON.parse(connection.calendars);for(const c of fresh)c.selected=old.some(v=>v.id===c.id&&v.selected);for(const c of old)if(c.selected&&!fresh.some(v=>v.id===c.id))fresh.push({...c,missing:true,writable:false});await run(db,'UPDATE connections SET calendars=? WHERE id=? AND uid=?',JSON.stringify(fresh),id,user.uid);return json({calendars:fresh});}
+   if(method==='PUT'){const input=await body(request,50000),calendars=JSON.parse(connection.calendars);assert(Array.isArray(input.selected)&&input.selected.every(id=>calendars.some(c=>c.id===id)),'Invalid calendar selection.');if(settings?.destination?.connectionId===id)assert(input.selected.includes(settings.destination.calendarId),'This calendar receives your bookings. Choose another booking destination in Availability before deselecting it.',409);for(const c of calendars)c.selected=input.selected.includes(c.id);await run(db,'UPDATE connections SET calendars=? WHERE id=? AND uid=?',JSON.stringify(calendars),id,user.uid);return json({calendars});}
+   if(method==='DELETE'){assert(settings?.destination?.connectionId!==id,'This account receives your bookings. Choose another booking destination in Availability before removing it.',409);assert(!await one(db,"SELECT id FROM bookings WHERE connection_id=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND end>?",id,Date.now()),'This calendar has upcoming bookings. Cancel them before removing it.',409);await run(db,'DELETE FROM connections WHERE id=? AND uid=?',id,user.uid);return json({removed:true});}
   }
   if(path==='/availability'&&method==='GET'){
    const start=Number(url.searchParams.get('start')),end=Number(url.searchParams.get('end'));assert(Number.isSafeInteger(start)&&Number.isSafeInteger(end)&&end>start&&end-start<=42*86400000,'Choose a date range up to six weeks.');
@@ -74,6 +80,8 @@ export function createHandler({authenticate=identity,provider=providers}={}){ret
   }
   throw new Problem('Not found.',404);
  }catch(error){return json({error:error instanceof Problem?error.message:'The request could not be completed. Please retry.'},error instanceof Problem?error.status:500);}
-};}
+}
+ return async(request,env)=>{const response=await handle(request,env);const headers=new Headers(response.headers);headers.set('Vary','Origin');if(request.headers.get('Origin')===env.PUBLIC_ORIGIN){headers.set('Access-Control-Allow-Origin',env.PUBLIC_ORIGIN);headers.set('Access-Control-Allow-Methods','GET, POST, PUT, DELETE, OPTIONS');headers.set('Access-Control-Allow-Headers','Authorization, Content-Type, X-Booking-Token');headers.set('Access-Control-Max-Age','600');}return new Response(response.body,{status:response.status,headers});};
+}
 const handler=createHandler();
 export default {fetch:handler,async scheduled(event,env){await env.DB.batch([env.DB.prepare('DELETE FROM oauth_states WHERE expires<?').bind(Date.now()),env.DB.prepare('DELETE FROM rate_limits WHERE expires<?').bind(Date.now())]);}};
