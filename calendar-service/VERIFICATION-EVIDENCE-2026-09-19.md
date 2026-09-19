@@ -28,3 +28,8 @@ This is an implementation review, not an independent security certification or a
 - Controlled live create, reschedule and cancel test with disposable accounts. Existing events were only read during this review.
 - Do not claim complete two-way synchronization: externally deleting a provider event does not currently automatically cancel the application booking record; internal reservations can remain blocked. Cancellation through the app has automated coverage.
 - Previously shared OAuth secrets should be rotated through provider consoles and deployed securely before claiming release security readiness.
+
+## Host mail follow-up
+
+After the host approved sending permission, only the booking destination connection has mail_enabled=1; the availability-only account remains 0. The automatic scheduled worker submitted both previously unnotified confirmed bookings. Both now have notification_state=accepted and notification_sent_at=1789816028673. Inbox receipt is checked separately; API acceptance alone is not delivery proof.
+`nInbox verification: both automatic New Event messages are visible with Inbox labels in julia@redcrowninteractive.com at 14:07 Israel time, including the Serjio booking. This establishes actual host receipt for these two bookings; it does not establish guest or Outlook receipt.
