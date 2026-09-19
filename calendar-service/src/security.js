@@ -11,4 +11,13 @@ async function key(env){assert(env.TOKEN_ENCRYPTION_KEY,'Calendar connections ar
 export async function encrypt(value,env){const iv=crypto.getRandomValues(new Uint8Array(12)),cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},await key(env),new TextEncoder().encode(value));return btoa(String.fromCharCode(...iv,...new Uint8Array(cipher)));}
 export async function decrypt(value,env){const bytes=Uint8Array.from(atob(value),c=>c.charCodeAt(0));return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes.slice(0,12)},await key(env),bytes.slice(12)));}
 export async function body(request,max=950000,form=false){assert(Number(request.headers.get('Content-Length')||0)<=max,'Request too large.',413);const reader=request.body?.getReader();assert(reader,'Missing request body.');let count=0,chunks=[];for(;;){const {value,done}=await reader.read();if(done)break;count+=value.byteLength;if(count>max){await reader.cancel();throw new Problem('Request too large.',413);}chunks.push(value);}const bytes=new Uint8Array(count);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}try{const text=new TextDecoder().decode(bytes);return form?Object.fromEntries(new URLSearchParams(text)):JSON.parse(text);}catch{throw new Problem('Invalid request.');}}
-export async function rateLimit(env,key,limit=30){const now=Date.now(),bucket=Math.floor(now/60000);const result=await env.DB.prepare('INSERT INTO rate_limits(key,count,expires) VALUES(?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(`${key}:${bucket}`,now+120000).first();assert(result.count<=limit,'Too many requests. Please wait a minute.',429);}
+export async function rateLimit(env,key,limit=30,windowMs=60000){const now=Date.now(),bucket=Math.floor(now/windowMs);const result=await env.DB.prepare('INSERT INTO rate_limits(key,count,expires) VALUES(?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(`${key}:${windowMs}:${bucket}`,now+windowMs*2).first();assert(result.count<=limit,'Too many requests. Please try again later.',429);}
+export async function invitationLimits(env,uid,recipients){
+ await rateLimit(env,`invite-host:${uid}`,30,3600000);
+ await rateLimit(env,`invite-host-day:${uid}`,100,86400000);
+ for(const email of new Set(recipients.filter(Boolean).map(v=>v.trim().toLowerCase()))){
+  const recipient=await hash(email);
+  await rateLimit(env,`invite-recipient:${recipient}`,5,3600000);
+  await rateLimit(env,`invite-recipient-day:${recipient}`,15,86400000);
+ }
+}
