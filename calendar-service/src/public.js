@@ -38,9 +38,11 @@ export async function publicRoutes(request,env,provider,path){
    assert(typeof input.requestId==='string'&&/^[a-f0-9-]{36}$/i.test(input.requestId),'Invalid booking request.');
    const meeting=host.workspace.meetings.find(m=>m.id===input.meetingId&&m.enabled);assert(meeting,'Meeting not found.',404);
    assert(typeof input.name==='string'&&input.name.trim()&&input.name.length<=100&&typeof input.email==='string'&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)&&input.email.length<=254,'Enter your name and a valid email.');
+   assert(input.participants===undefined||(Array.isArray(input.participants)&&input.participants.length<=10),'Add up to 10 additional participants.');
+   const participants=[];for(const value of input.participants||[]){assert(typeof value==='string'&&value.trim().length<=254&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()),'Enter a valid email for each additional participant.');const email=value.trim().toLowerCase();if(email!==input.email.toLowerCase()&&!participants.includes(email))participants.push(email);}participants.sort();
    assert(typeof(input.notes||'')==='string'&&(input.notes||'').length<=2000&&Number.isSafeInteger(input.start),'Invalid booking details.');
    let booking=await one(db,'SELECT * FROM bookings WHERE uid=? AND request_id=?',host.uid,input.requestId);
-   if(booking){const prior=JSON.parse(booking.data);assert(booking.start===input.start&&booking.meeting_id===input.meetingId&&prior.email===input.email,'This booking request was already used.',409);}
+   if(booking){const prior=JSON.parse(booking.data);assert(booking.start===input.start&&booking.meeting_id===input.meetingId&&prior.email===input.email&&JSON.stringify([...(prior.participants||[])].sort())===JSON.stringify(participants),'This booking request was already used.',409);}
    else {
     const previous=await rescheduleSource(db,host,meeting,input.previousId,input.rescheduleToken);
     const date=localDate(input.start,host.workspace.timezone),range=dateRange(date,1,host.workspace.timezone),choices=await available(host,meeting,range,env,provider,previous?.id);
@@ -48,7 +50,7 @@ export async function publicRoutes(request,env,provider,path){
     const destination=host.workspace.destination,connection=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',destination.connectionId,host.uid);assert(connection,'The host must reconnect their booking calendar.',503);
     assert(JSON.parse(connection.calendars).some(c=>c.id===destination.calendarId&&c.writable&&c.selected),'The booking calendar must be writable and selected for conflict checks.',503);
     const id=crypto.randomUUID(),manage=await managementToken(id,env),end=input.start+meeting.duration*60000,paddedStart=input.start-meeting.before*60000,paddedEnd=end+meeting.after*60000;
-    const data=JSON.stringify({title:meeting.title,location:meeting.location,reminderMinutes:meeting.reminderMinutes||0,reminderEmail:meeting.reminderEmail||'',name:input.name.trim(),email:input.email,notes:input.notes||'',timezone:host.workspace.timezone,manageUrl:`${env.PUBLIC_ORIGIN}/calendar/meet/?booking=${encodeURIComponent(id)}#${manage}`});
+    const data=JSON.stringify({title:meeting.title,location:meeting.location,reminderMinutes:meeting.reminderMinutes||0,reminderEmail:meeting.reminderEmail||'',name:input.name.trim(),email:input.email,participants,notes:input.notes||'',timezone:host.workspace.timezone,manageUrl:`${env.PUBLIC_ORIGIN}/calendar/meet/?booking=${encodeURIComponent(id)}#${manage}`});
     let inserted;try{inserted=await run(db,"INSERT INTO bookings(id,uid,meeting_id,request_id,start,end,busy_start,busy_end,status,data,manage_hash,connection_id,calendar_id,created_at,replaces) SELECT ?,?,?,?,?,?,?,?,'pending',?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM bookings WHERE uid=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND busy_start<? AND busy_end>?) AND (?=0 OR (SELECT COUNT(*) FROM bookings WHERE uid=? AND meeting_id=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND start>=? AND start<? AND id<>?)<?)",id,host.uid,meeting.id,input.requestId,input.start,end,paddedStart,paddedEnd,data,await hash(manage),connection.id,destination.calendarId,Date.now(),previous?.id||null,host.uid,paddedEnd,paddedStart,meeting.dailyLimit,host.uid,meeting.id,range.start,range.end,previous?.id||'',meeting.dailyLimit);}catch(error){if(/UNIQUE|BOOKING_CHANGED/.test(error.message))throw new Problem('A matching booking or reschedule is already in progress. Retry the original request.',409);throw error;}
     assert(inserted.meta.changes===1,'This time was just booked. Choose another.',409);booking=await one(db,'SELECT * FROM bookings WHERE id=?',id);
    }
@@ -60,7 +62,7 @@ export async function publicRoutes(request,env,provider,path){
  if(path.startsWith('/booking/')){
   const id=path.split('/')[2],input=method==='POST'?await body(request,5000):null,token=input?.token||url.searchParams.get('token')||'';
   const booking=await one(db,'SELECT * FROM bookings WHERE id=?',id);assert(booking&&await hash(token)===booking.manage_hash,'Booking not found.',404);
-  if(method==='GET'){const data=JSON.parse(booking.data),profile=await one(db,'SELECT slug FROM profiles WHERE uid=?',booking.uid);return json({id,slug:profile?.slug,meetingId:booking.meeting_id,start:booking.start,end:booking.end,status:booking.status,title:data.title,name:data.name,email:data.email,notes:data.notes,location:data.location,timezone:data.timezone});}
+  if(method==='GET'){const data=JSON.parse(booking.data),profile=await one(db,'SELECT slug FROM profiles WHERE uid=?',booking.uid);return json({id,slug:profile?.slug,meetingId:booking.meeting_id,start:booking.start,end:booking.end,status:booking.status,title:data.title,name:data.name,email:data.email,participants:data.participants||[],notes:data.notes,location:data.location,timezone:data.timezone});}
   if(path.endsWith('/cancel')&&method==='POST'){
    if(booking.status==='cancelled')return json({status:'cancelled'});
    assert(booking.status==='confirmed'||booking.status==='cancelling','This booking is awaiting calendar confirmation. Contact the host.',409);

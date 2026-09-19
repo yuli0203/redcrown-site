@@ -40,3 +40,15 @@ test('Guest booking requests a Google email invitation with meeting details',asy
  await writeBooking(connection,'primary',{id:'12345678-abcd-1234-abcd-123456789012',start,end:start+1800000,data:JSON.stringify({title:'Project conversation',location:'Video call',name:'Guest',email:'guest@example.test',notes:'Discuss website',manageUrl:'https://example.test/manage'})},env);
  assert.match(sent.url,/sendUpdates=all/);assert.deepEqual(sent.body.attendees,[{email:'guest@example.test',displayName:'Guest'}]);assert.equal(sent.body.summary,'Project conversation');assert.equal(sent.body.location,'Video call');assert.equal(sent.body.start.dateTime,'2026-10-20T09:00:00.000Z');assert.match(sent.body.description,/Discuss website/);assert.match(sent.body.description,/https:\/\/example.test\/manage/);env.DB.close();
 });
+
+
+test('Google and Microsoft invitations include additional participants',async t=>{
+ const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',MICROSOFT_CLIENT_ID:'client',MICROSOFT_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64')};let sent;
+ t.mock.method(globalThis,'fetch',async(url,options={})=>{if(String(url).includes('oauth2'))return response({access_token:'access'});if(options.method==='POST'){sent=JSON.parse(options.body);return response({id:'event'});}return response({},404);});
+ for(const provider of ['google','microsoft']){
+  const connection={id:'participants-'+provider,provider,refresh_token:await encrypt('refresh',env)};
+  await writeBooking(connection,'primary',{id:crypto.randomUUID(),start:Date.now(),end:Date.now()+1800000,data:JSON.stringify({title:'Meeting',name:'Guest',email:'guest@example.test',participants:['extra@example.test']})},env);
+  assert.equal(sent.attendees.length,2);assert.equal(provider==='google'?sent.attendees[1].email:sent.attendees[1].emailAddress.address,'extra@example.test');
+ }
+ env.DB.close();
+});

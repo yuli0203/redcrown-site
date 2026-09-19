@@ -92,3 +92,18 @@ test('Reminder settings persist, stay private on landing pages and snapshot into
  const booked=await f.api('/public/test-host/book','POST',f.request());assert.equal(booked.status,201);
  const row=await f.DB.prepare('SELECT data FROM bookings WHERE id=?').bind(booked.data.id).first();assert.equal(JSON.parse(row.data).reminderEmail,'owner@example.test');assert.equal(JSON.parse(row.data).reminderMinutes,60);f.DB.close();
 });
+
+
+test('Additional participants validate, deduplicate, persist and cannot change on retry',async()=>{
+ const f=await fixture();
+ for(const participants of [['bad-address'],Array(11).fill('a@example.test'),'not-an-array'])assert.equal((await f.api('/public/test-host/book','POST',{...f.request(),participants})).status,400);
+ assert.equal(f.writes(),0);
+ const input={...f.request(),participants:[' Extra@example.test ','extra@example.test','guest@example.test','second@example.test']};
+ const result=await f.api('/public/test-host/book','POST',input);assert.equal(result.status,201);
+ const detail=await f.api(`/booking/${result.data.id}?token=${result.data.manageToken}`);assert.deepEqual(detail.data.participants,['extra@example.test','second@example.test']);
+ assert.equal((await f.api('/public/test-host/book','POST',{...input,participants:['replacement@example.test']})).status,409);
+ assert.equal((await f.api('/public/test-host/book','POST',input)).status,201);
+ const publicPage=await f.api('/public/test-host');assert.ok(!JSON.stringify(publicPage.data).includes('extra@example.test'));
+ const moved=await f.api('/public/test-host/book','POST',{...f.request(),start:f.start+7200000,participants:detail.data.participants,previousId:result.data.id,rescheduleToken:result.data.manageToken});assert.equal(moved.status,201);
+ const movedDetail=await f.api(`/booking/${moved.data.id}?token=${moved.data.manageToken}`);assert.deepEqual(movedDetail.data.participants,detail.data.participants);f.DB.close();
+});
