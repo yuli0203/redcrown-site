@@ -15,6 +15,7 @@
   }
   const form = $('#auth-form');
   let sdk, auth, ready = false, busy = false, creating = false;
+  let microsoftEnabled = false;
   let unavailable = 'Loading sign-in...';
   const message = text => { $('#auth-message').textContent = text; };
   const updateControls = () => {
@@ -83,6 +84,10 @@
     closeAuth();
   }));
   $('#auth-microsoft').addEventListener('click', () => run(async () => {
+    if (!microsoftEnabled) {
+      message('Microsoft sign-in is not connected yet. Please use Google or email.');
+      return;
+    }
     const provider = new sdk.OAuthProvider('microsoft.com');
     provider.setCustomParameters({prompt:'select_account', tenant:'common'});
     // Identity only. Calendar permissions require a separate connection flow.
@@ -146,7 +151,7 @@
       $('#auth-microsoft').hidden = Boolean(user);
       if (user) { emailPanel.hidden = true; $('#main-signin').setAttribute('aria-expanded','false'); }
     }
-    if ($('#signin-availability')) $('#signin-availability').textContent = user ? 'Signed in. The calendar currently saves meetings on this device only.' : 'Google, Microsoft or email. No credit card required.';
+    if ($('#signin-availability')) $('#signin-availability').textContent = user ? 'Signed in. The calendar currently saves meetings on this device only.' : (microsoftEnabled ? 'Google, Microsoft or email. No credit card required.' : 'Google or email. Microsoft sign-in is coming soon. No credit card required.');
     // This is a display/storage partition, not authorization. Future server APIs must verify ID tokens.
     document.dispatchEvent(new CustomEvent('crown-auth-change', {detail:{uid:user?.uid || null}}));
   }
@@ -155,7 +160,8 @@
     try {
       const response = await fetch('/calendar/auth-config.json', {cache:'no-store'});
       if (!response.ok) throw new Error('config');
-      const {firebase} = await response.json();
+      const {firebase, providers} = await response.json();
+      microsoftEnabled = providers?.microsoft === true;
       if (!firebase || !['apiKey','authDomain','projectId','appId'].every(key => typeof firebase[key] === 'string' && firebase[key].trim())) {
         unavailable = 'Sign-in is not activated yet. The site owner needs to connect the Firebase project. You can still use the local calendar.';
         if ($('#signin-availability')) $('#signin-availability').textContent = 'Account registration opens once sign-in setup is complete. You can explore the preview now.';
