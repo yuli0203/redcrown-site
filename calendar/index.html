@@ -28,9 +28,17 @@
 <section class="entry-card" aria-labelledby="entry-title">
 <h2 id="entry-title">Your calendar starts here.</h2>
 <p>Sign in or create your free account.</p>
-<button id="main-google" class="auth-button landing-google"><span aria-hidden="true" class="google-letter">G</span>Continue with Google</button>
-<button id="main-microsoft" class="auth-button landing-microsoft"><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Continue with Microsoft</button>
-<button id="main-signin" class="primary">Sign in with email</button>
+<button id="auth-google" class="auth-button landing-google"><span aria-hidden="true" class="google-letter">G</span>Continue with Google</button>
+<button id="auth-microsoft" class="auth-button landing-microsoft"><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Continue with Microsoft</button>
+<button id="main-signin" class="primary" aria-expanded="false" aria-controls="auth-email-panel">Sign in with email</button><div id="auth-email-panel" hidden><h3 id="auth-title">Sign in with email</h3>  <form id="auth-form">
+    <label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" maxlength="254" required disabled>
+    <label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password" required disabled aria-describedby="auth-password-help">
+    <small id="auth-password-help" hidden>Use at least 8 characters. The account password policy may require more.</small>
+    <button class="primary" id="auth-submit" data-auth-action disabled>Sign in</button>
+  </form>
+  <button id="auth-reset" class="auth-link" data-auth-action disabled>Forgot password?</button>
+  <button id="auth-switch" class="auth-link" data-auth-action disabled>New here? Create an account</button>
+</div><p id="auth-message" role="status" aria-live="polite"></p>
 <a class="preview-link" href="/calendar/preview/">Explore the scheduling preview ↗</a>
 <p id="signin-availability" class="entry-note" role="status">Checking sign-in availability...</p>
 </section>
@@ -58,22 +66,6 @@
 <div><h2>Our studio</h2><a href="/">Red Crown Interactive</a><a href="/services/">What we build</a><a href="/#work">Our work</a><a href="/legal/">Privacy &amp; legal</a></div></div>
 <div class="footer-base"><span>© Red Crown Interactive</span><span>Crown Calendar · Product preview</span><a href="#main">Back to top ↑</a></div>
 </footer>
-<dialog id="auth-dialog" aria-labelledby="auth-title" aria-describedby="auth-description">
-  <button id="auth-close" aria-label="Close sign-in">×</button>
-  <h2 id="auth-title">Sign in to Crown Calendar</h2>
-  <p id="auth-description">Use Google, Microsoft or your email. Meetings stay on this device for now.</p>
-  <button id="auth-google" class="auth-button google-signin" data-auth-action disabled>Continue with Google</button>
-  <button id="auth-microsoft" class="auth-button microsoft-signin" data-auth-action disabled><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Continue with Microsoft</button>
-  <div class="auth-divider">or use email</div>
-  <form id="auth-form">
-    <label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" maxlength="254" required disabled>
-    <label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password" required disabled aria-describedby="auth-password-help">
-    <small id="auth-password-help" hidden>Use at least 8 characters. The account password policy may require more.</small>
-    <button class="primary" id="auth-submit" data-auth-action disabled>Sign in</button>
-  </form>
-  <button id="auth-reset" class="auth-link" data-auth-action disabled>Forgot password?</button>
-  <button id="auth-switch" class="auth-link" data-auth-action disabled>New here? Create an account</button>
-  <p id="auth-message" role="status" aria-live="polite">Loading sign-in...</p>
-</dialog>
+
 </body>
 </html>

@@ -2,12 +2,25 @@
   'use strict';
   const $ = selector => document.querySelector(selector);
   const dialog = $('#auth-dialog');
+  const authSurface = dialog || $('.entry-card');
+  const emailPanel = $('#auth-email-panel');
+  function showAuth() {
+    if (dialog) dialog.showModal();
+    else authSurface.scrollIntoView({block:'center'});
+  }
+  function closeAuth() {
+    if (dialog) dialog.close();
+    if (emailPanel) { emailPanel.hidden = true; $('#main-signin').setAttribute('aria-expanded','false'); }
+    $('#auth-password').value = '';
+  }
   const form = $('#auth-form');
   let sdk, auth, ready = false, busy = false, creating = false;
   let unavailable = 'Loading sign-in...';
   const message = text => { $('#auth-message').textContent = text; };
   const updateControls = () => {
-    dialog.querySelectorAll('[data-auth-action], input').forEach(control => { control.disabled = !ready || busy; });
+    authSurface.querySelectorAll('[data-auth-action], input').forEach(control => { control.disabled = !ready || busy; });
+    $('#auth-google').disabled = busy;
+    $('#auth-microsoft').disabled = busy;
     $('#auth-signout').disabled = busy;
   };
   const errors = {
@@ -30,7 +43,8 @@
     'auth/web-storage-unsupported': 'Allow browser storage to use sign-in.'
   };
   async function run(action) {
-    if (!ready || busy) return;
+    if (busy) return;
+    if (!ready) { message(unavailable); return; }
     busy = true; message('Please wait...'); updateControls();
     try { await action(); }
     catch (error) { message(errors[error.code] || 'Unable to complete sign-in. Please try again.'); }
@@ -47,37 +61,33 @@
     $('#auth-password-help').hidden = !register;
     message(ready ? '' : unavailable);
   }
-  $('#auth-open').addEventListener('click', () => { setMode(false); dialog.showModal(); });
-  $('.footer-signin')?.addEventListener('click', () => $('#main-signin').click());
-  $('#main-google')?.addEventListener('click', () => {
-    setMode(false);
-    dialog.showModal();
-    if (ready) $('#auth-google').click();
-  });
-  $('#main-microsoft')?.addEventListener('click', () => {
-    setMode(false);
-    dialog.showModal();
-    if (ready) $('#auth-microsoft').click();
-  });
+  $('#auth-open').addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
+  $('.footer-signin')?.addEventListener('click', () => $('#auth-open').click());
   $('#main-signin')?.addEventListener('click', () => {
     if (auth?.currentUser) { location.assign('/calendar/preview/'); return; }
-    setMode(false); dialog.showModal();
+    if (emailPanel) {
+      const opening = emailPanel.hidden;
+      emailPanel.hidden = !opening;
+      $('#main-signin').setAttribute('aria-expanded',String(opening));
+      if (opening) { setMode(false); if (ready) $('#auth-email').focus({preventScroll:true}); }
+      else $('#auth-password').value = '';
+    } else { setMode(false); showAuth(); }
   });
-  $('#auth-close').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('close', () => { $('#auth-password').value = ''; });
+  $('#auth-close')?.addEventListener('click', closeAuth);
+  dialog?.addEventListener('close', () => { $('#auth-password').value = ''; });
   $('#auth-switch').addEventListener('click', () => setMode(!creating));
   $('#auth-google').addEventListener('click', () => run(async () => {
     const provider = new sdk.GoogleAuthProvider();
     provider.setCustomParameters({prompt:'select_account'});
     await sdk.signInWithPopup(auth, provider);
-    dialog.close();
+    closeAuth();
   }));
   $('#auth-microsoft').addEventListener('click', () => run(async () => {
     const provider = new sdk.OAuthProvider('microsoft.com');
     provider.setCustomParameters({prompt:'select_account', tenant:'common'});
     // Identity only. Calendar permissions require a separate connection flow.
     await sdk.signInWithPopup(auth, provider);
-    dialog.close();
+    closeAuth();
   }));
   form.addEventListener('submit', event => {
     event.preventDefault();
@@ -94,7 +104,7 @@
         catch { message('Account created, but the verification email could not be sent. Use Verify email to try again.'); }
       } else {
         await sdk.signInWithEmailAndPassword(auth, email, password);
-        dialog.close();
+        closeAuth();
       }
     });
   });
@@ -109,9 +119,9 @@
   });
   $('#auth-signout').addEventListener('click', () => run(async () => {
     await sdk.signOut(auth); message('Signed out.');
-  }).then(() => { if (auth?.currentUser) dialog.showModal(); }));
+  }).then(() => { if (auth?.currentUser) showAuth(); }));
   $('#auth-verify').addEventListener('click', () => {
-    dialog.showModal();
+    showAuth();
     run(async () => {
       if (!auth.currentUser) return;
       await sdk.reload(auth.currentUser);
@@ -131,8 +141,11 @@
       ? 'Saved locally for this account, on this browser only. Sign-in does not sync meetings across devices.'
       : 'Guest meetings are stored in this browser. Sign in to use a separate local meeting list.';
     if ($('#main-signin')) $('#main-signin').textContent = user ? 'Open calendar preview' : 'Sign in with email';
-    if ($('#main-google')) $('#main-google').hidden = Boolean(user);
-    if ($('#main-microsoft')) $('#main-microsoft').hidden = Boolean(user);
+    if (!dialog) {
+      $('#auth-google').hidden = Boolean(user);
+      $('#auth-microsoft').hidden = Boolean(user);
+      if (user) { emailPanel.hidden = true; $('#main-signin').setAttribute('aria-expanded','false'); }
+    }
     if ($('#signin-availability')) $('#signin-availability').textContent = user ? 'Signed in. The calendar currently saves meetings on this device only.' : 'Google, Microsoft or email. No credit card required.';
     // This is a display/storage partition, not authorization. Future server APIs must verify ID tokens.
     document.dispatchEvent(new CustomEvent('crown-auth-change', {detail:{uid:user?.uid || null}}));
