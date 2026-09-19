@@ -48,7 +48,7 @@ test('Google and Microsoft invitations include additional participants',async t=
  for(const provider of ['google','microsoft']){
   const connection={id:'participants-'+provider,provider,refresh_token:await encrypt('refresh',env)};
   await writeBooking(connection,'primary',{id:crypto.randomUUID(),start:Date.now(),end:Date.now()+1800000,data:JSON.stringify({title:'Meeting',name:'Guest',email:'guest@example.test',participants:['extra@example.test']})},env);
-  assert.equal(sent.attendees.length,2);assert.equal(provider==='google'?sent.attendees[1].email:sent.attendees[1].emailAddress.address,'extra@example.test');
+  assert.equal(provider==='google'?sent.transparency:sent.showAs,provider==='google'?'opaque':'busy');assert.equal(sent.attendees.length,2);assert.equal(provider==='google'?sent.attendees[1].email:sent.attendees[1].emailAddress.address,'extra@example.test');
  }
  env.DB.close();
 });
