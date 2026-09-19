@@ -52,3 +52,24 @@ test('Google and Microsoft invitations include additional participants',async t=
  }
  env.DB.close();
 });
+
+
+test('Google booking retry fails safely on lookup errors and cancelled events',async t=>{
+ const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64')};
+ const connection={id:'safe-retry',provider:'google',refresh_token:await encrypt('refresh',env)};let mode=403,writes=0;
+ t.mock.method(globalThis,'fetch',async(url,options={})=>{if(String(url).includes('oauth2'))return response({access_token:'access'});if(options.method==='POST'){writes++;return response({id:'created'});}return mode===200?response({id:'existing',status:'cancelled'}):response({},mode);});
+ const booking={id:crypto.randomUUID(),start:Date.now(),end:Date.now()+1800000,data:JSON.stringify({title:'Test',email:'guest@example.test'})};
+ for(mode of [403,429,500,200])await assert.rejects(writeBooking(connection,'primary',booking,env));assert.equal(writes,0);
+ mode=404;await writeBooking(connection,'primary',booking,env);assert.equal(writes,1);env.DB.close();
+});
+
+test('Outlook availability handles paginated busy, free, declined and all-day events',async t=>{
+ const env={DB:database(),MICROSOFT_CLIENT_ID:'client',MICROSOFT_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64')};
+ const connection={id:'outlook-busy',uid:'host',provider:'microsoft',refresh_token:await encrypt('refresh',env),calendars:JSON.stringify([{id:'work',name:'Work',selected:true}])};let fail=false;
+ const event=(showAs,responseValue='accepted')=>({start:{dateTime:'2026-10-01T09:00:00',timeZone:'UTC'},end:{dateTime:'2026-10-01T10:00:00',timeZone:'UTC'},showAs,responseStatus:{response:responseValue}});
+ t.mock.method(globalThis,'fetch',async url=>{url=String(url);if(url.includes('oauth2'))return response({access_token:'access'});if(url.includes('page=2'))return fail?response({},503):response({value:[{...event('oof'),isAllDay:true,start:{dateTime:'2026-10-02T00:00:00'},end:{dateTime:'2026-10-03T00:00:00'}}]});return response({value:[event('busy'),event('free'),event('workingElsewhere'),event('busy','declined'),{...event('busy'),isCancelled:true}],'@odata.nextLink':'https://graph.microsoft.com/v1.0/me/calendars/work/calendarView?page=2'});});
+ const data=await readAvailability([connection],Date.parse('2026-10-01'),Date.parse('2026-10-04'),env,{details:true});assert.equal(data.busy.length,2);assert.equal(data.busy[0].start,Date.parse('2026-10-01T09:00:00Z'));assert.ok(data.events.some(e=>e.allDay));
+ fail=true;await assert.rejects(readAvailability([connection],Date.parse('2026-10-01'),Date.parse('2026-10-04'),env),/could not be checked/);env.DB.close();
+});
+
+test('Invalid calendar list response is not treated as an empty account',async t=>{t.mock.method(globalThis,'fetch',async()=>response({}));await assert.rejects(listCalendars('microsoft','access'));await assert.rejects(listCalendars('google','access'));});
