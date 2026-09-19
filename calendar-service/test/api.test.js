@@ -7,7 +7,7 @@ import { encrypt,decrypt } from '../src/security.js';
 async function fixture(){const DB=database(),env={DB,PUBLIC_ORIGIN:'http://localhost',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,7).toString('base64')};let failed=false,writes=0;
  const provider={async readAvailability(){return {busy:[],events:[]};},async writeBooking(c,id,b){writes++;if(failed)throw Error();return {id:b.id};},async cancelEvent(){}};
  const handle=createHandler({authenticate:async r=>({uid:r.headers.get('x-test-user')||'host',verified:true}),provider});
- const api=async(path,method='GET',data,user='host')=>{const result=await handle(new Request('http://localhost/calendar/api'+path,{method,headers:{'x-test-user':user,...(data?{'Content-Type':'application/json'}:{})},...(data?{body:JSON.stringify(data)}:{})}),env);return {status:result.status,data:await result.json()};};
+ const api=async(path,method='GET',data,user='host',headers={})=>{const result=await handle(new Request('http://localhost/calendar/api'+path,{method,headers:{'x-test-user':user,...headers,...(data?{'Content-Type':'application/json'}:{})},...(data?{body:JSON.stringify(data)}:{})}),env);return {status:result.status,data:await result.json()};};
  const date=new Date(Date.now()+2*86400000);date.setUTCHours(9,0,0,0);const start=+date;
  const workspace=validateWorkspace({pageName:'Host',slug:'test-host',timezone:'UTC',weekly:Object.fromEntries([1,2,3,4,5,6,7].map(d=>[d,[['09:00','17:00']]])),meetings:[{id:'intro',title:'Intro',duration:30,before:0,after:15,notice:0}],destination:{connectionId:'one',calendarId:'primary'},published:true});
  await DB.prepare('INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?)').bind('one','host','google','account','host@example.test','encrypted',JSON.stringify([{id:'primary',selected:true,writable:true}])).run();
@@ -48,5 +48,20 @@ test('Database refuses a stale replacement after cancellation starts',async()=>{
  await f.DB.prepare("UPDATE bookings SET status='cancelling' WHERE id=?").bind(original.data.id).run();
  await assert.rejects(async()=>f.DB.prepare("INSERT INTO bookings(id,uid,meeting_id,request_id,start,end,busy_start,busy_end,status,data,manage_hash,connection_id,calendar_id,created_at,replaces) SELECT ?,uid,meeting_id,?,start+7200000,end+7200000,busy_start+7200000,busy_end+7200000,'pending',data,manage_hash,connection_id,calendar_id,created_at,id FROM bookings WHERE id=?").bind(crypto.randomUUID(),crypto.randomUUID(),original.data.id).run(),/BOOKING_CHANGED/);
  assert.equal((await f.DB.prepare('SELECT COUNT(*) AS n FROM bookings').first()).n,1);
+ f.DB.close();
+});
+
+
+test('Rescheduling at the daily limit replaces the count without allowing an extra booking',async()=>{
+ const f=await fixture();f.workspace.meetings[0].dailyLimit=1;
+ assert.equal((await f.api('/workspace','PUT',{data:f.workspace,version:1})).status,200);
+ const original=await f.api('/public/test-host/book','POST',f.request());assert.equal(original.status,201);
+ const date=new Date(f.start).toISOString().slice(0,10),base=`/public/test-host/slots?meeting=intro&days=1&timezone=UTC&from=${date}`;
+ assert.deepEqual((await f.api(base)).data.slots,[]);
+ assert.equal((await f.api(base+`&previousId=${original.data.id}`)).status,409);
+ const choices=await f.api(base+`&previousId=${original.data.id}`,'GET',null,'host',{'X-Booking-Token':original.data.manageToken});
+ assert.equal(choices.status,200);assert.ok(choices.data.slots.some(s=>s.start===f.start+7200000));
+ const moved=await f.api('/public/test-host/book','POST',{...f.request(),start:f.start+7200000,previousId:original.data.id,rescheduleToken:original.data.manageToken});
+ assert.equal(moved.status,201);assert.equal((await f.api('/public/test-host/book','POST',f.request())).status,409);
  f.DB.close();
 });
