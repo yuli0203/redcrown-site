@@ -1,6 +1,6 @@
 import { feedUrl, fetchFeed, parseFeed } from './ical-feed.js';
 import { recordWorkspaceUsage } from './analytics.js';
-import { sendBookingNotifications } from './notifications.js';
+import { notificationsReady, sendBookingNotifications } from './notifications.js';
 import { remindersReady, sendReminders } from './reminders.js';
 import { assert, Problem, validateWorkspace, slots, dateRange, localDate, validZone } from './scheduling.js';
 import { identity, body, hash, random, encrypt, rateLimit } from './security.js';
@@ -18,7 +18,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   assert(url.pathname.startsWith(prefix+'/'),'Not found.',404);
   const origin=request.headers.get('Origin');if(origin)assert(origin===env.PUBLIC_ORIGIN,'This origin is not allowed.',403);
   if(method==='OPTIONS'){assert(['GET','POST','PUT','DELETE'].includes(request.headers.get('Access-Control-Request-Method')),'Method not allowed.',405);return new Response(null,{status:204});}
-  if(path==='/health')return json({ready:Boolean(db),emailReminders:remindersReady(env),google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
+  if(path==='/health')return json({ready:Boolean(db),emailReminders:remindersReady(env),bookingNotifications:notificationsReady(env),google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
   assert(db,'The scheduling service is not configured yet.',503);
 
   await rateLimit(env,`ip:${await hash(request.headers.get('CF-Connecting-IP')||'local')}`,120);

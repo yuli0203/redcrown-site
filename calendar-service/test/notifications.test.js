@@ -16,3 +16,10 @@ test('Host notification sends only after confirmation and retries identical payl
  await sendBookingNotifications(env,now,send);await sendBookingNotifications(env,now+60000,send);await sendBookingNotifications(env,now+120000,send);
  assert.equal(sent.length,2);assert.equal(sent[0].body,sent[1].body);assert.equal(sent[0].headers['Idempotency-Key'],sent[1].headers['Idempotency-Key']);assert.deepEqual(JSON.parse(sent[0].body).to,['host@example.test']);DB.close();
 });
+test('Previously unattempted upcoming bookings survive setup delays, while expired attempts do not resend',async()=>{
+ const DB=database(),env={DB,RESEND_API_KEY:'test',NOTIFICATION_FROM:'calendar@example.test'},sent=[];
+ for(const id of ['never-attempted','expired-attempt'])await DB.prepare(`INSERT INTO bookings(id,uid,meeting_id,request_id,start,end,busy_start,busy_end,status,data,manage_hash,connection_id,calendar_id,created_at,notification_attempt_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,'host','intro',id,now+3600000,now+5400000,now+3600000,now+5400000,'confirmed',JSON.stringify(data),'hash','connection','primary',now-3*86400000,id==='expired-attempt'?now-2*86400000:null).run();
+ await sendBookingNotifications(env,now,async(url,options)=>{sent.push(options);return Response.json({id:'accepted'});});
+ assert.equal(sent.length,1);assert.equal(sent[0].headers['Idempotency-Key'],'booking-notification/never-attempted');
+ DB.close();
+});
