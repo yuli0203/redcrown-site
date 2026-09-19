@@ -15,6 +15,7 @@
    const card=node('article','','calendar-account'),heading=node('div','','calendar-account-heading'),info=node('div');info.append(node('h2',account.email),node('p',`${account.provider==='google'?'Google Calendar':'Microsoft Outlook'} - persistent connection`,'sync-small'));
    const actions=node('div','','calendar-account-actions');
    actions.append(button('Edit calendars',()=>edit(card,account)),button('Refresh list',async()=>{await api.request('/connections/'+account.id+'/refresh',{method:'POST',data:{}});await load();await refresh();}),button('Reconnect',()=>connect(account.provider)),button('Remove',async()=>{await api.request('/connections/'+account.id,{method:'DELETE'});await load();await refresh();}));heading.append(info,actions);card.append(heading,node('p',`${account.calendars.filter(c=>c.selected).length} calendars selected`,'sync-small'));const selected=node('p',account.calendars.filter(c=>c.selected).map(c=>c.name).join(' / ')||'Choose Edit calendars, then Save selection to start checking availability.','sync-small');card.append(selected);$('#calendar-accounts').append(card);
+   if(!working&&!account.calendars.some(c=>c.selected))edit(card,account);
   }
   document.dispatchEvent(new CustomEvent('crown-calendars-change',{detail:{accounts}}));
  }

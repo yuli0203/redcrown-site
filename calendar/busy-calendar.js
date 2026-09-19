@@ -51,7 +51,7 @@
     const from=Math.max(bounds.start,rangeStart), to=Math.min(bounds.end,rangeEnd);
     if(from>=to) {
       $('#busy-day-coverage').textContent='Availability has not been checked for this date.';
-      const note=document.createElement('p');note.className='sync-small';note.textContent='Calendar sync currently checks the next 30 days. This date is outside that range.';list.append(note);return;
+      const note=document.createElement('p');note.className='sync-small';note.textContent='This date is outside the checked month. Refresh availability to check it.';list.append(note);return;
     }
     $('#busy-day-coverage').textContent=`Checked ${time(from)} - ${to === bounds.end ? '24:00' : time(to)}. Free and busy times below.`;
     const entries=calendarEntries(intervals,meetings,selected,rangeStart,rangeEnd);
@@ -88,7 +88,7 @@
         segment.style.left=`${(part.start-bounds.start)/(bounds.end-bounds.start)*100}%`;
         segment.style.width=`${(part.end-part.start)/(bounds.end-bounds.start)*100}%`;track.append(segment);
       }
-      button.append(title);if(checked) button.append(track);
+      button.append(title,status);if(checked) button.append(track);
       const entries=checked?calendarEntries(intervals,meetings,date,rangeStart,rangeEnd):[];
       for(const event of entries.slice(0,2)) {
         const chip=document.createElement('span');chip.className='calendar-event-chip'+(event.busy?'':' event-free');
