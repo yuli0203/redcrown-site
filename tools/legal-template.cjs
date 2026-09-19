@@ -1,9 +1,12 @@
 const sections = [['privacy','Privacy Policy'],['terms','Terms of Use'],['accessibility','Accessibility Statement'],['support','Support']];
-function footer(product = 'studio') {
+function footer(product = 'studio', lang = 'en') {
   const base = product === 'calendar' ? '/calendar/legal/' : '/legal/';
+  const shared = lang === 'en' ? '/legal/' : `/${lang}/legal/`;
+  const labels = lang === 'he' ? ['מדיניות פרטיות','תנאי שימוש','הצהרת נגישות','תמיכה'] : sections.map(s => s[1]);
+  const links = sections.map(([id], i) => `<a href="${['privacy','accessibility'].includes(id) ? shared : base}#${id}">${labels[i]}</a>`).join('') + (product === 'calendar' ? `<a href="/calendar/legal/#privacy">${lang === 'he' ? 'פרטיות נתוני היומן' : 'Calendar data policy'}</a>` : '');
   return `<!-- shared-legal-footer:start -->
 <link rel="stylesheet" href="/shared/legal.css">
-<div class="rc-legal-footer"><p>© <span data-rc-year>${new Date().getFullYear()}</span> Red Crown Interactive. All rights reserved.</p><div role="navigation" aria-label="${product === 'calendar' ? 'Red Crown Calendar' : 'Red Crown Interactive'} policies and support">${sections.map(([id,label]) => `<a href="${base}#${id}">${label}</a>`).join('')}</div></div>
+<div class="rc-legal-footer"><p>© <span data-rc-year>${new Date().getFullYear()}</span> Red Crown Interactive. ${lang === 'he' ? 'כל הזכויות שמורות.' : 'All rights reserved.'}</p><div role="navigation" aria-label="${product === 'calendar' ? 'Red Crown Calendar' : 'Red Crown Interactive'} policies and support">${links}</div></div>
 <script defer src="/shared/legal.js"></script>
 <!-- shared-legal-footer:end -->`;
 }

@@ -13,9 +13,9 @@ function save(file, text) {
   fs.writeFileSync(target, text);
 }
 for (const data of require('./legal-content.cjs')) save(data.path, page(data));
-for (const [file, product] of [['index.html','studio'],['calendar/index.html','calendar'],['calendar/meet/index.html','calendar']]) {
+for (const [file, product] of [['index.html','studio'],['calendar/index.html','calendar'],['calendar/he/index.html','calendar'],['calendar/meet/index.html','calendar']]) {
   let text = fs.readFileSync(path.join(root, file), 'utf8');
-  const markup = footer(product);
+  const markup = footer(product, file === 'calendar/he/index.html' ? 'he' : 'en');
   const marker = /<!-- shared-legal-footer:start -->[\s\S]*?<!-- shared-legal-footer:end -->/;
   if (marker.test(text)) text = text.replace(marker, markup);
   else if (file === 'index.html') text = text.replace(/<div class="copy"[^>]*>[\s\S]*?<\/nav>/, markup);

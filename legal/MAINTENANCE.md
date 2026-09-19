@@ -24,3 +24,8 @@ References reviewed:
 - https://developers.google.com/workspace/workspace-api-user-data-developer-policy
 - https://www.w3.org/TR/WCAG-EM/
 - https://www.w3.org/TR/wcag/
+
+Calendar footers reuse the studio privacy and accessibility links. Hebrew and
+Russian links resolve to the existing /he/legal/ and /ru/legal/ pages through
+shared/legal.js. Keep Calendar data disclosures under /calendar/legal/#privacy;
+do not copy the studio translations into new Calendar pages.
