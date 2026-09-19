@@ -29,6 +29,7 @@
 <h2 id="entry-title">Your calendar starts here.</h2>
 <p>Sign in or create your free account.</p>
 <button id="main-google" class="auth-button landing-google"><span aria-hidden="true" class="google-letter">G</span>Continue with Google</button>
+<button id="main-microsoft" class="auth-button landing-microsoft"><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Continue with Microsoft</button>
 <button id="main-signin" class="primary">Sign in with email</button>
 <a class="preview-link" href="/calendar/preview/">Explore the scheduling preview ↗</a>
 <p id="signin-availability" class="entry-note" role="status">Checking sign-in availability...</p>
@@ -37,7 +38,7 @@
 <section id="how-it-works" class="product-section">
 <div class="section-title"><span>GETTING STARTED</span><h2>A straightforward way to schedule.</h2></div>
 <div class="steps-grid">
-<article><span class="step-index">01</span><h3>Create your account</h3><p>Use Google or your email to access your own calendar space.</p><small>Sign-in setup in progress</small></article>
+<article><span class="step-index">01</span><h3>Create your account</h3><p>Use Google, Microsoft or your email to access your own calendar space.</p><small>Sign-in setup in progress</small></article>
 <article><span class="step-index">02</span><h3>Set your availability</h3><p>Choose meeting lengths and working hours, with time between meetings when you need it.</p><a href="/calendar/preview/">Try the local preview ↗</a></article>
 <article><span class="step-index">03</span><h3>Share a booking link</h3><p>Let guests choose a time without creating an account of their own.</p><small>Public booking links coming next</small></article>
 </div>
@@ -46,7 +47,7 @@
 <section class="product-section questions-section" id="questions"><div class="section-title"><span>USEFUL TO KNOW</span><h2>A few practical answers.</h2></div><div class="questions-list">
 <details><summary>Is Crown Calendar free?</summary><p>Crown Calendar is being built as a free scheduling tool by Red Crown Interactive. There are no paid plans or subscriptions in this preview.</p></details>
 <details><summary>What can I use right now?</summary><p>The separate calendar preview lets you select dates and meeting lengths, save meetings in this browser and export them as .ics files. It does not send invitations or sync with external calendars.</p></details>
-<details><summary>How will sign-in work?</summary><p>Google and email/password sign-in are being set up. Account registration will open once the authentication service is connected. An account will not automatically grant access to your Google Calendar.</p></details>
+<details><summary>How will sign-in work?</summary><p>Google, Microsoft and email/password sign-in are being set up. Account registration will open once the authentication service is connected. An account will not automatically grant access to your calendars.</p></details>
 <details><summary>Can I choose any meeting length?</summary><p>You can choose a preset or enter a custom duration in minutes. The current preview supports 1 to 480 minutes, subject to the available working hours and breaks.</p></details>
 <details><summary>Who is behind the tool?</summary><p>Red Crown Interactive builds apps and interactive software. Crown Calendar is a free tool from the studio. <a href="/">Learn about Red Crown Interactive ↗</a></p></details>
 </div></section>
@@ -60,8 +61,9 @@
 <dialog id="auth-dialog" aria-labelledby="auth-title" aria-describedby="auth-description">
   <button id="auth-close" aria-label="Close sign-in">×</button>
   <h2 id="auth-title">Sign in to Crown Calendar</h2>
-  <p id="auth-description">Use Google or your email. Meetings stay on this device for now.</p>
+  <p id="auth-description">Use Google, Microsoft or your email. Meetings stay on this device for now.</p>
   <button id="auth-google" class="auth-button google-signin" data-auth-action disabled>Continue with Google</button>
+  <button id="auth-microsoft" class="auth-button microsoft-signin" data-auth-action disabled><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Continue with Microsoft</button>
   <div class="auth-divider">or use email</div>
   <form id="auth-form">
     <label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" maxlength="254" required disabled>

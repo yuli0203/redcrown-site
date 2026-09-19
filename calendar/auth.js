@@ -54,6 +54,11 @@
     dialog.showModal();
     if (ready) $('#auth-google').click();
   });
+  $('#main-microsoft')?.addEventListener('click', () => {
+    setMode(false);
+    dialog.showModal();
+    if (ready) $('#auth-microsoft').click();
+  });
   $('#main-signin')?.addEventListener('click', () => {
     if (auth?.currentUser) { location.assign('/calendar/preview/'); return; }
     setMode(false); dialog.showModal();
@@ -64,6 +69,13 @@
   $('#auth-google').addEventListener('click', () => run(async () => {
     const provider = new sdk.GoogleAuthProvider();
     provider.setCustomParameters({prompt:'select_account'});
+    await sdk.signInWithPopup(auth, provider);
+    dialog.close();
+  }));
+  $('#auth-microsoft').addEventListener('click', () => run(async () => {
+    const provider = new sdk.OAuthProvider('microsoft.com');
+    provider.setCustomParameters({prompt:'select_account', tenant:'common'});
+    // Identity only. Calendar permissions require a separate connection flow.
     await sdk.signInWithPopup(auth, provider);
     dialog.close();
   }));
@@ -120,7 +132,8 @@
       : 'Guest meetings are stored in this browser. Sign in to use a separate local meeting list.';
     if ($('#main-signin')) $('#main-signin').textContent = user ? 'Open calendar preview' : 'Sign in with email';
     if ($('#main-google')) $('#main-google').hidden = Boolean(user);
-    if ($('#signin-availability')) $('#signin-availability').textContent = user ? 'Signed in. The calendar currently saves meetings on this device only.' : 'Google or email. No credit card required.';
+    if ($('#main-microsoft')) $('#main-microsoft').hidden = Boolean(user);
+    if ($('#signin-availability')) $('#signin-availability').textContent = user ? 'Signed in. The calendar currently saves meetings on this device only.' : 'Google, Microsoft or email. No credit card required.';
     // This is a display/storage partition, not authorization. Future server APIs must verify ID tokens.
     document.dispatchEvent(new CustomEvent('crown-auth-change', {detail:{uid:user?.uid || null}}));
   }

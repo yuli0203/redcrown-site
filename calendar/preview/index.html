@@ -43,8 +43,9 @@
 <dialog id="auth-dialog" aria-labelledby="auth-title" aria-describedby="auth-description">
   <button id="auth-close" aria-label="Close sign-in">×</button>
   <h2 id="auth-title">Sign in to Crown Calendar</h2>
-  <p id="auth-description">Use Google or your email. Meetings stay on this device for now.</p>
+  <p id="auth-description">Use Google, Microsoft or your email. Meetings stay on this device for now.</p>
   <button id="auth-google" class="auth-button google-signin" data-auth-action disabled>Continue with Google</button>
+  <button id="auth-microsoft" class="auth-button microsoft-signin" data-auth-action disabled><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Continue with Microsoft</button>
   <div class="auth-divider">or use email</div>
   <form id="auth-form">
     <label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" maxlength="254" required disabled>
