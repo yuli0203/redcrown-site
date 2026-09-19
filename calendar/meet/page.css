@@ -20,3 +20,16 @@
 .calendar-add-options{margin-top:20px}.calendar-add-options h3{margin:0 0 12px}.calendar-add-links{display:flex;flex-wrap:wrap;gap:10px}.calendar-add-options .booking-status{margin:12px 0}
 
 .booking-back{margin:0 0 20px;min-height:44px;font-weight:600}.booking-back:focus-visible{outline:3px solid var(--page-accent);outline-offset:3px}
+/* Mirror the booking layout without reversing email addresses or clock values. */
+html[dir=rtl] body{font-family:Arial,"Noto Sans Hebrew",sans-serif}
+html[dir=rtl] .meeting-summary,html[dir=rtl] .booking-scheduler,html[dir=rtl] .guest-form{text-align:start}
+html[dir=rtl] .booking-detail .meeting-summary{border-right:0;border-left:1px solid #8883}
+html[dir=rtl] .booking-detail .booking-times{border-left:0;border-right:1px solid #8883;padding-left:0;padding-right:24px}
+html[dir=rtl] .booking-month-nav .booking-button{transform:scaleX(-1)}
+html[dir=rtl] .booking-slot-grid .booking-button,html[dir=rtl] input[type=email],html[dir=rtl] #booking-timezone{direction:ltr;unicode-bidi:plaintext}
+html[dir=rtl] .meeting-meta,html[dir=rtl] .booking-status{overflow-wrap:anywhere;unicode-bidi:plaintext}
+html[dir=rtl] .booking-progress{padding-inline-start:0}
+html[dir=rtl] .guest-form>button:first-child{padding-left:12px;padding-right:0}
+html[dir=rtl] .calendar-add-links,html[dir=rtl] .rc-legal-footer{text-align:start}
+@media(max-width:920px){html[dir=rtl] .booking-detail .booking-times{border-right:0;border-top:1px solid #8883;padding:20px 0 0}}
+@media(max-width:760px){html[dir=rtl] .booking-detail .meeting-summary{border-left:0;border-bottom:1px solid #8883}html[dir=rtl] .booking-sidebar-logo{margin-inline-start:0}}
