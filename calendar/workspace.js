@@ -2,6 +2,11 @@
   'use strict';
   const $ = selector => document.querySelector(selector);
   await window.CrownAPI.ready;const cloud=window.CrownAPI.online||window.CrownAPI.configured;let serverVersion=0;
+  const notificationWarning=document.createElement('p');
+  notificationWarning.className='workspace-auth-status';notificationWarning.setAttribute('role','status');
+  notificationWarning.textContent=document.documentElement.lang.startsWith('he')?'התראות על פגישות באימייל אינן מחוברות. פגישות נשמרות ביומן, אך לא נשלחת אליכם התראה באימייל. יש לפנות לתמיכה.':'Booking email notifications are not connected. Bookings are saved to your calendar, but no host notification email is sent. Contact support to enable delivery.';
+  notificationWarning.hidden=window.CrownAPI.config?.bookingNotifications!==false;
+  $('#meeting-settings').prepend(notificationWarning);
   const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,notice:120,horizon:60,interval:15,dailyLimit:0,location:'',reminderMinutes:30,reminderEmail:'',accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
   let uid = null, logo = '', photo = '', revision = 0, meetings = [], editingId = null, removed = null, savedData = {};
   const dialog = $('#configure-meeting-dialog');
@@ -246,7 +251,8 @@
     try{const result=await window.CrownAPI.request('/bookings');if(version!==revision)return;const list=$('#upcoming-bookings-list');list.replaceChildren();
       for(const booking of result.bookings){const row=document.createElement('article');row.className='meeting-type-row';const text=document.createElement('div');const title=document.createElement('h3');title.textContent=booking.data.title;const meta=document.createElement('p');meta.className='sync-small';meta.textContent=`${new Date(booking.start).toLocaleString()} - ${booking.data.name} - ${booking.status}`;text.append(title,meta);row.append(text);
        if(booking.status==='pending'){const retry=document.createElement('button');retry.className='auth-button';retry.textContent='Retry confirmation';retry.addEventListener('click',async()=>{retry.disabled=true;try{await window.CrownAPI.request(`/bookings/${booking.id}/retry`,{method:'POST',data:{}});await upcoming();}catch(e){$('#upcoming-bookings-status').textContent=e.message;retry.disabled=false;}});row.append(retry);}
-       else if(['confirmed','cancelling'].includes(booking.status)){const manage=document.createElement('a');manage.className='auth-button';manage.textContent='Manage booking';manage.href=`/calendar/meet/?booking=${booking.id}#${booking.manageToken}`;manage.target='_blank';manage.rel='noopener';row.append(manage);}list.append(row);
+       else if(['confirmed','cancelling'].includes(booking.status)){const manage=document.createElement('a');manage.className='auth-button';manage.textContent='Manage booking';manage.href=`/calendar/meet/?booking=${booking.id}#${booking.manageToken}`;manage.target='_blank';manage.rel='noopener';row.append(manage);}
+       else if(booking.status==='cancelled'){const remove=document.createElement('button');remove.type='button';remove.className='auth-button';remove.textContent=document.documentElement.lang.startsWith('he')?'הסרה מהרשימה':'Remove from list';remove.setAttribute('aria-label',remove.textContent+': '+booking.data.title);remove.addEventListener('click',async()=>{remove.disabled=true;try{await window.CrownAPI.request(`/bookings/${encodeURIComponent(booking.id)}`,{method:'DELETE'});if(version!==revision)return;await upcoming();$('#refresh-bookings').focus();}catch(e){if(version===revision){$('#upcoming-bookings-status').textContent=e.message;remove.disabled=false;}}});row.append(remove);}list.append(row);
       }$('#upcoming-bookings-status').textContent=result.bookings.length?'':'No upcoming bookings yet.';
     }catch(e){if(version===revision)$('#upcoming-bookings-status').textContent=e.message;}
   }
