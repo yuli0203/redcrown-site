@@ -8,6 +8,7 @@
 <meta name="description" content="A simple, free calendar. Preview meeting lengths, dates and available times.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/calendar/calendar.css">
+<link rel="stylesheet" href="/calendar/product-design.css">
 <script defer src="/calendar/auth.js"></script>
 </head>
 <body class="product-home">
@@ -16,16 +17,22 @@
 <main id="main" class="product-main">
 <section class="product-intro" id="features" aria-labelledby="product-title">
 <p class="product-label">A FREE TOOL BY RED CROWN INTERACTIVE</p>
-<h1 id="product-title">Free, limitless scheduling.</h1>
+<h1 id="product-title">Free, limitless<br><em>scheduling.</em></h1>
 <p class="product-description">A simple place to manage your availability and let people find a time to meet. Set your meeting lengths, share your schedule and keep your calendars together.</p>
 <div class="product-points">
 <div><span aria-hidden="true">01</span><h2>Your meeting lengths</h2><p>Choose a preset or set the exact number of minutes you need.</p></div>
-<div><span aria-hidden="true">02</span><h2>Your availability</h2><p>Working hours, breaks and time zones in one place.</p></div>
+<div><span aria-hidden="true">02</span><h2>Your availability &amp; buffers</h2><p>Working hours, breaks, booking limits and time between meetings.</p></div>
 <div><span aria-hidden="true">03</span><h2>Your calendars</h2><p>Google, Outlook and holiday preferences are planned.</p></div>
 </div>
 <p class="product-status">Currently in preview. Live booking links and calendar sync are still in development.</p>
 </section>
 <section class="entry-card" aria-labelledby="entry-title">
+<div class="calendar-art" role="img" aria-label="Illustration of a weekly schedule with a meeting and buffer time">
+  <div class="art-toolbar"><span class="art-mark">C</span><span>Your week, in balance</span><span class="art-dots">•••</span></div>
+  <div class="art-week"><span>MON<b>21</b></span><span>TUE<b>22</b></span><span class="art-active">WED<b>23</b></span><span>THU<b>24</b></span><span>FRI<b>25</b></span></div>
+  <div class="art-schedule"><span class="art-time">09:00</span><div class="art-grid"></div><div class="art-event"><i></i><span>Project catch-up<small>09:30 - 10:15</small></span></div><div class="art-buffer">15 min buffer</div><span class="art-time art-time-bottom">11:00</span></div>
+  <span class="art-caption">SCHEDULING PREVIEW</span>
+</div>
 <h2 id="entry-title">Your calendar starts here.</h2>
 <p>Sign in or create your free account.</p>
 <button id="main-google" class="auth-button landing-google"><span aria-hidden="true" class="google-letter">G</span>Continue with Google</button>
@@ -34,6 +41,7 @@
 <p id="signin-availability" class="entry-note" role="status">Checking sign-in availability...</p>
 </section>
 </main>
+<section class="capability-strip" aria-label="Scheduling features being built"><span><i aria-hidden="true">↔</i> Calendar sync</span><span><i aria-hidden="true">◷</i> Flexible durations</span><span><i aria-hidden="true">≋</i> Before &amp; after buffers</span><span><i aria-hidden="true">◎</i> Time zones &amp; holidays</span></section>
 <section id="how-it-works" class="product-section">
 <div class="section-title"><span>GETTING STARTED</span><h2>A straightforward way to schedule.</h2></div>
 <div class="steps-grid">
@@ -42,7 +50,7 @@
 <article><span class="step-index">03</span><h3>Share a booking link</h3><p>Let guests choose a time without creating an account of their own.</p><small>Public booking links coming next</small></article>
 </div>
 </section>
-<section class="product-section connections-overview" aria-labelledby="connection-heading"><div><div class="section-title"><span>CALENDARS &amp; AVAILABILITY</span><h2 id="connection-heading">Keep your schedule together.</h2></div><p>Google Calendar and Microsoft Outlook are the first planned connections. Holiday preferences will help you set days off without blocking each date manually.</p></div><div class="connection-list"><div><b>Google Calendar</b><span>Planned</span></div><div><b>Microsoft Outlook</b><span>Planned</span></div><div><b>Holidays &amp; days off</b><span>Planned</span></div></div></section>
+<section class="product-section connections-overview" aria-labelledby="connection-heading"><div><div class="section-title"><span>CALENDARS &amp; AVAILABILITY</span><h2 id="connection-heading">Your calendars.<br><em>One clear schedule.</em></h2></div><p>Google Calendar and Microsoft Outlook are the first planned connections, with conflict checks across your calendars. Set buffers, booking notice and holidays around the way you work.</p></div><div class="connection-list"><div><i class="service-icon service-google" aria-hidden="true">G</i><b>Google Calendar</b><span>Planned</span></div><div><i class="service-icon service-outlook" aria-hidden="true">O</i><b>Microsoft Outlook</b><span>Planned</span></div><div><i class="service-icon service-holiday" aria-hidden="true">✦</i><b>Holidays &amp; days off</b><span>Planned</span></div></div></section>
 <section class="product-section questions-section" id="questions"><div class="section-title"><span>USEFUL TO KNOW</span><h2>A few practical answers.</h2></div><div class="questions-list">
 <details><summary>Is Crown Calendar free?</summary><p>Crown Calendar is being built as a free scheduling tool by Red Crown Interactive. There are no paid plans or subscriptions in this preview.</p></details>
 <details><summary>What can I use right now?</summary><p>The separate calendar preview lets you select dates and meeting lengths, save meetings in this browser and export them as .ics files. It does not send invitations or sync with external calendars.</p></details>
