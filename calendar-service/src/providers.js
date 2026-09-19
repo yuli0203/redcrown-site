@@ -1,3 +1,4 @@
+import { readFeed } from './ical-feed.js';
 import { Temporal } from '@js-temporal/polyfill';
 import { assert, Problem } from './scheduling.js';
 import { decrypt, encrypt } from './security.js';
@@ -31,7 +32,7 @@ function safeGraphNext(url){if(!url)return null;assert(url.startsWith(`${graph}/
 function eventTime(value,zone){return value?.date?Number(Temporal.PlainDate.from(value.date).toZonedDateTime({timeZone:zone,plainTime:'00:00'}).epochMilliseconds):Date.parse(value?.dateTime ? /Z$|[+-]\d\d:\d\d$/.test(value.dateTime)?value.dateTime:value.dateTime+'Z' : '');}
 export async function readAvailability(connections,start,end,env,{details=false,timezone='UTC'}={}){
  const busy=[],events=[];
- for(const connection of connections){try{const selected=JSON.parse(connection.calendars).filter(c=>c.selected);if(!selected.length)continue;const token=await tokenFor(connection,env),eventFallback=new Set();
+ for(const connection of connections){try{const selected=JSON.parse(connection.calendars).filter(c=>c.selected);if(!selected.length)continue;if(connection.provider==='ical'){const blocks=await readFeed(connection,start,end,env,timezone);busy.push(...blocks);if(details)events.push(...blocks.map(b=>({...b,title:'Busy',calendar:selected[0].name,allDay:false,busy:true})));continue;}const token=await tokenFor(connection,env),eventFallback=new Set();
   if(connection.provider==='google'){
    for(let i=0;i<selected.length;i+=50){const batch=selected.slice(i,i+50),data=await request(`${google}/freeBusy`,token,{method:'POST',body:JSON.stringify({timeMin:new Date(start).toISOString(),timeMax:new Date(end).toISOString(),items:batch.map(c=>({id:c.id}))})});for(const c of batch){const result=data.calendars?.[c.id];if(result?.errors?.length){eventFallback.add(c.id);continue;}assert(result&&Array.isArray(result.busy),`Availability for ${c.name} could not be checked. Reconnect or deselect this calendar.`,503);for(const b of result.busy)busy.push({start:Date.parse(b.start),end:Date.parse(b.end)});}}
    if(!details&&!eventFallback.size)continue;

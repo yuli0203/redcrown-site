@@ -81,3 +81,14 @@ test('Outlook availability handles paginated busy, free, declined and all-day ev
 });
 
 test('Invalid calendar list response is not treated as an empty account',async t=>{t.mock.method(globalThis,'fetch',async()=>response({}));await assert.rejects(listCalendars('microsoft','access'));await assert.rejects(listCalendars('google','access'));});
+
+test('Linked ICS calendars block all-day busy intervals and unavailable feeds fail closed',async t=>{
+ const env={TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64')};
+ const connection={id:'feed-test',provider:'ical',refresh_token:await encrypt('https://outlook.office365.com/owa/calendar/test/calendar.ics',env),calendars:JSON.stringify([{id:'feed',name:'School',selected:true,timezone:'Asia/Jerusalem'}])};
+ let fail=false;
+ t.mock.method(globalThis,'fetch',async()=>fail?new Response('Unavailable',{status:503}):new Response('BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:block\r\nDTSTART;VALUE=DATE:20260928\r\nDTEND;VALUE=DATE:20260929\r\nSUMMARY:Private title\r\nEND:VEVENT\r\nEND:VCALENDAR'));
+ const result=await readAvailability([connection],Date.parse('2026-09-27'),Date.parse('2026-09-30'),env,{details:true});
+ assert.deepEqual(result.busy,[{start:Date.parse('2026-09-27T21:00:00Z'),end:Date.parse('2026-09-28T21:00:00Z')}]);
+ assert.equal(result.events[0].title,'Busy');
+ fail=true;await assert.rejects(readAvailability([connection],Date.parse('2026-09-27'),Date.parse('2026-09-30'),env),error=>error.connectionId==='feed-test');
+});

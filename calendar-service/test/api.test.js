@@ -120,3 +120,17 @@ test('Guest meeting names propagate and blank names use guest and host',async()=
   assert.equal((await f.api('/public/test-host/book','POST',{...f.request(),meetingName:'x'.repeat(161)})).status,400);
  }finally{f.DB.close();}
 });
+
+test('Feed connections encrypt URLs, hide links and cannot receive bookings',async()=>{
+ const f=await fixture(),old=globalThis.fetch;
+ const url='https://calendar.google.com/calendar/ical/private-test/basic.ics';
+ globalThis.fetch=async()=>new Response('BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR');
+ try {
+  assert.equal((await f.api('/connections/feed','POST',{url,name:'Work busy times'})).status,200);
+  const row=await f.DB.prepare("SELECT * FROM connections WHERE provider='ical'").first();assert.ok(row);assert.ok(!row.refresh_token.includes(url));assert.equal(await decrypt(row.refresh_token,f.env),url);
+  const list=await f.api('/connections');assert.ok(!JSON.stringify(list.data).includes(url));
+  const calendar=JSON.parse(row.calendars)[0];assert.equal(calendar.writable,false);assert.equal(calendar.selected,true);
+  const invalid={...f.workspace,destination:{connectionId:row.id,calendarId:'feed'}};
+  assert.equal((await f.api('/workspace','PUT',{data:invalid,version:1})).status,400);
+ }finally{globalThis.fetch=old;f.DB.close();}
+});

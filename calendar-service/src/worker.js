@@ -1,7 +1,8 @@
+import { feedUrl, fetchFeed, parseFeed } from './ical-feed.js';
 import { recordWorkspaceUsage } from './analytics.js';
 import { sendBookingNotifications } from './notifications.js';
 import { remindersReady, sendReminders } from './reminders.js';
-import { assert, Problem, validateWorkspace, slots, dateRange, localDate } from './scheduling.js';
+import { assert, Problem, validateWorkspace, slots, dateRange, localDate, validZone } from './scheduling.js';
 import { identity, body, hash, random, encrypt, rateLimit } from './security.js';
 import * as providers from './providers.js';
 import { publicRoutes,finalizeBooking,managementToken } from './public.js';
@@ -55,6 +56,15 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    }catch(error){if(/UNIQUE/.test(error.message))throw new Problem('That page address is already taken.',409);throw error;}
    return json({data,version:input.version+1});
   }
+  if(path==='/connections/feed'&&method==='POST'){
+   const input=await body(request,6000),url=feedUrl(input.url);assert(typeof input.name==='string'&&input.name.trim()&&input.name.length<=80,'Enter a calendar name.');
+   const timezone=input.timezone||'UTC';assert(typeof timezone==='string'&&validZone(timezone),'Choose the calendar time zone.');
+   parseFeed(await fetchFeed(url),Date.now(),Date.now()+42*86400000,timezone);
+   const accountId=await hash(url),id=crypto.randomUUID(),calendars=JSON.stringify([{id:'feed',name:input.name.trim(),selected:true,writable:false,timezone}]);
+   assert((await connections(db,user.uid)).length<20,'You can connect up to 20 calendar accounts.');
+   await run(db,'INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?) ON CONFLICT(uid,provider,account_id) DO UPDATE SET email=excluded.email,refresh_token=excluded.refresh_token,calendars=excluded.calendars',id,user.uid,'ical',accountId,input.name.trim(),await encrypt(url,env),calendars);
+   return json({connected:true});
+  }
   if(path==='/connections'&&method==='GET')return json({accounts:(await connections(db,user.uid)).map(c=>({id:c.id,email:c.email,provider:c.provider,calendars:JSON.parse(c.calendars)}))});
   if(path.startsWith('/connect/')&&method==='POST'){
    const name=path.split('/')[2],config=provider.providerConfig(name,env),state=random(),browser=random(),verifier=random();
@@ -66,7 +76,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   if(path.startsWith('/connections/')){
    const id=path.split('/')[2],connection=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',id,user.uid);assert(connection,'Connection not found.',404);
    const profile=await one(db,'SELECT data FROM profiles WHERE uid=?',user.uid),settings=profile?JSON.parse(profile.data):null;
-   if(method==='POST'&&path.endsWith('/refresh')){const fresh=await provider.listCalendars(connection.provider,await provider.tokenFor(connection,env)),old=JSON.parse(connection.calendars);for(const c of fresh)c.selected=old.some(v=>v.id===c.id&&v.selected);for(const c of old)if(c.selected&&!fresh.some(v=>v.id===c.id))fresh.push({...c,missing:true,writable:false});await run(db,'UPDATE connections SET calendars=? WHERE id=? AND uid=?',JSON.stringify(fresh),id,user.uid);return json({calendars:fresh});}
+   if(method==='POST'&&path.endsWith('/refresh')){if(connection.provider==='ical')return json({calendars:JSON.parse(connection.calendars)});const fresh=await provider.listCalendars(connection.provider,await provider.tokenFor(connection,env)),old=JSON.parse(connection.calendars);for(const c of fresh)c.selected=old.some(v=>v.id===c.id&&v.selected);for(const c of old)if(c.selected&&!fresh.some(v=>v.id===c.id))fresh.push({...c,missing:true,writable:false});await run(db,'UPDATE connections SET calendars=? WHERE id=? AND uid=?',JSON.stringify(fresh),id,user.uid);return json({calendars:fresh});}
    if(method==='PUT'){const input=await body(request,50000),calendars=JSON.parse(connection.calendars);assert(Array.isArray(input.selected)&&input.selected.every(id=>calendars.some(c=>c.id===id)),'Invalid calendar selection.');if(settings?.destination?.connectionId===id)assert(input.selected.includes(settings.destination.calendarId),'This calendar receives your bookings. Choose another booking destination in Availability before deselecting it.',409);for(const c of calendars)c.selected=input.selected.includes(c.id);await run(db,'UPDATE connections SET calendars=? WHERE id=? AND uid=?',JSON.stringify(calendars),id,user.uid);return json({calendars});}
    if(method==='DELETE'){assert(settings?.destination?.connectionId!==id,'This account receives your bookings. Choose another booking destination in Availability before removing it.',409);assert(!await one(db,"SELECT id FROM bookings WHERE connection_id=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND end>?",id,Date.now()),'This calendar has upcoming bookings. Cancel them before removing it.',409);await run(db,'DELETE FROM connections WHERE id=? AND uid=?',id,user.uid);return json({removed:true});}
   }
