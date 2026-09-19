@@ -77,7 +77,7 @@
   }
   $('#copy-meeting-page').addEventListener('click',()=>copyLink());
   const pageDialog=$('#page-settings-dialog');
-  function resetPageSettings(){$('#schedule-slug').value=savedData.slug||'';$('#meeting-page-name').value=savedData.pageName||displayName;$('#landing-page-status').textContent='';}
+  function resetPageSettings(){$('#schedule-slug').value=savedData.slug||slug(savedData.pageName||displayName).replace(/[^a-z0-9-]/g,'').slice(0,60);$('#meeting-page-name').value=savedData.pageName||displayName;$('#landing-page-status').textContent='';}
   $('#open-page-settings').addEventListener('click',()=>{if(!uid)return;resetPageSettings();pageDialog.showModal();$('#meeting-page-name').focus();});
   $('#close-page-settings').addEventListener('click',()=>pageDialog.close());
   $('#cancel-page-settings').addEventListener('click',()=>pageDialog.close());
