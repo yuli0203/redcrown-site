@@ -19,4 +19,9 @@ html[data-theme="light"]{color-scheme:light;--bg:#faf7f8;--panel:#fff;--line:#36
 [data-theme="light"] #auth-dialog{background:#fff;border-color:#c49eae;box-shadow:0 20px 80px #3515242b}
 [data-theme="light"] #auth-dialog::backdrop{background:#33212c69}
 [data-theme="light"] .primary{color:#fff}
+/* Preserve the original Red Crown navigation bar in light mode. */
+[data-theme="light"] body>header{--text:#f0eae4;--muted:#b3a4ab;--accent:#f27790;--line:#ffffff16;background:#100c0e;color:var(--text);border-bottom-color:var(--line);box-shadow:0 0 0 100vmax #100c0e;clip-path:inset(0 -100vmax)}
+[data-theme="light"] header .auth-button{background:#291920;border-color:#72505e;color:var(--text)}
+[data-theme="light"] header .auth-button:hover{background:#422431}
+[data-theme="light"] header .theme-toggle{background:transparent}
 @media(max-width:560px){.header-actions{flex-wrap:wrap;gap:9px}.theme-toggle{padding-inline:10px}.product-home header{flex-wrap:wrap;height:auto;padding-block:15px}.product-home .product-nav{order:3;width:100%;justify-content:space-between}.product-home .header-actions{margin-left:auto}}
