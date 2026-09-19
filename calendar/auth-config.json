@@ -6,7 +6,7 @@
     "appId": "1:846983787:web:37fcd3ea40c1a0e64db72e"
   },
   "calendar": {
-    "googleEnabled": false,
+    "googleEnabled": true,
     "googleClientId": "846983787-lhc0lbb3sujmdbqqfa5094febohqup6p.apps.googleusercontent.com"
   },
   "providers": {
