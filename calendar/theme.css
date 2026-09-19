@@ -1,0 +1,22 @@
+.theme-toggle{white-space:nowrap;min-height:40px;background:transparent}
+html[data-theme="light"]{color-scheme:light;--bg:#faf7f8;--panel:#fff;--line:#36212b20;--text:#271c22;--muted:#675761;--red:#bc1033;--accent:#a6193b}
+[data-theme="light"] :is(.entry-card,.steps-grid article,.connection-list,.support-grid>section){background:#fff;border-color:#dfcdd5}
+[data-theme="light"] .entry-card{box-shadow:0 10px 35px #58203109}
+[data-theme="light"] .full-footer{background:#f1e8ec;border-top-color:#dbc7d0}
+[data-theme="light"] .auth-button{background:#fff;border-color:#c8aeb9}
+[data-theme="light"] .auth-button:hover{background:#f5e7ed}
+[data-theme="light"] .theme-toggle{background:transparent}
+[data-theme="light"] :is(select,input){background:#fff;border-color:#b69aa7}
+[data-theme="light"] :is(.booking-window,.preview-label,.host-avatar,.meeting-item button){border-color:#ccb3bf}
+[data-theme="light"] .host-avatar{background:#f9e9ef}
+[data-theme="light"] .date-grid>button{background:#f7e6ed;color:#982043}
+[data-theme="light"] .date-grid>button:disabled{background:transparent;color:#76616c;opacity:.6}
+[data-theme="light"] .date-grid>button:not(:disabled):hover{background:#ebc4d3}
+[data-theme="light"] .date-grid>button[aria-pressed="true"]{background:var(--red);color:white}
+[data-theme="light"] .month-nav button:not(:disabled):hover{background:#f3dee7}
+[data-theme="light"] .time-slots button{border-color:#c29eae;color:#921738;background:#fff}
+[data-theme="light"] .time-slots button:hover,[data-theme="light"] .time-slots button[aria-pressed="true"]{background:#f5dce6;border-color:#a6193b}
+[data-theme="light"] #auth-dialog{background:#fff;border-color:#c49eae;box-shadow:0 20px 80px #3515242b}
+[data-theme="light"] #auth-dialog::backdrop{background:#33212c69}
+[data-theme="light"] .primary{color:#fff}
+@media(max-width:560px){.header-actions{flex-wrap:wrap;gap:9px}.theme-toggle{padding-inline:10px}.product-home header{flex-wrap:wrap;height:auto;padding-block:15px}.product-home .product-nav{order:3;width:100%;justify-content:space-between}.product-home .header-actions{margin-left:auto}}
