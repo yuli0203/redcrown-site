@@ -27,7 +27,7 @@ function harness() {
   }};
   vm.runInNewContext(fs.readFileSync('calendar/availability.js','utf8'),context);
   const tick=()=>new Promise(resolve=>setImmediate(resolve));
-  return {find,storage,calls,tick,signin:id=>events['crown-auth-change']({detail:{uid:id}}), async connect(id='one') {identity=id;find('#connect-google-calendar').events.click();await oauth.callback({access_token:'secret-test-token',expires_in:3600});await tick();}, select(index){const card=find('#calendar-accounts').children[0];const input=card.children[1].children[index+1].children[0]; input.checked=true;input.events.change();}, fail(){failure=true;},delay(p){pending=p;}};
+  return {find,storage,calls,tick,signin:id=>events['crown-auth-change']({detail:{uid:id}}), async connect(id='one') {identity=id;find('#connect-google-calendar').events.click();await oauth.callback({access_token:'secret-test-token',expires_in:3600});await tick();}, action(text){const walk=node=>[node,...node.children.flatMap(walk)];const target=walk(find('#calendar-accounts')).find(n=>n.tag==='button' && n.textContent===text);target.events.click();}, select(index,apply=true){const walk=node=>[node,...node.children.flatMap(walk)];let card=find('#calendar-accounts').children[0];if(!walk(card).some(n=>n.tag==='input')) {walk(card).find(n=>n.tag==='button' && n.textContent==='Edit calendars').events.click();card=find('#calendar-accounts').children[0];}const input=walk(card).filter(n=>n.tag==='input')[index];input.checked=true;input.events.change();if(apply) this.action('Save selection');}, fail(){failure=true;},delay(p){pending=p;}};
 }
 test('Multiple accounts, calendar selections, overlapping busy intervals and token isolation',async()=>{
  const h=harness();await h.tick();h.signin('user-a');await h.connect();
@@ -43,7 +43,7 @@ test('Multiple accounts, calendar selections, overlapping busy intervals and tok
 });
 test('A per-calendar API error cannot be reported as free availability',async()=>{
  const h=harness();await h.tick();h.signin('user-a');await h.connect();h.fail();h.select(0);await h.tick();
- assert.match(h.find('#sync-message').textContent,/incomplete/);assert.equal(h.find('#busy-preview').hidden,true);
+ assert.match(h.find('#sync-message').textContent,/incomplete.*Work/);assert.equal(h.find('#busy-preview').hidden,true);
  assert.match(h.find('#sync-summary-text').textContent,/not been checked/);
 });
 test('A response arriving after sign-out does not restore private calendar data',async()=>{
@@ -53,3 +53,12 @@ test('A response arriving after sign-out does not restore private calendar data'
  assert.equal(h.find('#sync-availability').hidden,true);
 });
 
+
+test('Checkbox edits only sync after Save selection and Cancel discards changes',async()=>{
+ const h=harness();await h.tick();h.signin('user-a');await h.connect();
+ const before=h.calls.length;h.select(0,false);await h.tick();assert.equal(h.calls.length,before);
+ h.action('Cancel');assert.equal(JSON.parse([...h.storage.values()][0])[0].calendars[0].selected,false);
+ h.select(1,false);h.action('Save selection');await h.tick();
+ assert.equal(JSON.parse([...h.storage.values()][0])[0].calendars[1].selected,true);
+ assert.match(h.find('#sync-summary-text').textContent,/1 selected calendars/);
+});

@@ -6,6 +6,17 @@
   const scopes = ['openid', 'email', 'https://www.googleapis.com/auth/calendar.calendarlist.readonly', 'https://www.googleapis.com/auth/calendar.events.freebusy'];
   let uid = null, generation = 0, accounts = [], busy = false, clientId = '', sdkReady = false, enabled = false;
   const sessions = new Map(); // Access tokens stay in memory, never in browser storage.
+  const edits = new Map();
+  const calendarErrors = new Map();
+  const errorKey = (account,id) => JSON.stringify([account,id]);
+  function calendarFailure(calendar) {
+    const reason = calendar?.errors?.map(error => error.reason).join(', ') || 'missing availability data';
+    const explanation = reason.includes('notFound') ? 'Google could not find this calendar or allow access to its busy times.'
+      : reason.includes('forbidden') ? 'Google did not allow access to this calendar.'
+      : reason.includes('internalError') ? 'Google had a temporary error. Try Refresh availability again.'
+      : 'Google could not return busy times for this calendar.';
+    return `${explanation} (${reason})`;
+  }
   const workspaceLinks = [...document.querySelectorAll('a[href="#features"], a[href="#how-it-works"], a[href="#connection-heading"]')].map(link => ({link, href:link.getAttribute('href'),text:link.textContent}));
   const message = text => { $('#sync-message').textContent = text; };
   const key = () => `crown-calendar-connections-v1:${uid}`;
@@ -42,22 +53,41 @@
       info.append(element('p', session && session.expires > Date.now() ? 'Google Calendar - connected for this session' : 'Google Calendar - reconnect to refresh availability','sync-small'));
       const actions = element('div',null,'calendar-account-actions');
       const reconnect = button('Reconnect', () => connect(account)); reconnect.disabled ||= !sdkReady || !clientId || !enabled;
-      actions.append(reconnect,button('Remove account', () => {
-        sessions.delete(account.id); accounts = accounts.filter(a => a.id !== account.id); save(); invalidate(); render();
+      const edit = button('Edit calendars', () => { edits.set(account.id,new Set(account.calendars.filter(c => c.selected).map(c => c.id))); render(); });
+      edit.setAttribute('aria-expanded',String(edits.has(account.id)));
+      actions.append(edit,reconnect,button('Remove account', () => {
+        sessions.delete(account.id); edits.delete(account.id); accounts = accounts.filter(a => a.id !== account.id); save(); invalidate(); render();
         message('Account removed from this browser. Google permissions can be managed in your Google Account.');
       }));
       heading.append(info,actions); card.append(heading);
+      const selected = account.calendars.filter(c => c.selected);
+      card.append(element('p',selected.length ? `${selected.length} selected: ${selected.map(c => c.name).join(', ')}` : 'No calendars selected. Use Edit calendars to choose which calendars to sync.','sync-small'));
+      const failed = account.calendars.filter(c => c.selected && calendarErrors.has(errorKey(account.id,c.id)));
+      for (const calendar of failed) card.append(element('p',`${calendar.name}: ${calendarErrors.get(errorKey(account.id,calendar.id))}`,'calendar-error'));
+      if (!edits.has(account.id)) { list.append(card); continue; }
+      const draft = edits.get(account.id);
       const choices = element('fieldset'); choices.append(element('legend','Calendars to check for conflicts'));
+      choices.append(element('p','Choose your calendars, then Save selection to apply and sync. Google permission was requested when you connected the account.','sync-small'));
       for (const calendar of account.calendars) {
         const row = element('label',null,'calendar-choice');
-        const input = element('input'); input.type = 'checkbox'; input.checked = calendar.selected; input.disabled = busy;
-        input.addEventListener('change', () => { calendar.selected = input.checked; save(); invalidate(); render(); refresh(); });
-        row.append(input,element('span',calendar.name));
+        const input = element('input'); input.type = 'checkbox'; input.checked = draft.has(calendar.id); input.disabled = busy;
+        input.addEventListener('change', () => { if (input.checked) draft.add(calendar.id); else draft.delete(calendar.id); });
+        const description = element('span',calendar.name);
+        const error = calendarErrors.get(errorKey(account.id,calendar.id));
+        if (error) description.append(element('small',error,'calendar-error'));
+        row.append(input,description);
         if (calendar.primary) row.append(element('small','Primary'));
         choices.append(row);
       }
       if (!account.calendars.length) choices.append(element('p','No readable calendars were returned for this account.','sync-small'));
-      card.append(choices); list.append(card);
+      const editActions = element('div',null,'calendar-edit-actions');
+      const apply = button('Save selection', () => {
+        account.calendars.forEach(calendar => { calendar.selected = draft.has(calendar.id); });
+        edits.delete(account.id); save(); invalidate(); render(); refresh();
+      });
+      apply.className = 'auth-button';
+      editActions.append(apply,button('Cancel', () => { edits.delete(account.id); render(); }));
+      card.append(choices,editActions); list.append(card);
     }
   }
   async function api(url, token, body) {
@@ -105,9 +135,10 @@
           const previous = accounts.find(a => a.id === identity.sub);
           const account = {id:identity.sub,email:identity.email,calendars:calendars.filter(c => !c.deleted).map(c => ({id:c.id,name:c.summaryOverride || c.summary || c.id,primary:Boolean(c.primary),selected:previous?.calendars.find(old => old.id === c.id)?.selected ?? false}))};
           accounts = [...accounts.filter(a => a.id !== account.id),account];
+          if (!previous) edits.set(account.id,new Set());
           sessions.set(account.id,{token:result.access_token,expires:Date.now() + Number(result.expires_in || 3600)*1000 - 60000});
           save(); invalidate(); $('#calendar-providers').hidden = true; $('#add-calendar').setAttribute('aria-expanded','false');
-          finish('Account connected. Select the calendars you want to check for busy time.');
+          finish('Account connected. Choose your sub-calendars, then click Save selection.');
           if (account.calendars.some(c => c.selected)) refresh();
         } catch (error) { finish(error.message || 'Calendar connection failed. Please try again.'); }
       }
@@ -122,7 +153,7 @@
     if (!selected.length) { message('Select at least one calendar to check availability.'); return; }
     if (selected.some(a => !sessions.has(a.id) || sessions.get(a.id).expires <= Date.now())) { render(); message('Reconnect each selected account before checking availability.'); return; }
     const version = generation;
-    busy = true; render(); message('Refreshing availability...');
+    busy = true; calendarErrors.clear(); render(); message('Refreshing availability...');
     const start = new Date(), end = new Date(start.getTime() + 30*86400000);
     try {
       const intervals = [];
@@ -134,7 +165,10 @@
           if (version !== generation) return;
           for (const id of batch) {
             const calendar = data.calendars?.[id];
-            if (!calendar || calendar.errors?.length || !Array.isArray(calendar.busy)) throw new Error('One or more selected calendars could not be checked. Availability is incomplete. Reconnect or deselect the unavailable calendar.');
+            if (!calendar || calendar.errors?.length || !Array.isArray(calendar.busy)) {
+              calendarErrors.set(errorKey(account.id,id),calendarFailure(calendar));
+              continue;
+            }
             for (const interval of calendar.busy) {
               const from = Date.parse(interval.start), to = Date.parse(interval.end);
               if (!Number.isFinite(from) || !Number.isFinite(to) || from >= to) throw new Error('A calendar returned invalid availability. Try refreshing again.');
@@ -144,6 +178,10 @@
         }
       }
       if (version !== generation) return;
+      if (calendarErrors.size) {
+        const names = selected.flatMap(account => account.calendars.filter(c => c.selected && calendarErrors.has(errorKey(account.id,c.id))).map(c => `${c.name} (${account.email})`));
+        throw new Error(`Availability is incomplete: ${names.join('; ')} could not be checked. See the reason under the account. Use Edit calendars to deselect them and Save selection, or retry Refresh availability.`);
+      }
       intervals.sort((a,b) => a.start-b.start);
       const merged = [];
       for (const item of intervals) {
@@ -171,7 +209,7 @@
   document.addEventListener('crown-auth-change',event => {
     const nextUid = event.detail.uid;
     if (uid === nextUid) return;
-    uid = nextUid; generation++; busy = false; sessions.clear(); message(''); invalidate();
+    uid = nextUid; generation++; busy = false; sessions.clear(); edits.clear(); calendarErrors.clear(); message(''); invalidate();
     panel.hidden = !uid; document.body.classList.toggle('is-signed-in',Boolean(uid));
     for (const {link,href,text} of workspaceLinks) {
       link.setAttribute('href',uid ? (href === '#how-it-works' ? '/calendar/preview/' : '#sync-availability') : href);
@@ -179,7 +217,7 @@
     }
     accounts = uid ? load() : []; render();
   });
-  setInterval(() => { if (uid && !document.hidden && sessions.size && !busy) refresh(); },5*60*1000);
+  setInterval(() => { if (uid && !document.hidden && sessions.size && !busy && !edits.size) refresh(); },5*60*1000);
   Promise.all([
     fetch('/calendar/auth-config.json',{cache:'no-store'}).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
     new Promise((resolve,reject) => {
