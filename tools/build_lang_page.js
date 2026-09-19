@@ -125,7 +125,7 @@ const LANGS = {
 };
 
 // Proper nouns that read the same in every language, so they need no translation.
-const BRAND = new Set(['iOS', 'WebGL', 'Unreal Engine', 'Unity', 'Tel Aviv University',
+const BRAND = new Set(['React', 'Flutter', 'iOS', 'WebGL', 'Unreal Engine', 'Unity', 'Tel Aviv University',
   'Technion', 'Python', 'Playtika', 'Photoshop', 'Philips', 'Meta Quest', 'Israeli Navy',
   'Figma', 'C++', 'C#', 'Blender', 'Autodesk Maya', 'Android', 'LinkedIn',
   'Language / שפה / Язык',
