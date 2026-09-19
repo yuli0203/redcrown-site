@@ -1,0 +1,38 @@
+/* Reuse the studio language picker design. */
+/* Align Hebrew footer headings, links and branding on the same reading edge. */
+html[dir=rtl] .footer-columns>div{min-width:0}
+html[dir=rtl] .footer-columns>div>a:not(.brand),html[dir=rtl] .footer-signin{text-align:start;line-height:1.7}
+html[dir=rtl] .footer-studio .brand{width:fit-content;margin-inline-start:auto}
+html[dir=rtl] .footer-studio p{line-height:1.9;max-width:36ch}
+html[dir=rtl] .footer-columns h2{line-height:1.5;margin-bottom:14px}
+html[dir=rtl] .full-footer .rc-legal-footer p{unicode-bidi:plaintext}
+@media(max-width:760px){
+ html[dir=rtl] .footer-columns{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 20px}
+ html[dir=rtl] .footer-studio{padding-bottom:24px;border-bottom:1px solid var(--line)}
+ html[dir=rtl] .footer-studio p{max-width:none}
+ html[dir=rtl] .footer-columns>div>a:not(.brand),html[dir=rtl] .footer-signin{font-size:12px;margin:0;padding-block:8px}
+ html[dir=rtl] .footer-columns h2{font-size:13px}
+}
+@media(max-width:520px){
+ html[dir=rtl] .footer-columns{grid-template-columns:repeat(2,minmax(0,1fr))}
+ html[dir=rtl] .footer-columns>div:last-child{grid-column:1/-1;padding-top:20px;border-top:1px solid var(--line)}
+ html[dir=rtl] .full-footer .rc-legal-footer{text-align:right;align-items:stretch}
+ html[dir=rtl] .full-footer .rc-legal-footer [role=navigation]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 20px;text-align:right}
+}
+.lang{position:relative;margin-inline-start:14px;flex-shrink:0;direction:ltr}
+.lang-toggle{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:8px 11px;background:transparent;color:var(--text);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s}
+.lang-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.lang-cur{display:inline-flex;align-items:center;gap:6px}
+.lang .caret{width:9px;height:6px;color:var(--muted);transition:transform .2s}
+.lang.open .caret{transform:rotate(180deg)}
+.lang-menu{position:absolute;top:calc(100% + 6px);right:0;min-width:100%;display:none;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.45);z-index:60}
+.lang.open .lang-menu{display:flex}
+.lang-menu a{display:inline-flex;align-items:center;gap:7px;width:100%;font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.06em;padding:9px 16px 9px 11px;background:transparent;color:var(--muted);border:0;cursor:pointer;white-space:nowrap;transition:all .2s}
+.lang-menu a:hover{background:var(--panel);color:var(--accent)}
+.lang-menu a[hidden]{display:none}
+.lang .flag{width:18px;height:12px;border-radius:2px;flex-shrink:0;display:block;box-shadow:0 0 0 .5px rgba(255,255,255,.25)}
+[dir="rtl"] .lang-menu{right:auto;left:0}
+
+.calendar-languages{margin-inline-start:0}.calendar-languages .lang-menu a{text-decoration:none;box-sizing:border-box}.calendar-languages .lang-menu [aria-current]{display:none}
+@media(max-width:900px){.calendar-languages .lang-toggle{min-height:44px;padding:11px 13px}.calendar-languages .lang-menu a{min-height:44px;padding:12px 16px}}
+.language-scope-note{grid-column:1/-1;font-size:12px;color:var(--muted)}html[dir=rtl] .product-nav{margin-left:0;margin-right:auto}html[dir=rtl] .product-main,html[dir=rtl] .product-section,html[dir=rtl] .calendar-support,html[dir=rtl] .full-footer{text-align:right}html[dir=rtl] .footer-signin{text-align:right}html[dir=rtl] .product-intro h1{letter-spacing:0;line-height:1.25}html[dir=rtl] input[type=email],html[dir=rtl] input[type=url]{direction:ltr;text-align:left}html[dir=rtl] .calendar-feedback textarea{direction:rtl}html[dir=rtl] .brand{direction:ltr}@media(max-width:760px){.product-home header{height:auto;min-height:76px;flex-wrap:wrap;padding-block:14px}.product-home .header-actions{flex-wrap:wrap;gap:8px}.product-nav{order:3;width:100%;justify-content:center}}

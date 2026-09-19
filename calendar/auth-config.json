@@ -1,0 +1,16 @@
+{
+  "firebase": {
+    "apiKey": "AIzaSyC7reNu2MWjjyURAhj7xI3OXNSIueOugg8",
+    "authDomain": "crown-calendar-89e18.firebaseapp.com",
+    "projectId": "crown-calendar-89e18",
+    "appId": "1:846983787:web:37fcd3ea40c1a0e64db72e"
+  },
+  "calendar": {
+    "googleEnabled": true,
+    "googleClientId": "846983787-lhc0lbb3sujmdbqqfa5094febohqup6p.apps.googleusercontent.com"
+  },
+  "providers": {
+    "microsoft": false
+  },
+  "apiOrigin": "https://red-crown-calendar-api.yuli0203.workers.dev"
+}
