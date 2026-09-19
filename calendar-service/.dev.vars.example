@@ -1,0 +1,10 @@
+# Server-only environment values. Copy to .dev.vars for local development.
+# Never put these secrets in calendar/auth-config.json.
+GOOGLE_CLIENT_ID=846983787-lhc0lbb3sujmdbqqfa5094febohqup6p.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=
+MICROSOFT_CLIENT_ID=
+MICROSOFT_CLIENT_SECRET=
+# Generate 32 random bytes and base64-encode them. Keep this key stable and backed up.
+TOKEN_ENCRYPTION_KEY=
+TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET=

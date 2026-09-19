@@ -1,0 +1,79 @@
+import { assert, Problem, validateWorkspace, slots, dateRange, localDate } from './scheduling.js';
+import { identity, body, hash, random, encrypt, rateLimit } from './security.js';
+import * as providers from './providers.js';
+import { publicRoutes,finalizeBooking,managementToken } from './public.js';
+export const prefix='/calendar/api';
+export const json=(value,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}});
+export const all=async(db,sql,...args)=>(await db.prepare(sql).bind(...args).all()).results;
+export const one=(db,sql,...args)=>db.prepare(sql).bind(...args).first();
+export const run=(db,sql,...args)=>db.prepare(sql).bind(...args).run();
+export const connections=(db,uid)=>all(db,'SELECT * FROM connections WHERE uid=?',uid);
+export function createHandler({authenticate=identity,provider=providers}={}){return async function handle(request,env){
+ const url=new URL(request.url),path=url.pathname.slice(prefix.length),method=request.method,db=env.DB;
+ try {
+  assert(url.pathname.startsWith(prefix+'/'),'Not found.',404);
+  if(path==='/health')return json({ready:Boolean(db),google:Boolean(env.GOOGLE_CLIENT_SECRET),microsoft:Boolean(env.MICROSOFT_CLIENT_SECRET),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
+  assert(db,'The scheduling service is not configured yet.',503);
+  if(method==='OPTIONS')return new Response(null,{status:204});
+  const origin=request.headers.get('Origin');if(origin)assert(origin===env.PUBLIC_ORIGIN,'This origin is not allowed.',403);
+  await rateLimit(env,`ip:${await hash(request.headers.get('CF-Connecting-IP')||'local')}`,120);
+  if(path.startsWith('/oauth/')&&path.endsWith('/callback')){
+   const providerName=path.split('/')[2],state=url.searchParams.get('state')||'',browser=request.headers.get('Cookie')?.match(/(?:^|; )crown_oauth=([^;]+)/)?.[1]||'';
+   const saved=await one(db,'DELETE FROM oauth_states WHERE state=? AND expires>? RETURNING *',await hash(state),Date.now());
+   assert(saved&&saved.provider===providerName&&saved.browser_hash===await hash(browser),'Calendar connection expired. Start again.');assert(!url.searchParams.has('error'),'Calendar permission was declined.');
+   const config=provider.providerConfig(providerName,env),token=await provider.exchange(providerName,{grant_type:'authorization_code',code:url.searchParams.get('code')||'',redirect_uri:config.redirect,code_verifier:saved.verifier},env);
+   const granted=new Set((token.scope||'').split(' '));
+   if(providerName==='google')assert(granted.has('https://www.googleapis.com/auth/calendar')||['calendar.calendarlist.readonly','calendar.events','calendar.events.freebusy'].every(scope=>granted.has('https://www.googleapis.com/auth/'+scope)),'Allow calendar list, event and availability permissions to enable bookings.');
+   else assert([...granted].some(scope=>scope.toLowerCase()==='calendars.readwrite'),'Allow calendar read/write access to enable bookings.');
+   const info=await provider.accountInfo(providerName,token.access_token),accountId=info.sub||info.id,email=info.email||info.mail||info.userPrincipalName;
+   assert(accountId&&email,'The calendar account could not be identified.',503);
+   const existing=await one(db,'SELECT * FROM connections WHERE uid=? AND provider=? AND account_id=?',saved.uid,providerName,accountId);
+   assert(token.refresh_token||existing,'Persistent calendar access was not granted. Reconnect and allow access.',503);
+   const calendars=await provider.listCalendars(providerName,token.access_token),previous=existing?JSON.parse(existing.calendars):[];
+   for(const c of calendars)c.selected=previous.find(p=>p.id===c.id)?.selected||false;
+   await run(db,'INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?) ON CONFLICT(uid,provider,account_id) DO UPDATE SET email=excluded.email,refresh_token=excluded.refresh_token,calendars=excluded.calendars',existing?.id||crypto.randomUUID(),saved.uid,providerName,accountId,email,token.refresh_token?await encrypt(token.refresh_token,env):existing.refresh_token,JSON.stringify(calendars));
+   return new Response(null,{status:303,headers:{Location:`${env.PUBLIC_ORIGIN}/calendar/?connected=1#sync-availability`,'Set-Cookie':'crown_oauth=; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=0','Cache-Control':'no-store'}});
+  }
+  if(path.startsWith('/public/')||path.startsWith('/booking/'))return await publicRoutes(request,env,provider,path);
+  const user=await authenticate(request,env);await rateLimit(env,`user:${user.uid}`,90);
+  if(path==='/workspace'&&method==='GET'){const row=await one(db,'SELECT * FROM profiles WHERE uid=?',user.uid);return json({data:row?JSON.parse(row.data):null,version:row?.version||0});}
+  if(path==='/workspace'&&method==='PUT'){
+   const input=await body(request),data=validateWorkspace(input.data);assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
+   if(data.published)assert(user.verified,'Verify your email before publishing a booking page.',403);
+   if(data.destination){const c=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',data.destination.connectionId,user.uid);assert(c&&JSON.parse(c.calendars).some(v=>v.id===data.destination.calendarId&&v.writable&&v.selected),'Choose a connected, writable calendar selected for conflict checks.');}
+   try {
+    const result=input.version===0?await run(db,'INSERT INTO profiles(uid,slug,data,version,updated_at) VALUES(?,?,?,1,?) ON CONFLICT(uid) DO NOTHING',user.uid,data.slug||null,JSON.stringify(data),Date.now()):await run(db,'UPDATE profiles SET slug=?,data=?,version=version+1,updated_at=? WHERE uid=? AND version=?',data.slug||null,JSON.stringify(data),Date.now(),user.uid,input.version);
+    assert(result.meta.changes===1,'Settings changed in another tab. Reload before saving.',409);
+   }catch(error){if(/UNIQUE/.test(error.message))throw new Problem('That page address is already taken.',409);throw error;}
+   return json({data,version:input.version+1});
+  }
+  if(path==='/connections'&&method==='GET')return json({accounts:(await connections(db,user.uid)).map(c=>({id:c.id,email:c.email,provider:c.provider,calendars:JSON.parse(c.calendars)}))});
+  if(path.startsWith('/connect/')&&method==='POST'){
+   const name=path.split('/')[2],config=provider.providerConfig(name,env),state=random(),browser=random(),verifier=random();
+   await run(db,'INSERT INTO oauth_states(state,uid,provider,verifier,browser_hash,expires) VALUES(?,?,?,?,?,?)',await hash(state),user.uid,name,verifier,await hash(browser),Date.now()+600000);
+   const challenge=btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier))))).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
+   const url=new URL(config.authorize);for(const [k,v] of Object.entries({client_id:config.clientId,redirect_uri:config.redirect,response_type:'code',scope:config.scope,state,code_challenge:challenge,code_challenge_method:'S256',...(name==='google'?{access_type:'offline',prompt:'consent select_account'}:{prompt:'select_account'})}))url.searchParams.set(k,v);
+   const response=json({url:url.href});response.headers.set('Set-Cookie',`crown_oauth=${browser}; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=600${env.PUBLIC_ORIGIN.startsWith('https:')?'; Secure':''}`);return response;
+  }
+  if(path.startsWith('/connections/')){
+   const id=path.split('/')[2],connection=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',id,user.uid);assert(connection,'Connection not found.',404);
+   if(method==='PUT'){const input=await body(request,50000),calendars=JSON.parse(connection.calendars);assert(Array.isArray(input.selected)&&input.selected.every(id=>calendars.some(c=>c.id===id)),'Invalid calendar selection.');for(const c of calendars)c.selected=input.selected.includes(c.id);await run(db,'UPDATE connections SET calendars=? WHERE id=? AND uid=?',JSON.stringify(calendars),id,user.uid);return json({calendars});}
+   if(method==='DELETE'){assert(!await one(db,"SELECT id FROM bookings WHERE connection_id=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND end>?",id,Date.now()),'This calendar has upcoming bookings. Cancel them before removing it.',409);await run(db,'DELETE FROM connections WHERE id=? AND uid=?',id,user.uid);return json({removed:true});}
+  }
+  if(path==='/availability'&&method==='GET'){
+   const start=Number(url.searchParams.get('start')),end=Number(url.searchParams.get('end'));assert(Number.isSafeInteger(start)&&Number.isSafeInteger(end)&&end>start&&end-start<=42*86400000,'Choose a date range up to six weeks.');
+   const linked=await connections(db,user.uid);assert(linked.some(c=>JSON.parse(c.calendars).some(v=>v.selected)),'Select at least one calendar.');const profile=await one(db,'SELECT data FROM profiles WHERE uid=?',user.uid);return json({...await provider.readAvailability(linked,start,end,env,{details:true,timezone:profile?JSON.parse(profile.data).timezone:'UTC'}),start,end});
+  }
+  if(path==='/bookings'&&method==='GET'){
+   const bookings=await all(db,'SELECT * FROM bookings WHERE uid=? AND end>? ORDER BY start LIMIT 100',user.uid,Date.now());const results=[];
+   for(const b of bookings)results.push({id:b.id,start:b.start,end:b.end,status:b.status,data:JSON.parse(b.data),manageToken:await managementToken(b.id,env)});
+   return json({bookings:results});
+  }
+  if(path.startsWith('/bookings/')&&path.endsWith('/retry')&&method==='POST'){
+   const booking=await one(db,'SELECT * FROM bookings WHERE id=? AND uid=?',path.split('/')[2],user.uid);assert(booking,'Booking not found.',404);await finalizeBooking(booking,env,provider);return json({status:booking.status});
+  }
+  throw new Problem('Not found.',404);
+ }catch(error){return json({error:error instanceof Problem?error.message:'The request could not be completed. Please retry.'},error instanceof Problem?error.status:500);}
+};}
+const handler=createHandler();
+export default {fetch:handler,async scheduled(event,env){await env.DB.batch([env.DB.prepare('DELETE FROM oauth_states WHERE expires<?').bind(Date.now()),env.DB.prepare('DELETE FROM rate_limits WHERE expires<?').bind(Date.now())]);}};

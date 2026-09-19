@@ -1,0 +1,6 @@
+import { DatabaseSync } from 'node:sqlite';
+import { readFileSync,readdirSync } from 'node:fs';
+export function database(path=':memory:'){
+ const sqlite=new DatabaseSync(path);sqlite.exec('PRAGMA journal_mode=WAL;');sqlite.exec('CREATE TABLE IF NOT EXISTS _migrations(name TEXT PRIMARY KEY)');for(const name of readdirSync(new URL('./migrations/',import.meta.url)).filter(n=>n.endsWith('.sql')).sort()){if(!sqlite.prepare('SELECT name FROM _migrations WHERE name=?').get(name)){sqlite.exec(readFileSync(new URL('./migrations/'+name,import.meta.url),'utf8'));sqlite.prepare('INSERT INTO _migrations VALUES(?)').run(name);}}
+ const wrapper={prepare(sql){const statement=sqlite.prepare(sql);let values=[];const query={bind(...args){values=args;return query;},async first(){return statement.get(...values)||null;},async all(){return {results:statement.all(...values)};},async run(){const result=statement.run(...values);return {meta:{changes:Number(result.changes)}};}};return query;},async batch(queries){sqlite.exec('BEGIN IMMEDIATE');try{const result=[];for(const q of queries)result.push(await q.run());sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}},close(){sqlite.close();}};return wrapper;
+}

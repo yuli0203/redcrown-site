@@ -1,0 +1,11 @@
+{
+  "name": "red-crown-calendar-api",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "triggers":{"crons":["*/15 * * * *"]},
+  "vars": {
+    "FIREBASE_PROJECT_ID": "crown-calendar-89e18",
+    "PUBLIC_ORIGIN": "https://redcrowninteractive.com"
+  },
+  "d1_databases": [{"binding":"DB","database_name":"red-crown-calendar","database_id":"REPLACE_WITH_DATABASE_ID","migrations_dir":"migrations"}]
+}
