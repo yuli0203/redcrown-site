@@ -193,17 +193,20 @@
   $('#calendar-display-form').addEventListener('submit',async event=>{event.preventDefault();const preset=$('#calendar-display-preset').value;if(await persist({calendarDisplay:preset},'#calendar-display-status')){window.CrownBusyPreview.setDisplay(preset);displayDialog.close();}});
   const imageVersions = {logo:0,photo:0};
   const profileDialog=$('#profile-dialog');
+  const crop=window.CrownPhotoCrop.create(value=>{photo=value;renderProfile();});
+  function signInPhoto(){const user=window.CrownAuth?.current?.();const url=user?.photoURL||user?.providerData?.find(p=>p.photoURL)?.photoURL||'';return /^https:\/\//.test(url)?url:'';}
   function renderProfile(){
     const initial=(displayName||userEmail||'You').trim().charAt(0).toUpperCase();
-    for(const [imageId,initialId,value] of [['header-profile-photo','header-profile-initial',savedData.photo],['profile-photo-preview','profile-photo-initial',photo]]){
+    for(const [imageId,initialId,value] of [['header-profile-photo','header-profile-initial',savedData.photo||signInPhoto()],['profile-photo-preview','profile-photo-initial',photo||signInPhoto()]]){
       const image=$('#'+imageId),fallback=$('#'+initialId);image.hidden=!value;fallback.hidden=!!value;fallback.textContent=initial;
-      if(value)image.src=value;else image.removeAttribute('src');
+      image.referrerPolicy='no-referrer';image.onerror=()=>{image.hidden=true;fallback.hidden=false;};
+      if(value){if(image.getAttribute('src')!==value)image.src=value;}else image.removeAttribute('src');
     }
   }
-  $('#open-profile').addEventListener('click',()=>{if(!uid)return;photo=savedData.photo||'';$('#booking-photo').value='';$('#profile-status').textContent='';renderProfile();profileDialog.showModal();});
+  $('#open-profile').addEventListener('click',()=>{if(!uid)return;crop.clear();photo=savedData.photo||'';$('#booking-photo').value='';$('#profile-status').textContent='';renderProfile();profileDialog.showModal();});
   $('#close-profile').addEventListener('click',()=>profileDialog.close());
   $('#cancel-profile').addEventListener('click',()=>profileDialog.close());
-  profileDialog.addEventListener('close',()=>{imageVersions.photo++;photo=savedData.photo||'';$('#booking-photo').value='';renderProfile();});
+  profileDialog.addEventListener('close',()=>{imageVersions.photo++;crop.clear();photo=savedData.photo||'';$('#booking-photo').value='';renderProfile();});
   $('#profile-form').addEventListener('submit',async event=>{event.preventDefault();if(!uid)return;const button=event.submitter;button.disabled=true;try{if(await persist({photo},'#profile-status')){preview();profileDialog.close();}}finally{button.disabled=false;}});
 
   for (const kind of ['logo','photo']) {
@@ -217,6 +220,7 @@
         const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
         const image=new Image();image.src=data;await image.decode();
         if(version!==imageVersions[kind] || accountRevision!==revision || !uid) return;
+        if(kind==='photo'){crop.load(image);status.textContent='Position your photo, then Save profile.';return;}
         const canvas=document.createElement('canvas'),ratio=Math.min(1,640/image.width,640/image.height);canvas.width=Math.max(1,Math.round(image.width*ratio));canvas.height=Math.max(1,Math.round(image.height*ratio));canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);const optimized=canvas.toDataURL('image/webp',.82);
         if(optimized.length>400000)throw new Error('Image is too large.');
         if(kind==='logo') logo=optimized; else photo=optimized;
@@ -224,8 +228,8 @@
       } catch {if(version===imageVersions[kind] && accountRevision===revision) status.textContent='This image could not be opened. Choose another file.';}
     });
     $(`#remove-booking-${kind}`).addEventListener('click',()=>{
-      imageVersions[kind]++; if(kind==='logo') logo=''; else photo='';
-      $(`#booking-${kind}`).value='';preview();$(kind==='photo'?'#profile-status':'#style-settings-status').textContent=`${name} removed from preview. Save ${kind==='photo'?'profile':'style'} to keep this change.`;
+      imageVersions[kind]++; if(kind==='logo') logo=''; else {crop.clear();photo='';}
+      $(`#booking-${kind}`).value='';preview();$(kind==='photo'?'#profile-status':'#style-settings-status').textContent=kind==='photo'?'Sign-in photo selected. Save profile to keep this change.':`${name} removed from preview. Save style to keep this change.`;
     });
   }
   document.addEventListener('crown-auth-change',async event => {

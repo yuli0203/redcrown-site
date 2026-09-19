@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/calendar/theme.css">
 <script src="/calendar/theme.js"></script>
 <script defer src="/calendar/api.js"></script><script defer src="/calendar/auth.js?v=reminders-1"></script>
-<script defer src="/calendar/busy-calendar.js"></script><script defer src="/calendar/cloud-calendars.js"></script><script defer src="/calendar/availability.js"></script><script defer src="/calendar/settings.js"></script><script defer src="/calendar/notice.js"></script><script defer src="/calendar/workspace.js?v=notice-1"></script>
+<script defer src="/calendar/busy-calendar.js"></script><script defer src="/calendar/cloud-calendars.js"></script><script defer src="/calendar/availability.js"></script><script defer src="/calendar/settings.js"></script><script defer src="/calendar/notice.js"></script><script defer src="/calendar/photo-crop.js"></script><script defer src="/calendar/workspace.js?v=notice-1"></script>
 <link rel="stylesheet" href="/calendar/availability.css">
 </head>
 <body class="product-home">
@@ -22,11 +22,12 @@
 <form id="calendar-display-form" class="settings-grid"><label class="settings-wide">Display preset<select id="calendar-display-preset"><option value="global">Global / ISO - Monday first, 24-hour time</option><option value="israel">Israel - Sunday first, 24-hour time</option><option value="us">US - Sunday first, 12-hour time</option><option value="saturday">Saturday first - 24-hour time (e.g. Egypt)</option></select></label><p class="sync-small settings-wide">Changes your availability calendar display. Dates, calendar sync and booking hours stay the same.</p><div class="settings-wide settings-actions"><button class="primary" type="submit">Save display</button><button id="cancel-calendar-display" class="auth-link" type="button">Cancel</button></div><p id="calendar-display-status" class="sync-small settings-wide" role="status"></p></form></dialog>
 <dialog id="profile-dialog" aria-labelledby="profile-title">
 <div class="meeting-dialog-heading"><h2 id="profile-title">Your profile</h2><button id="close-profile" class="auth-button" type="button" aria-label="Close profile">&#215;</button></div>
-<p class="sync-small">Your photo appears in the top bar and on your booking page.</p>
+<p class="sync-small">Your sign-in photo is used by default in the top bar. Upload a custom photo to use here and on your booking page.</p>
 <form id="profile-form" class="settings-grid">
 <div class="settings-wide profile-portrait"><img id="profile-photo-preview" hidden alt="Profile photo preview"><span id="profile-photo-initial" class="profile-initial" aria-hidden="true"></span></div>
 <label class="settings-wide">Your profile photo<input id="booking-photo" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG or WebP. Up to 1 MB. Displayed as a circle.</small></label>
-<button id="remove-booking-photo" type="button" class="auth-link">Remove profile photo</button>
+<div id="profile-crop-controls" class="settings-wide" hidden><canvas id="profile-crop-canvas" width="320" height="320" aria-label="Profile photo crop preview. Drag to reposition, or use the sliders below."></canvas><p class="sync-small">Drag to position your photo inside the circle.</p><label>Zoom<input id="profile-crop-zoom" type="range" min="1" max="4" step="0.05" value="1"></label><label>Horizontal position<input id="profile-crop-x" type="range" min="0" max="100" step="1" value="50"></label><label>Vertical position<input id="profile-crop-y" type="range" min="0" max="100" step="1" value="50"></label><button id="profile-crop-reset" class="auth-link" type="button">Reset crop</button></div>
+<button id="remove-booking-photo" type="button" class="auth-link">Use sign-in photo</button>
 <div class="settings-wide settings-actions"><button class="primary" type="submit">Save profile</button><button id="cancel-profile" class="auth-link" type="button">Cancel</button></div><p id="profile-status" class="sync-small settings-wide" role="status"></p>
 </form></dialog>
 <p id="workspace-auth-status" class="workspace-auth-status" role="status" hidden></p><main id="main" class="product-main">
