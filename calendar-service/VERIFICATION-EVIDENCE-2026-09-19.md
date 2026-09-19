@@ -41,3 +41,6 @@ The disposable notification test on September 22 at 14:30-15:15 Asia/Jerusalem w
 Cancelled this test through its management page on September 19. The UI confirmed Meeting cancelled. The production public slots endpoint then returned the exact original start/end interval (1790076600000 / 1790079300000), proving that cancellation released this slot. The real September 23 meeting was not changed.
 
 The Google Data Access draft was restored with gmail.send and a 937-character justification. Save remains disabled without the required YouTube demonstration URL. No review submission has been made.
+## Recorded verification test
+
+The second disposable booking, Red Crown verification demo - test only, produced an automatic host email visible in the business Inbox at 14:23. Cancellation through the app succeeded. The public booking page initially retained the unavailable slot briefly; after refresh it showed September 22 at 14:30 and 14:45 available again. A fresh production slots response independently included the cancelled interval. The user saved their recording; it has not been inspected or submitted. The separate Gmail consent segment remains outstanding.
