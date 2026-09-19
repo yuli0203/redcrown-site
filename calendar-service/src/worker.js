@@ -1,6 +1,6 @@
 import { feedUrl, fetchFeed, parseFeed } from './ical-feed.js';
 import { recordWorkspaceUsage } from './analytics.js';
-import { notificationsReady, sendBookingNotifications } from './notifications.js';
+import { sendBookingNotifications } from './notifications.js';
 import { remindersReady, sendReminders } from './reminders.js';
 import { assert, Problem, validateWorkspace, slots, dateRange, localDate, validZone } from './scheduling.js';
 import { identity, body, hash, random, encrypt, rateLimit } from './security.js';
@@ -18,7 +18,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   assert(url.pathname.startsWith(prefix+'/'),'Not found.',404);
   const origin=request.headers.get('Origin');if(origin)assert(origin===env.PUBLIC_ORIGIN,'This origin is not allowed.',403);
   if(method==='OPTIONS'){assert(['GET','POST','PUT','DELETE'].includes(request.headers.get('Access-Control-Request-Method')),'Method not allowed.',405);return new Response(null,{status:204});}
-  if(path==='/health')return json({ready:Boolean(db),emailReminders:remindersReady(env),bookingNotifications:notificationsReady(env),google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
+  if(path==='/health')return json({ready:Boolean(db),emailReminders:remindersReady(env),bookingNotificationMode:'connected-account',google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
   assert(db,'The scheduling service is not configured yet.',503);
 
   await rateLimit(env,`ip:${await hash(request.headers.get('CF-Connecting-IP')||'local')}`,120);
@@ -38,6 +38,8 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    for(const c of calendars)c.selected=previous.find(p=>p.id===c.id)?.selected||false;
    for(const c of previous)if(c.selected&&!calendars.some(v=>v.id===c.id))calendars.push({...c,missing:true,writable:false});
    await run(db,'INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?) ON CONFLICT(uid,provider,account_id) DO UPDATE SET email=excluded.email,refresh_token=excluded.refresh_token,calendars=excluded.calendars',existing?.id||crypto.randomUUID(),saved.uid,providerName,accountId,email,token.refresh_token?await encrypt(token.refresh_token,env):existing.refresh_token,JSON.stringify(calendars));
+   const mailEnabled=providerName==='google'?granted.has('https://www.googleapis.com/auth/gmail.send'):[...granted].some(scope=>scope.toLowerCase()==='mail.send');
+   await run(db,'UPDATE connections SET mail_enabled=? WHERE uid=? AND provider=? AND account_id=?',mailEnabled?1:0,saved.uid,providerName,accountId);
    return new Response(null,{status:303,headers:{Location:`${env.PUBLIC_ORIGIN}/calendar/?connected=1#sync-availability`,'Set-Cookie':'crown_oauth=; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=0','Cache-Control':'no-store'}});
   }
   if(path.startsWith('/public/')||path.startsWith('/booking/'))return await publicRoutes(request,env,provider,path);
@@ -65,7 +67,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    await run(db,'INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?) ON CONFLICT(uid,provider,account_id) DO UPDATE SET email=excluded.email,refresh_token=excluded.refresh_token,calendars=excluded.calendars',id,user.uid,'ical',accountId,input.name.trim(),await encrypt(url,env),calendars);
    return json({connected:true});
   }
-  if(path==='/connections'&&method==='GET')return json({accounts:(await connections(db,user.uid)).map(c=>({id:c.id,email:c.email,provider:c.provider,calendars:JSON.parse(c.calendars)}))});
+  if(path==='/connections'&&method==='GET')return json({accounts:(await connections(db,user.uid)).map(c=>({id:c.id,email:c.email,provider:c.provider,mailEnabled:c.mail_enabled===1,calendars:JSON.parse(c.calendars)}))});
   if(path.startsWith('/connect/')&&method==='POST'){
    const name=path.split('/')[2],config=provider.providerConfig(name,env),state=random(),browser=random(),verifier=random();
    await run(db,'INSERT INTO oauth_states(state,uid,provider,verifier,browser_hash,expires) VALUES(?,?,?,?,?,?)',await hash(state),user.uid,name,verifier,await hash(browser),Date.now()+600000);
@@ -86,7 +88,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   }
   if(path==='/bookings'&&method==='GET'){
    const bookings=await all(db,'SELECT * FROM bookings WHERE uid=? AND end>? AND removed_from_list_at IS NULL ORDER BY start LIMIT 100',user.uid,Date.now());const results=[];
-   for(const b of bookings)results.push({id:b.id,start:b.start,end:b.end,status:b.status,data:JSON.parse(b.data),manageToken:await managementToken(b.id,env)});
+   for(const b of bookings)results.push({id:b.id,start:b.start,end:b.end,status:b.status,notificationState:b.notification_sent_at?'accepted':b.notification_state||'not_sent',data:JSON.parse(b.data),manageToken:await managementToken(b.id,env)});
    return json({bookings:results});
   }
   if(/^\/bookings\/[^/]+$/.test(path)&&method==='DELETE'){
