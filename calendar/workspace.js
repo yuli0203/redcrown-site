@@ -117,10 +117,11 @@
     if(!savedData.pageName||!savedData.slug){
       const name=(savedData.pageName||displayName||'Your host').trim().slice(0,60);
       const base=slug(name).replace(/[^a-z0-9-]/g,'').replace(/^-+|-+$/g,'').slice(0,40)||'meetings';
-      const changes={pageName:name,slug:savedData.slug||`${base}-${crypto.randomUUID().slice(0,8)}`};
+      const changes={pageName:name,slug:savedData.slug||`${base}-${crypto.randomUUID().slice(0,8)}`,timezone:savedData.timezone||Intl.DateTimeFormat().resolvedOptions().timeZone};
       if(!await persist(changes,'#meeting-settings-status'))return;
       if(version!==revision)return;
     }
+    if(!savedData.photo&&signInPhoto()){if(!await persist({photo:signInPhoto()},'#meeting-settings-status'))return;if(version!==revision)return;}
     stored = savedData;window.CrownBusyPreview.setDisplay(stored.calendarDisplay||'global');
     $('#meeting-page-name').value=typeof stored.pageName==='string' ? stored.pageName : displayName;
     const validMeeting = m => m && typeof m.id === 'string' && typeof m.title === 'string' && m.title.trim() && m.title.length <= 80 && typeof m.description === 'string' && m.description.length <= 500 && Number.isInteger(m.duration) && m.duration >= 1 && m.duration <= 480 && ['before','after'].every(k => Number.isInteger(m[k]) && m[k] >= 0 && m[k] <= 240);
@@ -136,7 +137,7 @@
       if (!input.checkValidity()) input.value = defaults[field];
     }
     logo = typeof stored.logo === 'string' && /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(stored.logo) && stored.logo.length < 1500000 ? stored.logo : '';
-    photo = typeof stored.photo === 'string' && /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(stored.photo) && stored.photo.length < 1500000 ? stored.photo : '';
+    photo = typeof stored.photo === 'string' && (/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(stored.photo)||googlePhoto(stored.photo)) && stored.photo.length < 1500000 ? stored.photo : '';
     $('#booking-photo').value = '';
     $('#booking-logo').value = '';
     $('#meeting-settings-status').textContent = ''; $('#style-settings-status').textContent = '';
@@ -258,7 +259,8 @@
   const imageVersions = {logo:0,photo:0};
   const profileDialog=$('#profile-dialog');
   const crop=window.CrownPhotoCrop.create(value=>{photo=value;renderProfile();});
-  function signInPhoto(){const user=window.CrownAuth?.current?.();const url=user?.photoURL||user?.providerData?.find(p=>p.photoURL)?.photoURL||'';return /^https:\/\//.test(url)?url:'';}
+  function googlePhoto(value){try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&value.length<=2048&&(u.hostname==='googleusercontent.com'||u.hostname.endsWith('.googleusercontent.com'));}catch{return false;}}
+  function signInPhoto(){const user=window.CrownAuth?.current?.();const url=user?.photoURL||user?.providerData?.find(p=>p.photoURL)?.photoURL||'';return googlePhoto(url)?url:'';}
   function renderProfile(){
     const initial=(displayName||userEmail||'You').trim().charAt(0).toUpperCase();
     for(const [imageId,initialId,value] of [['header-profile-photo','header-profile-initial',savedData.photo||signInPhoto()],['profile-photo-preview','profile-photo-initial',photo||signInPhoto()]]){
@@ -271,7 +273,7 @@
   $('#close-profile').addEventListener('click',()=>profileDialog.close());
   $('#cancel-profile').addEventListener('click',()=>profileDialog.close());
   profileDialog.addEventListener('close',()=>{imageVersions.photo++;crop.clear();photo=savedData.photo||'';$('#booking-photo').value='';renderProfile();});
-  $('#profile-form').addEventListener('submit',async event=>{event.preventDefault();if(!uid)return;const button=event.submitter;button.disabled=true;try{if(await persist({photo},'#profile-status')){preview();profileDialog.close();}}finally{button.disabled=false;}});
+  $('#profile-form').addEventListener('submit',async event=>{event.preventDefault();if(!uid)return;const button=event.submitter;button.disabled=true;try{if(await persist({photo:photo||signInPhoto()},'#profile-status')){preview();profileDialog.close();}}finally{button.disabled=false;}});
 
   for (const kind of ['logo','photo']) {
     const name=kind==='logo' ? 'Logo' : 'Profile photo';

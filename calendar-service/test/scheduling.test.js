@@ -30,3 +30,20 @@ test('Display preference persists without changing bookable slots',()=>{
  for(const calendarDisplay of ['global','israel','us','saturday']){const value=validateWorkspace({...base,calendarDisplay});assert.equal(value.calendarDisplay,calendarDisplay);assert.deepEqual(slots(value,meeting,[],range,now),slots(base,meeting,[],range,now));}
  assert.throws(()=>validateWorkspace({...base,calendarDisplay:'invalid'}));
 });
+
+
+test('Profile photo accepts Google account image or uploaded image, rejects unrelated URLs',()=>{
+ const url='https://lh3.googleusercontent.com/a/example=s96-c';
+ assert.equal(validateWorkspace({photo:url}).photo,url);
+ assert.equal(validateWorkspace({photo:'data:image/png;base64,aGVsbG8='}).photo,'data:image/png;base64,aGVsbG8=');
+ for(const photo of ['https://googleusercontent.com.evil.test/a','http://lh3.googleusercontent.com/a','https://evil.test/a','https://user:pass@lh3.googleusercontent.com/a','javascript:alert(1)'])assert.throws(()=>validateWorkspace({photo}));
+ assert.throws(()=>validateWorkspace({logo:url}));
+});
+test('Israel month availability excludes weekly closures, overrides and all-day busy dates',()=>{
+ const w=validateWorkspace({timezone:'Asia/Jerusalem',calendarDisplay:'israel',exceptions:{'2026-09-22':[]},meetings:[meeting]});
+ const range=dateRange('2026-09-01',30,w.timezone),closed=dateRange('2026-09-23',1,w.timezone);
+ const result=slots(w,meeting,[closed],range,Date.parse('2026-09-01T00:00:00Z'));
+ const local=new Intl.DateTimeFormat('en-CA',{timeZone:w.timezone,year:'numeric',month:'2-digit',day:'2-digit',weekday:'long'});
+ assert.ok(result.length>0);
+ for(const s of result){const parts=Object.fromEntries(local.formatToParts(s.start).map(p=>[p.type,p.value]));assert.ok(!['Saturday','Sunday'].includes(parts.weekday));assert.ok(!['22','23'].includes(parts.day));}
+});

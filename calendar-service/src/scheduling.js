@@ -6,6 +6,10 @@ export function validZone(zone){try{Temporal.Now.zonedDateTimeISO(zone);return t
 const text=(value,max,required=false)=>{assert(typeof value==='string' && value.length<=max && (!required || value.trim()),'Invalid text value.');return value.trim();};
 const integer=(value,min,max)=>{assert(Number.isInteger(value)&&value>=min&&value<=max,'Invalid numeric setting.');return value;};
 function windows(values){assert(Array.isArray(values)&&values.length<=8,'Use up to eight time windows per day.');let last=-1;return values.map(pair=>{assert(Array.isArray(pair)&&pair.length===2,'Invalid hours.');const [start,end]=pair.map(v=>{assert(typeof v==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(v),'Invalid time.');return Number(v.slice(0,2))*60+Number(v.slice(3));});assert(start<end&&start>=last,'Hours must be ordered and cannot overlap.');last=end;return pair;});}
+export function validProfilePhoto(value){
+ if(typeof value!=='string'||value.length>2048)return false;
+ try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password&&!url.port&&(url.hostname==='googleusercontent.com'||url.hostname.endsWith('.googleusercontent.com'));}catch{return false;}
+}
 export function validateWorkspace(input){
  assert(input&&typeof input==='object','Invalid workspace.');
  const zone=text(input.timezone||'UTC',80);assert(validZone(zone),'Choose a valid time zone.');
@@ -20,7 +24,7 @@ export function validateWorkspace(input){
  const calendarDisplay=input.calendarDisplay||'global';assert(['global','israel','us','saturday'].includes(calendarDisplay),'Choose a valid calendar display.');
  const result={calendarDisplay,pageName:text(input.pageName||'',60),slug,timezone:zone,weekly:normalized,exceptions,meetings,published:input.published===true,destination:input.destination||null};
  for(const [key,fallback] of Object.entries({accent:'#c8102e',background:'#ffffff',text:'#271c22'})){assert(!input[key] || /^#[a-f\d]{6}$/i.test(input[key]),'Invalid color.');result[key]=input[key]||fallback;}
- for(const key of ['logo','photo']){const value=input[key]||'';assert(typeof value==='string' && value.length<=400000 && (!value || /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value)),'Use a smaller PNG, JPEG or WebP image.');result[key]=value;}
+ for(const key of ['logo','photo']){const value=input[key]||'';assert(typeof value==='string' && value.length<=400000 && (!value || /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value) || (key==='photo'&&validProfilePhoto(value))),'Use a smaller PNG, JPEG or WebP image.');result[key]=value;}
  if(result.destination) {assert(typeof result.destination==='object','Invalid booking calendar.');result.destination={connectionId:text(result.destination.connectionId,80,true),calendarId:text(result.destination.calendarId,1024,true)};}
  if(result.published)assert(result.slug&&result.pageName&&result.destination&&meetings.some(m=>m.enabled),'Choose a page name, address, booking calendar and active meeting before publishing.');
  return result;

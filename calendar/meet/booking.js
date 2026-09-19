@@ -16,7 +16,7 @@
   if(!query.get('meeting')){document.body.classList.add('booking-landing');$('#page-description').textContent='Choose a meeting type below. Available times are checked against the host calendar.';}
   if(query.has('reschedule')){originalGuest=await call(`/booking/${encodeURIComponent(query.get('reschedule'))}?token=${encodeURIComponent(location.hash.slice(1))}`);if(originalGuest.status!=='confirmed')throw Error('This booking is no longer available to reschedule. Return to its management link.');$('header>span').textContent='Reschedule a meeting';$('#page-description').textContent='Choose a new time. Your current booking stays reserved until the change is confirmed.';}
   for(const [key,variable] of [['accent','--page-accent'],['background','--page-bg'],['text','--page-text']])document.documentElement.style.setProperty(variable,host[key]);
-  for(const kind of ['logo','photo'])if(host[kind]){const image=make('img');image.src=host[kind];image.alt=kind==='logo'?'Host logo':'Host profile photo';image.className='host-'+kind;$('#host-name').before(image);}
+  for(const kind of ['logo','photo'])if(host[kind]){const image=make('img');image.referrerPolicy='no-referrer';image.src=host[kind];image.alt=kind==='logo'?'Host logo':'Host profile photo';image.className='host-'+kind;$('#host-name').before(image);}
   $('#host-name').textContent=`Meet with ${host.pageName}`;
   const zone=Intl.DateTimeFormat().resolvedOptions().timeZone;
   const meetings=host.meetings.filter(m=>!query.get('meeting')||m.id===query.get('meeting'));
@@ -33,10 +33,10 @@
     const hostName=$('#host-name');hostName.textContent=host.pageName;identity.append(hostName);
     summary.prepend(back,logoPanel,identity);
     const help=make('div','','booking-sidebar-help');for(const [text,path] of [['Privacy','privacy'],['Booking help','support']]){const a=make('a',text);a.href='/calendar/legal/#'+path;help.append(a);}summary.append(help);
-    await showScheduler(card,meeting,slug,zone,host.calendarDisplay);}
+    await showScheduler(card,meeting,slug,zone,host.calendarDisplay,host.timezone);}
   }
  }catch(e){error(e.message);const retry=button('Try again',()=>location.reload());$('#page-error').append(document.createElement('br'),retry);}
- async function showScheduler(card,meeting,slug,initialZone,calendarDisplay){
+ async function showScheduler(card,meeting,slug,initialZone,calendarDisplay,hostZone){
   card.querySelector('.booking-scheduler')?.remove();const panel=make('div','','booking-scheduler');card.append(panel);let revision=0;
   const today=new Date(),firstMonth=new Date(today.getFullYear(),today.getMonth(),1);let month=new Date(firstMonth),selectedDate='',currentSlots=[],guestDraft={...originalGuest};
   const dateKey=value=>`${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}`;
@@ -52,12 +52,12 @@
   async function load(){
    step(2);panelHeading.textContent='Select a date and time';layout.hidden=false;retryAvailability.hidden=true;const current=++revision;status.textContent='Checking availability...';panel.setAttribute('aria-busy','true');grid.replaceChildren();days.replaceChildren();formArea.replaceChildren();monthTitle.textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});previous.disabled=month<=firstMonth;
    const maxMonth=new Date(today);maxMonth.setDate(maxMonth.getDate()+(meeting.horizon||365));next.disabled=month.getFullYear()===maxMonth.getFullYear()&&month.getMonth()>=maxMonth.getMonth()||month>maxMonth;
-   dayTitle.textContent='Select an available date';zoneNote.textContent=`Times shown in ${zone.value.replaceAll('_',' ')}.`;
+   dayTitle.textContent='Select an available date';zoneNote.textContent=`Times shown in ${zone.value.replaceAll('_',' ')}.${hostZone&&hostZone!==zone.value?' Host schedule: '+hostZone.replaceAll('_',' ')+'.':''}`;
    try{
     const count=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();
     const result=await call(`/public/${encodeURIComponent(slug)}/slots?${new URLSearchParams({meeting:meeting.id,from:dateKey(month),days:String(count),timezone:zone.value,...(query.has('reschedule')?{previousId:query.get('reschedule')}:{})})}`);
     if(current!==revision||!panel.isConnected)return;currentSlots=result.slots;
-    status.textContent=currentSlots.length?'Choose a date, then an available time.':'No available times this month. Try another month or contact the host.';
+    status.textContent=currentSlots.length?'Highlighted dates have available times. Faded dates are unavailable.':'No available times this month. Try another month or contact the host.';
     const groups=new Map();for(const slot of currentSlots){const key=inZone(slot.start);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(slot);}
     for(let i=0;i<(month.getDay()-weekStart+7)%7;i++)days.append(make('span'));
     function choose(key,b){step(2);selectedDate=key;grid.replaceChildren();formArea.replaceChildren();for(const item of days.querySelectorAll('button'))item.setAttribute('aria-pressed',String(item===b));dayTitle.textContent=new Date(key+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});for(const slot of groups.get(key)){const text=new Date(slot.start).toLocaleTimeString(undefined,{timeZone:zone.value,hour:'2-digit',minute:'2-digit',hour12:timeFormat.value==='12'});const time=button(text,()=>{for(const item of grid.children)item.setAttribute('aria-pressed',String(item===time));bookingForm(slot);});grid.append(time);}}
