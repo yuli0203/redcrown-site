@@ -8,7 +8,7 @@
     if(data.v!==1 || typeof data.name!=='string' || data.name.length>60 || !Array.isArray(data.meetings)) throw new Error();
     const valid=m=>m && typeof m.title==='string' && m.title.length<=80 && typeof m.description==='string' && m.description.length<=500 && Number.isInteger(m.duration) && m.duration>=1 && m.duration<=480;
     if(!data.meetings.every(valid)) throw new Error();
-    for(const [key,variable] of [['accent','--page-accent'],['background','--page-bg'],['text','--page-text']]) if(/^#[0-9a-f]{6}$/i.test(data[key])) document.documentElement.style.setProperty(variable,data[key]);
+    window.CrownBookingStyle.apply(data);
     $('.preview-notice').textContent='This is an old static preview link, not a live booking page. Ask the host for their published booking link.';
     const setup=document.createElement('a');setup.href='/calendar/#meeting-settings';setup.className='booking-button';setup.textContent='Host: open booking setup';$('.preview-notice').append(document.createElement('br'),setup);
     $('.booking-progress').hidden=true;

@@ -33,3 +33,20 @@ html[dir=rtl] .guest-form>button:first-child{padding-left:12px;padding-right:0}
 html[dir=rtl] .calendar-add-links,html[dir=rtl] .rc-legal-footer{text-align:start}
 @media(max-width:920px){html[dir=rtl] .booking-detail .booking-times{border-right:0;border-top:1px solid #8883;padding:20px 0 0}}
 @media(max-width:760px){html[dir=rtl] .booking-detail .meeting-summary{border-left:0;border-bottom:1px solid #8883}html[dir=rtl] .booking-sidebar-logo{margin-inline-start:0}}
+
+/* Keep readable text and controls across host themes and zoom levels. */
+.booking-progress li,.booking-weekdays,.guest-form small,.page-credit,#page-description{opacity:1}
+.booking-controls input{width:100%;min-width:0;min-height:44px;border:1px solid currentColor;border-radius:7px;padding:12px;background:var(--page-bg);color:var(--page-text);font:inherit}
+.booking-controls input,.guest-form input,.guest-form textarea,.booking-controls select{font-size:16px}
+.booking-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--page-text);outline-offset:3px}
+.booking-scheduler,.meeting-summary{overflow-wrap:anywhere}
+.booking-month-nav h3{min-width:0}
+@media(max-width:360px){.booking-detail .booking-scheduler{padding:12px}.booking-detail .booking-month-grid{gap:3px}.booking-detail .booking-month-grid .booking-button{min-width:24px;min-height:32px}}
+
+.booking-month-grid [aria-pressed=true],.booking-slot-grid [aria-pressed=true],.booking-progress [aria-current]:before,.booking-host-initial,.confirmation-check{color:var(--page-accent-ink,#fff)}
+
+body>header a:focus-visible,body>header button:focus-visible{outline-color:#fff}
+/* Form boundaries and date controls stay visible under custom host colors. */
+.booking-controls input,.booking-controls select,.guest-form input,.guest-form textarea{border-color:var(--page-text)}
+.booking-detail .meeting-summary{background:var(--page-bg)}
+.booking-month-grid .booking-button:not(:disabled):not([aria-pressed=true]){background:var(--page-bg);border-color:var(--page-accent)}
