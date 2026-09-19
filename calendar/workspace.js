@@ -2,7 +2,7 @@
   'use strict';
   const $ = selector => document.querySelector(selector);
   await window.CrownAPI.ready;const cloud=window.CrownAPI.online||window.CrownAPI.configured;let serverVersion=0;
-  const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,notice:120,horizon:60,interval:15,dailyLimit:0,location:'',reminderMinutes:0,reminderEmail:'',accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
+  const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,notice:120,horizon:60,interval:15,dailyLimit:0,location:'',reminderMinutes:30,reminderEmail:'',accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
   let uid = null, logo = '', photo = '', revision = 0, meetings = [], editingId = null, removed = null, savedData = {};
   const dialog = $('#configure-meeting-dialog');
   const meetingFields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location','reminderMinutes','reminderEmail'];
@@ -92,7 +92,7 @@
     meetings = Array.isArray(stored.meetings) ? stored.meetings.filter(validMeeting) : [];
     if (!Array.isArray(stored.meetings) && typeof stored.title === 'string' && stored.title.trim()) {
       const legacy = {id:crypto.randomUUID()};
-      for (const field of meetingFields) legacy[field] = stored[field] ?? defaults[field];
+      for (const field of meetingFields) legacy[field] = stored[field] ?? (field==='reminderMinutes' ? 0 : defaults[field]);
       if (validMeeting(legacy)) meetings = [legacy];
     }
     for (const field of fields) {
@@ -153,6 +153,7 @@
     if (!uid) return;
     editingId=meeting?.id || null;
     for (const field of meetingFields) $(`#booking-${field}`).value=(meeting || defaults)[field] ?? defaults[field];
+    if(meeting) $('#booking-reminderMinutes').value=meeting.reminderMinutes??0;
     setNotice(meeting?.notice??defaults.notice);
     $('#booking-reminderEmail').value=meeting?.reminderEmail || window.CrownAuth?.current?.()?.email || userEmail;reminderRecipients();
     $('#configure-meeting-title').textContent=meeting ? 'Configure meeting' : 'Add meeting';
