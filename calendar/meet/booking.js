@@ -19,6 +19,7 @@
   if(query.has('reschedule')){originalGuest=await call(`/booking/${encodeURIComponent(query.get('reschedule'))}?token=${encodeURIComponent(location.hash.slice(1))}`);if(originalGuest.status!=='confirmed')throw Error(t('This booking is no longer available to reschedule. Return to its management link.'));$('header>span').textContent=t('Reschedule a meeting');$('#page-description').textContent=t('Choose a new time. Your current booking stays reserved until the change is confirmed.');}
   window.CrownBookingStyle.apply(host);
   for(const kind of ['logo','photo'])if(host[kind]){const image=make('img');image.referrerPolicy='no-referrer';image.src=host[kind];image.alt=kind==='logo'?t('Host logo'):t('Host profile photo');image.className='host-'+kind;$('#host-name').before(image);}
+  if(!query.get('meeting')){const images=[...document.querySelectorAll('.booking-hero>.host-logo,.booking-hero>.host-photo')];if(images.length){const identity=make('div','','booking-host-images');images[0].before(identity);identity.append(...images);}}
   $('#host-name').textContent=`${he?'פגישה עם':'Meet with'} ${host.pageName}`;
   const zone=Intl.DateTimeFormat().resolvedOptions().timeZone;
   const meetings=host.meetings.filter(m=>!query.get('meeting')||m.id===query.get('meeting'));
