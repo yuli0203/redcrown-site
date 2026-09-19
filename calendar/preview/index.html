@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e080a">
+<title>Crown Calendar</title>
+<meta name="description" content="A simple, free calendar. Preview meeting lengths, dates and available times.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/calendar/calendar.css">
+<script defer src="/calendar/calendar.js"></script>
+<script defer src="/calendar/auth.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to calendar</a>
+<header><a class="brand" href="/calendar/" aria-label="Crown Calendar home"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="32" height="32" alt=""><span>Crown Calendar</span></a><div class="header-actions"><span class="free-label">Free, limitless scheduling</span><button id="auth-open" class="auth-button">Sign in</button><div id="auth-account" hidden><span id="auth-identity"></span><button id="auth-verify" class="auth-link" hidden>Verify email</button><button id="auth-signout" class="auth-button">Sign out</button></div></div></header>
+<main id="main">
+<div class="page-heading"><div><h1>Schedule a meeting.</h1><p>Choose a date and time. Save meetings on this device.</p></div><span class="preview-label">Local calendar</span></div>
+        <div class="booking-window">
+          <aside class="host-panel">
+            <div class="host-avatar"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="36" height="36" alt=""></div>
+            <p class="host-name">Red Crown Interactive</p><h2>Meeting details</h2>
+            <p class="meeting-description">Choose a length, date and time.</p>
+            <label class="title-label" for="meeting-title">Meeting title</label><input id="meeting-title" maxlength="100" value="Meeting" autocomplete="off"><label class="duration-label" for="duration"><span aria-hidden="true">◷</span> Meeting length</label>
+            <select id="duration" aria-label="Meeting length"><option value="15">15 minutes</option><option value="30" selected>30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="custom">Custom duration</option></select>
+            <div id="custom-duration-wrap" hidden><label for="custom-duration">Duration in minutes</label><input id="custom-duration" type="number" min="1" max="480" value="25" inputmode="numeric"><span id="duration-error" role="status"></span></div>
+            <div class="meeting-meta">Time zone: Asia/Jerusalem</div>
+            <div class="host-bottom">Working hours<br>Sun - Thu, 09:00 - 17:00<br>Break: 12:00 - 13:00</div>
+          </aside>
+          <div class="calendar-panel">
+            <div class="calendar-title"><h3>Select a date</h3><span class="demo-badge">Sun - Thu</span></div>
+            <div class="month-nav"><strong id="month-label"></strong><div><button id="previous-month" aria-label="Previous month">‹</button><button id="next-month" aria-label="Next month">›</button></div></div>
+            <div class="weekdays" aria-hidden="true"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+            <div class="date-grid" id="date-grid" role="group" aria-label="Choose a date"></div>
+            <div class="timezone"><span aria-hidden="true">◎</span><span>Time zone<br><strong>Israel Time (Asia/Jerusalem)</strong></span></div>
+          </div>
+          <div class="time-panel"><h3 id="selected-date"></h3><p>Choose a time</p><div id="time-slots" class="time-slots"></div><div id="slot-summary" role="status" class="slot-summary">Select an available time.</div><button id="save-meeting" class="primary" disabled>Save meeting locally</button><p id="save-status" role="status"></p></div>
+        </div>
+
+<div class="support-grid"><section><h2>Your saved meetings</h2><p id="account-storage-note">Guest meetings are stored in this browser. Sign in to use a separate local meeting list.</p><div id="saved-meetings"></div></section><section><h2>Calendar connections</h2><div class="connection"><span>Google Calendar</span><span>Not connected</span></div><div class="connection"><span>Microsoft Outlook</span><span>Not connected</span></div><p>Calendar sync is not available yet. Signing in does not connect your Google Calendar. Saving locally does not send invitations or create a video link. Holidays are not blocked automatically.</p></section></div>
+<noscript><p>Enable JavaScript to choose a date and view available times.</p></noscript>
+</main>
+<dialog id="auth-dialog" aria-labelledby="auth-title" aria-describedby="auth-description">
+  <button id="auth-close" aria-label="Close sign-in">×</button>
+  <h2 id="auth-title">Sign in to Crown Calendar</h2>
+  <p id="auth-description">Use Google or your email. Meetings stay on this device for now.</p>
+  <button id="auth-google" class="auth-button google-signin" data-auth-action disabled>Continue with Google</button>
+  <div class="auth-divider">or use email</div>
+  <form id="auth-form">
+    <label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" maxlength="254" required disabled>
+    <label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password" required disabled aria-describedby="auth-password-help">
+    <small id="auth-password-help" hidden>Use at least 8 characters. The account password policy may require more.</small>
+    <button class="primary" id="auth-submit" data-auth-action disabled>Sign in</button>
+  </form>
+  <button id="auth-reset" class="auth-link" data-auth-action disabled>Forgot password?</button>
+  <button id="auth-switch" class="auth-link" data-auth-action disabled>New here? Create an account</button>
+  <p id="auth-message" role="status" aria-live="polite">Loading sign-in...</p>
+</dialog>
+</body>
+</html>
