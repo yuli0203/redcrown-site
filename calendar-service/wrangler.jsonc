@@ -1,5 +1,6 @@
 {
   "name": "red-crown-calendar-api",
+  "account_id": "fb903435ac18bbd03f36ee53e45d45b2",
   "main": "src/worker.js",
   "compatibility_date": "2026-09-01",
   "triggers":{"crons":["*/15 * * * *"]},
@@ -7,5 +8,5 @@
     "FIREBASE_PROJECT_ID": "crown-calendar-89e18",
     "PUBLIC_ORIGIN": "https://redcrowninteractive.com"
   },
-  "d1_databases": [{"binding":"DB","database_name":"red-crown-calendar","database_id":"REPLACE_WITH_DATABASE_ID","migrations_dir":"migrations"}]
+  "d1_databases": [{"binding":"DB","database_name":"red-crown-calendar","database_id":"06e4ca95-0243-4471-bd20-4782dbea0b3d","migrations_dir":"migrations"}]
 }

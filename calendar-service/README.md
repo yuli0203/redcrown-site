@@ -19,9 +19,9 @@ An isolated test-only browser fixture is available with `node test/browser-fixtu
 
 The existing website README specifies Cloudflare Pages. This service is a separate Worker using D1; route `/calendar/api/*` on the same domain to it. Keep the existing Pages site for other paths.
 
-1. Sign in using `npx wrangler login`. This machine currently has no Cloudflare CLI session.
-2. Create a D1 database named `red-crown-calendar`; copy its ID into `wrangler.jsonc`.
-3. Apply the migrations with `npx wrangler d1 migrations apply red-crown-calendar --remote`.
+1. Cloudflare CLI authorization completed on 2026-09-19. Use `npx wrangler whoami` to verify the current session.
+2. D1 database `red-crown-calendar` was created in the account specified in `wrangler.jsonc`; its binding is configured.
+3. Both migrations were applied remotely and verified with `npx wrangler d1 migrations list red-crown-calendar --remote` (no pending migrations).
 4. Add a Worker route for `redcrowninteractive.com/calendar/api/*` in the correct zone. Keep `PUBLIC_ORIGIN` exactly `https://redcrowninteractive.com`.
 5. Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `TOKEN_ENCRYPTION_KEY`, `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, `TURNSTILE_SITE_KEY`, and `TURNSTILE_SECRET` through Cloudflare secrets/configuration. Use `wrangler secret put NAME` for secrets. Never paste secrets into chat or public files.
 6. In the Google OAuth web client, register `https://redcrowninteractive.com/calendar/api/oauth/google/callback` (and `http://127.0.0.1:8770/calendar/api/oauth/google/callback` for local testing). The server requests calendar event access to read names and create/cancel bookings, plus the calendar list and identity. Refresh access is requested using the authorization-code flow. Google verification and production scope approval still need review.
@@ -29,6 +29,8 @@ The existing website README specifies Cloudflare Pages. This service is a separa
 8. Configure a Turnstile widget for the production domain. The production booking endpoint refuses bookings without configured protection. Local-only bypass requires both the configured origin and request origin to be localhost.
 9. Build-check with `npm run check`. Deploy only after secrets, route, provider consent and database configuration are ready.
 10. Perform a live acceptance test with dedicated test calendars: connect two accounts, select sub-calendars, reload, create a meeting, publish, book as a guest, verify the calendar invitation, reschedule, cancel, revoke calendar access and verify bookings fail closed.
+
+Hosting setup is blocked on identifying the existing website host. On 2026-09-19, the authorized Cloudflare account returned no Pages projects or zones. Public DNS uses Porkbun nameservers. This does not identify the website host, and no DNS changes or production deployment have been made. Confirm the host and domain routing before applying step 4. Provider secrets and Turnstile configuration remain outstanding.
 
 Cloudflare's free tier is a starting point, not unlimited infrastructure. Measure Worker CPU and D1 usage on live provider traffic before public launch. Free-tier requests can fail after quota exhaustion. Multi-account providers can also exceed Worker subrequest quotas; load testing and batching/caching are required before scaling beyond small workspaces.
 
