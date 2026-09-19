@@ -5,7 +5,7 @@
   const authSurface = dialog || $('.entry-card');
   const emailPanel = $('#auth-email-panel');
   function showAuth() {
-    if (auth?.currentUser && $('#sync-availability')) { $('#sync-availability').scrollIntoView({block:'start'}); return; }
+    if (auth?.currentUser?.emailVerified && $('#sync-availability')) { $('#sync-availability').scrollIntoView({block:'start'}); return; }
     if (dialog) dialog.showModal();
     else authSurface.scrollIntoView({block:'center'});
   }
@@ -15,7 +15,26 @@
     $('#auth-password').value = '';
   }
   const form = $('#auth-form');
-  let sdk, auth, ready = false, busy = false, creating = false;
+  let sdk, auth, ready = false, busy = false, creating = false, lastVerificationSent = 0;
+  const verificationPanel = document.createElement('section');
+  verificationPanel.hidden = true;
+  verificationPanel.innerHTML = '<h3>Verify your email</h3><p>Open the verification link in your inbox, then return here. Check your spam folder too.</p><button type="button" data-auth-action id="auth-check-verification">I have verified my email</button><button type="button" data-auth-action id="auth-resend-verification">Resend verification email</button>';
+  authSurface.append(verificationPanel);
+  async function sendVerification(user) {
+    if (Date.now() - lastVerificationSent < 60000) { message('Please wait a minute before requesting another verification email.'); return; }
+    await sdk.sendEmailVerification(user, {url: location.origin + '/calendar/'});
+    lastVerificationSent = Date.now();
+    message('Verification email sent. Open the link, then select I have verified my email.');
+  }
+  async function checkVerification() {
+    if (!auth.currentUser) return;
+    await sdk.reload(auth.currentUser);
+    await auth.currentUser.getIdToken(true);
+    renderUser(auth.currentUser);
+    message(auth.currentUser.emailVerified ? 'Your email is verified. Welcome!' : 'Your email is not verified yet. Open the link in your inbox first.');
+  }
+  $('#auth-check-verification').addEventListener('click', () => run(checkVerification));
+  $('#auth-resend-verification').addEventListener('click', () => run(() => sendVerification(auth.currentUser)));
   window.CrownAuth={token:()=>auth?.currentUser?.getIdToken(),current:()=>auth?.currentUser};
   let microsoftEnabled = false;
   let unavailable = 'Loading sign-in...';
@@ -67,7 +86,7 @@
   $('#auth-open')?.addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
   $('.footer-signin')?.addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
   $('#main-signin')?.addEventListener('click', () => {
-    if (auth?.currentUser) { location.assign('/calendar/preview/'); return; }
+    if (auth?.currentUser) { if (!auth.currentUser.emailVerified) { verificationPanel.scrollIntoView({block:'center'}); return; } location.assign('/calendar/preview/'); return; }
     if (emailPanel) {
       const opening = emailPanel.hidden;
       emailPanel.hidden = !opening;
@@ -107,7 +126,7 @@
         if (!policy.isValid) { message('Choose a stronger password: check the minimum length, uppercase, lowercase, number and symbol requirements.'); return; }
         const credential = await sdk.createUserWithEmailAndPassword(auth, email, password);
         $('#auth-password').value = '';
-        try { await sdk.sendEmailVerification(credential.user); message('Account created. Check your email to verify your address.'); }
+        try { await sendVerification(credential.user); message('Account created. Check your email to verify your address.'); }
         catch { message('Account created, but the verification email could not be sent. Use Verify email to try again.'); }
       } else {
         await sdk.signInWithEmailAndPassword(auth, email, password);
@@ -130,16 +149,12 @@
   $('#auth-verify').addEventListener('click', () => {
     showAuth();
     run(async () => {
-      if (!auth.currentUser) return;
-      await sdk.reload(auth.currentUser);
-      await auth.currentUser.getIdToken(true);
-      renderUser(auth.currentUser);
-      if (auth.currentUser.emailVerified) { message('Your email is verified.'); return; }
-      await sdk.sendEmailVerification(auth.currentUser);
-      message('Verification email sent. After verifying, select Verify email again to refresh your status.');
+      await checkVerification();
     });
   });
   function renderUser(user) {
+    const verified = Boolean(user?.emailVerified);
+    verificationPanel.hidden = !user || verified;
     if ($('.footer-signin')) $('.footer-signin').textContent = user ? 'Calendar workspace' : 'Sign in / Create account';
     if ($('#auth-open')) $('#auth-open').hidden = Boolean(user);
     $('#auth-account').hidden = !user;
@@ -149,15 +164,15 @@
     if ($('#account-storage-note')) $('#account-storage-note').textContent = user
       ? 'Saved locally for this account, on this browser only. Sign-in does not sync meetings across devices.'
       : 'Guest meetings are stored in this browser. Sign in to use a separate local meeting list.';
-    if ($('#main-signin')) $('#main-signin').textContent = user ? 'Open calendar preview' : 'Sign in with email';
+    if ($('#main-signin')) $('#main-signin').textContent = user ? (verified ? 'Open calendar preview' : 'Verify your email to continue') : 'Sign in with email';
     if (!dialog) {
       $('#auth-google').hidden = Boolean(user);
       $('#auth-microsoft').hidden = Boolean(user);
       if (user) { emailPanel.hidden = true; $('#main-signin').setAttribute('aria-expanded','false'); }
     }
-    if ($('#signin-availability')) $('#signin-availability').textContent = user ? 'Signed in. The calendar currently saves meetings on this device only.' : (microsoftEnabled ? 'Google, Microsoft or email. No credit card required.' : 'Google or email. Microsoft sign-in is coming soon. No credit card required.');
-    // This is a display/storage partition, not authorization. Future server APIs must verify ID tokens.
-    document.dispatchEvent(new CustomEvent('crown-auth-change', {detail:{uid:user?.uid || null,displayName:user?.displayName || '',email:user?.email || ''}}));
+    if ($('#signin-availability')) $('#signin-availability').textContent = user ? (verified ? 'Signed in with a verified email.' : 'Verify your email before connecting calendars or setting up bookings.') : (microsoftEnabled ? 'Google, Microsoft or email. No credit card required.' : 'Google or email. Microsoft sign-in is coming soon. No credit card required.');
+    // Only verified identities unlock the workspace. The API independently enforces verification.
+    document.dispatchEvent(new CustomEvent('crown-auth-change', {detail:{uid:verified ? user.uid : null,displayName:user?.displayName || '',email:user?.email || ''}}));
   }
   async function initialize() {
     updateControls();
