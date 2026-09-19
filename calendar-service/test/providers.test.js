@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { database } from '../database.js';
 import { encrypt,decrypt } from '../src/security.js';
-import { readAvailability,listCalendars } from '../src/providers.js';
+import { readAvailability,listCalendars,writeBooking } from '../src/providers.js';
 const response=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json'}});
 test('Google refresh credentials stay encrypted and busy failures block availability',async t=>{
  const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64'),PUBLIC_ORIGIN:'http://localhost'},connection={id:'c',uid:'u',provider:'google',refresh_token:await encrypt('refresh',env),calendars:JSON.stringify([{id:'work',name:'Work',selected:true}])};
@@ -25,4 +25,18 @@ test('Google calendars without freeBusy support use complete event reads and fai
  t.mock.method(globalThis,'fetch',async url=>{url=String(url);if(url.includes('oauth2'))return response({access_token:'access'});if(url.endsWith('freeBusy'))return response({calendars:{holidays:{errors:[{reason:'notFound'}]}}});if(url.includes('pageToken='))return fail?response({},403):response({kind:'calendar#events',items:[{summary:'Free holiday',transparency:'transparent',start:{date:'2026-09-22'},end:{date:'2026-09-23'}}]});return response({timeZone:'Asia/Jerusalem',nextPageToken:'next',items:[{summary:'Closed',start:{date:'2026-09-21'},end:{date:'2026-09-22'}}]});});
  const data=await readAvailability([connection],Date.parse('2026-09-20'),Date.parse('2026-09-24'),env,{details:false});assert.deepEqual(data.busy,[{start:Date.parse('2026-09-20T21:00:00Z'),end:Date.parse('2026-09-21T21:00:00Z')}]);assert.equal(data.events.length,0);
  fail=true;await assert.rejects(readAvailability([connection],Date.parse('2026-09-20'),Date.parse('2026-09-24'),env),/Holidays could not be checked/);env.DB.close();
+});
+
+
+test('Guest booking requests a Google email invitation with meeting details',async t=>{
+ const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64')};
+ const connection={id:'invite-test',provider:'google',refresh_token:await encrypt('refresh',env)};let sent;
+ t.mock.method(globalThis,'fetch',async (url,options={})=>{
+  if(String(url).includes('oauth2'))return response({access_token:'access'});
+  if(options.method==='POST'){sent={url:String(url),body:JSON.parse(options.body)};return response({id:'event'});}
+  return response({},404);
+ });
+ const start=Date.parse('2026-10-20T09:00:00Z');
+ await writeBooking(connection,'primary',{id:'12345678-abcd-1234-abcd-123456789012',start,end:start+1800000,data:JSON.stringify({title:'Project conversation',location:'Video call',name:'Guest',email:'guest@example.test',notes:'Discuss website',manageUrl:'https://example.test/manage'})},env);
+ assert.match(sent.url,/sendUpdates=all/);assert.deepEqual(sent.body.attendees,[{email:'guest@example.test',displayName:'Guest'}]);assert.equal(sent.body.summary,'Project conversation');assert.equal(sent.body.location,'Video call');assert.equal(sent.body.start.dateTime,'2026-10-20T09:00:00.000Z');assert.match(sent.body.description,/Discuss website/);assert.match(sent.body.description,/https:\/\/example.test\/manage/);env.DB.close();
 });
