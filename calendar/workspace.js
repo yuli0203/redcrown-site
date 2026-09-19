@@ -168,6 +168,15 @@
     if (await persist(changes,'#style-settings-status')) { renderMeetings(); $('#style-settings-status').textContent=cloud?'Style saved to your account.':'Style saved on this browser.'; }
   });
   for (const field of fields) $(`#booking-${field}`).addEventListener('input',() => { preview(); $('#meeting-settings-status').textContent = ''; $('#style-settings-status').textContent = ''; });
+  $('#scheduling-calendar-form').addEventListener('submit',async event=>{
+    event.preventDefault();if(!uid)return;
+    const select=$('#schedule-destination'),button=event.submitter;
+    if(select.selectedOptions[0]?.disabled){$('#destination-status').textContent='Choose an available calendar, or reconnect the saved account.';return;}
+    const destination=select.value?JSON.parse(select.value):null;button.disabled=true;
+    try{if(await persist({destination},'#destination-status')){window.CrownSettings.setDestination(savedData.destination);$('#destination-status').textContent=destination?'Scheduling calendar saved. New bookings will be added here.':'Scheduling calendar cleared. Choose a calendar before publishing.';}}
+    finally{button.disabled=false;}
+  });
+  $('#schedule-destination').addEventListener('change',()=>{$('#destination-status').textContent='Unsaved change. Select Save calendar to apply.';});
   $('#availability-settings-form').addEventListener('submit',async event=>{
     event.preventDefault();if(!uid||!event.target.reportValidity())return;
     try{const settings={...window.CrownSettings.read(),pageName:$('#meeting-page-name').value.trim()};if(await persist(settings,'#schedule-status')){renderMeetings();pageDialog.close();$('#meeting-list-status').textContent=cloud?'Page settings saved.':'Page settings saved on this browser.';}}catch(error){$('#schedule-status').textContent=error.message;}
@@ -238,7 +247,7 @@
     $('#upcoming-bookings').hidden=true;$('#upcoming-bookings-list').replaceChildren();
     uid = event.detail.uid; displayName=event.detail.displayName || ''; userEmail=event.detail.email || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
-    $('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();photo='';renderProfile();
+    $('#destination-status').textContent='';window.CrownSettings.setDestination(null);$('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();photo='';renderProfile();
     for (const selector of ['#meeting-settings','#style-settings','.workspace-footer','#workspace-auth-status']) $(selector).hidden = !uid;
     nav.forEach(({link,href,text},i) => { link.setAttribute('href',uid ? ['#sync-availability','#meeting-settings','#style-settings'][i] : href); link.textContent=uid ? ['Sync calendars','Meetings page','Your style'][i] : text; });
     $('#workspace-auth-status').textContent='';
