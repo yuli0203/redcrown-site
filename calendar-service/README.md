@@ -9,7 +9,9 @@ Requires Node 24. In this directory:
 1. `npm ci`
 2. `npm test`
 3. `npm run dev`
-4. Open `http://127.0.0.1:8770/calendar/`.
+4. Open `http://127.0.0.1:8769/calendar/`. Stop any static preview server already using port 8769 before starting this service.
+
+Use this Node server for calendar development, not Python http.server: it serves both the frontend and authenticated API. It also listens on port 8770 for the registered Google OAuth callback and returns to port 8769, preserving the existing Firebase session and browser drafts. Override PORT and CALLBACK_PORT only when the matching OAuth redirect is registered. Check `/calendar/api/health` on port 8769 to confirm the backend is connected.
 
 The server stores local data in ignored `calendar.sqlite` files and generates an ignored `.dev.vars` encryption key on first start. Add provider values from `.dev.vars.example` to that file without replacing the generated key. Do not commit secrets. The server verifies real Firebase ID tokens. There is no development authentication bypass in `dev.js` or production code.
 
