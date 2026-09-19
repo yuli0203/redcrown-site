@@ -11,7 +11,20 @@ export function providerConfig(provider,env){
 }
 async function request(url,token,options={}){const response=await fetch(url,{...options,headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json',...(options.headers||{})},signal:AbortSignal.timeout(15000)});if(!response.ok)throw new Problem(response.status===401||response.status===403?'Calendar access needs to be reconnected.':'The calendar provider could not complete this request. Please retry.',503);return response.status===204?{}:response.json();}
 export async function exchange(provider,values,env){const config=providerConfig(provider,env);const response=await fetch(config.token,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:config.clientId,client_secret:config.secret,...values}),signal:AbortSignal.timeout(15000)});assert(response.ok,'Calendar authorization expired or was declined. Reconnect the account.',503);return response.json();}
-export async function tokenFor(connection,env){const result=await exchange(connection.provider,{grant_type:'refresh_token',refresh_token:await decrypt(connection.refresh_token,env)},env);assert(result.access_token,'Reconnect your calendar account.',503);if(result.refresh_token)await env.DB.prepare('UPDATE connections SET refresh_token=? WHERE id=? AND uid=?').bind(await encrypt(result.refresh_token,env),connection.id,connection.uid).run();return result.access_token;}
+const accessCache=new Map(),refreshing=new Map();
+export async function tokenFor(connection,env){
+ const cached=accessCache.get(connection.id);if(cached&&cached.cipher===connection.refresh_token&&cached.expires>Date.now())return cached.token;
+ const key=connection.id+':'+connection.refresh_token;
+ if(refreshing.has(key))return refreshing.get(key);
+ const promise=(async()=>{
+  const result=await exchange(connection.provider,{grant_type:'refresh_token',refresh_token:await decrypt(connection.refresh_token,env)},env);assert(result.access_token,'Reconnect your calendar account.',503);
+  let cipher=connection.refresh_token;
+  if(result.refresh_token){cipher=await encrypt(result.refresh_token,env);await env.DB.prepare('UPDATE connections SET refresh_token=? WHERE id=? AND uid=? AND refresh_token=?').bind(cipher,connection.id,connection.uid,connection.refresh_token).run();}
+  // Bounded, short-lived process memory only. Nothing here is sent to the client.
+  if(accessCache.size>=500)accessCache.delete(accessCache.keys().next().value);
+  accessCache.set(connection.id,{cipher,token:result.access_token,expires:Date.now()+Math.max(0,Number(result.expires_in||3600)-60)*1000});return result.access_token;
+ })();refreshing.set(key,promise);try{return await promise;}finally{refreshing.delete(key);}
+}
 export async function accountInfo(provider,token){return provider==='google'?request('https://www.googleapis.com/oauth2/v3/userinfo',token):request(`${graph}/me?$select=id,mail,userPrincipalName,displayName`,token);}
 export async function listCalendars(provider,token){let url=provider==='google'?`${google}/users/me/calendarList?maxResults=250&showHidden=true`:`${graph}/me/calendars?$top=100`;const calendars=[];for(let i=0;url&&i<30;i++){const page=await request(url,token);for(const c of page.items||page.value||[])if(!c.deleted)calendars.push({id:c.id,name:c.summaryOverride||c.summary||c.name||'Calendar',selected:false,writable:provider==='google'?['owner','writer'].includes(c.accessRole):c.canEdit===true});url=provider==='google'?(page.nextPageToken?`${google}/users/me/calendarList?maxResults=250&showHidden=true&pageToken=${encodeURIComponent(page.nextPageToken)}`:null):safeGraphNext(page['@odata.nextLink']);}assert(!url,'Too many calendars to load safely.',503);return calendars;}
 function safeGraphNext(url){if(!url)return null;assert(url.startsWith(`${graph}/`),'Invalid provider pagination.',503);return url;}
