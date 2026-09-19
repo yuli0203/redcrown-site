@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0e080a">
-<title>Free Meeting Scheduler &amp; Calendar Sync | Red Crown Calendar</title>
-<meta name="description" content="Free scheduling by Red Crown Interactive. Create meeting links, customize your page, and manage availability.">
-<link rel="canonical" href="https://redcrowninteractive.com/calendar/">
+<title>יומן פגישות חינמי עם סנכרון יומנים | Red Crown Calendar</title>
+<meta name="description" content="יומן פגישות חינמי לניהול זמינות, סנכרון עם יומנים קיימים ושיתוף קישור לקביעת פגישות. הגדירו שעות עבודה, משכי פגישות ומרווחים עם Red Crown Calendar.">
+<link rel="canonical" href="https://redcrowninteractive.com/calendar/he/">
 <link rel="alternate" hreflang="en" href="https://redcrowninteractive.com/calendar/">
 <link rel="alternate" hreflang="he" href="https://redcrowninteractive.com/calendar/he/">
 <link rel="alternate" hreflang="x-default" href="https://redcrowninteractive.com/calendar/">
@@ -18,10 +18,10 @@
 <script defer src="/calendar/api.js"></script><script defer src="/calendar/auth.js?v=reminders-1"></script>
 <script defer src="/calendar/busy-calendar.js"></script><script defer src="/calendar/cloud-calendars.js"></script><script defer src="/calendar/availability.js"></script><script defer src="/calendar/settings.js"></script><script defer src="/calendar/notice.js"></script><script defer src="/calendar/photo-crop.js"></script><script defer src="/calendar/workspace.js?v=notice-1"></script>
 <link rel="stylesheet" href="/calendar/availability.css">
-</head>
+<meta property="og:locale" content="he_IL"><meta property="og:title" content="יומן פגישות חינמי | Red Crown Calendar"><meta property="og:description" content="תיאום פגישות, ניהול זמינות וסנכרון עם יומנים קיימים."><meta property="og:url" content="https://redcrowninteractive.com/calendar/he/"><script defer src="/calendar/he/home-language.js"></script></head>
 <body class="product-home">
-<a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="/calendar/" aria-label="Red Crown Calendar home"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="32" height="32" alt=""><span>Red Crown Calendar</span></a><nav class="product-nav" aria-label="Product navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#feedback">Contact</a></nav><div class="header-actions"><div class="calendar-languages" aria-label="Language"><a href="/calendar/" lang="en" hreflang="en" aria-current="page">EN</a><a href="/calendar/he/" lang="he" hreflang="he">עברית</a></div><span class="free-label">Free, limitless scheduling</span><button id="theme-toggle" class="auth-button theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><div id="auth-account" hidden><button id="open-profile" class="profile-trigger" type="button" aria-label="Open your profile" aria-haspopup="dialog"><img id="header-profile-photo" hidden alt=""><span id="header-profile-initial" class="profile-initial" aria-hidden="true"></span><span id="auth-identity"></span></button><button id="auth-verify" class="auth-link" hidden>Verify email</button><button id="auth-signout" class="auth-button">Sign out</button></div></div></header>
+<a class="skip" href="#main">דילוג לתוכן</a>
+<header><a class="brand" href="/calendar/" aria-label="Red Crown Calendar home"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="32" height="32" alt=""><span>Red Crown Calendar</span></a><nav class="product-nav" aria-label="Product navigation"><a href="#features">מה אפשר לעשות</a><a href="#how-it-works">איך זה עובד</a><a href="#feedback">יצירת קשר</a></nav><div class="header-actions"><div class="calendar-languages" aria-label="Language"><a href="/calendar/" lang="en" hreflang="en">EN</a><a href="/calendar/he/" lang="he" hreflang="he" aria-current="page">עברית</a></div><span class="free-label">Free, limitless scheduling</span><button id="theme-toggle" class="auth-button theme-toggle" type="button" aria-label="מעבר למצב בהיר" title="מעבר למצב בהיר"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><div id="auth-account" hidden><button id="open-profile" class="profile-trigger" type="button" aria-label="Open your profile" aria-haspopup="dialog"><img id="header-profile-photo" hidden alt=""><span id="header-profile-initial" class="profile-initial" aria-hidden="true"></span><span id="auth-identity"></span></button><button id="auth-verify" class="auth-link" hidden>אימות כתובת אימייל</button><button id="auth-signout" class="auth-button">יציאה</button></div></div></header>
 <dialog id="calendar-display-dialog" aria-labelledby="calendar-display-title">
 <div class="meeting-dialog-heading"><h2 id="calendar-display-title">Calendar display</h2><button id="close-calendar-display" class="auth-button" type="button" aria-label="Close calendar display">&#215;</button></div>
 <form id="calendar-display-form" class="settings-grid"><label class="settings-wide">Display preset<select id="calendar-display-preset"><option value="global">Global / ISO - Monday first, 24-hour time</option><option value="israel">Israel - Sunday first, 24-hour time</option><option value="us">US - Sunday first, 12-hour time</option><option value="saturday">Saturday first - 24-hour time (e.g. Egypt)</option></select></label><p class="sync-small settings-wide">Changes your availability calendar display. Dates, calendar sync and booking hours stay the same.</p><div class="settings-wide settings-actions"><button class="primary" type="submit">Save display</button><button id="cancel-calendar-display" class="auth-link" type="button">Cancel</button></div><p id="calendar-display-status" class="sync-small settings-wide" role="status"></p></form></dialog>
@@ -50,7 +50,7 @@
 <div class="settings-actions"><button type="submit" class="primary">Save availability</button><button id="cancel-availability-settings" class="auth-link" type="button">Cancel</button><span id="schedule-status" role="status"></span></div></form></dialog>
 <div class="sync-summary"><div><h2>Combined availability</h2><div class="sync-status-row"><p id="sync-summary-text">Select calendars to see busy time in the month below.</p><button id="refresh-availability" class="sync-refresh-icon" type="button" aria-label="Refresh availability" title="Refresh availability" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0 1 11.8-1L20 9M4 15l2.1 3A7 7 0 0 0 17.9 17"/></svg></button></div></div></div>
 <section id="synced-calendar-preview" class="synced-calendar-preview" hidden aria-labelledby="synced-calendar-title">
-<div class="meeting-list-toolbar"><h2 id="synced-calendar-title">Your availability</h2><button id="open-calendar-display" class="auth-button" type="button">Configure calendar display</button></div><p id="synced-calendar-zone" class="sync-small"></p>
+<div class="meeting-list-toolbar"><h2 id="synced-calendar-title">הזמינות שלכם</h2><button id="open-calendar-display" class="auth-button" type="button">Configure calendar display</button></div><p id="synced-calendar-zone" class="sync-small"></p>
 <div class="busy-calendar-layout"><div><div class="month-nav"><button id="busy-previous-month" type="button" aria-label="Previous month">&#8249;</button><h3 id="busy-month-label"></h3><button id="busy-next-month" type="button" aria-label="Next month">&#8250;</button></div><div id="busy-weekdays" class="weekdays" aria-hidden="true"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div><div id="busy-date-grid" class="busy-date-grid" role="group" aria-label="Calendar availability"></div><p class="sync-small busy-calendar-legend"><span class="legend-free" aria-hidden="true"></span> Free <span aria-hidden="true"></span> Busy <span class="legend-unknown" aria-hidden="true"></span> Not checked. Select a day for exact times.</p></div>
 <div class="busy-day-panel"><h3 id="busy-day-title"></h3><p id="busy-day-coverage" class="sync-small"></p><div id="busy-day-intervals" role="status" aria-live="polite"></div></div></div>
 <p class="sync-small">Free means no conflict in your selected calendars. Meeting rules are applied separately on your booking page.</p>
@@ -62,7 +62,7 @@
 <div class="section-title"><span>02 / MEETINGS</span><h2 id="meeting-settings-title">Configure your meetings page</h2></div>
 <div class="meeting-share-panel"><div class="meeting-list-toolbar"><div><h3>Your booking landing page</h3><p class="sync-small">One link where guests choose a meeting type.</p></div><button id="open-page-settings" class="auth-button" type="button">Landing page settings</button></div><p>Share your meeting types:</p><div class="meeting-share-controls"><input id="meeting-page-link" aria-label="Your meeting page link" readonly><a id="preview-meeting-page" class="auth-button" target="_blank" rel="noopener">Preview</a><button id="copy-meeting-page" class="auth-button" type="button">Copy link</button></div><p id="meeting-share-status" class="sync-small" role="status"></p><p id="share-help" class="sync-small">Preview link with your saved meetings. Bookings are not live yet. Copy a new link after changes; previously shared previews do not update. Logos and profile photos are not included.</p></div>
 <dialog id="page-settings-dialog" class="availability-settings" aria-labelledby="page-settings-title"><div class="meeting-dialog-heading"><h2 id="page-settings-title">Landing page settings</h2><button id="close-page-settings" class="auth-button" type="button" aria-label="Close page settings">&#215;</button></div><p class="sync-small">Configure the public page where guests choose a meeting type.</p>
-<form id="landing-page-settings-form" class="settings-grid"><label class="settings-wide">Your name on the meeting page<input id="meeting-page-name" maxlength="60" placeholder="Your name" required></label><label class="settings-wide">Booking page address<input id="schedule-slug" pattern="[a-z0-9][a-z0-9-]{2,59}" placeholder="your-name" maxlength="60"></label><p class="sync-small settings-wide">Manage the meeting types in the list below. Choose colors and a logo in Configure your style.</p><div class="settings-wide settings-actions"><button type="submit" class="primary">Save landing page</button><button id="cancel-page-settings" class="auth-link" type="button">Cancel</button><span id="landing-page-status" role="status"></span></div></form></dialog>
+<form id="landing-page-settings-form" class="settings-grid"><label class="settings-wide">Your name on the meeting page<input id="meeting-page-name" maxlength="60" placeholder="השם שלכם" required></label><label class="settings-wide">Booking page address<input id="schedule-slug" pattern="[a-z0-9][a-z0-9-]{2,59}" placeholder="your-name" maxlength="60"></label><p class="sync-small settings-wide">Manage the meeting types in the list below. Choose colors and a logo in Configure your style.</p><div class="settings-wide settings-actions"><button type="submit" class="primary">Save landing page</button><button id="cancel-page-settings" class="auth-link" type="button">Cancel</button><span id="landing-page-status" role="status"></span></div></form></dialog>
 <div class="publish-controls"><button id="publish-page" class="auth-button" type="button">Publish booking page</button><span id="publish-status" class="sync-small" role="status"></span></div>
 <div class="meeting-list-toolbar"><p class="sync-small">Create the meetings guests can book with you.</p><button id="add-meeting-type" class="auth-button" type="button">+ Add meeting</button></div>
 <div id="meeting-types-list"></div><p id="meeting-list-status" role="status" class="sync-small"></p>
@@ -93,7 +93,7 @@
 </section>
 <section id="style-settings" class="workspace-section" hidden aria-labelledby="style-settings-title">
 <div class="section-title"><span>03 / STYLE</span><h2 id="style-settings-title">Configure your style</h2></div>
-<p class="sync-small">Choose your booking page colors and logo.</p>
+<p class="sync-small">התאימו את הצבעים והלוגו של עמוד הפגישות למותג שלכם.</p>
 <div class="style-layout"><form id="style-settings-form" class="settings-grid">
 <label>Accent color<input id="booking-accent" type="color" value="#c8102e"></label>
 <label>Background color<input id="booking-background" type="color" value="#ffffff"></label>
@@ -106,68 +106,68 @@
 </section>
 
 <section class="product-intro" id="features" aria-labelledby="product-title">
-<p class="product-label">A FREE TOOL BY RED CROWN INTERACTIVE</p>
-<h1 id="product-title">Free, limitless scheduling.</h1>
-<p class="product-description">A simple place to manage your availability and let people find a time to meet. Set your meeting lengths, share your schedule and keep your calendars together.</p>
+<p class="product-label">כלי חינמי מבית RED CROWN INTERACTIVE</p>
+<h1 id="product-title">יומן פגישות חינמי עם סנכרון ליומנים קיימים</h1>
+<p class="product-description">ניהול ותיאום פגישות במקום אחד. מחברים את היומנים הקיימים, מגדירים זמינות ומשך פגישה, ומשתפים קישור לקביעת פגישות בשעות הפנויות שלכם.</p>
 <div class="product-points">
-<div><span aria-hidden="true">01</span><h2>Your meeting lengths</h2><p>Choose a preset or set the exact number of minutes you need.</p></div>
-<div><span aria-hidden="true">02</span><h2>Your availability</h2><p>Working hours, breaks and time zones in one place.</p></div>
-<div><span aria-hidden="true">03</span><h2>Your calendars</h2><p>Choose accounts and sub-calendars to check for conflicts, with one calendar for new bookings.</p></div>
-<div><span aria-hidden="true">04</span><h2>Your booking page</h2><p>Choose your booking page colors and logo.</p></div>
+<div><span aria-hidden="true">01</span><h2>משך הפגישה לבחירתכם</h2><p>בחרו משך פגישה קבוע מראש או הגדירו את מספר הדקות שמתאים לכם.</p></div>
+<div><span aria-hidden="true">02</span><h2>הזמינות שלכם</h2><p>שעות עבודה, מרווחים בין פגישות ואזורי זמן במקום אחד.</p></div>
+<div><span aria-hidden="true">03</span><h2>היומנים שלכם</h2><p>בחרו חשבונות ותתי-יומנים לבדיקת התנגשויות, ויומן שבו יישמרו פגישות חדשות.</p></div>
+<div><span aria-hidden="true">04</span><h2>עמוד הפגישות שלכם</h2><p>התאימו את הצבעים והלוגו של עמוד הפגישות למותג שלכם.</p></div>
 </div>
-<p class="product-status">Currently in preview. Live booking links and calendar sync are still in development.</p>
+<p class="product-status">המוצר בגרסת פיתוח. הזמינות של חיבורים וקביעת פגישות תלויה בהשלמת הגדרת השירות.</p>
 </section>
 <section class="entry-card" aria-labelledby="entry-title">
-<h2 id="entry-title">Your calendar starts here.</h2>
-<p>Sign in or create your free account.</p>
-<button id="auth-google" class="auth-button landing-google"><span aria-hidden="true" class="google-letter">G</span>Continue with Google</button>
-<button id="auth-microsoft" class="auth-button landing-microsoft"><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Continue with Microsoft</button>
-<button id="main-signin" class="primary" aria-expanded="false" aria-controls="auth-email-panel">Sign in with email</button><div id="auth-email-panel" hidden><h3 id="auth-title">Sign in with email</h3>  <form id="auth-form">
-    <label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" maxlength="254" required disabled>
-    <label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password" required disabled aria-describedby="auth-password-help">
-    <small id="auth-password-help" hidden>Use at least 8 characters. The account password policy may require more.</small>
-    <button class="primary" id="auth-submit" data-auth-action disabled>Sign in</button>
+<p class="language-scope-note">ממשק ניהול היומן והמסמכים המשפטיים זמינים כרגע באנגלית.</p><h2 id="entry-title">היומן שלכם מתחיל כאן.</h2>
+<p>היכנסו או צרו חשבון בחינם.</p>
+<button id="auth-google" class="auth-button landing-google"><span aria-hidden="true" class="google-letter">G</span>המשך עם Google</button>
+<button id="auth-microsoft" class="auth-button landing-microsoft"><span class="microsoft-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>המשך עם Microsoft</button>
+<button id="main-signin" class="primary" aria-expanded="false" aria-controls="auth-email-panel">כניסה עם אימייל</button><div id="auth-email-panel" hidden><h3 id="auth-title">כניסה עם אימייל</h3>  <form id="auth-form">
+    <label for="auth-email">אימייל</label><input id="auth-email" type="email" autocomplete="email" maxlength="254" required disabled>
+    <label for="auth-password">סיסמה</label><input id="auth-password" type="password" autocomplete="current-password" required disabled aria-describedby="auth-password-help">
+    <small id="auth-password-help" hidden>יש להשתמש ב-8 תווים לפחות. ייתכן שתידרש סיסמה חזקה יותר.</small>
+    <button class="primary" id="auth-submit" data-auth-action disabled>כניסה</button>
   </form>
-  <button id="auth-reset" class="auth-link" data-auth-action disabled>Forgot password?</button>
-  <button id="auth-switch" class="auth-link" data-auth-action disabled>New here? Create an account</button>
+  <button id="auth-reset" class="auth-link" data-auth-action disabled>שכחתם סיסמה?</button>
+  <button id="auth-switch" class="auth-link" data-auth-action disabled>חדשים כאן? צרו חשבון</button>
 </div><p id="auth-message" role="status" aria-live="polite"></p>
-<a class="preview-link" href="/calendar/preview/">Explore the scheduling preview ↗</a>
-<p class="entry-note">By creating an account, you agree to the <a href="/calendar/legal/#terms">Red Crown Calendar Terms</a>. Read our <a href="/calendar/legal/#privacy">Privacy Policy</a>.</p>
-<p id="signin-availability" class="entry-note" role="status">Checking sign-in availability...</p>
+<a class="preview-link" href="/calendar/preview/">לצפייה בהדגמת היומן ↗</a>
+<p class="entry-note">יצירת חשבון מהווה הסכמה ל <a href="/calendar/legal/#terms">תנאי השימוש של Red Crown Calendar</a>ול <a href="/calendar/legal/#privacy">מדיניות הפרטיות</a>.</p>
+<p id="signin-availability" class="entry-note" role="status">בודקים את אפשרויות הכניסה...</p>
 </section>
 </main>
 <section id="how-it-works" class="product-section">
-<div class="section-title"><span>GETTING STARTED</span><h2>A straightforward way to schedule.</h2></div>
+<div class="section-title"><span>מתחילים בקלות</span><h2>דרך פשוטה לתאם פגישות.</h2></div>
 <div class="steps-grid">
-<article><span class="step-index">01</span><h3>Create your account</h3><p>Use Google or your email to access your own calendar space. Microsoft sign-in is coming soon.</p><small>Free account registration</small></article>
-<article><span class="step-index">02</span><h3>Set your availability</h3><p>Choose meeting lengths and working hours, with time between meetings when you need it.</p><a href="/calendar/preview/">Try the local preview ↗</a></article>
-<article><span class="step-index">03</span><h3>Share a booking link</h3><p>Let guests choose a time without creating an account of their own.</p><small>Public booking links coming next</small></article>
+<article><span class="step-index">01</span><h3>יוצרים חשבון</h3><p>נכנסים באמצעות Google או אימייל לסביבת היומן האישית. חיבור Microsoft נמצא בתהליך הגדרה.</p><small>הרשמה בחינם</small></article>
+<article><span class="step-index">02</span><h3>מגדירים זמינות</h3><p>בוחרים משכי פגישות ושעות עבודה, ומוסיפים מרווחים בין פגישות לפי הצורך.</p><a href="/calendar/preview/">נסו את הדגמת היומן ↗</a></article>
+<article><span class="step-index">03</span><h3>משתפים קישור לקביעת פגישה</h3><p>האורחים בוחרים מועד פנוי ללא צורך ביצירת חשבון.</p><small>קישורי פגישות זמינים לאחר הגדרת השירות</small></article>
 </div>
 </section>
-<section class="product-section connections-overview" aria-labelledby="connection-heading"><div><div class="section-title"><span>CALENDARS &amp; AVAILABILITY</span><h2 id="connection-heading">Keep your schedule together.</h2></div><p>Google Calendar and Microsoft Outlook are the first planned connections. Holiday preferences will help you set days off without blocking each date manually.</p></div><div class="connection-list"><div><b>Google Calendar</b><span>Planned</span></div><div><b>Microsoft Outlook</b><span>Planned</span></div><div><b>Holidays &amp; days off</b><span>Planned</span></div></div></section>
+<section class="product-section connections-overview" aria-labelledby="connection-heading"><div><div class="section-title"><span>יומנים וזמינות</span><h2 id="connection-heading">כל הזמינות שלכם, במקום אחד.</h2></div><p>חיבור ליומן Google ול-Outlook מאפשר לרכז את הזמינות ולמנוע התנגשויות. אפשר להגדיר ימי חופש וחגים שבהם לא ניתן להזמין פגישות. זמינות החיבורים תלויה בהשלמת ההגדרה.</p></div><div class="connection-list"><div><b>Google Calendar</b><span>בתהליך הגדרה</span></div><div><b>Microsoft Outlook</b><span>בתהליך הגדרה</span></div><div><b>חגים וימי חופש</b><span>בתהליך הגדרה</span></div></div></section>
 <section class="product-section calendar-feedback" id="feedback" aria-labelledby="feedback-title">
-<div><div class="section-title"><span>WE WOULD LIKE TO HEAR FROM YOU</span><h2 id="feedback-title">Help us make it better.</h2></div><p>Suggest an improvement, share feedback, or ask about another Red Crown product or an idea you would like us to build.</p><p>Prefer email? <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></p></div>
+<div><div class="section-title"><span>נשמח לשמוע מכם</span><h2 id="feedback-title">עזרו לנו לשפר את המוצר.</h2></div><p>יש לכם הצעה לשיפור, משוב או שאלה? אפשר לפנות גם בנוגע למוצרים נוספים של Red Crown או לרעיון שתרצו שנפתח.</p><p>מעדיפים אימייל? <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></p></div>
 <form id="calendar-feedback-form" action="https://api.web3forms.com/submit" method="POST">
 <input type="hidden" name="access_key" value="35f8e692-deb5-4865-86a3-7a4be79eb90b"><input type="hidden" name="subject" value="Red Crown Calendar - feedback and product inquiry"><input type="hidden" name="from_name" value="Red Crown Calendar contact form"><input type="checkbox" name="botcheck" hidden tabindex="-1" autocomplete="off">
-<div class="feedback-fields"><label>Your name<input name="name" autocomplete="name" maxlength="100" required></label><label>Your email<input name="email" type="email" autocomplete="email" maxlength="254" required></label></div>
-<label>What would you like to discuss?<select name="topic" required><option value="">Choose a topic</option><option>Suggest an improvement</option><option>Share feedback or report a problem</option><option>Ask a question about Red Crown Calendar</option><option>Ask about another product or a new project</option></select></label>
-<label>Your message<textarea name="message" rows="5" minlength="10" maxlength="5000" required placeholder="Tell us what you have in mind."></textarea></label>
-<p class="feedback-note">We use your details to respond to your message. Submissions are processed by Web3Forms. Please do not include passwords, calendar access tokens, or private booking links. <a href="/calendar/legal/#privacy">Privacy Policy</a></p>
-<button class="primary" type="submit">Send message</button><p id="feedback-status" role="status" aria-live="polite"></p>
+<div class="feedback-fields"><label>השם שלכם<input name="name" autocomplete="name" maxlength="100" required></label><label>האימייל שלכם<input name="email" type="email" autocomplete="email" maxlength="254" required></label></div>
+<label>במה נוכל לעזור?<select name="topic" required><option value="">בחרו נושא</option><option>הצעה לשיפור</option><option>משוב או דיווח על תקלה</option><option>שאלה על Red Crown Calendar</option><option>שאלה על מוצר נוסף או פרויקט חדש</option></select></label>
+<label>ההודעה שלכם<textarea name="message" rows="5" minlength="10" maxlength="5000" required placeholder="ספרו לנו מה יש לכם בראש."></textarea></label>
+<p class="feedback-note">הפרטים משמשים למענה לפנייה ומועברים באמצעות Web3Forms. אין לצרף סיסמאות, הרשאות גישה ליומן או קישורי ניהול פגישות פרטיים. <a href="/calendar/legal/#privacy">מדיניות הפרטיות</a></p>
+<button class="primary" type="submit">שליחת הודעה</button><p id="feedback-status" role="status" aria-live="polite"></p>
 </form></section>
 <script defer src="/calendar/feedback.js"></script>
 <section class="calendar-support" id="support-calendar" aria-labelledby="support-calendar-title">
-<div><span class="support-eyebrow">KEEP FREE SCHEDULING GROWING</span><h2 id="support-calendar-title">Support Red Crown Calendar</h2><p>If this tool helps you, an optional tip helps cover hosting, calendar syncing, and the costs of serving more people.</p><small>Tips are optional. You can keep using the free product without contributing.</small></div>
-<div class="support-action"><a id="calendar-tip-link" class="primary" hidden target="_blank" rel="noopener noreferrer">Support with a tip <span aria-hidden="true">♡</span></a><button id="calendar-tip-pending" class="primary" type="button" disabled aria-describedby="calendar-tip-note">Support with a tip <span aria-hidden="true">♡</span></button><p id="calendar-tip-note">Tipping will be available once our payment link is connected.</p></div>
+<div><span class="support-eyebrow">עוזרים ליומן החינמי לצמוח</span><h2 id="support-calendar-title">תומכים ב-Red Crown Calendar</h2><p>הכלי עוזר לכם? טיפ לבחירתכם יעזור לממן אחסון, סנכרון יומנים והרחבת השירות למשתמשים נוספים.</p><small>התמיכה היא לבחירתכם. השימוש במוצר החינמי אינו מותנה בתשלום.</small></div>
+<div class="support-action"><a id="calendar-tip-link" class="primary" hidden target="_blank" rel="noopener noreferrer">תמיכה באמצעות טיפ <span aria-hidden="true">♡</span></a><button id="calendar-tip-pending" class="primary" type="button" disabled aria-describedby="calendar-tip-note">תמיכה באמצעות טיפ <span aria-hidden="true">♡</span></button><p id="calendar-tip-note">אפשרות התמיכה תיפתח לאחר חיבור עמוד התשלום.</p></div>
 </section><script defer src="/calendar/support.js"></script>
 <footer class="full-footer">
-<div class="footer-columns"><div class="footer-studio"><a class="brand" href="/"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="38" height="38" alt=""><span>Red Crown Interactive</span></a><p>Free scheduling by Red Crown Interactive.<br>We build apps, websites and interactive experiences.</p><a href="/#contact" class="studio-link">Need an app for your business? ↗</a></div>
-<div><h2>Red Crown Calendar</h2><a href="#features" data-workspace-href="#sync-availability" data-workspace-label="Connected calendars">Features</a><a href="#how-it-works" data-workspace-href="#meeting-settings" data-workspace-label="Your booking page">How it works</a><a href="/calendar/preview/" data-workspace-href="#style-settings" data-workspace-label="Booking page style">Calendar preview</a><button class="footer-signin" type="button">Sign in / Create account</button></div>
-<div><h2>Help</h2><a href="#support-calendar">Support the free product</a><a href="#connection-heading" data-workspace-href="#sync-availability" data-workspace-label="Calendar connections">Calendar connections</a><a href="#feedback">Feedback &amp; contact</a><a href="/calendar/legal/#support">Calendar support</a></div>
-<div><h2>Our studio</h2><a href="/">Red Crown Interactive</a><a href="/services/">What we build</a><a href="/#work">Our work</a><a href="/legal/">Studio policies</a></div></div>
+<div class="footer-columns"><div class="footer-studio"><a class="brand" href="/"><img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="38" height="38" alt=""><span>Red Crown Interactive</span></a><p>תיאום פגישות בחינם מבית Red Crown Interactive.<br>אנחנו מפתחים אפליקציות, אתרים וחוויות אינטראקטיביות.</p><a href="/#contact" class="studio-link">צריכים אפליקציה לעסק? ↗</a></div>
+<div><h2>Red Crown Calendar</h2><a href="#features" data-workspace-href="#sync-availability" data-workspace-label="Connected calendars">מה אפשר לעשות</a><a href="#how-it-works" data-workspace-href="#meeting-settings" data-workspace-label="Your booking page">איך זה עובד</a><a href="/calendar/preview/" data-workspace-href="#style-settings" data-workspace-label="Booking page style">הדגמת היומן</a><button class="footer-signin" type="button">כניסה / יצירת חשבון</button></div>
+<div><h2>עזרה</h2><a href="#support-calendar">תמיכה במוצר החינמי</a><a href="#connection-heading" data-workspace-href="#sync-availability" data-workspace-label="Calendar connections">חיבורי יומנים</a><a href="#feedback">משוב ויצירת קשר</a><a href="/calendar/legal/#support">תמיכה ביומן</a></div>
+<div><h2>הסטודיו שלנו</h2><a href="/">Red Crown Interactive</a><a href="/services/">מה אנחנו מפתחים</a><a href="/#work">העבודות שלנו</a><a href="/legal/">מדיניות הסטודיו</a></div></div>
 <!-- shared-legal-footer:start -->
 <link rel="stylesheet" href="/shared/legal.css">
-<div class="rc-legal-footer"><p>© <span data-rc-year>2026</span> Red Crown Interactive. All rights reserved.</p><div role="navigation" aria-label="Red Crown Calendar policies and support"><a href="/calendar/legal/#privacy">Privacy Policy</a><a href="/calendar/legal/#terms">Terms of Use</a><a href="/calendar/legal/#accessibility">Accessibility Statement</a><a href="/calendar/legal/#support">Support</a></div></div>
+<div class="rc-legal-footer"><p>© <span data-rc-year>2026</span> Red Crown Interactive. כל הזכויות שמורות.</p><div role="navigation" aria-label="Red Crown Calendar policies and support"><a href="/calendar/legal/#privacy">מדיניות הפרטיות</a><a href="/calendar/legal/#terms">תנאי שימוש</a><a href="/calendar/legal/#accessibility">הצהרת נגישות</a><a href="/calendar/legal/#support">תמיכה</a></div></div>
 <script defer src="/shared/legal.js"></script>
 <!-- shared-legal-footer:end -->
 </footer>
