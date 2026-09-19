@@ -24,6 +24,6 @@
  let accounts=[],destination=null;
  function renderDestinations(){const select=$('#schedule-destination');select.replaceChildren();const empty=make('option','Choose a calendar for new bookings');empty.value='';select.append(empty);for(const account of accounts)for(const calendar of account.calendars.filter(c=>c.selected&&c.writable)){const option=make('option',`${account.email} / ${calendar.name}`);option.value=JSON.stringify({connectionId:account.id,calendarId:calendar.id});select.append(option);}const saved=destination?JSON.stringify(destination):'';if(saved&&![...select.options].some(o=>o.value===saved)){const missing=make('option','Saved calendar unavailable - reconnect or select another');missing.value=saved;missing.disabled=true;select.append(missing);}select.value=saved;}
  document.addEventListener('crown-calendars-change',e=>{accounts=e.detail.accounts;renderDestinations();});
- window.CrownSettings={apply,read,getAccountEmails(){return accounts.map(account=>account.email);},setDestination(value){destination=value;renderDestinations();}};
+ window.CrownSettings={apply,read,getAccountEmails(){return accounts.filter(account=>account.provider!=='ical').map(account=>account.email);},setDestination(value){destination=value;renderDestinations();}};
 })();
 
