@@ -11,5 +11,30 @@
 #sync-title,#meeting-settings-title,#style-settings-title{font-size:25px;font-weight:500;line-height:1.3;letter-spacing:-.5px;margin:10px 0 0}
 .sync-heading .product-label,.workspace-section>.section-title>span{display:block;font-size:10px;font-weight:400;letter-spacing:1.5px;line-height:1.6;margin:0;color:var(--accent)}
 @media(max-width:600px){#sync-title,#meeting-settings-title,#style-settings-title{font-size:22px}}
-/* Thirty-day overview keeps availability visible without changing months. */
-.busy-calendar-layout{grid-template-columns:1fr}.busy-date-grid button{min-height:96px;padding:12px 7px;text-align:left;display:flex;flex-direction:column;gap:10px;min-width:0;cursor:pointer}.busy-date-grid button strong{font-size:13px;font-weight:500}.day-availability{font-size:11px;color:var(--muted)}.busy-date-grid button[aria-pressed=true]{background:color-mix(in srgb,var(--red) 8%,var(--panel));color:var(--text);outline:1px solid var(--accent)}.day-timeline{display:block;position:relative;width:100%;height:7px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:auto}.day-timeline>span{position:absolute;top:0;height:100%}.timeline-busy{background:var(--red)}.timeline-free,.busy-calendar-legend>.legend-free{background:#389777}.busy-calendar-legend>.legend-unknown{background:var(--muted)}.busy-calendar-legend>span{margin-left:12px}.busy-calendar-legend>span:first-child{margin-left:0}.busy-day-panel{border-left:0;border-top:1px solid var(--line);padding:22px 0 0}.free-time-block{border-color:#389777;background:color-mix(in srgb,#389777 9%,var(--panel))}.free-time-block span{color:#389777}@media(max-width:650px){.busy-date-grid button{min-height:82px;padding:8px 3px;gap:8px}.busy-date-grid button strong{font-size:11px}.day-availability{font-size:9px}.synced-calendar-preview{padding:12px}.busy-calendar-layout{gap:20px}}
+/* A compact calendar with a separate selected-day agenda. */
+.synced-calendar-preview{padding:28px;box-shadow:0 8px 32px #160e1205}
+.busy-calendar-layout{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;margin-top:28px;align-items:start}
+.busy-calendar-layout .month-nav{min-height:32px;margin-bottom:22px}
+.busy-date-grid{gap:7px}
+.busy-date-grid button{min-height:56px;border:0;border-radius:9px;padding:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;background:color-mix(in srgb,var(--accent) 6%,var(--panel));cursor:pointer}
+.busy-date-grid button:hover{background:color-mix(in srgb,var(--accent) 14%,var(--panel))}
+.busy-date-grid button strong{font-size:14px;font-weight:500;display:flex;align-items:center;gap:3px}
+.busy-date-grid button strong small{font-size:9px;font-weight:400;color:var(--muted)}
+.busy-date-grid button[aria-pressed=true]{background:var(--red);color:#fff;box-shadow:0 3px 10px #bc103325}
+.busy-date-grid button[aria-pressed=true] small{color:#fff}
+.busy-date-grid button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.day-timeline{display:block;position:relative;width:75%;height:3px;background:var(--line);border-radius:4px;overflow:hidden}
+.day-timeline>span{position:absolute;top:0;height:100%}
+.timeline-busy{background:var(--red)}
+.timeline-free,.busy-calendar-legend>.legend-free{background:#389777}
+.busy-date-grid button[aria-pressed=true] .timeline-busy{background:#ffd0da}
+.busy-calendar-legend>.legend-unknown{background:var(--muted)}
+.busy-calendar-legend{font-size:10px;line-height:2;margin-top:20px}
+.busy-calendar-legend>span{margin-left:10px}
+.busy-calendar-legend>span:first-child{margin-left:0}
+.busy-day-panel{padding:6px 0 0 28px;border-left:1px solid var(--line);min-height:300px}
+.busy-day-panel h3{font-size:16px;line-height:1.5}
+.free-time-block{border-color:#389777;background:color-mix(in srgb,#389777 9%,var(--panel))}
+.free-time-block span{color:#389777}
+@media(max-width:800px){.busy-calendar-layout{grid-template-columns:1fr;gap:26px}.busy-day-panel{border-left:0;border-top:1px solid var(--line);padding:22px 0 0;min-height:0}}
+@media(max-width:500px){.synced-calendar-preview{padding:20px 16px}.busy-date-grid{gap:5px}.busy-date-grid button{min-height:48px;padding:5px}.busy-date-grid button strong{font-size:13px}.busy-date-grid button strong small{font-size:8px}}

@@ -32,9 +32,9 @@
     $('#busy-day-title').textContent=label(selected);
     const list=$('#busy-day-intervals'); list.replaceChildren();
     if (!synced) {
-      $('#busy-day-coverage').textContent='Availability not synced yet.';
+      $('#busy-day-coverage').textContent='Connect your calendar to see your availability.';
       const empty=document.createElement('p'); empty.className='sync-small';
-      empty.textContent='Connect a calendar account, choose sub-calendars and save your selection. If already connected, refresh availability. Unavailable times will appear here after a successful sync.';
+      empty.textContent='Use Add calendar account above, choose the calendars to include, then Save selection. If your account is already listed, use Reconnect. Signing in alone does not sync your calendars.';
       list.append(empty); return;
     }
     const bounds=dayBounds(selected);
@@ -61,7 +61,8 @@
       const bounds=dayBounds(date), parts=synced?daySegments(date):[];
       const busy=parts.filter(item=>item.busy), free=parts.filter(item=>!item.busy);
       const button=document.createElement('button');button.type='button';
-      const title=document.createElement('strong');title.textContent=date.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+      const title=document.createElement('strong');title.textContent=date.getDate();
+      if(day===0 || date.getDate()===1) {const monthLabel=document.createElement('small');monthLabel.textContent=date.toLocaleDateString(undefined,{month:'short'});title.prepend(monthLabel);}
       const status=document.createElement('span');status.className='day-availability';
       status.textContent=!synced?'Not synced':!free.length?'Fully busy':!busy.length?'Free':`${busy.length} busy`;
       const track=document.createElement('span');track.className='day-timeline'+(!synced?' is-unknown':'');
@@ -70,7 +71,7 @@
         segment.style.left=`${(part.start-bounds.start)/(bounds.end-bounds.start)*100}%`;
         segment.style.width=`${(part.end-part.start)/(bounds.end-bounds.start)*100}%`;track.append(segment);
       }
-      button.append(title,status,track);
+      button.append(title);if(synced) button.append(track);
       button.setAttribute('aria-pressed',String(+selected===+date));
       button.setAttribute('aria-label',`${label(date)}: ${status.textContent}. Show times`);
       button.addEventListener('click',()=>{selected=date;draw();grid.children[(first.getDay()+6)%7+day].focus({preventScroll:true});});
@@ -84,7 +85,7 @@
       rangeStart=dayBounds(new Date()).start;
       const end=new Date(rangeStart);end.setDate(end.getDate()+30);rangeEnd=+end;
       selected=new Date(rangeStart);
-      $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone} - sync calendars to see unavailable times`;
+      $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
       $('#synced-calendar-preview').hidden=false;draw();
     },
     update(items,start,end) {
