@@ -7,6 +7,7 @@ html=html.replace('<html lang="en">','<html lang="he" dir="rtl">').replace(/<tit
 html=html.replace(/<meta name="description"[^>]*>/,'<meta name="description" content="יומן פגישות חינמי לניהול זמינות, סנכרון עם יומנים קיימים ושיתוף קישור לקביעת פגישות. הגדירו שעות עבודה, משכי פגישות ומרווחים עם Red Crown Calendar.">');
 html=html.replace('rel="canonical" href="https://redcrowninteractive.com/calendar/"','rel="canonical" href="https://redcrowninteractive.com/calendar/he/"');
 html=html.replace('hreflang="en" aria-current="page"','hreflang="en"').replace('lang="he" hreflang="he">','lang="he" hreflang="he" aria-current="page">');
+html=html.replace(/(<span class="lang-cur">)[\s\S]*?(<\/span>)/,(_,open,close)=>open+html.match(/<a[^>]*hreflang="he"[^>]*>([\s\S]*?)<\/a>/)[1]+close).replace('aria-label="Change language"','aria-label="שינוי שפה"');
 html=html.replace(/>([^<>]+)</g,(all,text)=>'>'+text.replace(text.trim(),t(text.trim()))+'<');
 html=html.replace(/(placeholder|aria-label|title)="([^"]+)"/g,(all,key,value)=>key+'="'+t(value)+'"');
 html=html.replace('</head>','<meta property="og:locale" content="he_IL"><meta property="og:title" content="יומן פגישות חינמי | Red Crown Calendar"><meta property="og:description" content="תיאום פגישות, ניהול זמינות וסנכרון עם יומנים קיימים."><meta property="og:url" content="https://redcrowninteractive.com/calendar/he/"><script defer src="/calendar/he/home-language.js"></script></head>');

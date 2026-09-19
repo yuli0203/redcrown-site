@@ -15,6 +15,12 @@
  // Explicit localized URLs stay crawlable; only the neutral calendar home follows a saved preference.
  if(calendarHome&&((supported.includes(explicit)&&homes[explicit]&&explicit!==current)||(current==='en'&&!explicit&&preference==='he'))){const u=new URL(location.href);u.pathname=homes[explicit]||homes.he;location.replace(u.href);return;}
  document.addEventListener('click',event=>{
+  const toggle=event.target.closest('.calendar-languages .lang-toggle');
+  document.querySelectorAll('.calendar-languages').forEach(picker=>{
+   const button=picker.querySelector('.lang-toggle');
+   const open=button===toggle&&!picker.classList.contains('open');
+   picker.classList.toggle('open',open);button.setAttribute('aria-expanded',String(open));
+  });
   const link=event.target.closest('a');if(!link)return;
   if(link.closest('.lang-static')){const lang=link.getAttribute('lang');if(supported.includes(lang)){save(lang);const url=new URL(link.href);url.searchParams.set('lang',lang);link.href=url.href;}return;}
   if(link.closest('.calendar-languages')){
@@ -26,5 +32,12 @@
    if(url.pathname==='/calendar/'&&lang==='he'){url.pathname=homes.he;link.href=url.href;}
    if(['/', '/he/', '/ru/'].includes(url.pathname)){url.pathname=studio[lang]||'/';url.searchParams.set('lang',lang);link.href=url.href;}
   }
+ });
+ document.addEventListener('keydown',event=>{
+  if(event.key!=='Escape')return;
+  document.querySelectorAll('.calendar-languages.open').forEach(picker=>{
+   picker.classList.remove('open');const button=picker.querySelector('.lang-toggle');
+   button.setAttribute('aria-expanded','false');button.focus();
+  });
  });
 })();
