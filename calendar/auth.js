@@ -42,7 +42,8 @@
   const updateControls = () => {
     authSurface.querySelectorAll('[data-auth-action], input').forEach(control => { control.disabled = !ready || busy; });
     $('#auth-google').disabled = busy;
-    $('#auth-microsoft').disabled = busy;
+    $('#auth-microsoft').disabled = !ready || busy || !microsoftEnabled;
+    $('#auth-microsoft').title = microsoftEnabled ? '' : 'Microsoft sign-in is coming soon. Use Google or email.';
     $('#auth-signout').disabled = busy;
   };
   const errors = {
@@ -86,7 +87,7 @@
   $('#auth-open')?.addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
   $('.footer-signin')?.addEventListener('click', () => { showAuth(); $('#auth-google').focus({preventScroll:true}); });
   $('#main-signin')?.addEventListener('click', () => {
-    if (auth?.currentUser) { if (!auth.currentUser.emailVerified) { verificationPanel.scrollIntoView({block:'center'}); return; } location.assign('/calendar/preview/'); return; }
+    if (auth?.currentUser) { if (!auth.currentUser.emailVerified) { verificationPanel.scrollIntoView({block:'center'}); return; } location.assign('/calendar/#sync-availability'); return; }
     if (emailPanel) {
       const opening = emailPanel.hidden;
       emailPanel.hidden = !opening;
@@ -164,10 +165,10 @@
     if ($('#account-storage-note')) $('#account-storage-note').textContent = user
       ? 'Saved locally for this account, on this browser only. Sign-in does not sync meetings across devices.'
       : 'Guest meetings are stored in this browser. Sign in to use a separate local meeting list.';
-    if ($('#main-signin')) $('#main-signin').textContent = user ? (verified ? 'Open calendar preview' : 'Verify your email to continue') : 'Sign in with email';
+    if ($('#main-signin')) $('#main-signin').textContent = user ? (verified ? 'Open calendar workspace' : 'Verify your email to continue') : 'Sign in with email';
     if (!dialog) {
       $('#auth-google').hidden = Boolean(user);
-      $('#auth-microsoft').hidden = Boolean(user);
+      $('#auth-microsoft').hidden = Boolean(user) || !microsoftEnabled;
       if (user) { emailPanel.hidden = true; $('#main-signin').setAttribute('aria-expanded','false'); }
     }
     if ($('#signin-availability')) $('#signin-availability').textContent = user ? (verified ? 'Signed in with a verified email.' : 'Verify your email before connecting calendars or setting up bookings.') : (microsoftEnabled ? 'Google, Microsoft or email. No credit card required.' : 'Google or email. Microsoft sign-in is coming soon. No credit card required.');
