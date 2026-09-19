@@ -36,15 +36,20 @@
 </section>
 <section id="meeting-settings" class="workspace-section" hidden aria-labelledby="meeting-settings-title">
 <div class="section-title"><span>02 / MEETINGS</span><h2 id="meeting-settings-title">Configure your meetings page</h2></div>
-<p class="sync-small">Set up how guests will book time with you.</p>
+<div class="meeting-list-toolbar"><p class="sync-small">Create the meetings guests can book with you.</p><button id="add-meeting-type" class="auth-button" type="button">+ Add meeting</button></div>
+<div id="meeting-types-list"></div><p id="meeting-list-status" role="status" class="sync-small"></p>
+<button id="undo-remove-meeting" class="auth-link" type="button" hidden>Undo remove</button>
+<dialog id="configure-meeting-dialog" aria-labelledby="configure-meeting-title">
+<div class="meeting-dialog-heading"><h2 id="configure-meeting-title">Configure meeting</h2><button id="close-meeting-dialog" class="auth-button" type="button" aria-label="Close meeting configuration">&#215;</button></div>
 <form id="meeting-settings-form" class="settings-grid">
-<label>Page title<input id="booking-title" maxlength="80" required value="Book a meeting"></label>
+<label>Meeting name<input id="booking-title" maxlength="80" required value="Book a meeting"></label>
 <label>Meeting length (minutes)<input id="booking-duration" type="number" min="1" max="480" step="1" required value="30"></label>
 <label class="settings-wide">Welcome message<textarea id="booking-description" maxlength="500" rows="3">Choose a time that works for you.</textarea></label>
 <label>Buffer before (minutes)<input id="booking-before" type="number" min="0" max="240" step="1" required value="0"></label>
 <label>Buffer after (minutes)<input id="booking-after" type="number" min="0" max="240" step="1" required value="15"></label>
-<div class="settings-wide settings-actions"><button class="primary" type="submit">Save meeting settings</button><span id="meeting-settings-status" role="status"></span></div>
+<div class="settings-wide settings-actions"><button class="primary" type="submit">Save meeting</button><button id="cancel-meeting-dialog" class="auth-link" type="button">Cancel</button><span id="meeting-settings-status" role="status"></span></div>
 </form>
+</dialog>
 <p class="sync-small">Saved as a draft on this browser. Public booking pages and availability rules are not live yet.</p>
 </section>
 <section id="style-settings" class="workspace-section" hidden aria-labelledby="style-settings-title">
