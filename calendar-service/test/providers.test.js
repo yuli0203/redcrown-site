@@ -4,6 +4,14 @@ import { database } from '../database.js';
 import { encrypt,decrypt } from '../src/security.js';
 import { readAvailability,listCalendars,writeBooking } from '../src/providers.js';
 const response=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json'}});
+
+test('Provider redirects fail closed using a Cloudflare-supported redirect mode',async t=>{
+ t.mock.method(globalThis,'fetch',async (url,options)=>{
+  assert.equal(options.redirect,'manual');
+  return new Response(null,{status:302,headers:{Location:'https://untrusted.example/'}});
+ });
+ await assert.rejects(()=>listCalendars('google','test-token'),error=>error.providerStatus===302);
+});
 test('Google refresh credentials stay encrypted and busy failures block availability',async t=>{
  const env={DB:database(),GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'secret',TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,3).toString('base64'),PUBLIC_ORIGIN:'http://localhost'},connection={id:'c',uid:'u',provider:'google',refresh_token:await encrypt('refresh',env),calendars:JSON.stringify([{id:'work',name:'Work',selected:true}])};
  t.mock.method(globalThis,'fetch',async url=>String(url).includes('oauth2')?response({access_token:'access'}):response({calendars:{work:{errors:[{reason:'forbidden'}]}}}));
