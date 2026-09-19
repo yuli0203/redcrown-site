@@ -12,7 +12,7 @@
   let displayName = '';
   const slug = value => value.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'') || 'your-name';
   function shareLink(meeting) {
-    if(cloud && savedData.slug && savedData.published) {const url=new URL('/calendar/meet/',location.origin);url.searchParams.set('user',savedData.slug);if(meeting)url.searchParams.set('meeting',meeting.id);return url.href;}
+    if(cloud && savedData.slug && savedData.published && meeting?.enabled!==false) {const url=new URL('/calendar/meet/',location.origin);url.searchParams.set('user',savedData.slug);if(meeting)url.searchParams.set('meeting',meeting.id);return url.href;}
     const name = savedData.pageName || displayName || 'Your name';
     const url = new URL('/calendar/meet/',location.origin);
     url.searchParams.set('user',slug(name)); url.searchParams.set('page',meeting ? slug(meeting.title) : 'meetings');
