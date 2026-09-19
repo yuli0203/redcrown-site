@@ -1,4 +1,5 @@
-import { assert, Problem, slots, dateRange, localDate } from './scheduling.js';
+import { sendBookingNotifications } from './notifications.js';
+import { assert, Problem, slots, dateRange, localDate, validZone } from './scheduling.js';
 import { body, hash, rateLimit, invitationLimits } from './security.js';
 import { json, one, all, run, connections } from './worker.js';
 export async function managementToken(id,env){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(env.TOKEN_ENCRYPTION_KEY),{name:'HMAC',hash:'SHA-256'},false,['sign']);return [...new Uint8Array(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(`manage:${id}`)))].map(x=>x.toString(16).padStart(2,'0')).join('');}
@@ -51,12 +52,14 @@ export async function publicRoutes(request,env,provider,path){
     assert(JSON.parse(connection.calendars).some(c=>c.id===destination.calendarId&&c.writable&&c.selected),'The booking calendar must be writable and selected for conflict checks.',503);
     await invitationLimits(env,host.uid,[input.email,...participants,meeting.reminderMinutes&&meeting.reminderEmail?.toLowerCase()!==connection.email.toLowerCase()?meeting.reminderEmail:'']);
     const id=crypto.randomUUID(),manage=await managementToken(id,env),end=input.start+meeting.duration*60000,paddedStart=input.start-meeting.before*60000,paddedEnd=end+meeting.after*60000;
-    const data=JSON.stringify({title:meeting.title,location:meeting.location,reminderMinutes:meeting.reminderMinutes||0,reminderEmail:meeting.reminderEmail||'',name:input.name.trim(),email:input.email,participants,notes:input.notes||'',timezone:host.workspace.timezone,manageUrl:`${env.PUBLIC_ORIGIN}/calendar/meet/?booking=${encodeURIComponent(id)}#${manage}`});
+    assert(input.inviteeTimezone===undefined||(typeof input.inviteeTimezone==='string'&&validZone(input.inviteeTimezone)),'Choose a valid invitee time zone.');
+    const data=JSON.stringify({hostName:host.workspace.pageName,hostEmail:connection.email,inviteeTimezone:input.inviteeTimezone||null,title:meeting.title,location:meeting.location,reminderMinutes:meeting.reminderMinutes||0,reminderEmail:meeting.reminderEmail||'',name:input.name.trim(),email:input.email,participants,notes:input.notes||'',timezone:host.workspace.timezone,manageUrl:`${env.PUBLIC_ORIGIN}/calendar/meet/?booking=${encodeURIComponent(id)}#${manage}`});
     let inserted;try{inserted=await run(db,"INSERT INTO bookings(id,uid,meeting_id,request_id,start,end,busy_start,busy_end,status,data,manage_hash,connection_id,calendar_id,created_at,replaces) SELECT ?,?,?,?,?,?,?,?,'pending',?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM bookings WHERE uid=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND busy_start<? AND busy_end>?) AND (?=0 OR (SELECT COUNT(*) FROM bookings WHERE uid=? AND meeting_id=? AND status IN ('pending','confirmed','cancelling','rescheduling') AND start>=? AND start<? AND id<>?)<?)",id,host.uid,meeting.id,input.requestId,input.start,end,paddedStart,paddedEnd,data,await hash(manage),connection.id,destination.calendarId,Date.now(),previous?.id||null,host.uid,paddedEnd,paddedStart,meeting.dailyLimit,host.uid,meeting.id,range.start,range.end,previous?.id||'',meeting.dailyLimit);}catch(error){if(/UNIQUE|BOOKING_CHANGED/.test(error.message))throw new Problem('A matching booking or reschedule is already in progress. Retry the original request.',409);throw error;}
     assert(inserted.meta.changes===1,'This time was just booked. Choose another.',409);booking=await one(db,'SELECT * FROM bookings WHERE id=?',id);
    }
    await finalizeBooking(booking,env,provider);
    assert(booking.status==='confirmed','This booking is no longer active.',409);
+   try{await sendBookingNotifications(env,Date.now(),fetch,booking.id);}catch{console.error('Booking notification queued',booking.id);}
    return json({id:booking.id,start:booking.start,end:booking.end,status:booking.status,manageToken:await managementToken(booking.id,env)},201);
   }
  }

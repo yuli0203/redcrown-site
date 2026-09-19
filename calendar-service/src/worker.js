@@ -1,3 +1,4 @@
+import { sendBookingNotifications } from './notifications.js';
 import { remindersReady, sendReminders } from './reminders.js';
 import { assert, Problem, validateWorkspace, slots, dateRange, localDate } from './scheduling.js';
 import { identity, body, hash, random, encrypt, rateLimit } from './security.js';
@@ -86,4 +87,4 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
  return async(request,env)=>{const response=await handle(request,env);const headers=new Headers(response.headers);headers.set('Vary','Origin');if(request.headers.get('Origin')===env.PUBLIC_ORIGIN){headers.set('Access-Control-Allow-Origin',env.PUBLIC_ORIGIN);headers.set('Access-Control-Allow-Methods','GET, POST, PUT, DELETE, OPTIONS');headers.set('Access-Control-Allow-Headers','Authorization, Content-Type, X-Booking-Token');headers.set('Access-Control-Max-Age','600');}return new Response(response.body,{status:response.status,headers});};
 }
 const handler=createHandler();
-export default {fetch:handler,async scheduled(event,env){await sendReminders(env);await env.DB.batch([env.DB.prepare('DELETE FROM oauth_states WHERE expires<?').bind(Date.now()),env.DB.prepare('DELETE FROM rate_limits WHERE expires<?').bind(Date.now())]);}};
+export default {fetch:handler,async scheduled(event,env){await sendReminders(env);await sendBookingNotifications(env);await env.DB.batch([env.DB.prepare('DELETE FROM oauth_states WHERE expires<?').bind(Date.now()),env.DB.prepare('DELETE FROM rate_limits WHERE expires<?').bind(Date.now())]);}};
