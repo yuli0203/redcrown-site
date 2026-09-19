@@ -33,6 +33,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    assert(token.refresh_token||existing,'Persistent calendar access was not granted. Reconnect and allow access.',503);
    const calendars=await provider.listCalendars(providerName,token.access_token),previous=existing?JSON.parse(existing.calendars):[];
    for(const c of calendars)c.selected=previous.find(p=>p.id===c.id)?.selected||false;
+   for(const c of previous)if(c.selected&&!calendars.some(v=>v.id===c.id))calendars.push({...c,missing:true,writable:false});
    await run(db,'INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?) ON CONFLICT(uid,provider,account_id) DO UPDATE SET email=excluded.email,refresh_token=excluded.refresh_token,calendars=excluded.calendars',existing?.id||crypto.randomUUID(),saved.uid,providerName,accountId,email,token.refresh_token?await encrypt(token.refresh_token,env):existing.refresh_token,JSON.stringify(calendars));
    return new Response(null,{status:303,headers:{Location:`${env.PUBLIC_ORIGIN}/calendar/?connected=1#sync-availability`,'Set-Cookie':'crown_oauth=; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=0','Cache-Control':'no-store'}});
   }
