@@ -3,7 +3,7 @@ import { assert, Problem } from './scheduling.js';
 const jwks=createRemoteJWKSet(new URL('https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com'));
 export async function identity(request,env){
  const token=request.headers.get('Authorization')?.match(/^Bearer (.+)$/)?.[1];assert(token,'Sign in to continue.',401);
- try {const {payload}=await jwtVerify(token,jwks,{algorithms:['RS256'],issuer:`https://securetoken.google.com/${env.FIREBASE_PROJECT_ID}`,audience:env.FIREBASE_PROJECT_ID});assert(payload.sub&&payload.sub.length<=128&&payload.auth_time<=Date.now()/1000,'Invalid sign-in.',401);return {uid:payload.sub,verified:payload.email_verified===true,authTime:payload.auth_time,provider:payload.firebase?.sign_in_provider};}catch{throw new Problem('Your sign-in expired. Sign in again.',401);}
+ try {const {payload}=await jwtVerify(token,jwks,{algorithms:['RS256'],issuer:`https://securetoken.google.com/${env.FIREBASE_PROJECT_ID}`,audience:env.FIREBASE_PROJECT_ID});assert(payload.sub&&payload.sub.length<=128&&payload.auth_time<=Date.now()/1000,'Invalid sign-in.',401);return {uid:payload.sub,verified:payload.email_verified===true,displayName:typeof payload.name==='string'?payload.name.slice(0,100):'',authTime:payload.auth_time,provider:payload.firebase?.sign_in_provider};}catch{throw new Problem('Your sign-in expired. Sign in again.',401);}
 }
 export const random=()=>crypto.randomUUID().replaceAll('-','')+crypto.randomUUID().replaceAll('-','');
 export async function hash(value){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(x=>x.toString(16).padStart(2,'0')).join('');}

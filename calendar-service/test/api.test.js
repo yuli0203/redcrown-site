@@ -107,3 +107,16 @@ test('Additional participants validate, deduplicate, persist and cannot change o
  const moved=await f.api('/public/test-host/book','POST',{...f.request(),start:f.start+7200000,participants:detail.data.participants,previousId:result.data.id,rescheduleToken:result.data.manageToken});assert.equal(moved.status,201);
  const movedDetail=await f.api(`/booking/${moved.data.id}?token=${moved.data.manageToken}`);assert.deepEqual(movedDetail.data.participants,detail.data.participants);f.DB.close();
 });
+
+test('Guest meeting names propagate and blank names use guest and host',async()=>{
+ const f=await fixture();
+ try {
+  const first=await f.api('/public/test-host/book','POST',{...f.request(),meetingName:'  Project planning  '});
+  assert.equal(first.status,201);assert.equal(first.data.title,'Project planning');
+  const saved=JSON.parse((await f.DB.prepare('SELECT data FROM bookings WHERE id=?').bind(first.data.id).first()).data);
+  assert.equal(saved.title,'Project planning');
+  const second=await f.api('/public/test-host/book','POST',{...f.request(),start:f.start+2*3600000,meetingName:'   '});
+  assert.equal(second.data.title,'Guest and Host');
+  assert.equal((await f.api('/public/test-host/book','POST',{...f.request(),meetingName:'x'.repeat(161)})).status,400);
+ }finally{f.DB.close();}
+});

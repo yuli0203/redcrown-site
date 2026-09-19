@@ -22,7 +22,7 @@ export function validateWorkspace(input){
  assert(meetings.length<=100&&new Set(meetings.map(m=>m.id)).size===meetings.length,'Invalid meeting list.');
  const slug=text(input.slug||'',60);assert(!slug || (/^[a-z0-9][a-z0-9-]{2,59}$/.test(slug)&&!['api','admin','login','meet','calendar','support'].includes(slug)),'Use a unique page address with 3-60 lowercase letters, numbers or hyphens.');
  const calendarDisplay=input.calendarDisplay||'global';assert(['global','israel','us','saturday'].includes(calendarDisplay),'Choose a valid calendar display.');
- const result={calendarDisplay,pageName:text(input.pageName||'',60),slug,timezone:zone,weekly:normalized,exceptions,meetings,published:input.published===true,destination:input.destination||null};
+ const result={hostName:text(input.hostName||'',100),calendarDisplay,pageName:text(input.pageName||'',60),slug,timezone:zone,weekly:normalized,exceptions,meetings,published:input.published===true,destination:input.destination||null};
  for(const [key,fallback] of Object.entries({accent:'#c8102e',background:'#ffffff',text:'#271c22'})){assert(!input[key] || /^#[a-f\d]{6}$/i.test(input[key]),'Invalid color.');result[key]=input[key]||fallback;}
  for(const key of ['logo','photo']){const value=input[key]||'';assert(typeof value==='string' && value.length<=400000 && (!value || /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value) || (key==='photo'&&validProfilePhoto(value))),'Use a smaller PNG, JPEG or WebP image.');result[key]=value;}
  if(result.destination) {assert(typeof result.destination==='object','Invalid booking calendar.');result.destination={connectionId:text(result.destination.connectionId,80,true),calendarId:text(result.destination.calendarId,1024,true)};}

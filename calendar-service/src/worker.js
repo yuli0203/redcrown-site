@@ -46,7 +46,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   const user=await authenticate(authRequest,env);assert(user.verified===true,'Verify your email before using your calendar workspace.',403);await rateLimit(env,`user:${user.uid}`,90);
   if(path==='/workspace'&&method==='GET'){try{await recordWorkspaceUsage(user,env);}catch{console.warn('Usage metric unavailable');}const row=await one(db,'SELECT * FROM profiles WHERE uid=?',user.uid);return json({data:row?JSON.parse(row.data):null,version:row?.version||0});}
   if(path==='/workspace'&&method==='PUT'){
-   const input=await body(request),data=validateWorkspace(input.data);assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
+   const input=await body(request),data=validateWorkspace(input.data);if(user.displayName)data.hostName=user.displayName;assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
    if(data.published)assert(user.verified,'Verify your email before publishing a booking page.',403);
    if(data.destination&&data.published){const c=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',data.destination.connectionId,user.uid);assert(c&&JSON.parse(c.calendars).some(v=>v.id===data.destination.calendarId&&v.writable&&v.selected),'Choose a connected, writable calendar selected for conflict checks.');}
    try {
