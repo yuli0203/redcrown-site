@@ -84,3 +84,11 @@ test('Calendar refresh retains conflict selections and protects the booking dest
  assert.equal((await f.api('/workspace','PUT',{data:{...f.workspace,published:false},version:1})).status,200);
  f.DB.close();
 });
+
+test('Reminder settings persist, stay private on landing pages and snapshot into bookings',async()=>{
+ const f=await fixture();f.workspace.meetings[0].reminderMinutes=60;f.workspace.meetings[0].reminderEmail='owner@example.test';
+ const saved=await f.api('/workspace','PUT',{data:f.workspace,version:1});assert.equal(saved.data.data.meetings[0].reminderEmail,'owner@example.test');
+ const page=await f.api('/public/test-host');assert.equal(page.data.meetings[0].reminderEmail,undefined);
+ const booked=await f.api('/public/test-host/book','POST',f.request());assert.equal(booked.status,201);
+ const row=await f.DB.prepare('SELECT data FROM bookings WHERE id=?').bind(booked.data.id).first();assert.equal(JSON.parse(row.data).reminderEmail,'owner@example.test');assert.equal(JSON.parse(row.data).reminderMinutes,60);f.DB.close();
+});

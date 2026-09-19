@@ -47,7 +47,7 @@ The static site's `.cfignore` excludes this service, tests and dependency folder
 - Busy calendars are rechecked on booking. A single atomic SQL operation reserves the buffered interval across all meeting types. External calendar applications can still change events after that check; no provider offers a transaction spanning its calendar and our database.
 - Deterministic provider request IDs support retries. Failed/uncertain provider writes retain a pending reservation; the host can retry from Upcoming bookings. No automatic release risks double-booking an event that might already exist.
 - Rescheduling reserves the replacement, writes it, cancels the old event, then confirms the change. While a failure is pending, both times stay reserved. Overlapping moves into the existing meeting's own busy time are currently excluded; choose another available slot.
-- Cancellation uses an unguessable management token. The host can manage bookings from their account. Calendar invitations come from Google/Microsoft; standalone reminder emails/SMS are not implemented.
+- Cancellation uses an unguessable management token. The host can manage bookings from their account. Calendar invitations come from Google/Microsoft; optional email reminders use the separate sender configuration below. SMS is not implemented.
 - Microsoft integrations, OAuth consent, invitation delivery, Turnstile and encrypted refresh-token rotation require live credential testing before launch.
 - No iCloud/CalDAV/ICS subscription connector, team scheduling, payments, conferencing provisioning or CRM integration is claimed.
 
@@ -63,3 +63,11 @@ References: [Cloudflare D1 pricing](https://developers.cloudflare.com/d1/platfor
 ## Release gate and rollback
 
 Before enabling `apiOrigin` on the website: apply all migrations; configure provider secrets and callback URLs; verify consent, reload persistence, selected calendars, booking, invitation delivery, cancellation and rescheduling with dedicated test accounts; configure Turnstile for the website hostname; verify Worker CPU and subrequest limits with real calendars. Revert the frontend configuration if authorization or booking fails. Do not roll back database migrations or delete pending reservations to recover provider failures. The existing website remains independent of the API deployment.
+
+## Optional meeting reminders
+
+Meeting types save a lead time and private recipient email, initially filled from the signed-in account. Existing types default to no reminder. Settings apply to new bookings; rescheduling creates a new snapshot. Public meeting pages never expose reminder recipients.
+
+Apply migration 0004 before deploying the Worker. Configure RESEND_API_KEY as a Worker secret and REMINDER_FROM as a verified sender address. The one-minute cron sends due reminders for confirmed, upcoming bookings only. The popup reports delivery as unavailable until both values are configured. Local Node development does not run the Worker cron.
+
+Retries use a stable booking idempotency key and stop after 23 hours to stay within the provider deduplication window. Cancellations and replacements are rechecked before sending; a cancellation racing an already submitted email cannot recall it. Test delivery with a dedicated mailbox before enabling for users. See [Resend idempotency documentation](https://resend.com/changelog/idempotency-keys).

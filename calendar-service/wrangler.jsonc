@@ -5,7 +5,7 @@
   "workers_dev": true,
   "preview_urls": false,
   "compatibility_date": "2026-09-01",
-  "triggers":{"crons":["*/15 * * * *"]},
+  "triggers":{"crons":["* * * * *"]},
   "vars": {
     "FIREBASE_PROJECT_ID": "crown-calendar-89e18",
     "PUBLIC_ORIGIN": "https://redcrowninteractive.com",

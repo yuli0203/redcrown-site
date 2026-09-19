@@ -8,3 +8,7 @@ MICROSOFT_CLIENT_SECRET=
 TOKEN_ENCRYPTION_KEY=
 TURNSTILE_SITE_KEY=
 TURNSTILE_SECRET=
+
+# Optional email reminders. Use a verified sender address in Resend.
+RESEND_API_KEY=
+REMINDER_FROM=

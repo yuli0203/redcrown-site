@@ -2,14 +2,20 @@
   'use strict';
   const $ = selector => document.querySelector(selector);
   await window.CrownAPI.ready;const cloud=window.CrownAPI.online||window.CrownAPI.configured;let serverVersion=0;
-  const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,notice:120,horizon:60,interval:15,dailyLimit:0,location:'',accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
+  const defaults = {title:'Book a meeting',description:'Choose a time that works for you.',duration:30,before:0,after:15,notice:120,horizon:60,interval:15,dailyLimit:0,location:'',reminderMinutes:0,reminderEmail:'',accent:'#c8102e',background:'#ffffff',text:'#271c22',logo:''};
   let uid = null, logo = '', photo = '', revision = 0, meetings = [], editingId = null, removed = null, savedData = {};
   const dialog = $('#configure-meeting-dialog');
-  const meetingFields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location'];
+  const meetingFields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location','reminderMinutes','reminderEmail'];
   const nav = [...document.querySelectorAll('.product-nav a')].map(link => ({link,href:link.getAttribute('href'),text:link.textContent}));
   const key = () => `crown-calendar-workspace-v1:${uid}`;
   const fields = ['title','description','duration','before','after','notice','horizon','interval','dailyLimit','location','accent','background','text'];
-  let displayName = '';
+  let displayName = '', userEmail = '';
+  function reminderInputs(){
+    const enabled=Number($('#booking-reminderMinutes').value)>0;
+    $('#booking-reminderEmail').disabled=!enabled;$('#booking-reminderEmail').required=enabled;
+    $('#meeting-reminder-help').textContent='Defaults to your sign-in email. Applies to new bookings. '+(window.CrownAPI.config?.emailReminders?'Reminders are sent shortly after the selected time.':'Email delivery is not connected yet. You can save these settings, but reminders will not be sent.');
+  }
+  $('#booking-reminderMinutes').addEventListener('change',reminderInputs);
   const slug = value => value.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'') || 'your-name';
   function shareLink(meeting) {
     if(cloud && savedData.slug && savedData.published && meeting?.enabled!==false) {const url=new URL('/calendar/meet/',location.origin);url.searchParams.set('user',savedData.slug);if(meeting)url.searchParams.set('meeting',meeting.id);return url.href;}
@@ -121,6 +127,7 @@
     if (!uid) return;
     editingId=meeting?.id || null;
     for (const field of meetingFields) $(`#booking-${field}`).value=(meeting || defaults)[field] ?? defaults[field];
+    $('#booking-reminderEmail').value=meeting?.reminderEmail || window.CrownAuth?.current?.()?.email || userEmail;reminderInputs();
     $('#configure-meeting-title').textContent=meeting ? 'Configure meeting' : 'Add meeting';
     $('#meeting-settings-status').textContent=''; $('#booking-title').setCustomValidity(''); dialog.showModal(); $('#booking-title').focus();
   }
@@ -197,7 +204,7 @@
     if (uid === event.detail.uid) return;
     if (dialog.open) dialog.close();if(pageDialog.open)pageDialog.close();
     $('#upcoming-bookings').hidden=true;$('#upcoming-bookings-list').replaceChildren();
-    uid = event.detail.uid; displayName=event.detail.displayName || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
+    uid = event.detail.uid; displayName=event.detail.displayName || ''; userEmail=event.detail.email || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
     $('#meeting-list-status').textContent=''; $('#undo-remove-meeting').hidden=true; renderMeetings();
     for (const selector of ['#meeting-settings','#style-settings','.workspace-footer','#workspace-auth-status']) $(selector).hidden = !uid;
