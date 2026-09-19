@@ -34,11 +34,12 @@
     catch { if(version===revision) { $('#meeting-page-link').value=shareLink(meeting); $('#meeting-page-link').focus(); $('#meeting-page-link').select(); $('#meeting-share-status').textContent='Select and copy the link above.'; } }
   }
   $('#copy-meeting-page').addEventListener('click',()=>copyLink());
-  $('#save-meeting-page-name').addEventListener('click',async()=>{
-    const name=$('#meeting-page-name').value.trim();
-    if(!name) { $('#meeting-share-status').textContent='Enter your name first.'; return; }
-    if(await persist({pageName:name},'#meeting-share-status')) { renderMeetings(); $('#meeting-share-status').textContent='Page name saved.'; }
-  });
+  const pageDialog=$('#page-settings-dialog');
+  function resetPageSettings(){window.CrownSettings.apply(savedData);$('#meeting-page-name').value=savedData.pageName||displayName;$('#schedule-status').textContent='';}
+  $('#open-page-settings').addEventListener('click',()=>{if(!uid)return;resetPageSettings();pageDialog.showModal();$('#meeting-page-name').focus();});
+  $('#close-page-settings').addEventListener('click',()=>pageDialog.close());
+  $('#cancel-page-settings').addEventListener('click',()=>pageDialog.close());
+  pageDialog.addEventListener('close',resetPageSettings);
   function preview() {
     const sample = meetings[0] || defaults;
     $('#booking-preview-title').textContent = sample.title;
@@ -153,7 +154,7 @@
   for (const field of fields) $(`#booking-${field}`).addEventListener('input',() => { preview(); $('#meeting-settings-status').textContent = ''; $('#style-settings-status').textContent = ''; });
   $('#availability-settings-form').addEventListener('submit',async event=>{
     event.preventDefault();if(!uid||!event.target.reportValidity())return;
-    try{const settings=window.CrownSettings.read();if(await persist(settings,'#schedule-status')){renderMeetings();$('#schedule-status').textContent=cloud?'Availability saved to your account.':'Availability saved locally. Connect the booking service to accept bookings.';}}catch(error){$('#schedule-status').textContent=error.message;}
+    try{const settings={...window.CrownSettings.read(),pageName:$('#meeting-page-name').value.trim()};if(await persist(settings,'#schedule-status')){renderMeetings();pageDialog.close();$('#meeting-list-status').textContent=cloud?'Page settings saved.':'Page settings saved on this browser.';}}catch(error){$('#schedule-status').textContent=error.message;}
   });
   $('#publish-page').addEventListener('click',async()=>{
     if(!cloud||!uid)return;
@@ -194,7 +195,7 @@
   }
   document.addEventListener('crown-auth-change',async event => {
     if (uid === event.detail.uid) return;
-    if (dialog.open) dialog.close();
+    if (dialog.open) dialog.close();if(pageDialog.open)pageDialog.close();
     $('#upcoming-bookings').hidden=true;$('#upcoming-bookings-list').replaceChildren();
     uid = event.detail.uid; displayName=event.detail.displayName || ''; revision++; meetings=[]; savedData={}; removed=null; editingId=null;
     $('#meeting-page-name').value='';
