@@ -22,14 +22,46 @@ window.CrownTimezone = {
   }
   let selected = initial || device;
   input.value = labels.get(selected);
-  input.addEventListener('focus', () => input.select());
-  input.addEventListener('input', () => input.setCustomValidity(''));
-  input.addEventListener('change', () => {
+  const matchInput = () => {
    const value = input.value.trim().toLowerCase();
-   const match = zones.find(z => z.toLowerCase() === value || labels.get(z).toLowerCase() === value);
-   if (!match) { input.setCustomValidity(he ? 'בחרו אזור זמן מתוך ההצעות.' : 'Choose a time zone from the suggestions.'); return; }
-   input.setCustomValidity(''); input.value = labels.get(match); selected = match;
+   if (!value) return;
+   const exact = zones.find(z => z.toLowerCase() === value || labels.get(z).toLowerCase() === value);
+   if (exact) return exact;
+   const cities = zones.filter(z => z.split('/').pop().replaceAll('_',' ').toLowerCase() === value);
+   if (cities.length === 1) return cities[0];
+   if (['israel','tel aviv','ישראל','ירושלים'].includes(value)) return 'Asia/Jerusalem';
+  };
+  const commit = (match, format = true) => {
+   input.setCustomValidity('');
+   if (format) input.value = labels.get(match);
+   if (selected === match) return;
+   selected = match;
    input.dispatchEvent(new Event('timezonechange'));
+  };
+  input.addEventListener('focus', () => { input.value = ''; });
+  input.addEventListener('input', () => {
+   input.setCustomValidity('');
+   const match = matchInput();
+   if (match) commit(match, false);
+  });
+  input.addEventListener('change', () => {
+   const match = matchInput();
+   if (match) commit(match);
+  });
+  input.addEventListener('blur', () => {
+   const match = matchInput();
+   if (match) commit(match);
+   // An unfinished search must never masquerade as the active time zone.
+   input.value = labels.get(selected); input.setCustomValidity('');
+  });
+  input.addEventListener('keydown', event => {
+   if (event.key === 'Escape') { input.value = labels.get(selected); input.blur(); }
+   if (event.key === 'Enter') {
+    event.preventDefault();
+    const match = matchInput();
+    if (match) { commit(match); input.blur(); }
+    else { input.setCustomValidity(he ? 'בחרו אזור זמן מתוך ההצעות.' : 'Choose a time zone from the suggestions.'); input.reportValidity(); }
+   }
   });
   return {element:input, list, get value(){return selected;}, set value(zone){
    selected = zone || device; input.value = labels.get(selected) || window.CrownTimezone.format(selected); input.setCustomValidity('');
