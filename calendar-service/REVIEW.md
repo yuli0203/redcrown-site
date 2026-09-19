@@ -18,3 +18,12 @@ Review gates:
 - Small restorable commits; no changes to unrelated studio pages.
 
 Deployment dependencies: Cloudflare account/database binding, Google OAuth web client secret and callback registration, Microsoft app registration, token encryption secret. None may be placed in public JavaScript or committed. Free-tier quotas are finite. Production acceptance requires live provider round trips, domain routing and abuse protection.
+
+
+## Follow-up review - 2026-09-19
+
+Fixed a cancellation/rescheduling race: a replacement now validates the original booking atomically through migration 0003, and cancellation claims an eligible booking before calling the provider. Interrupted cancellations expose a retry action, and successful cancellation removes the obsolete rescheduling link. Invitations include the guest management link. Deleted or disabled meeting links display an explanation instead of an empty page.
+
+Validation: 17 service tests, 11 calendar UI logic tests, and the Worker dry-run build passed. Sample-only browser booking and cancellation succeeded; the cancelled page has no remaining rescheduling action. The unavailable-meeting message was verified in the browser. No real provider invitations were sent. Migration 0003 is local and must be applied before deploying this change.
+
+Remaining review item: rescheduling a booking on a day already at its daily booking limit currently counts the original booking against that limit. Live provider testing, credentials, and hosting configuration remain outstanding.

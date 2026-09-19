@@ -15,7 +15,9 @@
   for(const kind of ['logo','photo'])if(host[kind]){const image=make('img');image.src=host[kind];image.alt=kind==='logo'?'Host logo':'Host profile photo';image.className='host-'+kind;$('#host-name').before(image);}
   $('#host-name').textContent=`Meet with ${host.pageName}`;
   const zone=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  for(const meeting of host.meetings.filter(m=>!query.get('meeting')||m.id===query.get('meeting'))){
+  const meetings=host.meetings.filter(m=>!query.get('meeting')||m.id===query.get('meeting'));
+  if(!meetings.length)throw Error('This meeting is no longer available. Please contact the host for an updated booking link.');
+  for(const meeting of meetings){
    const card=make('section','','public-meeting');card.append(make('h2',meeting.title),make('p',`${meeting.duration} minutes${meeting.location?' - '+meeting.location:''}`),make('p',meeting.description));
    const open=button('Choose a time',()=>showScheduler(card,meeting,slug,zone));card.append(open);$('#public-meetings').append(card);
   }
@@ -41,7 +43,7 @@
   }
  }
  async function manage(){const id=query.get('booking'),token=location.hash.slice(1);const result=await call(`/booking/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`);$('#host-name').textContent=result.title;$('#page-description').textContent=`${new Date(result.start).toLocaleString()} - ${result.status}`;if(result.status==='confirmed'&&result.slug){const link=make('a','Choose a new time','booking-button');link.href=`/calendar/meet/?user=${encodeURIComponent(result.slug)}&meeting=${encodeURIComponent(result.meetingId)}&reschedule=${encodeURIComponent(id)}#${token}`;$('#public-meetings').append(link);}
-  if(result.status==='confirmed')$('#public-meetings').append(button('Cancel booking',async event=>{const b=event.currentTarget;b.disabled=true;try{await call(`/booking/${encodeURIComponent(id)}/cancel`,'POST',{token});$('#page-description').textContent='Your booking has been cancelled.';b.remove();}catch(e){error(e.message);b.disabled=false;}}));}
+  if(['confirmed','cancelling'].includes(result.status))$('#public-meetings').append(button(result.status==='cancelling'?'Retry cancellation':'Cancel booking',async event=>{const b=event.currentTarget;b.disabled=true;try{await call(`/booking/${encodeURIComponent(id)}/cancel`,'POST',{token});$('#page-description').textContent='Your booking has been cancelled.';$('#public-meetings').replaceChildren();}catch(e){error(e.message);b.disabled=false;}}));}
  function downloadICS(meeting,booking){const escape=value=>String(value||'').replaceAll('\\','\\\\').replaceAll('\n','\\n').replaceAll(',','\\,').replaceAll(';','\\;').replaceAll('\r','');const stamp=value=>new Date(value).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');const text=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Red Crown Interactive//Calendar//EN','BEGIN:VEVENT',`UID:${booking.id}@redcrowninteractive.com`,`DTSTAMP:${stamp(Date.now())}`,`DTSTART:${stamp(booking.start)}`,`DTEND:${stamp(booking.end)}`,`SUMMARY:${escape(meeting.title)}`,`LOCATION:${escape(meeting.location)}`,'END:VEVENT','END:VCALENDAR'].join('\r\n');const url=URL.createObjectURL(new Blob([text],{type:'text/calendar'})),link=make('a');link.href=url;link.download='meeting.ics';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  let turnstilePromise;function loadTurnstile(){return turnstilePromise??=new Promise((resolve,reject)=>{if(window.turnstile)return resolve();const script=make('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.onload=resolve;script.onerror=reject;document.head.append(script);});}
 })();
