@@ -75,7 +75,8 @@
 <label>Daily booking limit (0 = no limit)<input id="booking-dailyLimit" type="number" min="0" max="100" value="0" required></label>
 <label class="settings-wide">Location or video link<input id="booking-location" maxlength="200" placeholder="Video link, phone or address"></label>
 <label>Email reminder<select id="booking-reminderMinutes"><option value="0">No reminder</option><option value="5">5 minutes before</option><option value="15">15 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option><option value="1440">1 day before</option><option value="2880">2 days before</option></select></label>
-<label>Send reminder to<input id="booking-reminderEmail" type="email" maxlength="254" autocomplete="email" aria-describedby="meeting-reminder-help"></label>
+<label class="settings-wide">Send reminder to<select id="booking-reminder-recipient" aria-describedby="meeting-reminder-help"></select></label>
+<label id="booking-reminder-custom" class="settings-wide" hidden>Other email address<input id="booking-reminderEmail" type="email" maxlength="254" autocomplete="email" aria-describedby="meeting-reminder-help" placeholder="name@example.com"></label>
 <p id="meeting-reminder-help" class="sync-small settings-wide">Defaults to your sign-in email. Applies to new bookings.</p>
 <div class="settings-wide settings-actions"><button class="primary" type="submit">Save meeting</button><button id="cancel-meeting-dialog" class="auth-link" type="button">Cancel</button><span id="meeting-settings-status" role="status"></span></div>
 </form>
