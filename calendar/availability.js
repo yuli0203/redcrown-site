@@ -4,6 +4,7 @@
   const panel = $('#sync-availability');
   if (!panel) return;
   const scopes = ['openid', 'email', 'https://www.googleapis.com/auth/calendar.calendarlist.readonly', 'https://www.googleapis.com/auth/calendar.events.freebusy'];
+  const eventsScope = 'https://www.googleapis.com/auth/calendar.events.readonly';
   let uid = null, generation = 0, accounts = [], busy = false, clientId = '', sdkReady = false, enabled = false;
   const sessions = new Map(); // Access tokens stay in memory, never in browser storage.
   const edits = new Map();
@@ -103,7 +104,7 @@
   function connect(expected) {
     if (!uid || busy || !sdkReady || !clientId || !enabled) return;
     const version = generation;
-    busy = true; render(); message('Choose a Google account and allow calendar availability access.');
+    busy = true; render(); message('Choose a Google account. Allow read-only event access to show meeting names, or keep availability-only access for busy blocks.');
     let finished = false;
     const timeout = setTimeout(() => finish('The connection window did not finish. Try again in Chrome or allow popups.'),120000);
     function finish(text) {
@@ -114,7 +115,7 @@
     }
     try {
     const client = google.accounts.oauth2.initTokenClient({
-      client_id:clientId, scope:scopes.join(' '), include_granted_scopes:false,
+      client_id:clientId, scope:[...scopes,eventsScope].join(' '), include_granted_scopes:false,
       ...(expected ? {hint:expected.email} : {}),
       error_callback:() => finish('Calendar connection cancelled or blocked. You can try again.'),
       callback:async result => {
@@ -136,7 +137,7 @@
           const account = {id:identity.sub,email:identity.email,calendars:calendars.filter(c => !c.deleted).map(c => ({id:c.id,name:c.summaryOverride || c.summary || c.id,primary:Boolean(c.primary),selected:previous?.calendars.find(old => old.id === c.id)?.selected ?? false}))};
           accounts = [...accounts.filter(a => a.id !== account.id),account];
           if (!previous) edits.set(account.id,new Set());
-          sessions.set(account.id,{token:result.access_token,expires:Date.now() + Number(result.expires_in || 3600)*1000 - 60000});
+          sessions.set(account.id,{token:result.access_token,details:google.accounts.oauth2.hasGrantedAllScopes(result,eventsScope),expires:Date.now() + Number(result.expires_in || 3600)*1000 - 60000});
           save(); invalidate(); $('#calendar-providers').hidden = true; $('#add-calendar').setAttribute('aria-expanded','false');
           finish('Account connected. Choose your sub-calendars, then click Save selection.');
           if (account.calendars.some(c => c.selected)) refresh();
@@ -156,7 +157,8 @@
     busy = true; calendarErrors.clear(); render(); message('Refreshing availability...');
     const start = new Date(), end = new Date(start.getTime() + 30*86400000);
     try {
-      const intervals = [];
+      const intervals = [], meetings = [];
+      let detailsUnavailable = false;
       for (const account of selected) {
         const ids = account.calendars.filter(c => c.selected).map(c => c.id);
         for (let i = 0; i < ids.length; i += 50) {
@@ -177,6 +179,31 @@
           }
         }
       }
+      // Event details are optional. Busy-time checks remain authoritative even if details fail.
+      for (const account of selected) {
+        const session=sessions.get(account.id);
+        if (!session.details) { detailsUnavailable=true; continue; }
+        for (const calendar of account.calendars.filter(c=>c.selected)) {
+          const collected=[];let pageToken='';
+          try {
+            do {
+              const query=new URLSearchParams({timeMin:start.toISOString(),timeMax:end.toISOString(),singleEvents:'true',orderBy:'startTime',maxResults:'250',fields:'nextPageToken,items(summary,status,start,end,transparency)'});
+              if(pageToken) query.set('pageToken',pageToken);
+              const page=await api(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendar.id)}/events?${query}`,session.token);
+              if(version!==generation) return;
+              for(const event of page.items || []) {
+                const parse=value=>value?.dateTime ? Date.parse(value.dateTime) : value?.date ? +new Date(`${value.date}T00:00:00`) : NaN;
+                const from=parse(event.start),to=parse(event.end);
+                if(event.status==='cancelled' || !Number.isFinite(from) || !Number.isFinite(to) || from>=to) continue;
+                collected.push({start:from,end:to,title:event.summary || 'Busy',calendar:calendar.name,allDay:Boolean(event.start.date),busy:event.transparency!=='transparent'});
+              }
+              pageToken=page.nextPageToken || '';
+            } while(pageToken);
+            meetings.push(...collected);
+          } catch { detailsUnavailable=true; }
+          if(version!==generation) return;
+        }
+      }
       if (version !== generation) return;
       if (calendarErrors.size) {
         const names = selected.flatMap(account => account.calendars.filter(c => c.selected && calendarErrors.has(errorKey(account.id,c.id))).map(c => `${c.name} (${account.email})`));
@@ -194,8 +221,8 @@
       const list = $('#busy-periods'); list.replaceChildren();
       for (const interval of merged) list.append(element('li',`${new Date(interval.start).toLocaleString()} - ${new Date(interval.end).toLocaleString()}`));
       $('#busy-preview').hidden = !merged.length;
-      window.CrownBusyPreview?.update(merged, start.getTime(), end.getTime());
-      message('Availability refreshed. This preview does not yet block times on booking pages.');
+      window.CrownBusyPreview?.update(merged, start.getTime(), end.getTime(), meetings);
+      message(detailsUnavailable ? 'Availability refreshed. Some meeting details are unavailable, so those times appear as Busy. Reconnect and allow read-only event access to show names where permitted.' : 'Calendar refreshed. Meeting names are shown where available.');
     } catch (error) { if (version === generation) { invalidate(); message(error.message || 'Availability could not be refreshed. Check your connection.'); } }
     finally { if (version === generation) { busy = false; render(); } }
   }

@@ -11,10 +11,20 @@
     const start = Math.max(bounds.start,rangeStart), end = Math.min(bounds.end,rangeEnd);
     return intervals.map(item => ({start:Math.max(item.start,start),end:Math.min(item.end,end)})).filter(item => item.start < item.end);
   }
-  if (typeof module !== 'undefined') module.exports={dayBounds,dayIntervals};
+  function calendarEntries(intervals,meetings,date,rangeStart,rangeEnd) {
+    const bounds=dayBounds(date),from=Math.max(bounds.start,rangeStart),to=Math.min(bounds.end,rangeEnd);
+    const entries=meetings.filter(item=>item.end>from && item.start<to && from<to).map(item=>({...item,start:Math.max(item.start,from),end:Math.min(item.end,to)}));
+    for(const period of dayIntervals(intervals,date,rangeStart,rangeEnd)) {
+      let gaps=[period];
+      for(const event of entries.filter(item=>item.busy)) gaps=gaps.flatMap(gap=>event.end<=gap.start || event.start>=gap.end ? [gap] : [{start:gap.start,end:Math.min(gap.end,event.start)},{start:Math.max(gap.start,event.end),end:gap.end}].filter(item=>item.start<item.end));
+      entries.push(...gaps.map(item=>({...item,title:'Busy',busy:true})));
+    }
+    return entries.sort((a,b)=>a.start-b.start || a.end-b.end);
+  }
+  if (typeof module !== 'undefined') module.exports={dayBounds,dayIntervals,calendarEntries};
   if (typeof document === 'undefined') return;
   const $ = selector => document.querySelector(selector);
-  let intervals=[], rangeStart=0, rangeEnd=0, selected=null, month=null, synced=false;
+  let intervals=[], meetings=[], rangeStart=0, rangeEnd=0, selected=null, month=null, synced=false;
   const time = stamp => new Date(stamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
   const label = date => date.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   function daySegments(date) {
@@ -44,14 +54,18 @@
       const note=document.createElement('p');note.className='sync-small';note.textContent='Calendar sync currently checks the next 30 days. This date is outside that range.';list.append(note);return;
     }
     $('#busy-day-coverage').textContent=`Checked ${time(from)} - ${to === bounds.end ? '24:00' : time(to)}. Free and busy times below.`;
-    const items=daySegments(selected);
+    const entries=calendarEntries(intervals,meetings,selected,rangeStart,rangeEnd);
+    const items=[...entries,...daySegments(selected).filter(item=>!item.busy).map(item=>({...item,title:'Free'}))].sort((a,b)=>a.start-b.start);
     if (!items.length) {
       const empty=document.createElement('p'); empty.className='sync-small'; empty.textContent='No synced busy periods in this checked time range. This does not yet confirm bookable availability.'; list.append(empty); return;
     }
     for (const item of items) {
       const block=document.createElement('div'); block.className='busy-time-block'+(item.busy?'':' free-time-block');
-      const times=document.createElement('strong'); times.textContent=item.start === bounds.start && item.end === bounds.end ? 'All day' : `${time(item.start)} - ${item.end === bounds.end ? '24:00' : time(item.end)}`;
-      const text=document.createElement('span'); text.textContent=item.busy?'Unavailable':'Free'; block.append(times,text); list.append(block);
+      const times=document.createElement('strong'); times.textContent=item.allDay || (item.start === bounds.start && item.end === bounds.end) ? 'All day' : `${time(item.start)} - ${item.end === bounds.end ? '24:00' : time(item.end)}`;
+      const text=document.createElement('span'); text.className='calendar-event-info';
+      const name=document.createElement('strong');name.textContent=item.title || 'Busy';text.append(name);
+      if(item.calendar) {const source=document.createElement('small');source.textContent=item.calendar+(item.busy?'':' - does not block availability');text.append(source);}
+      block.append(times,text); list.append(block);
     }
   }
   function draw() {
@@ -75,9 +89,15 @@
         segment.style.width=`${(part.end-part.start)/(bounds.end-bounds.start)*100}%`;track.append(segment);
       }
       button.append(title);if(checked) button.append(track);
+      const entries=checked?calendarEntries(intervals,meetings,date,rangeStart,rangeEnd):[];
+      for(const event of entries.slice(0,2)) {
+        const chip=document.createElement('span');chip.className='calendar-event-chip'+(event.busy?'':' event-free');
+        chip.textContent=event.title;chip.title=`${event.allDay?'All day':time(event.start)} - ${event.title}`;button.append(chip);
+      }
+      if(entries.length>2) {const more=document.createElement('span');more.className='calendar-event-more';more.textContent=`+${entries.length-2} more`;button.append(more);}
       if(!checked) button.classList.add('day-unchecked');
       button.setAttribute('aria-pressed',String(+selected===+date));
-      button.setAttribute('aria-label',`${label(date)}: ${status.textContent}. Show times`);
+      button.setAttribute('aria-label',`${label(date)}: ${status.textContent}${entries.length ? '. '+entries.map(item=>item.title).join(', ') : ''}. Show times`);
       button.addEventListener('click',()=>{selected=date;draw();grid.children[(first.getDay()+6)%7+day].focus({preventScroll:true});});
       grid.append(button);
     }
@@ -90,15 +110,15 @@
   $('#busy-next-month').addEventListener('click',()=>changeMonth(1));
   window.CrownBusyPreview={
     clear() {
-      intervals=[]; synced=false;
+      intervals=[]; meetings=[]; synced=false;
       rangeStart=dayBounds(new Date()).start;
       const end=new Date(rangeStart);end.setDate(end.getDate()+30);rangeEnd=+end;
       selected=new Date(rangeStart);month=new Date(selected.getFullYear(),selected.getMonth(),1);
       $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
       $('#synced-calendar-preview').hidden=false;draw();
     },
-    update(items,start,end) {
-      intervals=items.map(item=>({...item}));rangeStart=start;rangeEnd=end;synced=true;
+    update(items,start,end,events=[]) {
+      intervals=items.map(item=>({...item}));meetings=events.map(item=>({...item}));rangeStart=start;rangeEnd=end;synced=true;
       if(!selected || dayBounds(selected).end<=start || +selected>=end) selected=new Date(dayBounds(new Date(start)).start);
       month=new Date(selected.getFullYear(),selected.getMonth(),1);
       $('#synced-calendar-zone').textContent=`${Intl.DateTimeFormat().resolvedOptions().timeZone} - ${new Date(start).toLocaleDateString()} to ${new Date(end).toLocaleDateString()}`;
