@@ -4,7 +4,7 @@ window.CrownHolidays = {
   const make=(tag,text)=>{const el=document.createElement(tag);if(text)el.textContent=text;return el;};
   const box=make('div');box.className='holiday-import';box.lang=he?'he':'en';box.dir=he?'rtl':'ltr';
   const enabled=make('input');enabled.type='checkbox';enabled.id='holidays-enabled';
-  const toggle=make('label',t('Automatically sync public holidays','סנכרון אוטומטי של חגים רשמיים'));toggle.prepend(enabled);
+  const toggle=make('label',t('Automatically sync public holidays','סנכרון אוטומטי של חגים רשמיים'));toggle.className='holiday-toggle';toggle.prepend(enabled);
   const country=make('select');country.id='holidays-country';
   const label=make('label',t('Holiday country','מדינה לחגים רשמיים'));label.htmlFor=country.id;label.append(country);
   const status=make('p');status.className='sync-small';status.setAttribute('role','status');
