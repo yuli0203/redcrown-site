@@ -9,7 +9,7 @@
  const button=(label,fn)=>{const b=node('button',label,'auth-button');b.type='button';b.disabled=working;b.addEventListener('click',async()=>{try{await fn();}catch(e){message(e.message);}});return b;};
  function render(){
   $('#calendar-accounts').replaceChildren();$('#sync-empty').hidden=accounts.length>0;
-  $('#refresh-availability').disabled=working||!accounts.some(a=>a.calendars.some(c=>c.selected));
+  $('#refresh-availability').disabled=working||!uid;
   $('#connect-google-calendar').disabled=working||!api.config.google;$('#connect-microsoft-calendar').disabled=working||!api.config.microsoft;
   $('.sync-footnote').textContent='Connections are saved securely for your account. Availability refreshes automatically while this page is open and is checked again when someone books.';
   for(const account of accounts){
@@ -37,7 +37,7 @@
  async function refresh(){
   if(!uid||working)return;const current=revision,requestVersion=++refreshVersion;
   working=true;render();message('Checking calendars...');
-  try{await load();if(current!==revision||requestVersion!==refreshVersion)return;if(!accounts.some(a=>a.calendars.some(c=>c.selected))){window.CrownBusyPreview.clear();$('#sync-summary-text').textContent='Select calendars to check availability.';message('Add a calendar account, then choose which calendars to sync.');return;}const now=new Date(),start=range?.start??+new Date(now.getFullYear(),now.getMonth(),1),end=range?.end??+new Date(now.getFullYear(),now.getMonth()+1,1);const result=await api.request(`/availability?start=${start}&end=${end}`);if(current!==revision||requestVersion!==refreshVersion)return;reconnectNeeded.clear();window.CrownBusyPreview.update(result.busy,start,end,result.events);$('#sync-summary-text').textContent=`Last synced at ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}.`;message('');}
+  try{await load();if(current!==revision||requestVersion!==refreshVersion)return;const now=new Date(),start=range?.start??+new Date(now.getFullYear(),now.getMonth(),1),end=range?.end??+new Date(now.getFullYear(),now.getMonth()+1,1);const result=await api.request(`/availability?start=${start}&end=${end}`);if(current!==revision||requestVersion!==refreshVersion)return;reconnectNeeded.clear();window.CrownBusyPreview.update(result.busy,start,end,result.events);$('#sync-summary-text').textContent=`Last synced at ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}.`;message(result.calendarsChecked?'':'Public holidays shown. Connect and select your calendars to include meetings and other busy times.');}
   catch(e){if(current===revision&&requestVersion===refreshVersion){if(e.connectionId&&/reconnect|authorization expired/i.test(e.message))reconnectNeeded.add(e.connectionId);window.CrownBusyPreview.clear();$('#sync-summary-text').textContent='Availability could not be checked. Refresh or reconnect the affected calendar.';message(e.message);}}
   finally{if(current===revision&&requestVersion===refreshVersion){working=false;render();}}
  }
@@ -55,6 +55,7 @@
  $('#connect-google-calendar').addEventListener('click',()=>connect('google').catch(e=>message(e.message)));
  $('#connect-microsoft-calendar').addEventListener('click',()=>connect('microsoft').catch(e=>message(e.message)));
  $('#refresh-availability').addEventListener('click',refresh);
+ document.addEventListener('crown-availability-change',()=>{refreshVersion++;working=false;refresh();});
  document.addEventListener('crown-calendar-month',e=>{range=e.detail;refreshVersion++;working=false;refresh();});
  document.addEventListener('crown-auth-change',async e=>{uid=e.detail.uid;revision++;refreshVersion++;accounts=[];reconnectNeeded.clear();working=false;range=null;$('#sync-availability').hidden=!uid;document.body.classList.toggle('is-signed-in',Boolean(uid));window.CrownBusyPreview.clear();render();if(uid)try{await load();await refresh();}catch(e){message(e.message);}});
  document.addEventListener('click',event=>{for(const menu of document.querySelectorAll('.calendar-account-menu[open]'))if(!menu.contains(event.target))menu.open=false;});

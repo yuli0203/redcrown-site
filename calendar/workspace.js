@@ -117,7 +117,7 @@
     const version=revision;
     let stored = {};
     try { stored = JSON.parse(localStorage.getItem(key()) || '{}') || {}; } catch {}
-    if(cloud){const result=await window.CrownAPI.request('/workspace');if(version!==revision)return;serverVersion=result.version;if(result.data)stored=result.data;}
+    if(cloud){const result=await window.CrownAPI.request('/workspace');if(version!==revision)return;serverVersion=result.version;if(result.data)stored=result.data;else stored={...stored,holidays:stored.holidays||{enabled:true,country:'auto'}};}
     savedData = typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
     if(!savedData.pageName||!savedData.slug){
       const name=(savedData.pageName||displayName||'Your host').trim().slice(0,60);
@@ -146,7 +146,7 @@
     $('#booking-photo').value = '';
     $('#booking-logo').value = '';
     $('#meeting-settings-status').textContent = ''; $('#style-settings-status').textContent = '';
-    window.CrownSettings.apply(savedData);renderMeetings(); preview();
+    window.CrownSettings.apply(savedData);renderMeetings(); preview();document.dispatchEvent(new Event('crown-availability-change'));
   }
   async function persist(changes, status) {
     if (!uid) return false;
@@ -240,7 +240,7 @@
   $('#schedule-destination').addEventListener('change',()=>{$('#destination-status').textContent='Unsaved change. Select Save calendar to apply.';});
   $('#availability-settings-form').addEventListener('submit',async event=>{
     event.preventDefault();if(!uid||!event.target.reportValidity())return;
-    try{const {slug,...settings}=window.CrownSettings.read();if(await persist(settings,'#schedule-status')){availabilityDialog.close();$('#meeting-list-status').textContent='Booking availability saved.';}}catch(error){$('#schedule-status').textContent=error.message;}
+    try{const {slug,...settings}=window.CrownSettings.read();if(await persist(settings,'#schedule-status')){availabilityDialog.close();document.dispatchEvent(new Event('crown-availability-change'));$('#meeting-list-status').textContent='Booking availability saved.';}}catch(error){$('#schedule-status').textContent=error.message;}
   });
   $('#publish-page').addEventListener('click',async()=>{
     if(!cloud||!uid)return;
