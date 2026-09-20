@@ -31,6 +31,16 @@ test('Display preference persists without changing bookable slots',()=>{
  assert.throws(()=>validateWorkspace({...base,calendarDisplay:'invalid'}));
 });
 
+test('Israel time zones default to Sunday first without replacing an explicit display preference',()=>{
+ for(const timezone of ['Asia/Jerusalem','Asia/Tel_Aviv','Israel']){
+  assert.equal(validateWorkspace({timezone}).calendarDisplay,'israel');
+  for(const calendarDisplay of ['global','us','saturday','israel'])assert.equal(validateWorkspace({timezone,calendarDisplay}).calendarDisplay,calendarDisplay);
+ }
+ for(const timezone of ['UTC','America/New_York','Europe/Berlin'])assert.equal(validateWorkspace({timezone}).calendarDisplay,'global');
+ const saved=validateWorkspace({timezone:'Asia/Jerusalem',calendarDisplay:'global'});
+ assert.equal(validateWorkspace({...saved,pageName:'Updated name'}).calendarDisplay,'global');
+});
+
 
 test('Profile photo accepts Google account image or uploaded image, rejects unrelated URLs',()=>{
  const url='https://lh3.googleusercontent.com/a/example=s96-c';

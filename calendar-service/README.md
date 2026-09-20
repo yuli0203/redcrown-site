@@ -125,3 +125,14 @@ Release rollback: revert the frontend holiday commit and restore Worker version
 or holiday slot enforcement fails. No database migration is required. Existing
 holiday settings stay stored but the old Worker ignores them; pause publishing
 for affected new hosts while recovering. Existing meetings are never cancelled.
+
+## Israel display default (2026-09-20)
+
+When no display preference is supplied, a time zone mapped uniquely to Israel
+(including Asia/Jerusalem and its aliases) defaults to the existing `israel`
+display preset: Sunday first, 24-hour time. Explicit saved preferences remain
+unchanged, and working hours and booking rules are unaffected. Other time zones
+retain the global default. The saved preset is also returned to guest booking
+pages. Validation: 69 tests, Worker dry-run, fresh-account browser verification
+and reload persistence. No frontend release or database migration is needed.
+Rollback Worker version: becf8794-b4d5-4917-a9cd-0e18bb5a02f0.

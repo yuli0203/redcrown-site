@@ -65,7 +65,9 @@ test('Every new account gets automatic holidays, persisted independently from ex
   for(const user of ['new-one','new-two']){
    const result=await request(user,'/workspace','PUT',{version:0,data:{timezone:'Asia/Jerusalem'}});
    assert.equal(result.status,200);assert.deepEqual(result.data.data.holidays,{enabled:true,country:'auto'});
+   assert.equal(result.data.data.calendarDisplay,'israel');
    const reload=await request(user,'/workspace');assert.deepEqual(reload.data.data.holidays,result.data.data.holidays);
+   assert.equal(reload.data.data.calendarDisplay,'israel');
   }
   const range=dateRange('2026-09-21',1,'Asia/Jerusalem');
   const preview=await request('new-one',`/availability?start=${range.start}&end=${range.end}`);

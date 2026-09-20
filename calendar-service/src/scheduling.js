@@ -1,5 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill';
-import { validHolidaySettings, holidayCountry, holidayDates } from './holidays.js';
+import { validHolidaySettings, holidayCountry, holidayDates, holidayOptions } from './holidays.js';
 export class Problem extends Error { constructor(message,status=400){super(message);this.status=status;} }
 export const assert=(ok,message,status=400)=>{if(!ok)throw new Problem(message,status);};
 export const overlap=(a,b)=>a.start<b.end && a.end>b.start;
@@ -24,7 +24,7 @@ export function validateWorkspace(input){
  for(const m of meetings)assert((!m.reminderEmail&&!m.reminderMinutes)||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m.reminderEmail),'Enter a valid reminder email.');
  assert(meetings.length<=100&&new Set(meetings.map(m=>m.id)).size===meetings.length,'Invalid meeting list.');
  const slug=text(input.slug||'',60);assert(!slug || (/^[a-z0-9][a-z0-9-]{2,59}$/.test(slug)&&!['api','admin','login','meet','calendar','support'].includes(slug)),'Use a unique page address with 3-60 lowercase letters, numbers or hyphens.');
- const calendarDisplay=input.calendarDisplay||'global';assert(['global','israel','us','saturday'].includes(calendarDisplay),'Choose a valid calendar display.');
+ const calendarDisplay=input.calendarDisplay||(holidayOptions(zone).detected==='IL'?'israel':'global');assert(['global','israel','us','saturday'].includes(calendarDisplay),'Choose a valid calendar display.');
  const result={hostName:text(input.hostName||'',100),calendarDisplay,pageName:text(input.pageName||'',60),slug,timezone:zone,holidays:{enabled:holidays.enabled,country:holidays.country},weekly:normalized,exceptions,meetings,published:input.published===true,destination:input.destination||null};
  if(result.published&&holidays.enabled)assert(holidayCountry(result),'Choose a country for public holidays before publishing.');
  for(const [key,fallback] of Object.entries({accent:'#c8102e',background:'#ffffff',text:'#271c22'})){assert(!input[key] || /^#[a-f\d]{6}$/i.test(input[key]),'Invalid color.');result[key]=input[key]||fallback;}
