@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill';
+import { validHolidaySettings, holidayCountry, holidayDates } from './holidays.js';
 export class Problem extends Error { constructor(message,status=400){super(message);this.status=status;} }
 export const assert=(ok,message,status=400)=>{if(!ok)throw new Problem(message,status);};
 export const overlap=(a,b)=>a.start<b.end && a.end>b.start;
@@ -13,6 +14,8 @@ export function validProfilePhoto(value){
 export function validateWorkspace(input){
  assert(input&&typeof input==='object','Invalid workspace.');
  const zone=text(input.timezone||'UTC',80);assert(validZone(zone),'Choose a valid time zone.');
+ const holidays=input.holidays??{enabled:false,country:'auto'};
+ assert(validHolidaySettings(holidays),'Choose a supported holiday country.');
  const weekly=input.weekly||{1:[['09:00','17:00']],2:[['09:00','17:00']],3:[['09:00','17:00']],4:[['09:00','17:00']],5:[['09:00','17:00']],6:[],7:[]};
  const normalized={};for(let day=1;day<=7;day++)normalized[day]=windows(weekly[day]||[]);
  const exceptions={};assert(Object.keys(input.exceptions||{}).length<=366,'Too many date overrides.');
@@ -22,7 +25,8 @@ export function validateWorkspace(input){
  assert(meetings.length<=100&&new Set(meetings.map(m=>m.id)).size===meetings.length,'Invalid meeting list.');
  const slug=text(input.slug||'',60);assert(!slug || (/^[a-z0-9][a-z0-9-]{2,59}$/.test(slug)&&!['api','admin','login','meet','calendar','support'].includes(slug)),'Use a unique page address with 3-60 lowercase letters, numbers or hyphens.');
  const calendarDisplay=input.calendarDisplay||'global';assert(['global','israel','us','saturday'].includes(calendarDisplay),'Choose a valid calendar display.');
- const result={hostName:text(input.hostName||'',100),calendarDisplay,pageName:text(input.pageName||'',60),slug,timezone:zone,weekly:normalized,exceptions,meetings,published:input.published===true,destination:input.destination||null};
+ const result={hostName:text(input.hostName||'',100),calendarDisplay,pageName:text(input.pageName||'',60),slug,timezone:zone,holidays:{enabled:holidays.enabled,country:holidays.country},weekly:normalized,exceptions,meetings,published:input.published===true,destination:input.destination||null};
+ if(result.published&&holidays.enabled)assert(holidayCountry(result),'Choose a country for public holidays before publishing.');
  for(const [key,fallback] of Object.entries({accent:'#c8102e',background:'#ffffff',text:'#271c22'})){assert(!input[key] || /^#[a-f\d]{6}$/i.test(input[key]),'Invalid color.');result[key]=input[key]||fallback;}
  for(const key of ['logo','photo']){const value=input[key]||'';assert(typeof value==='string' && value.length<=400000 && (!value || /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value) || (key==='photo'&&validProfilePhoto(value))),'Use a smaller PNG, JPEG or WebP image.');result[key]=value;}
  if(result.destination) {assert(typeof result.destination==='object','Invalid booking calendar.');result.destination={connectionId:text(result.destination.connectionId,80,true),calendarId:text(result.destination.calendarId,1024,true)};}
@@ -36,8 +40,10 @@ export function slots(workspace,meeting,busy,range,now=Date.now(),bookings=[]){
  const horizon=Temporal.Instant.fromEpochMilliseconds(now).toZonedDateTimeISO(zone).add({days:meeting.horizon});
  let date=Temporal.Instant.fromEpochMilliseconds(range.start).toZonedDateTimeISO(zone).toPlainDate();
  const endDate=Temporal.Instant.fromEpochMilliseconds(range.end).toZonedDateTimeISO(zone).toPlainDate();
+ assert(!workspace.holidays?.enabled||holidayCountry(workspace),'The host needs to choose a holiday country.',503);
+ const holidays=holidayDates(workspace,date.toString(),endDate.toString());
  for(let day=0;day<33&&Temporal.PlainDate.compare(date,endDate)<=0;day++,date=date.add({days:1})){
-  const key=date.toString(),windows=workspace.exceptions[key]??workspace.weekly[date.dayOfWeek]??[];
+  const key=date.toString(),windows=workspace.exceptions[key]??(holidays.has(key)?[]:workspace.weekly[date.dayOfWeek])??[];
   if(meeting.dailyLimit && bookings.filter(b=>localDate(b.start,zone)===key).length>=meeting.dailyLimit)continue;
   const midnight=date.toZonedDateTime({timeZone:zone,plainTime:'00:00'}),nextMidnight=date.add({days:1}).toZonedDateTime({timeZone:zone,plainTime:'00:00'}),stable=midnight.offsetNanoseconds===nextMidnight.offsetNanoseconds;
   for(const [from,to] of windows){

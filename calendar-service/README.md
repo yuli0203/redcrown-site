@@ -90,3 +90,38 @@ Enable Gmail API in the Google OAuth project and include gmail.send in its conse
 The recipient is derived exclusively from the authenticated calendar connection, never guest input. A database claim prevents concurrent duplicate submissions. Accepted means provider acceptance, not verified inbox delivery. Rate limits and pre-submission token failures retry on the minute cron. Ambiguous submissions (network errors, server failures or interrupted sends) are marked uncertain and are not automatically resent, because these APIs offer no idempotency key. Rejected permissions require reconnection. Cancelled, pending and past bookings are excluded. Previously unnotified upcoming bookings become eligible after reconnecting.
 
 Provider mailbox quotas still apply. No paid email service is enabled. Existing optional timed reminders remain a separate Resend-based feature. Validate actual receipt with each provider before claiming end-to-end delivery.
+
+
+## Automatic national public holidays (2026-09-20)
+
+New workspaces default to `holidays: { enabled: true, country: "auto" }`.
+The scheduling time zone comes from the user's browser. The IANA country mapping
+is supplied by countries-and-timezones. A single supported country is selected
+automatically; shared zones, UTC/fixed offsets and unsupported countries require
+an explicit selection before publishing. The country selector is always available,
+and a manual selection stays fixed when the scheduling time zone changes.
+Existing workspaces without this setting retain their previous availability.
+
+Only national `public` holidays from date-holidays are applied, including observed
+substitute days. These are maintained calendar rules, not a real-time government
+feed. Keep the pinned dependency/lockfile updated to receive one-off declarations
+and rule corrections. Country coverage is limited to the library's supported
+catalog. State/local holidays, holiday eves and sunset times are excluded.
+
+The engine calculates every requested year, including year boundaries, and caches
+country/year results. Holidays are full dates in the host's scheduling time zone,
+not UTC instants. Explicit date overrides win. Holiday closures are not written
+into user exceptions or external Google/Microsoft calendars. Both slot listing
+and the final booking check enforce the policy, and the host preview shows named
+holiday events even without an external calendar connection.
+
+Validation: 68 server tests, Worker dry-run build, and English/Hebrew browser QA
+cover default creation, observed holidays, aliases, ambiguous zones, manual country
+selection, persistence, opt-out, year rollover, local date boundaries, custom
+hours and public booking rejection. Fixture QA makes no real invitations.
+
+Release rollback: revert the frontend holiday commit and restore Worker version
+7de1cddc-82b0-4564-acf1-421c7bc1a71d if settings initialization, country selection,
+or holiday slot enforcement fails. No database migration is required. Existing
+holiday settings stay stored but the old Worker ignores them; pause publishing
+for affected new hosts while recovering. Existing meetings are never cancelled.

@@ -1,4 +1,5 @@
 import { feedUrl, fetchFeed, parseFeed } from './ical-feed.js';
+import { holidayOptions, holidayEvents, holidayCountry } from './holidays.js';
 import { recordWorkspaceUsage } from './analytics.js';
 import { sendBookingNotifications } from './notifications.js';
 import { remindersReady, sendReminders } from './reminders.js';
@@ -18,7 +19,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   assert(url.pathname.startsWith(prefix+'/'),'Not found.',404);
   const origin=request.headers.get('Origin');if(origin)assert(origin===env.PUBLIC_ORIGIN,'This origin is not allowed.',403);
   if(method==='OPTIONS'){assert(['GET','POST','PUT','DELETE'].includes(request.headers.get('Access-Control-Request-Method')),'Method not allowed.',405);return new Response(null,{status:204});}
-  if(path==='/health')return json({ready:Boolean(db),emailReminders:remindersReady(env),bookingNotificationMode:'connected-account',google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
+  if(path==='/health')return json({ready:Boolean(db),publicHolidays:true,emailReminders:remindersReady(env),bookingNotificationMode:'connected-account',google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
   assert(db,'The scheduling service is not configured yet.',503);
 
   await rateLimit(env,`ip:${await hash(request.headers.get('CF-Connecting-IP')||'local')}`,120);
@@ -53,9 +54,14 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   let authRequest=request,connectInput;
   if(navigation){assert(request.headers.get('Origin')===env.PUBLIC_ORIGIN,'Start calendar connection from the scheduling page.',403);assert(request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded'),'Invalid connection request.');const input=await body(request,16000,true);connectInput=input;assert(typeof input.idToken==='string'&&input.idToken.length<12000,'Sign in to connect a calendar.',401);authRequest=new Request(request.url,{headers:{Authorization:`Bearer ${input.idToken}`}});}
   const user=await authenticate(authRequest,env);assert(user.verified===true,'Verify your email before using your calendar workspace.',403);await rateLimit(env,`user:${user.uid}`,90);
+  if(path==='/holiday-options'&&method==='GET'){
+   const zone=url.searchParams.get('timezone')||'UTC';assert(validZone(zone),'Choose a valid time zone.');return json(holidayOptions(zone));
+  }
   if(path==='/workspace'&&method==='GET'){try{await recordWorkspaceUsage(user,env);}catch{console.warn('Usage metric unavailable');}const row=await one(db,'SELECT * FROM profiles WHERE uid=?',user.uid);return json({data:row?JSON.parse(row.data):null,version:row?.version||0});}
   if(path==='/workspace'&&method==='PUT'){
-   const input=await body(request),data=validateWorkspace(input.data);if(user.displayName)data.hostName=user.displayName;assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
+   const input=await body(request);
+   if(input.version===0&&input.data&&input.data.holidays===undefined)input.data.holidays={enabled:true,country:'auto'};
+   const data=validateWorkspace(input.data);if(user.displayName)data.hostName=user.displayName;assert(Number.isInteger(input.version)&&input.version>=0,'Invalid workspace version.');
    if(data.published)assert(user.verified,'Verify your email before publishing a booking page.',403);
    if(data.destination&&data.published){const c=await one(db,'SELECT * FROM connections WHERE id=? AND uid=?',data.destination.connectionId,user.uid);assert(c&&JSON.parse(c.calendars).some(v=>v.id===data.destination.calendarId&&v.writable&&v.selected),'Choose a connected, writable calendar selected for conflict checks.');}
    try {
@@ -98,7 +104,12 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   }
   if(path==='/availability'&&method==='GET'){
    const start=Number(url.searchParams.get('start')),end=Number(url.searchParams.get('end'));assert(Number.isSafeInteger(start)&&Number.isSafeInteger(end)&&end>start&&end-start<=42*86400000,'Choose a date range up to six weeks.');
-   const linked=await connections(db,user.uid);assert(linked.some(c=>JSON.parse(c.calendars).some(v=>v.selected)),'Select at least one calendar.');const profile=await one(db,'SELECT data FROM profiles WHERE uid=?',user.uid);return json({...await provider.readAvailability(linked,start,end,env,{details:true,timezone:profile?JSON.parse(profile.data).timezone:'UTC'}),start,end});
+   const linked=await connections(db,user.uid),profile=await one(db,'SELECT data FROM profiles WHERE uid=?',user.uid);
+   const workspace=profile?JSON.parse(profile.data):{timezone:'UTC'},selected=linked.some(c=>JSON.parse(c.calendars).some(v=>v.selected));
+   assert(!workspace.holidays?.enabled||holidayCountry(workspace),'Choose your public holiday country in booking availability settings.',409);
+   const result=selected?await provider.readAvailability(linked,start,end,env,{details:true,timezone:workspace.timezone}):{busy:[],events:[]};
+   const holidays=holidayEvents(workspace,start,end);
+   return json({...result,busy:[...result.busy,...holidays.filter(h=>h.busy).map(({start,end})=>({start,end}))],events:[...(result.events||[]),...holidays],calendarsChecked:selected,start,end});
   }
   if(path==='/bookings'&&method==='GET'){
    const bookings=await all(db,'SELECT * FROM bookings WHERE uid=? AND end>? AND removed_from_list_at IS NULL ORDER BY start LIMIT 100',user.uid,Date.now());const results=[];
