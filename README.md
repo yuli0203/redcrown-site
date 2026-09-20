@@ -14,6 +14,21 @@ The live site is served by GitHub Pages from `main` at `/` (apex A records →
 185.199.108–111.153, `www` CNAME → yuli0203.github.io, `CNAME` file in the repo).
 Every push to `main` auto-deploys.
 
+## Soro blog
+
+`/blog/` embeds the Soro blog for redcrowninteractive.com in Hebrew and dark mode.
+The footer on each homepage links to it. Content is managed in the existing Soro
+account under Articles; only published articles appear in the widget. Soro notes
+that published content can take up to 60 minutes to appear. The public embed ID
+is intentionally present in the page; it is not an account credential.
+
+The Soro connection is managed under Settings > Connect Your Website. Existing
+drafts are not published by this integration. The widget depends on Soro and
+JavaScript; embedding alone does not guarantee indexing or search rankings.
+The canonical tag is marked `data-soro` so article navigation can update it
+without adding a second canonical URL. To roll back the website integration,
+revert the Soro blog commit and disable the embed connection in Soro.
+
 GitHub Pages does not read `_redirects` (that file is Cloudflare Pages syntax and
 is kept only in case the site moves there). A moved URL therefore needs a small
 redirect page at the old path — see `services/vr-development/index.html` and
