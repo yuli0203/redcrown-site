@@ -128,9 +128,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .eyebrow::before { content: ''; width: 28px; height: 2px; background: var(--gold); flex: none; }
 
-.section-head { max-width: 62ch; margin-block-end: clamp(32px, 5vw, 56px); }
-.section-head h2 { font-size: clamp(30px, 4.6vw, 50px); }
-.section-head p { margin-block-start: 18px; color: var(--ink-2); font-size: clamp(16px, 1.6vw, 18.5px); }
+/* הכותרת מקבלת את מלוא רוחב העמוד ולכן אינה נשברת לשתי שורות במסך רחב;
+   פסקת המשנה נשארת ברוחב קריא.
+   The heading gets the full content width, so it does not break onto a second
+   line on a wide screen, while the paragraph under it keeps a readable measure. */
+.section-head { margin-block-end: clamp(32px, 5vw, 56px); }
+.section-head h2 { font-size: clamp(30px, 4.6vw, 50px); text-wrap: balance; }
+.section-head p { margin-block-start: 18px; color: var(--ink-2); font-size: clamp(16px, 1.6vw, 18.5px); max-width: 62ch; }
 
 .btn {
   display: inline-flex;
