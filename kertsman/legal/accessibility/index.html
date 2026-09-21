@@ -104,7 +104,13 @@
   </div>
 </footer>
 
-<script src="../../data/listings.js"></script>
+<script>
+  /* קובץ הדירות נטען עם חותמת זמן, כדי שאחרי עדכון במסך הניהול
+     הדפדפן יציג מיד את הרשימה החדשה ולא עותק מהמטמון.
+     The listing file is loaded with a timestamp so an update made in the
+     admin screen shows up at once instead of a cached copy. */
+  document.write('<script src="../../data/listings.js?t=' + Date.now() + '"><\/script>');
+</script>
 <script src="../../assets/legal.js" defer></script>
 <script src="../../assets/a11y.js" defer></script>
 </body>
