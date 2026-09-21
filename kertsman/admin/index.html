@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-base="../">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#1A006D">
+<meta name="robots" content="noindex, nofollow">
+<title>ניהול הדירות | קרצמן נדל״ן</title>
+<link rel="icon" href="../assets/favicon.png" type="image/png">
+<link rel="stylesheet" href="../assets/kertsman.css">
+<link rel="stylesheet" href="../assets/admin.css">
+</head>
+<body class="admin">
+
+<div class="gate" id="gate">
+  <form class="gate-card" id="gate-form">
+    <img class="brand-logo" src="../assets/logo.png" alt="קרצמן נדל״ן" width="492" height="136">
+    <h1>ניהול הדירות</h1>
+    <p>הזינו את סיסמת הניהול כדי להיכנס.</p>
+    <div class="form-row">
+      <label for="gate-pass">סיסמה</label>
+      <input id="gate-pass" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn-primary" type="submit">כניסה</button>
+    <p class="gate-status" id="gate-status" role="status" aria-live="polite"></p>
+    <p class="gate-note">
+      הסיסמה מגנה על המסך הזה מפני מבקרים מזדמנים בלבד. היא אינה מגנה על השרת,
+      ולכן אין להשתמש בסיסמה שמשמשת אתכם במקום אחר.
+    </p>
+  </form>
+</div>
+
+<main class="admin-shell" id="shell" hidden>
+  <header class="admin-bar">
+    <div class="admin-bar-in">
+      <img class="brand-logo" src="../assets/logo.png" alt="קרצמן נדל״ן" width="492" height="136">
+      <span class="admin-title">ניהול הדירות</span>
+      <span class="admin-count" id="count"></span>
+      <div class="admin-actions">
+        <a class="btn btn-ghost btn-sm" href="../" target="_blank" rel="noopener">צפייה באתר</a>
+        <button class="btn btn-gold btn-sm" type="button" id="download">הורדת הקובץ לפרסום</button>
+      </div>
+    </div>
+    <div class="admin-dirty" id="dirty" hidden>
+      יש שינויים שעוד לא פורסמו. הורידו את הקובץ והעלו אותו לשרת כדי שהם יופיעו באתר.
+    </div>
+  </header>
+
+  <section class="admin-main">
+    <div class="admin-list">
+      <div class="admin-list-head">
+        <h2>הדירות באתר</h2>
+        <button class="btn btn-primary btn-sm" type="button" id="add">הוספת דירה</button>
+      </div>
+      <ol class="rows" id="rows"></ol>
+      <button class="btn btn-ghost btn-sm reset" type="button" id="reset">ביטול כל השינויים וחזרה לקובץ שפורסם</button>
+    </div>
+
+    <form class="admin-editor" id="editor" novalidate hidden>
+      <div class="editor-head">
+        <h2 id="editor-title">עריכת דירה</h2>
+        <button class="btn btn-ghost btn-sm" type="button" id="close-editor">סגירה</button>
+      </div>
+
+      <fieldset>
+        <legend>פרטי הדירה</legend>
+        <div class="form-two">
+          <div class="form-row">
+            <label for="f-id">מזהה (באנגלית, בלי רווחים). אפשר להשאיר ריק</label>
+            <input id="f-id" name="id" type="text">
+          </div>
+          <div class="form-row">
+            <label for="f-price">מחיר בשקלים</label>
+            <input id="f-price" name="price" type="number" min="0" step="1000">
+          </div>
+        </div>
+        <div class="form-three">
+          <div class="form-row">
+            <label for="f-rooms">חדרים</label>
+            <input id="f-rooms" name="rooms" type="number" min="1" step="0.5">
+          </div>
+          <div class="form-row">
+            <label for="f-size">שטח במ״ר</label>
+            <input id="f-size" name="size" type="number" min="1">
+          </div>
+          <div class="form-row">
+            <label for="f-balcony">מרפסת במ״ר</label>
+            <input id="f-balcony" name="balcony" type="number" min="0">
+          </div>
+        </div>
+        <div class="form-three">
+          <div class="form-row">
+            <label for="f-floor">קומה</label>
+            <input id="f-floor" name="floor" type="number" min="0">
+          </div>
+          <div class="form-row">
+            <label for="f-floors">מתוך קומות</label>
+            <input id="f-floors" name="floors" type="number" min="0">
+          </div>
+          <div class="form-row">
+            <label for="f-parking">חניות</label>
+            <input id="f-parking" name="parking" type="number" min="0">
+          </div>
+        </div>
+        <div class="form-two">
+          <div class="form-row">
+            <label for="f-year">שנת בנייה</label>
+            <input id="f-year" name="year" type="number" min="1900" max="2100">
+          </div>
+          <div class="form-row">
+            <label for="f-status">סטטוס</label>
+            <select id="f-status" name="status">
+              <option value="available">מוצגת למכירה</option>
+              <option value="under-offer">בתהליך</option>
+              <option value="sold">נמכרה</option>
+            </select>
+          </div>
+        </div>
+        <div class="checks">
+          <label><input type="checkbox" id="f-exclusive"> בבלעדיות למשרד</label>
+          <label><input type="checkbox" id="f-fresh"> להציג תג "חדש"</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>עברית</legend>
+        <div class="form-two">
+          <div class="form-row">
+            <label for="f-city-he">עיר</label>
+            <input id="f-city-he" type="text">
+          </div>
+          <div class="form-row">
+            <label for="f-area-he">שכונה</label>
+            <input id="f-area-he" type="text">
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="f-title-he">כותרת</label>
+          <input id="f-title-he" type="text">
+        </div>
+        <div class="form-row">
+          <label for="f-desc-he">תיאור</label>
+          <textarea id="f-desc-he" rows="5"></textarea>
+        </div>
+        <div class="form-row">
+          <label for="f-features-he">מאפיינים, שורה לכל מאפיין</label>
+          <textarea id="f-features-he" rows="4" placeholder="מרפסת שמש 14 מ״ר&#10;ממ״ד&#10;חניה בטאבו"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>רוסית</legend>
+        <p class="hint">אם תשאירו שדה ריק, הגרסה הרוסית תציג את הטקסט בעברית.</p>
+        <div class="form-two">
+          <div class="form-row">
+            <label for="f-city-ru">עיר</label>
+            <input id="f-city-ru" type="text">
+          </div>
+          <div class="form-row">
+            <label for="f-area-ru">שכונה</label>
+            <input id="f-area-ru" type="text">
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="f-title-ru">כותרת</label>
+          <input id="f-title-ru" type="text">
+        </div>
+        <div class="form-row">
+          <label for="f-desc-ru">תיאור</label>
+          <textarea id="f-desc-ru" rows="5"></textarea>
+        </div>
+        <div class="form-row">
+          <label for="f-features-ru">מאפיינים, שורה לכל מאפיין, באותו סדר כמו בעברית</label>
+          <textarea id="f-features-ru" rows="4"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>תמונות</legend>
+        <p class="hint">
+          מעלים את הצילומים לתיקייה <code>assets/img/</code> בשרת, ורושמים כאן שורה לכל תמונה,
+          למשל <code>assets/img/ahuza-1.jpg</code>. התמונה הראשונה היא זו שמופיעה בכרטיס.
+        </p>
+        <div class="form-row">
+          <label for="f-images">נתיבי תמונות</label>
+          <textarea id="f-images" rows="4" placeholder="assets/img/p1-a.svg&#10;assets/img/p1-b.svg"></textarea>
+        </div>
+      </fieldset>
+
+      <div class="editor-foot">
+        <button class="btn btn-primary" type="submit">שמירת הדירה</button>
+        <button class="btn btn-ghost" type="button" id="delete">מחיקת הדירה</button>
+        <p class="form-status" id="editor-status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </section>
+
+  <section class="admin-help">
+    <h2>איך מפרסמים את השינויים</h2>
+    <ol>
+      <li>עורכים כאן את הדירות. השינויים נשמרים בדפדפן הזה בלבד.</li>
+      <li>לוחצים על <strong>הורדת הקובץ לפרסום</strong>. יירד קובץ בשם <code>listings.js</code>.</li>
+      <li>נכנסים לניהול האחסון (GoDaddy File Manager), לתיקייה <code>data</code> שבאתר,
+          ומעלים את הקובץ במקום הקובץ הקיים.</li>
+      <li>מרעננים את האתר. הדירות המעודכנות מופיעות בעברית וברוסית.</li>
+    </ol>
+    <h2 class="pw-head">שינוי סיסמת הניהול</h2>
+    <p class="hint">
+      הקלידו סיסמה חדשה, העתיקו את השורה שנוצרת, והחליפו בה את השורה
+      <code>var PASS_HASH = ...</code> בראש הקובץ <code>assets/admin.js</code>.
+      הסיסמה עצמה לא נשמרת בשום מקום, רק הטביעה שלה.
+    </p>
+    <div class="pw-tool">
+      <div class="form-row">
+        <label for="pw-new">סיסמה חדשה</label>
+        <input id="pw-new" type="text" autocomplete="off">
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" id="pw-make">יצירת השורה</button>
+      <output class="pw-out" id="pw-out"></output>
+    </div>
+
+    <p class="admin-note">
+      חשוב לדעת: האתר בנוי כאתר סטטי, בלי שרת ובלי בסיס נתונים. לכן המסך הזה עורך עותק
+      מקומי ומייצר את קובץ הדירות, והעלאת הקובץ היא הפעולה שמפרסמת בפועל. כך אין צורך
+      בתשלום חודשי על מערכת ניהול, ואין סיכון שמישהו ישנה את האתר מרחוק.
+    </p>
+  </section>
+</main>
+
+<script src="../data/listings.js"></script>
+<script src="../assets/admin.js" defer></script>
+</body>
+</html>

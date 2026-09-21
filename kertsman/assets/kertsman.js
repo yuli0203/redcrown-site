@@ -128,8 +128,10 @@
       if (!value) node.style.display = 'none';
     });
 
-    var year = byId('year');
-    if (year) year.textContent = new Date().getFullYear();
+    var thisYear = new Date().getFullYear();
+    Array.prototype.forEach.call(document.querySelectorAll('#year, #year-credit'), function (node) {
+      node.textContent = thisYear;
+    });
   }
 
   /* ---------- cards ---------- */
