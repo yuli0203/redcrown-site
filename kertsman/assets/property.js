@@ -21,6 +21,7 @@
       forSale: 'למכירה', exclusive: 'בלעדי', fresh: 'חדש', underOffer: 'בתהליך', sold: 'נמכר',
       rooms: 'חדרים', sqm: 'מ"ר', floor: 'קומה', outOf: 'מתוך', parking: 'חניות',
       balcony: 'מרפסת', year: 'שנת בנייה', features: 'מה יש בדירה', gallery: 'תמונה',
+      prevShot: 'התמונה הקודמת', nextShot: 'התמונה הבאה',
       whatsapp: 'שליחת הודעה בוואטסאפ', call: 'להתקשר', back: 'לכל הדירות',
       missing: 'הדירה הזו כבר לא מפורסמת', missingNote: 'ייתכן שהיא נמכרה או ירדה מהאתר. אפשר לראות את הדירות שמוצגות כרגע.',
       askAbout: 'שלום, אני מתעניין/ת בדירה', crumbHome: 'דף הבית', crumbList: 'דירות למכירה',
@@ -31,6 +32,7 @@
       forSale: 'Продажа', exclusive: 'Эксклюзив', fresh: 'Новое', underOffer: 'В сделке', sold: 'Продано',
       rooms: 'комн.', sqm: 'м²', floor: 'Этаж', outOf: 'из', parking: 'Парковка',
       balcony: 'Балкон', year: 'Год постройки', features: 'Что есть в квартире', gallery: 'Фото',
+      prevShot: 'Предыдущее фото', nextShot: 'Следующее фото',
       whatsapp: 'Написать в WhatsApp', call: 'Позвонить', back: 'Все квартиры',
       missing: 'Эта квартира больше не публикуется', missingNote: 'Возможно, она продана или снята с публикации. Посмотрите квартиры, которые есть сейчас.',
       askAbout: 'Здравствуйте! Интересует квартира', crumbHome: 'Главная', crumbList: 'Квартиры на продажу',
@@ -60,6 +62,7 @@
   }
 
   var I = {
+    chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>',
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg>',
     wa: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.1a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.1 8.1 0 1 1 12 20.1Zm4.5-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5s0-.4-.1-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.6 2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.2-.2-.4-.3Z"/></svg>'
@@ -150,6 +153,10 @@
       '</div>' +
       '<div class="prop-gallery">' +
         '<div class="gallery-main"><img id="gallery-img" src="' + esc(images[0] || '') + '" alt="' + esc(loc(item.title)) + '" width="1600" height="900" fetchpriority="high"></div>' +
+        (images.length > 1
+          ? '<button class="gal-nav gal-prev" type="button" data-gal="-1" aria-label="' + esc(t('prevShot')) + '">' + I.chev + '</button>' +
+            '<button class="gal-nav gal-next" type="button" data-gal="1" aria-label="' + esc(t('nextShot')) + '">' + I.chev + '</button>'
+          : '') +
         (images.length > 1 ? '<div class="thumbs">' + images.map(function (src, i) {
           return '<button type="button" data-thumb="' + i + '" aria-current="' + (i === 0 ? 'true' : 'false') + '" aria-label="' + esc(t('gallery') + ' ' + (i + 1)) + '"><img src="' + esc(src) + '" alt="" loading="lazy"></button>';
         }).join('') + '</div>' : '') +
@@ -188,14 +195,36 @@
     setMeta(item);
 
     var gallery = byId('property');
+    var shown = 0;
+
+    var showImage = function (index) {
+      if (!images[index]) return;
+      shown = index;
+      var img = byId('gallery-img');
+      if (img) img.src = images[index];
+      Array.prototype.forEach.call(gallery.querySelectorAll('[data-thumb]'), function (btn) {
+        btn.setAttribute('aria-current', String(Number(btn.getAttribute('data-thumb')) === index));
+      });
+    };
+
+    if (images.length > 1) {
+      /* חצים במקלדת: ימין תמיד מתקדם קדימה בכיוון הקריאה של העמוד
+         arrow keys: right always moves forward in the page's reading order */
+      document.addEventListener('keydown', function (event) {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        var forward = (event.key === 'ArrowRight') === (document.documentElement.dir !== 'rtl');
+        showImage((shown + (forward ? 1 : -1) + images.length) % images.length);
+      });
+    }
+
     gallery.addEventListener('click', function (event) {
       var thumb = event.target.closest('[data-thumb]');
-      if (thumb) {
-        var index = Number(thumb.getAttribute('data-thumb'));
-        byId('gallery-img').src = images[index];
-        Array.prototype.forEach.call(gallery.querySelectorAll('[data-thumb]'), function (btn) {
-          btn.setAttribute('aria-current', String(Number(btn.getAttribute('data-thumb')) === index));
-        });
+      if (thumb) { showImage(Number(thumb.getAttribute('data-thumb'))); return; }
+
+      var step = event.target.closest('[data-gal]');
+      if (step && images.length > 1) {
+        var delta = Number(step.getAttribute('data-gal'));
+        showImage((shown + delta + images.length) % images.length);
         return;
       }
       var copy = event.target.closest('#copy-link');
@@ -240,8 +269,33 @@
     });
   }
 
+  /* רשת ביטחון להחלפת שפה: אם הגענו בלי מזהה אבל הגענו מעמוד דירה אחר,
+     לוקחים את המזהה מכתובת המקור. זה מציל מקרה שבו הדפדפן עדיין מריץ גרסה
+     ישנה של הקובץ הזה בעמוד שממנו באנו, והקישור נבנה בלי המזהה.
+     A safety net for the language switch: arriving without an id but from
+     another apartment page, the id is taken from the referring address. That
+     rescues the case where the page we came from still runs an older cached
+     copy of this file and built the link without the id. */
+  function idFromReferrer() {
+    try {
+      var ref = document.referrer || '';
+      if (!/\/dira\//.test(ref)) return '';
+      var found = /[?&]id=([^&#]+)/.exec(ref);
+      return found ? decodeURIComponent(found[1]) : '';
+    } catch (err) { return ''; }
+  }
+
   function init() {
     var id = param('id');
+    if (!id) {
+      var rescued = idFromReferrer();
+      if (rescued) {
+        id = rescued;
+        if (window.history && history.replaceState) {
+          history.replaceState(null, '', '?id=' + encodeURIComponent(id));
+        }
+      }
+    }
     var item = LISTINGS.filter(function (x) { return x.id === id; })[0];
     if (item) render(item); else missing();
     linkLanguages(item ? item.id : '');

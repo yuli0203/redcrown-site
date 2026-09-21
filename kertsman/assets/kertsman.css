@@ -1186,58 +1186,61 @@ html { font-size: calc(100% * var(--a11y-scale, 1)); }
 
 /* ============================================================
    רצועת הקרדיט של Red Crown Interactive / studio credit bar
-   פס אדום בתחתית העמוד, בצבעי הסטודיו, עם הלוגו על עיגול לבן
-   כדי שהסמל האדום ייראה על הרקע האדום.
-   A red band at the very bottom in the studio's colours; the mark sits on a
-   white disc so the crimson logo reads against the crimson background.
+   הרצועה ממשיכה את הסגול הכהה של הפוטר ולא צובעת את תחתית האתר באדום:
+   האדום מופיע רק בסמל עצמו ובריחוף על הכפתור, כך שהקרדיט ברור אבל מנומס.
+   The band continues the footer's deep violet instead of painting the bottom
+   of the site red: the red shows only in the mark itself and on hover, so the
+   credit reads clearly while staying polite.
    ============================================================ */
 
 .credit-bar {
-  /* אדום כהה ומאופק, לא הגוון הבוהק של הלוגו: הרצועה אמורה לסגור את העמוד
-     בשקט ולא לצעוק. / A deep, restrained red rather than the logo's bright
-     one: the bar should close the page quietly. */
-  --rc-red: #7A0C1F;
-  --rc-red-dark: #5C0716;
+  --rc-red: #C8102E;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(12px, 2vw, 20px);
-  background: var(--rc-red);
+  gap: clamp(12px, 2vw, 18px);
+  background: #0C0030;
   color: #fff;
-  padding: 14px var(--gutter);
+  padding: 13px var(--gutter);
   text-decoration: none;
+  border-block-start: 1px solid rgba(255, 255, 255, .08);
   transition: background-color .22s ease;
 }
 .credit-bar:hover,
-.credit-bar:focus-visible { background: var(--rc-red-dark); }
+.credit-bar:focus-visible { background: #16003f; }
 
 .credit-mark {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   flex: none;
   border-radius: 50%;
   background: #fff;
   display: grid;
   place-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
 }
-.credit-mark img { width: 30px; height: 30px; object-fit: contain; }
+.credit-mark img { width: 25px; height: 25px; object-fit: contain; }
 
-.credit-text { display: grid; gap: 2px; line-height: 1.35; }
-.credit-text b { font-family: var(--display); font-size: 16.5px; font-weight: 700; color: #fff; }
-.credit-text span { font-size: 13.5px; color: rgba(255, 255, 255, .78); }
+.credit-text { display: grid; gap: 1px; line-height: 1.35; }
+.credit-text b { font-family: var(--display); font-size: 15px; font-weight: 600; color: #fff; letter-spacing: .1px; }
+.credit-text span { font-size: 12.5px; color: rgba(255, 255, 255, .5); }
 
 .credit-cta {
   flex: none;
-  border: 1px solid rgba(255, 255, 255, .55);
+  border: 1px solid rgba(255, 255, 255, .28);
   border-radius: var(--r-pill);
-  padding: 7px 16px;
-  font-size: 14px;
+  padding: 6px 15px;
+  font-size: 13.5px;
   font-weight: 600;
   white-space: nowrap;
-  transition: background-color .2s ease, border-color .2s ease;
+  color: rgba(255, 255, 255, .82);
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
 }
-.credit-bar:hover .credit-cta { background: #fff; border-color: #fff; color: var(--rc-red); }
+.credit-bar:hover .credit-cta,
+.credit-bar:focus-visible .credit-cta {
+  background: var(--rc-red);
+  border-color: var(--rc-red);
+  color: #fff;
+}
 
 @media (max-width: 620px) {
   /* בנייד כפתורי הוואטסאפ והנגישות צפים מעל תחתית העמוד, ולכן הרצועה
@@ -1246,5 +1249,46 @@ html { font-size: calc(100% * var(--a11y-scale, 1)); }
      bottom of the page, so the bar keeps its content up top and leaves room
      underneath for them to sit on. */
   .credit-bar { flex-direction: column; text-align: center; gap: 10px; padding-block: 18px 74px; }
-  .credit-text b { font-size: 15.5px; }
+}
+
+/* ---------- חצי מעבר בין תמונות / gallery arrows ---------- */
+
+.gallery, .prop-gallery { position: relative; }
+
+.gal-nav {
+  position: absolute;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 255, 255, .92);
+  color: var(--brand);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  opacity: .9;
+  transition: opacity .2s ease, background-color .2s ease, transform .2s ease;
+  z-index: 3;
+}
+.gal-nav:hover { opacity: 1; background: #fff; }
+.gal-nav:active { transform: translateY(-50%) scale(.94); }
+.gal-nav svg { width: 22px; height: 22px; }
+
+.gal-prev { inset-inline-start: 12px; }
+.gal-next { inset-inline-end: 12px; }
+
+/* החץ מצביע תמיד החוצה, לכיוון שבו הכפתור יושב, בשתי השפות
+   the chevron always points outward, whichever side the button sits on */
+.gal-next svg { transform: rotate(180deg); }
+html[dir="rtl"] .gal-prev svg { transform: rotate(180deg); }
+html[dir="rtl"] .gal-next svg { transform: rotate(0deg); }
+
+@media (max-width: 620px) {
+  .gal-nav { width: 36px; height: 36px; }
+  .gal-nav svg { width: 19px; height: 19px; }
+  .gal-prev { inset-inline-start: 8px; }
+  .gal-next { inset-inline-end: 8px; }
 }

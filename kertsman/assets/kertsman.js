@@ -25,6 +25,7 @@
       emptyNote: 'הדירות שלנו נסגרות מהר. השאירו פרטים ונעדכן אתכם ראשונים על דירה שעולה לשיווק.',
       results: 'דירות', priceOnRequest: 'מחיר במשא ומתן',
       close: 'סגירה', features: 'מה יש בדירה', gallery: 'תמונה', sending: 'שולח...',
+      prevShot: 'התמונה הקודמת', nextShot: 'התמונה הבאה',
       formOk: 'תודה! הפרטים נשלחו ואנחנו נחזור אליכם בהקדם.',
       formOkWa: 'תודה! נפתח עבורכם חלון וואטסאפ עם הפרטים. אם הוא לא נפתח, התקשרו אלינו ישירות.',
       formFallback: 'השליחה לא עברה, אז פתחנו לכם וואטסאפ עם אותם פרטים.',
@@ -44,6 +45,7 @@
       emptyNote: 'Наши объекты уходят быстро. Оставьте контакты, и мы сообщим вам первыми о новой квартире.',
       results: 'объектов', priceOnRequest: 'Цена по договорённости',
       close: 'Закрыть', features: 'Что есть в квартире', gallery: 'Фото', sending: 'Отправляем...',
+      prevShot: 'Предыдущее фото', nextShot: 'Следующее фото',
       formOk: 'Спасибо! Данные отправлены, мы свяжемся с вами в ближайшее время.',
       formOkWa: 'Спасибо! Мы открыли WhatsApp с вашими данными. Если окно не открылось, позвоните нам напрямую.',
       formFallback: 'Отправка не прошла, поэтому мы открыли WhatsApp с теми же данными.',
@@ -64,6 +66,7 @@
   /* ---------- icons ---------- */
 
   var I = {
+    chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>',
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
     bed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18M6 10V7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v3"/></svg>',
     area: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v6H3M21 15h-6v6"/></svg>',
@@ -244,6 +247,10 @@
       '<div class="sheet-scroll">' +
         '<div class="gallery">' +
           '<div class="gallery-main"><img id="gallery-img" src="' + esc(images[0] || '') + '" alt="' + esc(loc(item.title)) + '" width="1600" height="900"></div>' +
+          (images.length > 1
+            ? '<button class="gal-nav gal-prev" type="button" data-gal="-1" aria-label="' + esc(t('prevShot')) + '">' + I.chev + '</button>' +
+              '<button class="gal-nav gal-next" type="button" data-gal="1" aria-label="' + esc(t('nextShot')) + '">' + I.chev + '</button>'
+            : '') +
           (images.length > 1 ? '<div class="thumbs">' + images.map(function (src, i) {
             return '<button type="button" data-thumb="' + i + '" aria-current="' + (i === 0 ? 'true' : 'false') + '" aria-label="' + esc(t('gallery') + ' ' + (i + 1)) + '"><img src="' + esc(src) + '" alt="" loading="lazy"></button>';
           }).join('') + '</div>' : '') +
@@ -429,6 +436,16 @@
 
       var thumb = event.target.closest('[data-thumb]');
       if (thumb) { showImage(Number(thumb.getAttribute('data-thumb'))); return; }
+
+      var step = event.target.closest('[data-gal]');
+      if (step) {
+        var count = ((current && current.images) || []).length;
+        if (count > 1) {
+          var delta = Number(step.getAttribute('data-gal'));
+          showImage((galleryIndex + delta + count) % count);
+        }
+        return;
+      }
 
       if (event.target.closest('[data-close]')) { closeSheet(); return; }
 
