@@ -33,8 +33,7 @@
   "description": "Семейное бутиковое агентство недвижимости в районе Хайфы. Квартиры на продажу с личным сопровождением.",
   "url": "https://www.kertsman.com/ru/",
   "areaServed": ["Хайфа", "Кармель", "Ахуза", "Неве-Шаанан", "Бат-Галим", "Хадар ха-Кармель", "Крайот"],
-  "availableLanguage": ["ru", "he", "en"],
-  "address": { "@type": "PostalAddress", "addressLocality": "Хайфа", "addressCountry": "IL" }
+  "availableLanguage": ["ru", "he", "en"]
 }
 </script>
 </head>
@@ -213,7 +212,7 @@
           </p>
           <p class="signature">С радостью к вашим услугам, семейный бутиковый бизнес из Хайфы</p>
           <div class="credentials">
-            <span class="tag">Лицензия № <span data-cfg="licence">0000000</span></span>
+            <span class="tag" data-optional="licence">Лицензия № <span data-cfg="licence"></span></span>
             <span class="tag">Семейный бизнес</span>
             <span class="tag">Русский, иврит, английский</span>
             <span class="tag">Юридическое сопровождение с адвокатом по недвижимости</span>
@@ -340,7 +339,7 @@
           <ul class="contact-list">
             <li>
               <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0 8.3 6.7 15 15 15l1.5-3.5-4-2-2 2a12 12 0 0 1-5-5l2-2-2-4L6 4A2 2 0 0 0 4 5Z"/></svg></span>
-              <span><b>Телефон</b><a data-link="tel" href="#" data-cfg="phone">050-000-0000</a></span>
+              <span><b>Телефон</b><a data-link="tel" href="#" data-cfg="phone">052-227-5710</a></span>
             </li>
             <li>
               <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
@@ -348,7 +347,7 @@
             </li>
             <li>
               <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
-              <span><b>Офис</b><p data-cfg="address">бул. Мория 10, Хайфа</p></span>
+              <span><b>Район работы</b><p data-cfg="serviceArea">Хайфа, Кармель и Крайот</p></span>
             </li>
             <li>
               <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -385,7 +384,7 @@
           </div>
           <button class="btn btn-primary" type="submit">Отправить</button>
           <p class="form-status" role="status" aria-live="polite"></p>
-          <p class="form-note">Можно просто позвонить, <a data-link="tel" href="#" data-cfg="phone" style="color:var(--brand)">050-000-0000</a></p>
+          <p class="form-note">Можно просто позвонить, <a data-link="tel" href="#" data-cfg="phone" style="color:var(--brand)">052-227-5710</a></p>
         </form>
       </div>
     </div>
@@ -414,7 +413,7 @@
       <div>
         <h4>Связаться</h4>
         <ul>
-          <li><a data-link="tel" href="#" data-cfg="phone">050-000-0000</a></li>
+          <li><a data-link="tel" href="#" data-cfg="phone">052-227-5710</a></li>
           <li><a data-link="wa" href="#" data-wa-text="Здравствуйте! Я с сайта, хочу проконсультироваться." target="_blank" rel="noopener">WhatsApp</a></li>
           <li><a data-link="mail" href="#" data-cfg="email">info@kertsman.com</a></li>
           <li><a href="../" hreflang="he">גרסה בעברית</a></li>
@@ -422,7 +421,7 @@
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© <span id="year">2026</span> Керцман недвижимость · Лицензия № <span data-cfg="licence">0000000</span></span>
+      <span>© <span id="year">2026</span> Керцман недвижимость<span data-optional="licence"> · Лицензия № <span data-cfg="licence"></span></span></span>
       <span>Информация на сайте не является юридической консультацией или оценкой и не заменяет индивидуальную проверку объекта.</span>
     </div>
   </div>

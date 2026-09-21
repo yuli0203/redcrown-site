@@ -98,7 +98,7 @@
       role: loc(CFG.role),
       phone: CFG.phone || '',
       email: CFG.email || '',
-      address: loc(CFG.address),
+      serviceArea: loc(CFG.serviceArea),
       hours: loc(CFG.hours),
       licence: CFG.licence || '',
       officeCity: loc(CFG.officeCity),
@@ -114,6 +114,14 @@
       else if (kind === 'mail') node.href = 'mailto:' + (CFG.email || '');
       else if (kind === 'wa') node.href = waLink(node.getAttribute('data-wa-text') || t('leadContact'));
     });
+    // תגית שאין לה ערך בהגדרות פשוט לא מוצגת / an optional badge with no
+    // value in the config is dropped rather than shown with a placeholder
+    Array.prototype.forEach.call(document.querySelectorAll('[data-optional]'), function (node) {
+      var key = node.getAttribute('data-optional');
+      var value = (map[key] || '').toString().replace(/[0\s-]/g, '');
+      if (!value) node.style.display = 'none';
+    });
+
     var year = byId('year');
     if (year) year.textContent = new Date().getFullYear();
   }
