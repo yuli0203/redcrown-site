@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ============================================================
+     PLACEHOLDER LOGO / לוגו זמני
+     החליפו את הקובץ הזה בלוגו האמיתי של המשרד ושמרו על שם הקובץ
+     (assets/logo.svg). אין צורך לשנות שום דבר אחר באתר.
+     Replace this file with the real office logo, keeping the file
+     name (assets/logo.svg). Nothing else in the site needs editing.
+     ============================================================ -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 56" width="260" height="56" role="img" aria-label="Kertsman">
+  <path d="M28 4 9 15v33h38V15L28 4Z" fill="#FFFFFF"/>
+  <path d="M28 10 15 17.5V42h26V17.5L28 10Z" fill="none" stroke="#B08A4E" stroke-width="1.6"/>
+  <path d="M23 22v12M23 28.5l7-6.5M25.5 27l7 7" fill="none" stroke="#123C33" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="60" y="30" font-family="Frank Ruhl Libre, Playfair Display, Georgia, serif" font-size="26" font-weight="700" fill="#FFFFFF">קרצמן</text>
+  <text x="60" y="45" font-family="Heebo, Manrope, Arial, sans-serif" font-size="9.5" letter-spacing="2.6" fill="#B9C4BF">KERTSMAN · REAL ESTATE</text>
+</svg>
