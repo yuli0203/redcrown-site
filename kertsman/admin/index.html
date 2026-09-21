@@ -25,7 +25,12 @@
     <p>הזינו את סיסמת הניהול כדי להיכנס.</p>
     <div class="form-row">
       <label for="gate-pass">סיסמה</label>
-      <input id="gate-pass" type="password" autocomplete="current-password" required>
+      <div class="key-row">
+        <input id="gate-pass" type="password" autocomplete="current-password"
+               autocorrect="off" autocapitalize="off" spellcheck="false" required>
+        <button class="btn btn-ghost btn-sm" type="button" id="gate-show">הצגה</button>
+      </div>
+      <p class="hint" id="gate-hint" hidden></p>
     </div>
     <button class="btn btn-primary" type="submit">כניסה</button>
     <p class="gate-status" id="gate-status" role="status" aria-live="polite"></p>

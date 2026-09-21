@@ -232,6 +232,35 @@
 
     if (lockLeft() > 0) showLock();
 
+    /* אפשר לראות מה הוקלד. שדה סיסמה מסתיר גם טעות מקלדת: הקלדה במצב עברית,
+       או מילוי אוטומטי של הדפדפן עם סיסמה אחרת, נראים שניהם כמו נקודות.
+       The typed value can be revealed: a password field hides a keyboard
+       mistake, and Hebrew layout or a browser autofill both look like dots. */
+    var field = byId('gate-pass');
+    var hint = byId('gate-hint');
+    var show = byId('gate-show');
+    if (show) {
+      show.addEventListener('click', function () {
+        var showing = field.type === 'text';
+        field.type = showing ? 'password' : 'text';
+        show.textContent = showing ? 'הצגה' : 'הסתרה';
+        field.focus();
+      });
+    }
+    if (hint) {
+      field.addEventListener('input', function () {
+        var hebrew = /[\u0590-\u05FF]/.test(field.value);
+        hint.textContent = hebrew ? 'נראה שהמקלדת במצב עברית. הסיסמה באותיות אנגליות.' : '';
+        hint.hidden = !hebrew;
+      });
+      field.addEventListener('keyup', function (event) {
+        if (!event.getModifierState || hint.textContent.indexOf('עברית') >= 0) return;
+        var caps = event.getModifierState('CapsLock');
+        hint.textContent = caps ? 'שימו לב: מקש Caps Lock דלוק.' : '';
+        hint.hidden = !caps;
+      });
+    }
+
     form.addEventListener('submit', function (event) {
       event.preventDefault();
       if (lockLeft() > 0) { showLock(); return; }
@@ -261,7 +290,7 @@
         if (state.until > Date.now()) { showLock(); return; }
         var left = FREE_TRIES - state.n;
         var warn = left > 2 ? '' : (left === 1 ? ' נשאר ניסיון אחד לפני נעילה זמנית.' : ' נשארו ' + left + ' ניסיונות לפני נעילה זמנית.');
-        status.textContent = 'סיסמה שגויה.' + warn;
+        status.textContent = 'סיסמה שגויה.' + warn + ' אפשר ללחוץ על "הצגה" כדי לראות מה הוקלד.';
         byId('gate-pass').select();
       });
     });
