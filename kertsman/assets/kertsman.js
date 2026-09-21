@@ -105,6 +105,23 @@
 
   /* ---------- config binding ---------- */
 
+  /* מספר רישיון אחד או שניים, מופרדים בפסיק בקובץ ההגדרות. התווית מתאימה
+     את עצמה למספר הרישיונות, והסימן U+200E שומר על סדר המספרים בשורה בעברית.
+     One licence number or two, comma separated in the config. The label follows
+     the count, and U+200E keeps the numbers in order on a right-to-left line. */
+  var licences = (CFG.licence || '').split(/[,;|]/).map(function (value) {
+    return value.trim();
+  }).filter(Boolean);
+
+  function licenceLine() {
+    if (!licences.length) return '';
+    var many = licences.length > 1;
+    var label = LANG === 'ru'
+      ? (many ? 'Лицензии №' : 'Лицензия №')
+      : (many ? 'רישיונות תיווך מס׳' : 'רישיון תיווך מס׳');
+    return label + ' ' + licences.join('\u200e, ') + '\u200e';
+  }
+
   function bindConfig() {
     var agent = loc(CFG.agent);
     var map = {
@@ -114,7 +131,8 @@
       email: CFG.email || '',
       serviceArea: loc(CFG.serviceArea),
       hours: loc(CFG.hours),
-      licence: CFG.licence || '',
+      licence: licences.join(', '),
+      licenceLine: licenceLine(),
       officeCity: loc(CFG.officeCity),
       initials: agent.split(/\s+/).map(function (w) { return w.charAt(0); }).join('').slice(0, 2)
     };

@@ -328,3 +328,35 @@ body.admin { background: var(--paper); }
 @media (max-width: 620px) {
   .connect { grid-template-columns: 1fr; }
 }
+
+/* ---------- delete, with a question first ---------- */
+
+.icon-btn.danger:hover:not(:disabled) { border-color: #b0392f; color: #b0392f; background: #fdf4f3; }
+.icon-btn svg { width: 16px; height: 16px; margin-inline: auto; }
+
+.btn-danger {
+  background: #b0392f;
+  color: #fff;
+  border-color: #b0392f;
+}
+.btn-danger:hover { background: #963026; border-color: #963026; color: #fff; }
+
+dialog.ask {
+  border: 0;
+  padding: 0;
+  background: none;
+  max-width: min(420px, calc(100vw - 32px));
+}
+dialog.ask::backdrop { background: rgba(18, 0, 73, .55); backdrop-filter: blur(3px); }
+.ask-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: clamp(22px, 3vw, 30px);
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  gap: 12px;
+  text-align: start;
+}
+.ask-card h2 { font-size: 22px; }
+.ask-card p { color: var(--ink-2); font-size: 15.5px; line-height: 1.6; }
+.ask-foot { display: flex; gap: 10px; justify-content: flex-end; margin-block-start: 6px; }

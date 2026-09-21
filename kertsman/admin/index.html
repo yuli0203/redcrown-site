@@ -246,9 +246,12 @@
   <section class="admin-help">
     <h2>איך מפרסמים את השינויים</h2>
     <ol>
-      <li>עורכים כאן את הדירות ומוסיפים תמונות. עד הפרסום השינויים נשמרים בדפדפן הזה בלבד.</li>
-      <li>לוחצים על <strong>פרסום לאתר</strong> בראש המסך. הדירות והתמונות נכתבות ישר לאתר.</li>
+      <li>עורכים כאן את הדירות ומוסיפים תמונות, ולוחצים על <strong>שמירת הדירה</strong>.</li>
+      <li>כל שמירה עולה לאתר מעצמה, כולל התמונות. שורת המצב בראש המסך מראה מה קורה,
+          ובסוף כתוב "נשמר ופורסם לאתר".</li>
       <li>אחרי כדקה מרעננים את האתר. הדירות המעודכנות מופיעות בעברית וברוסית, וכל דירה מקבלת עמוד משלה.</li>
+      <li>אותו דבר קורה במחיקת דירה ובשינוי סדר הדירות. כפתור <strong>פרסום לאתר</strong> נועד
+          לנסות שוב אם העלאה נכשלה, למשל כשהאינטרנט נופל באמצע.</li>
       <li>אם הפרסום לא עובד, למשל בלי אינטרנט, אפשר ללחוץ על <strong>הורדת העדכון</strong>,
           לקבל קובץ ZIP עם <code>data/listings.js</code> ועם התמונות, ולהעלות אותו לאתר ידנית.</li>
     </ol>
@@ -279,6 +282,7 @@
       </div>
     </div>
     <div class="connect-foot">
+      <label class="connect-remember"><input type="checkbox" id="c-auto" checked> לפרסם לאתר בכל שמירה</label>
       <label class="connect-remember"><input type="checkbox" id="c-remember" checked> לזכור את המפתח במחשב הזה</label>
       <button class="btn btn-primary btn-sm" type="button" id="c-test">בדיקת החיבור</button>
       <button class="btn btn-ghost btn-sm" type="button" id="c-save">שמירה</button>
@@ -312,6 +316,17 @@
     </p>
   </section>
 </main>
+
+<dialog class="ask" id="ask" aria-labelledby="ask-title">
+  <form class="ask-card" method="dialog">
+    <h2 id="ask-title">למחוק את הדירה?</h2>
+    <p id="ask-text">הדירה תוסר מהאתר. אי אפשר לבטל את הפעולה.</p>
+    <div class="ask-foot">
+      <button class="btn btn-ghost btn-sm" type="submit" value="cancel">ביטול</button>
+      <button class="btn btn-danger btn-sm" type="submit" value="ok" id="ask-ok">מחיקה</button>
+    </div>
+  </form>
+</dialog>
 
 <script src="../data/listings.js"></script>
 <script src="../assets/admin.js" defer></script>
