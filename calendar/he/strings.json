@@ -36,7 +36,7 @@
   "GETTING STARTED": "מתחילים בקלות",
   "A straightforward way to schedule.": "דרך פשוטה לתאם פגישות.",
   "Create your account": "יוצרים חשבון",
-  "Use Google or your email to access your own calendar space. Microsoft sign-in is coming soon.": "נכנסים באמצעות Google או אימייל לסביבת היומן האישית. חיבור Microsoft נמצא בתהליך הגדרה.",
+  "Use Google, Microsoft or your email to access your own calendar space.": "נכנסים באמצעות Google, Microsoft או אימייל לסביבת היומן האישית.",
   "Free account registration": "הרשמה בחינם",
   "Set your availability": "מגדירים זמינות",
   "Choose meeting lengths and working hours, with time between meetings when you need it.": "בוחרים משכי פגישות ושעות עבודה, ומוסיפים מרווחים בין פגישות לפי הצורך.",
@@ -89,6 +89,7 @@
   "Support": "תמיכה",
   "Switch to light mode": "מעבר למצב בהיר",
   "Switch to dark mode": "מעבר למצב כהה",
+  "Google, Microsoft or email. No credit card required.": "כניסה עם Google, Microsoft או אימייל. אין צורך בכרטיס אשראי.",
   "Google or email. Microsoft sign-in is coming soon. No credit card required.": "כניסה עם Google או אימייל. חיבור Microsoft בקרוב. אין צורך בכרטיס אשראי.",
   "Sending your message...": "שולחים את ההודעה...",
   "Thank you. Your message has been sent to Red Crown Interactive.": "תודה! ההודעה נשלחה ל-Red Crown Interactive.",
@@ -100,5 +101,12 @@
   "Guests can book without an account": "אפשר לקבוע פגישה ללא חשבון",
   "Connect Google Calendar and choose which calendars block busy times. Microsoft Outlook support is coming soon.": "חברו את Google Calendar ובחרו אילו יומנים חוסמים זמנים תפוסים. התמיכה ב-Microsoft Outlook תתווסף בהמשך.",
   "Available in beta": "זמין בגרסת בטא",
-  "Coming soon": "בקרוב"
+  "Coming soon": "בקרוב",
+  "Enable Microsoft sign-in": "הפעלת כניסה עם Microsoft",
+  "Use Microsoft to sign in to this same account. Calendar access is separate.": "כניסה עם Microsoft לאותו חשבון. הגישה ליומן מוגדרת בנפרד.",
+  "This email already has an account. Sign in with your original method, then select Enable Microsoft sign-in to connect Microsoft to the same account.": "כבר קיים חשבון עם האימייל הזה. היכנסו בשיטה המקורית ובחרו בהפעלת כניסה עם Microsoft כדי לחבר את Microsoft לאותו חשבון.",
+  "This Microsoft account is connected to another Crown Calendar account. Sign in with Microsoft to use that account.": "חשבון Microsoft הזה מחובר לחשבון אחר ביומן. היכנסו עם Microsoft כדי להשתמש בו.",
+  "Microsoft sign-in is already enabled for this account.": "כניסה עם Microsoft כבר פעילה בחשבון הזה.",
+  "Sign out and sign in again, then retry enabling Microsoft sign-in.": "צאו והיכנסו מחדש, ואז נסו שוב להפעיל כניסה עם Microsoft.",
+  "Microsoft sign-in is enabled. You can now use Microsoft to sign in to this same account.": "כניסה עם Microsoft הופעלה. אפשר כעת להיכנס עם Microsoft לאותו חשבון."
 }
