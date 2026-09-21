@@ -4,6 +4,9 @@ const I18N = {
     "journal.title":"Ideas for your next product",
     "journal.intro":"Selected articles in Hebrew on app development, interactive 3D and XR.",
     "journal.all":"ALL ARTICLES",
+    "journal.prev":"Previous articles",
+    "journal.next":"Next articles",
+    "journal.browse":"Browse articles",
 
     "float.cta":"GET A PROPOSAL",
     "doc.title":"App, 3D & VR/AR/XR Development in Unity | Red Crown Interactive",
@@ -73,6 +76,9 @@ const I18N = {
     "journal.title":"מרעיון למוצר - גם במילים",
     "journal.intro":"מאמרים על פיתוח אפליקציות, תלת-ממד ו-XR, שיעזרו לקבל החלטות טובות יותר.",
     "journal.all":"לכל המאמרים",
+    "journal.prev":"המאמרים הקודמים",
+    "journal.next":"המאמרים הבאים",
+    "journal.browse":"דפדוף במאמרים",
 
     "float.cta":"לייעוץ חינם",
     "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive",
@@ -146,6 +152,9 @@ const I18N = {
     "journal.title":"Идеи для вашего продукта",
     "journal.intro":"Статьи на иврите о разработке приложений, интерактивном 3D и XR.",
     "journal.all":"ВСЕ СТАТЬИ",
+    "journal.prev":"Предыдущие статьи",
+    "journal.next":"Следующие статьи",
+    "journal.browse":"Просмотр статей",
 
     "float.cta":"Получить предложение",
     "doc.title":"Разработка приложений, 3D и VR на Unity | Red Crown Interactive",

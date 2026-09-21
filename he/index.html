@@ -130,8 +130,8 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/shared/home-articles.css?v=20260921">
-<script src="/shared/home-articles.js?v=20260921" defer></script>
+<link rel="stylesheet" href="/shared/home-articles.css?v=20260921b">
+<script src="/shared/home-articles.js?v=20260921b" defer></script>
 </head>
 <body>
 <script>document.documentElement.classList.add('js');</script>
@@ -436,7 +436,7 @@
       </div>
       <a class="btn btn-line" href="/blog/" data-i18n="journal.all">לכל המאמרים</a>
     </div>
-    <div class="journal-grid" id="home-articles">
+    <div class="journal-grid" id="home-articles" data-lenis-prevent role="group" aria-label="דפדוף במאמרים" data-i18n-aria="journal.browse">
       <a class="journal-card" lang="he" dir="rtl" href="/blog/?post=vr-unity-app-development-company">
         <time datetime="2026-09-20T15:02:34.544+00:00">20 בספטמבר 2026</time>
         <h3>איך לבחור חברת פיתוח אפליקציות VR ב-Unity</h3>
@@ -449,6 +449,11 @@
         <p>פיתוח AR לתהליכי עבודה תעשייתיים מצמצם טעויות, מקצר הכשרות ומחבר הוראות, נתונים ובקרה בזמן אמת למערכת AR יציבה, מדויקת ונוחה לעובדים ברצפת הייצור.</p>
         <span class="journal-read">לקריאת המאמר <span aria-hidden="true">←</span></span>
       </a>
+    </div>
+    <div class="journal-controls" hidden>
+      <button type="button" data-journal-prev aria-label="המאמרים הקודמים" data-i18n-aria="journal.prev" aria-controls="home-articles"><span aria-hidden="true">←</span></button>
+      <span class="journal-position" dir="ltr" aria-live="polite" aria-atomic="true"></span>
+      <button type="button" data-journal-next aria-label="המאמרים הבאים" data-i18n-aria="journal.next" aria-controls="home-articles"><span aria-hidden="true">→</span></button>
     </div>
   </section>
 
@@ -544,7 +549,7 @@
 <a class="wa-float" href="https://wa.me/972585760550?text=Hi%21%20I%27m%20interested%20in%20app%20development%20services" target="_blank" rel="noopener" aria-label="שיחה בוואטסאפ"><svg viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5z"/><path d="M9.2 8.8c-.3 3.1 2.9 6.3 6 6l.6-1.6-2-1.2-.9.7c-.7-.4-1.2-.9-1.6-1.6l.7-.9-1.2-2z"/></svg></a>
 
 <script src="../lenis.min.js"></script>
-<script src="../site.js?v=22ea36628511"></script>
+<script src="../site.js?v=41c956453fc9"></script>
 <script src="../project-video.js?v=20260916" defer></script>
 <script src="../hero-gl.js" defer></script>
 <script src="../holo.js" defer></script>
