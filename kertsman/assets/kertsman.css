@@ -52,7 +52,7 @@
 
   --gutter: clamp(18px, 4.5vw, 56px);
   --maxw: 1240px;
-  --section-y: clamp(40px, 4.6vw, 64px);   /* מרווח אחיד בין כל המקטעים / one rhythm for every band */
+  --section-y: clamp(26px, 2.8vw, 40px);   /* מרווח אחיד בין כל המקטעים / one rhythm for every band */
 }
 
 html[lang='ru'] {
@@ -770,10 +770,11 @@ dialog.sheet::backdrop { background: rgba(18, 0, 73, .6); backdrop-filter: blur(
 /* ---------- footer ---------- */
 
 .foot {
-  margin-block-start: var(--section-y);
+  /* המקטע שמעל כבר נותן את המרווח, ולכן אין כאן margin נוסף
+     the section above already provides the gap, so no extra margin here */
   background: var(--brand-deep);
   color: rgba(255, 255, 255, .74);
-  padding-block: clamp(44px, 6vw, 72px) 28px;
+  padding-block: clamp(34px, 3.6vw, 48px) 26px;
 }
 .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: clamp(26px, 4vw, 56px); }
 .foot .brand-logo { background: #fff; padding: 12px; border-radius: 12px; height: 58px; box-sizing: content-box; }
