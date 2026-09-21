@@ -1,7 +1,7 @@
 /* ============================================================================
    קרצמן נדל"ן — לוגיקת האתר / Kertsman Real Estate — site behaviour
-   Renders the listings from data/listings.js in Hebrew or Russian, handles
-   search, filtering, favourites, the property sheet and the lead forms.
+   Renders the apartments from data/listings.js in Hebrew or Russian, opens the
+   property sheet and sends the contact form to WhatsApp.
    No build step, no framework, no external requests.
    ============================================================================ */
 (function () {
@@ -16,38 +16,34 @@
 
   var T = {
     he: {
-      sale: 'למכירה', rent: 'להשכרה', perMonth: 'לחודש',
+      forSale: 'למכירה',
       exclusive: 'בלעדי', fresh: 'חדש', underOffer: 'בתהליך', sold: 'נמכר',
       rooms: 'חדרים', sqm: 'מ"ר', floor: 'קומה', outOf: 'מתוך', parking: 'חניות',
       balcony: 'מרפסת', year: 'שנת בנייה', details: 'לפרטי הנכס', whatsapp: 'וואטסאפ',
-      call: 'להתקשר', empty: 'לא נמצאו נכסים בסינון הזה',
-      emptyNote: 'נסו להרחיב את החיפוש — או השאירו פרטים ונאתר עבורכם נכס שעוד לא פורסם.',
-      save: 'שמירה למועדפים', results: 'נכסים', priceOnRequest: 'מחיר במשא ומתן',
-      close: 'סגירה', about: 'על הנכס', features: 'מה יש בדירה',
-      gallery: 'תמונה', sending: 'שולח…',
-      formOk: 'תודה! נפתח עבורכם חלון וואטסאפ עם הפרטים. אם הוא לא נפתח — התקשרו אלינו ישירות.',
+      call: 'להתקשר', empty: 'כרגע אין נכסים מפורסמים',
+      emptyNote: 'הנכסים שלנו נסגרים מהר. השאירו פרטים ונעדכן אתכם ראשונים על דירה שעולה לשיווק.',
+      results: 'נכסים', priceOnRequest: 'מחיר במשא ומתן',
+      close: 'סגירה', features: 'מה יש בדירה', gallery: 'תמונה', sending: 'שולח...',
+      formOk: 'תודה! נפתח עבורכם חלון וואטסאפ עם הפרטים. אם הוא לא נפתח, התקשרו אלינו ישירות.',
       formErr: 'נא למלא שם וטלפון כדי שנוכל לחזור אליכם.',
-      askAbout: 'שלום סבטלנה, אני מתעניין/ת בנכס',
-      leadSell: 'שלום סבטלנה, אשמח להערכת שווי לנכס שלי.',
-      leadContact: 'שלום סבטלנה, אשמח לחזרה בנושא',
-      name: 'שם', phone: 'טלפון', note: 'הערות'
+      askAbout: 'שלום, אני מתעניין/ת בדירה',
+      leadContact: 'שלום, הגעתי מהאתר ואשמח לחזרה.',
+      name: 'שם', phone: 'טלפון'
     },
     ru: {
-      sale: 'Продажа', rent: 'Аренда', perMonth: 'в месяц',
+      forSale: 'Продажа',
       exclusive: 'Эксклюзив', fresh: 'Новое', underOffer: 'В сделке', sold: 'Продано',
       rooms: 'комн.', sqm: 'м²', floor: 'Этаж', outOf: 'из', parking: 'Парковка',
       balcony: 'Балкон', year: 'Год постройки', details: 'Подробнее', whatsapp: 'WhatsApp',
-      call: 'Позвонить', empty: 'По этому фильтру объектов не найдено',
-      emptyNote: 'Расширьте поиск — или оставьте контакты, и мы подберём объект, который ещё не опубликован.',
-      save: 'В избранное', results: 'объектов', priceOnRequest: 'Цена по договорённости',
-      close: 'Закрыть', about: 'Об объекте', features: 'Что есть в квартире',
-      gallery: 'Фото', sending: 'Отправляем…',
-      formOk: 'Спасибо! Мы открыли WhatsApp с вашими данными. Если окно не открылось — позвоните нам напрямую.',
+      call: 'Позвонить', empty: 'Сейчас нет опубликованных объектов',
+      emptyNote: 'Наши объекты уходят быстро. Оставьте контакты, и мы сообщим вам первыми о новой квартире.',
+      results: 'объектов', priceOnRequest: 'Цена по договорённости',
+      close: 'Закрыть', features: 'Что есть в квартире', gallery: 'Фото', sending: 'Отправляем...',
+      formOk: 'Спасибо! Мы открыли WhatsApp с вашими данными. Если окно не открылось, позвоните нам напрямую.',
       formErr: 'Укажите имя и телефон, чтобы мы могли перезвонить.',
-      askAbout: 'Здравствуйте, Светлана! Интересует объект',
-      leadSell: 'Здравствуйте, Светлана! Хочу получить оценку стоимости моей квартиры.',
-      leadContact: 'Здравствуйте, Светлана! Прошу связаться со мной по вопросу',
-      name: 'Имя', phone: 'Телефон', note: 'Комментарий'
+      askAbout: 'Здравствуйте! Интересует объект',
+      leadContact: 'Здравствуйте! Я с сайта, прошу связаться со мной.',
+      name: 'Имя', phone: 'Телефон'
     }
   }[LANG] || {};
 
@@ -66,7 +62,6 @@
     stairs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h5v-4h5v-4h5V8h3"/></svg>',
     car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M6 17v2M18 17v2"/><path d="M4 13l1.6-4.5A2 2 0 0 1 7.5 7h9a2 2 0 0 1 1.9 1.5L20 13v4H4v-4Z"/><circle cx="7.5" cy="14.5" r=".8" fill="currentColor"/><circle cx="16.5" cy="14.5" r=".8" fill="currentColor"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg>',
-    heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9.3A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 7 2.7C19 15.6 12 20 12 20Z"/></svg>',
     wa: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.1a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.1 8.1 0 1 1 12 20.1Zm4.5-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5s0-.4-.1-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.6 2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.2-.2-.4-.3Z"/></svg>'
   };
 
@@ -77,22 +72,14 @@
   });
 
   function price(item) {
-    if (!item.price) return t('priceOnRequest');
-    return money.format(item.price);
+    return item.price ? money.format(item.price) : t('priceOnRequest');
   }
 
   function waLink(text) {
-    var num = (CFG.phoneIntl || '').replace(/\D/g, '');
-    return 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+    return 'https://wa.me/' + (CFG.phoneIntl || '').replace(/\D/g, '') + '?text=' + encodeURIComponent(text);
   }
 
   function telLink() { return 'tel:+' + (CFG.phoneIntl || '').replace(/\D/g, ''); }
-
-  function el(html) {
-    var box = document.createElement('div');
-    box.innerHTML = html.trim();
-    return box.firstElementChild;
-  }
 
   function esc(str) {
     return String(str == null ? '' : str)
@@ -101,22 +88,6 @@
   }
 
   function byId(id) { return document.getElementById(id); }
-
-  /* ---------- favourites (per browser, optional) ---------- */
-
-  var FAV_KEY = 'kertsman:favourites';
-  var favourites = [];
-  try {
-    favourites = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
-    if (!Array.isArray(favourites)) favourites = [];
-  } catch (err) { favourites = []; }
-
-  function isFav(id) { return favourites.indexOf(id) > -1; }
-  function toggleFav(id) {
-    var at = favourites.indexOf(id);
-    if (at > -1) favourites.splice(at, 1); else favourites.push(id);
-    try { localStorage.setItem(FAV_KEY, JSON.stringify(favourites)); } catch (err) { /* private mode */ }
-  }
 
   /* ---------- config binding ---------- */
 
@@ -160,18 +131,16 @@
 
   function cardHtml(item) {
     var img = BASE + (item.images && item.images[0] ? item.images[0] : 'assets/img/skyline.svg');
-    var per = item.deal === 'rent' ? ' <span class="per">' + esc(t('perMonth')) + '</span>' : '';
     return '' +
       '<article class="card reveal' + (item.status === 'sold' ? ' is-sold' : '') + '" data-id="' + esc(item.id) + '">' +
         '<div class="card-media">' +
           '<img src="' + esc(img) + '" alt="' + esc(loc(item.title)) + '" loading="lazy" width="1600" height="1067">' +
           '<div class="card-tags">' + statusTags(item) + '</div>' +
-          '<button class="fav" type="button" data-fav="' + esc(item.id) + '" aria-pressed="' + (isFav(item.id) ? 'true' : 'false') + '" aria-label="' + esc(t('save')) + '">' + I.heart + '</button>' +
         '</div>' +
         '<div class="card-body">' +
           '<div class="card-price">' +
-            '<strong>' + esc(price(item)) + '</strong>' + per +
-            '<span class="card-deal">' + esc(t(item.deal === 'rent' ? 'rent' : 'sale')) + '</span>' +
+            '<strong>' + esc(price(item)) + '</strong>' +
+            '<span class="card-deal">' + esc(t('forSale')) + '</span>' +
           '</div>' +
           '<h3>' + esc(loc(item.title)) + '</h3>' +
           '<p class="card-where">' + I.pin + '<span>' + esc(loc(item.area)) + ', ' + esc(loc(item.city)) + '</span></p>' +
@@ -189,37 +158,13 @@
       '</article>';
   }
 
-  /* ---------- filtering ---------- */
-
-  var state = { deal: 'all', city: '', rooms: '', budget: '', sort: 'featured' };
-
-  function matches(item) {
-    if (state.deal === 'sale' && item.deal !== 'sale') return false;
-    if (state.deal === 'rent' && item.deal !== 'rent') return false;
-    if (state.deal === 'exclusive' && !item.exclusive) return false;
-    if (state.deal === 'fav' && !isFav(item.id)) return false;
-    if (state.city && loc(item.city) !== state.city) return false;
-    if (state.rooms && item.rooms < parseFloat(state.rooms)) return false;
-    if (state.budget && item.price > parseFloat(state.budget)) return false;
-    return true;
-  }
-
-  function sorted(list) {
-    var out = list.slice();
-    if (state.sort === 'price-asc') out.sort(function (a, b) { return a.price - b.price; });
-    else if (state.sort === 'price-desc') out.sort(function (a, b) { return b.price - a.price; });
-    else if (state.sort === 'size-desc') out.sort(function (a, b) { return b.size - a.size; });
-    else out.sort(function (a, b) {
-      var rank = function (x) { return (x.status === 'sold' ? 2 : 0) + (x.exclusive ? -1 : 0); };
-      return rank(a) - rank(b);
-    });
-    return out;
-  }
-
   function render() {
     var grid = byId('grid');
     if (!grid) return;
-    var list = sorted(LISTINGS.filter(matches));
+    // sold apartments stay on the page as proof of work, but at the end
+    var list = LISTINGS.slice().sort(function (a, b) {
+      return (a.status === 'sold' ? 1 : 0) - (b.status === 'sold' ? 1 : 0);
+    });
     grid.innerHTML = list.length
       ? list.map(cardHtml).join('')
       : '<div class="empty"><strong>' + esc(t('empty')) + '</strong><p>' + esc(t('emptyNote')) + '</p></div>';
@@ -230,22 +175,6 @@
     Array.prototype.forEach.call(grid.querySelectorAll('.reveal'), function (node, i) {
       node.style.transitionDelay = Math.min(i, 5) * 60 + 'ms';
       watch(node);
-    });
-    updateChipCounts();
-  }
-
-  function updateChipCounts() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-deal]'), function (chip) {
-      var kind = chip.getAttribute('data-deal');
-      var n = LISTINGS.filter(function (item) {
-        if (kind === 'all') return true;
-        if (kind === 'exclusive') return item.exclusive;
-        if (kind === 'fav') return isFav(item.id);
-        return item.deal === kind;
-      }).length;
-      var badge = chip.querySelector('.chip-count');
-      if (badge) badge.textContent = n;
-      chip.setAttribute('aria-pressed', String(kind === state.deal));
     });
   }
 
@@ -265,7 +194,6 @@
     galleryIndex = 0;
     var item = current;
     var images = (item.images || []).map(function (src) { return BASE + src; });
-    var per = item.deal === 'rent' ? '<p class="price-note">' + esc(t('perMonth')) + '</p>' : '';
     var agent = loc(CFG.agent);
     var initials = agent.split(/\s+/).map(function (w) { return w.charAt(0); }).join('').slice(0, 2);
 
@@ -280,7 +208,7 @@
         '</div>' +
         '<div class="sheet-body">' +
           '<div>' +
-            '<div class="sheet-tags">' + statusTags(item) + '<span class="tag">' + esc(t(item.deal === 'rent' ? 'rent' : 'sale')) + '</span></div>' +
+            '<div class="sheet-tags">' + statusTags(item) + '<span class="tag">' + esc(t('forSale')) + '</span></div>' +
             '<h2>' + esc(loc(item.title)) + '</h2>' +
             '<p class="sheet-where">' + I.pin + '<span>' + esc(loc(item.area)) + ', ' + esc(loc(item.city)) + '</span></p>' +
             '<p class="sheet-desc">' + esc(loc(item.description)) + '</p>' +
@@ -293,19 +221,19 @@
               (item.year ? specRow(t('year'), item.year) : '') +
             '</dl>' +
             ((item.features || []).length
-              ? '<h3 style="margin-block-start:30px;font-size:21px">' + esc(t('features')) + '</h3>' +
+              ? '<h3 class="sheet-sub">' + esc(t('features')) + '</h3>' +
                 '<ul class="feature-list">' + item.features.map(function (f) {
                   return '<li>' + I.check + '<span>' + esc(loc(f)) + '</span></li>';
                 }).join('') + '</ul>'
               : '') +
           '</div>' +
           '<aside class="agent-card">' +
-            '<p class="price">' + esc(price(item)) + '</p>' + per +
+            '<p class="price">' + esc(price(item)) + '</p>' +
             '<hr>' +
             '<div class="who"><span class="who-mark">' + esc(initials) + '</span>' +
               '<span><b>' + esc(agent) + '</b><span>' + esc(loc(CFG.role)) + '</span></span></div>' +
             '<div class="stack">' +
-              '<a class="btn btn-brass" href="' + esc(waLink(t('askAbout') + ' "' + loc(item.title) + '" (' + item.id + ')')) + '" target="_blank" rel="noopener">' + I.wa + esc(t('whatsapp')) + '</a>' +
+              '<a class="btn btn-gold" href="' + esc(waLink(t('askAbout') + ' "' + loc(item.title) + '" (' + item.id + ')')) + '" target="_blank" rel="noopener">' + I.wa + esc(t('whatsapp')) + '</a>' +
               '<a class="btn btn-ghost" href="' + esc(telLink()) + '">' + esc(t('call')) + ' ' + esc(CFG.phone || '') + '</a>' +
             '</div>' +
           '</aside>' +
@@ -336,7 +264,7 @@
     });
   }
 
-  /* ---------- lead forms ---------- */
+  /* ---------- contact form ---------- */
 
   function handleForm(form) {
     form.addEventListener('submit', function (event) {
@@ -353,14 +281,13 @@
         return;
       }
 
-      var intro = form.getAttribute('data-intro') === 'sell' ? t('leadSell') : t('leadContact');
-      var lines = [intro, '', t('name') + ': ' + name, t('phone') + ': ' + phone];
-      ['address', 'deal', 'rooms', 'message'].forEach(function (key) {
+      var lines = [t('leadContact'), '', t('name') + ': ' + name, t('phone') + ': ' + phone];
+      ['subject', 'address', 'message'].forEach(function (key) {
+        var field = form.querySelector('[name="' + key + '"]');
         var value = (data.get(key) || '').toString().trim();
         if (!value) return;
-        var label = form.querySelector('[name="' + key + '"]');
-        var text = label && label.labels && label.labels[0] ? label.labels[0].textContent : key;
-        lines.push(text + ': ' + value);
+        var label = field && field.labels && field.labels[0] ? field.labels[0].textContent : key;
+        lines.push(label + ': ' + value);
       });
 
       if (status) { status.textContent = t('sending'); status.removeAttribute('data-state'); }
@@ -392,48 +319,18 @@
 
   function init() {
     bindConfig();
-
-    // city options come from the data, so a new city needs no markup change
-    var citySelect = byId('f-city');
-    if (citySelect) {
-      var cities = [];
-      LISTINGS.forEach(function (item) {
-        var name = loc(item.city);
-        if (name && cities.indexOf(name) === -1) cities.push(name);
-      });
-      cities.sort().forEach(function (name) {
-        var option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
-        citySelect.appendChild(option);
-      });
-    }
-
     render();
 
     document.addEventListener('click', function (event) {
       var open = event.target.closest('[data-open]');
       if (open) { openSheet(open.getAttribute('data-open')); return; }
 
-      var fav = event.target.closest('[data-fav]');
-      if (fav) {
-        var id = fav.getAttribute('data-fav');
-        toggleFav(id);
-        fav.setAttribute('aria-pressed', String(isFav(id)));
-        if (state.deal === 'fav') render(); else updateChipCounts();
-        return;
-      }
-
-      var chip = event.target.closest('[data-deal]');
-      if (chip) { state.deal = chip.getAttribute('data-deal'); render(); return; }
-
       var thumb = event.target.closest('[data-thumb]');
       if (thumb) { showImage(Number(thumb.getAttribute('data-thumb'))); return; }
 
       if (event.target.closest('[data-close]')) { closeSheet(); return; }
 
-      var navLink = event.target.closest('.nav a');
-      if (navLink) document.body.classList.remove('nav-open');
+      if (event.target.closest('.nav a')) document.body.classList.remove('nav-open');
     });
 
     if (sheet) {
@@ -449,23 +346,6 @@
       });
     }
 
-    var search = byId('search');
-    if (search) {
-      search.addEventListener('submit', function (event) {
-        event.preventDefault();
-        state.deal = (byId('f-deal') || {}).value || 'all';
-        state.city = (byId('f-city') || {}).value || '';
-        state.rooms = (byId('f-rooms') || {}).value || '';
-        state.budget = (byId('f-budget') || {}).value || '';
-        render();
-        var target = byId('properties');
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
-
-    var sort = byId('f-sort');
-    if (sort) sort.addEventListener('change', function () { state.sort = sort.value; render(); });
-
     var burger = byId('burger');
     if (burger) burger.addEventListener('click', function () {
       var open = document.body.classList.toggle('nav-open');
@@ -475,6 +355,22 @@
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape') document.body.classList.remove('nav-open');
     });
+
+    // סרגל ההתקדמות של הגלילה / scroll progress bar
+    var progress = byId('progress');
+    if (progress && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var ticking = false;
+      var paint = function () {
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - doc.clientHeight;
+        progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(window.scrollY / max, 1) : 0) + ')';
+        ticking = false;
+      };
+      window.addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; window.requestAnimationFrame(paint); }
+      }, { passive: true });
+      paint();
+    }
 
     var topbar = document.querySelector('.topbar');
     if (topbar) {
@@ -486,7 +382,7 @@
     Array.prototype.forEach.call(document.querySelectorAll('form[data-lead]'), handleForm);
     Array.prototype.forEach.call(document.querySelectorAll('.reveal'), watch);
 
-    // Listings as structured data, so search engines can read the catalogue.
+    // the catalogue as structured data, so search engines can read it
     var ld = document.createElement('script');
     ld.type = 'application/ld+json';
     ld.textContent = JSON.stringify({
