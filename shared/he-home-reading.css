@@ -2,9 +2,9 @@
 html[lang="he"] .reading-home :is(.services-intro p,.work-sub,.about-lead,.contact-intro,.journal-card,.pcard,.wd-body,.faq-item){text-align:start}
 .reading-home :is(.services-intro p,.work-sub p,.about-lead p,.contact-intro p,.journal-card p){text-wrap:pretty;line-height:1.85}
 .reading-home :is(.work-heading,.services-intro h2,.about-lead h3,.journal-card h3){text-wrap:balance}
-html[lang="he"] .reading-home .services-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:56px;align-items:start;margin-block:76px 44px;padding:0 24px;text-align:start}
-.reading-home .services-intro h2{margin:0;padding-block-start:8px}
-html[lang="he"] .reading-home .services-intro p{max-width:65ch;margin:0;font-size:1rem}
+html[lang="he"] .reading-home .services-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:48px;align-items:center;max-width:1040px;width:100%;box-sizing:border-box;margin:76px auto 44px;padding:0 24px;text-align:start}
+.reading-home .services-intro h2{margin:0;padding:0;text-align:center}
+html[lang="he"] .reading-home .services-intro p{max-width:none;width:100%;margin:0;font-size:1rem}
 .reading-home .services-intro p>strong{font-size:1.15rem;line-height:1.65;color:var(--bone);padding-inline-start:20px;border-inline-start:2px solid var(--red)}
 html[lang="he"] .reading-home #work{margin-top:76px}
 html[lang="he"] .reading-home #work>.work-sub{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:48px;max-width:1040px;width:100%;margin:30px auto 40px;padding-inline:24px;align-items:start}
@@ -15,7 +15,7 @@ html[lang="he"] .reading-home .journey-heading{margin-top:76px}
 html[lang="he"] .reading-home [data-i18n="wwd.intro"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;max-width:1040px;width:100%;padding-inline:24px;margin:30px auto 36px}
 .reading-home [data-i18n="wwd.intro"] p+p{margin:0;padding-inline-start:32px;border-inline-start:1px solid var(--line)}
 .reading-home [data-i18n="wwd.intro"] strong{font-size:1.05rem}
-.reading-home .about{background:none;border:0;border-radius:0;margin-top:76px;padding:0 24px 32px}
+.reading-home .about{background:var(--panel);border:1px solid var(--line);border-radius:20px;margin-top:64px;padding:40px}
 .reading-home .about-in{grid-template-columns:230px minmax(0,1fr);gap:64px;max-width:1040px;margin:36px auto 0;align-items:start}
 .reading-home .about-lead{max-width:65ch}
 .reading-home .about-lead p{font-size:1rem}
@@ -38,7 +38,7 @@ html[lang="he"] .reading-home [data-i18n="wwd.intro"]{display:grid;grid-template
   .reading-home .services-intro h2{text-align:center}
   html[lang="he"] .reading-home #work>.work-sub,html[lang="he"] .reading-home [data-i18n="wwd.intro"]{grid-template-columns:1fr;gap:24px;padding-inline:20px;margin-block:26px 32px}
   .reading-home [data-i18n="wwd.intro"] p+p{border-inline-start:0;border-top:1px solid var(--line);padding:24px 0 0}
-  .reading-home .about{padding-inline:20px;margin-top:48px}
+  .reading-home .about{padding:28px 20px;margin-top:48px}
   .reading-home .about-in{grid-template-columns:1fr;gap:28px}
   .reading-home .founder-card{width:min(100%,230px);margin-inline:auto}
   .reading-home .about-lead{max-width:100%}
