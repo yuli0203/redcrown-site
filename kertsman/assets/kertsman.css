@@ -1193,8 +1193,11 @@ html { font-size: calc(100% * var(--a11y-scale, 1)); }
    ============================================================ */
 
 .credit-bar {
-  --rc-red: #C8102E;
-  --rc-red-dark: #9E0C24;
+  /* אדום כהה ומאופק, לא הגוון הבוהק של הלוגו: הרצועה אמורה לסגור את העמוד
+     בשקט ולא לצעוק. / A deep, restrained red rather than the logo's bright
+     one: the bar should close the page quietly. */
+  --rc-red: #7A0C1F;
+  --rc-red-dark: #5C0716;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1222,11 +1225,11 @@ html { font-size: calc(100% * var(--a11y-scale, 1)); }
 
 .credit-text { display: grid; gap: 2px; line-height: 1.35; }
 .credit-text b { font-family: var(--display); font-size: 16.5px; font-weight: 700; color: #fff; }
-.credit-text span { font-size: 13.5px; color: rgba(255, 255, 255, .86); }
+.credit-text span { font-size: 13.5px; color: rgba(255, 255, 255, .78); }
 
 .credit-cta {
   flex: none;
-  border: 1.5px solid rgba(255, 255, 255, .75);
+  border: 1px solid rgba(255, 255, 255, .55);
   border-radius: var(--r-pill);
   padding: 7px 16px;
   font-size: 14px;

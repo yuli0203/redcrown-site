@@ -216,10 +216,35 @@
       '<p style="margin-block-start:18px"><a class="btn btn-primary" href="' + BASE + '#properties">' + esc(t('back')) + '</a></p></div>';
   }
 
+  /* מעבר שפה בעמוד דירה חייב לשמור על הדירה עצמה: אותו מזהה עובר לכתובת
+     בשפה השנייה, כך שמי שמחליף שפה נשאר על אותה דירה ולא נזרק לדף הבית.
+     גם תגיות hreflang מצביעות על אותה דירה בשתי השפות, לטובת גוגל.
+     Switching language on an apartment page has to keep the apartment: the id
+     travels to the other language's address, so the reader stays on the same
+     flat instead of being dropped on the home page. The hreflang tags point
+     at the same apartment in both languages too. */
+  function linkLanguages(id) {
+    var query = id ? '?id=' + encodeURIComponent(id) : '';
+    var alt = byId('lang-alt');
+    if (alt) alt.href = alt.getAttribute('href').split('?')[0] + query;
+
+    var origin = window.location.origin;
+    var pairs = { 'alt-he': '/dira/', 'alt-ru': '/ru/dira/' };
+    Object.keys(pairs).forEach(function (nodeId) {
+      var node = byId(nodeId);
+      if (!node) return;
+      var base = /^https?:/.test(node.getAttribute('href') || '')
+        ? node.getAttribute('href').split('?')[0]
+        : origin + pairs[nodeId];
+      node.href = base + query;
+    });
+  }
+
   function init() {
     var id = param('id');
     var item = LISTINGS.filter(function (x) { return x.id === id; })[0];
     if (item) render(item); else missing();
+    linkLanguages(item ? item.id : '');
 
     var year = byId('year');
     if (year) year.textContent = new Date().getFullYear();
