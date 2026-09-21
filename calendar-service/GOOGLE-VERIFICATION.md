@@ -1,6 +1,6 @@
 # Google verification preparation
 
-Checked 19 September 2026 after production deployment. Calendar permission verification is still pending. See LAUNCH-READINESS.md for release gates.
+Checked 19 September 2026 after production deployment, updated 21 September 2026 after the gmail.send review decision. Calendar permission verification is still pending. See LAUNCH-READINESS.md for release gates.
 
 ## Observed console state
 
@@ -8,7 +8,7 @@ Checked 19 September 2026 after production deployment. Calendar permission verif
 - Red Crown Calendar branding is verified and published. Homepage, privacy, terms and developer contact are saved.
 - Public calendar and legal pages return HTTP 200.
 - Actual identity and calendar scopes below are now declared; justification is saved.
-- calendar.events remains unverified. gmail.send has been prepared in the current Data Access form but is not saved. Submission is blocked by the missing demonstration video; Confirm is disabled. No scope-review submission has been completed.
+- calendar.events remains unverified. The gmail.send request was withdrawn on 21 September 2026: Google's review found that sending application notifications through a host's own Gmail account is not an approved use of the Gmail API. The scope is gone from the codebase and must also be deleted from the Data Access form before Save and Submit. Submission remains blocked by the missing demonstration video; Confirm is disabled. No scope-review submission has been completed.
 - Support email is the eligible project account; public support is hello@redcrowninteractive.com.
 
 ## Prepared branding values
@@ -40,11 +40,11 @@ Source: `src/providers.js`, `providerConfig`, Google branch.
 | `https://www.googleapis.com/auth/calendar.events.freebusy` | Query busy intervals on selected accessible calendars to exclude conflicts. The documented FreeBusy endpoint does not accept `calendar.events` alone. |
 | `https://www.googleapis.com/auth/calendar.events` | Read selected-calendar event details for the host preview and fallback conflict checking; create booking events and invitations in a selected writable calendar; remove booked events when cancelled or rescheduled. Read-only access cannot create/cancel bookings. Owned-only access would omit shared calendars the host can edit. |
 
-The optional https://www.googleapis.com/auth/gmail.send scope is now used only when the host enables notifications for the saved booking destination account. It sends confirmation mail from that mailbox to itself and grants no inbox reading. Availability-only accounts do not request this scope. The live console draft includes it and the updated justification below, but Save is disabled until a demo URL is supplied. The host subsequently approved this permission for the booking destination; actual host inbox receipt was observed.
+https://www.googleapis.com/auth/gmail.send is no longer requested anywhere in the codebase. Confirmed bookings notify the host through our own Resend sender, and the Calendar API notifies guests and the host through the invitation it sends when the event is created (sendUpdates=all). Delete the scope from the Data Access form, Save and Submit, then reply to the review thread confirming the removal.
 
-Draft sensitive-scope justification (937 characters):
+Draft sensitive-scope justification (906 characters):
 
-Red Crown Calendar lets hosts select calendars, exclude busy times and accept bookings. calendar.calendarlist.readonly lists calendars and write permissions. calendar.events.freebusy reads busy intervals. calendar.events reads selected event details for the host preview and FreeBusy fallback, and creates/cancels booking events with attendee invitations. Read-only access cannot save bookings; owned-only access excludes shared calendars the host can edit. gmail.send is requested separately, only for the saved booking destination account, to send each confirmed booking notification from that mailbox to itself. Calendar invitations do not reliably notify the organizer. No inbox reading, Gmail modification, contacts or Drive access is requested. Identity scopes support sign-in and identify connected accounts. Refresh tokens are encrypted; guests never receive private calendar event details. Users can disconnect or revoke access.
+Red Crown Calendar lets hosts select calendars, exclude busy times and accept bookings. calendar.calendarlist.readonly lists calendars and write permissions. calendar.events.freebusy reads busy intervals. calendar.events reads selected event details for the host preview and FreeBusy fallback, and creates/cancels booking events with attendee invitations. Read-only access cannot save bookings; owned-only access excludes shared calendars the host can edit. Booking events are created with sendUpdates=all so the Calendar API notifies guests and the host, and our own email service sends the host confirmation, so no Gmail scope is requested. No inbox reading, Gmail modification, contacts or Drive access is requested. Identity scopes support sign-in and identify connected accounts. Refresh tokens are encrypted; guests never receive private calendar event details. Users can disconnect or revoke access.
 
 ## Demonstration script to record before submission
 
@@ -56,7 +56,7 @@ Use test accounts and invented attendee data; do not record tokens, secrets, pri
 4. Select a writable booking destination and create a meeting type.
 5. Open the public booking page as a guest, choose an available slot, and book using test participant addresses.
 6. Show the resulting provider event, invitation recipients, and host-only event preview.
-7. Show Enable booking emails for the saved destination, the complete separate Gmail send consent, and actual receipt of the automatic host notification. Show that availability-only connections do not request mail access.
+7. Show that the consent screen lists only the calendar and identity scopes above, and that the automatic host notification arrives from the Red Crown Calendar sending address rather than from the host's own mailbox.
 8. Demonstrate cancellation/rescheduling and disconnecting access, plus the support route for privacy/deletion requests.
 
 No video or verification submission has been created yet. Google must be able to inspect working functionality when reviewing; a localhost-only app is not a completed submission package.

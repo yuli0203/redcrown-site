@@ -1,7 +1,7 @@
 import { feedUrl, fetchFeed, parseFeed } from './ical-feed.js';
 import { holidayOptions, holidayEvents, holidayCountry } from './holidays.js';
 import { recordWorkspaceUsage } from './analytics.js';
-import { sendBookingNotifications } from './notifications.js';
+import { notificationsReady, sendBookingNotifications } from './notifications.js';
 import { remindersReady, sendReminders } from './reminders.js';
 import { assert, Problem, validateWorkspace, slots, dateRange, localDate, validZone } from './scheduling.js';
 import { identity, body, hash, random, encrypt, rateLimit } from './security.js';
@@ -19,7 +19,7 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
   assert(url.pathname.startsWith(prefix+'/'),'Not found.',404);
   const origin=request.headers.get('Origin');if(origin)assert(origin===env.PUBLIC_ORIGIN,'This origin is not allowed.',403);
   if(method==='OPTIONS'){assert(['GET','POST','PUT','DELETE'].includes(request.headers.get('Access-Control-Request-Method')),'Method not allowed.',405);return new Response(null,{status:204});}
-  if(path==='/health')return json({ready:Boolean(db),publicHolidays:true,emailReminders:remindersReady(env),bookingNotificationMode:'connected-account',google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
+  if(path==='/health')return json({ready:Boolean(db),publicHolidays:true,emailReminders:remindersReady(env),bookingNotifications:notificationsReady(env),google:Boolean(env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),microsoft:Boolean(env.MICROSOFT_CLIENT_ID&&env.MICROSOFT_CLIENT_SECRET&&env.TOKEN_ENCRYPTION_KEY),turnstileSiteKey:env.TURNSTILE_SITE_KEY||''});
   assert(db,'The scheduling service is not configured yet.',503);
 
   await rateLimit(env,`ip:${await hash(request.headers.get('CF-Connecting-IP')||'local')}`,120);
@@ -33,11 +33,6 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    else assert([...granted].some(scope=>scope.toLowerCase()==='calendars.readwrite'),'Allow calendar read/write access to enable bookings.');
    const info=await provider.accountInfo(providerName,token.access_token),accountId=info.sub||info.id,email=info.email||info.mail||info.userPrincipalName;
    assert(accountId&&email,'The calendar account could not be identified.',503);
-   if(saved.mail_connection_id){
-    const target=await one(db,'SELECT account_id FROM connections WHERE id=? AND uid=? AND provider=?',saved.mail_connection_id,saved.uid,providerName);
-    const profile=await one(db,'SELECT data FROM profiles WHERE uid=?',saved.uid);
-    assert(target?.account_id===accountId&&profile&&JSON.parse(profile.data).destination?.connectionId===saved.mail_connection_id,'Choose the saved booking destination account to enable email notifications.',403);
-   }
 
    const existing=await one(db,'SELECT * FROM connections WHERE uid=? AND provider=? AND account_id=?',saved.uid,providerName,accountId);
    assert(token.refresh_token||existing,'Persistent calendar access was not granted. Reconnect and allow access.',503);
@@ -45,14 +40,12 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    for(const c of calendars)c.selected=previous.find(p=>p.id===c.id)?.selected||false;
    for(const c of previous)if(c.selected&&!calendars.some(v=>v.id===c.id))calendars.push({...c,missing:true,writable:false});
    await run(db,'INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?) ON CONFLICT(uid,provider,account_id) DO UPDATE SET email=excluded.email,refresh_token=excluded.refresh_token,calendars=excluded.calendars',existing?.id||crypto.randomUUID(),saved.uid,providerName,accountId,email,token.refresh_token?await encrypt(token.refresh_token,env):existing.refresh_token,JSON.stringify(calendars));
-   const mailEnabled=providerName==='google'?granted.has('https://www.googleapis.com/auth/gmail.send'):[...granted].some(scope=>scope.toLowerCase()==='mail.send');
-   await run(db,'UPDATE connections SET mail_enabled=? WHERE uid=? AND provider=? AND account_id=?',mailEnabled?1:0,saved.uid,providerName,accountId);
    return new Response(null,{status:303,headers:{Location:`${env.PUBLIC_ORIGIN}/calendar/?connected=1#sync-availability`,'Set-Cookie':'crown_oauth=; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=0','Cache-Control':'no-store'}});
   }
   if(path.startsWith('/public/')||path.startsWith('/booking/'))return await publicRoutes(request,env,provider,path);
   const navigation=method==='POST'&&/^\/connect\/(google|microsoft)\/navigate$/.test(path);
-  let authRequest=request,connectInput;
-  if(navigation){assert(request.headers.get('Origin')===env.PUBLIC_ORIGIN,'Start calendar connection from the scheduling page.',403);assert(request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded'),'Invalid connection request.');const input=await body(request,16000,true);connectInput=input;assert(typeof input.idToken==='string'&&input.idToken.length<12000,'Sign in to connect a calendar.',401);authRequest=new Request(request.url,{headers:{Authorization:`Bearer ${input.idToken}`}});}
+  let authRequest=request;
+  if(navigation){assert(request.headers.get('Origin')===env.PUBLIC_ORIGIN,'Start calendar connection from the scheduling page.',403);assert(request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded'),'Invalid connection request.');const input=await body(request,16000,true);assert(typeof input.idToken==='string'&&input.idToken.length<12000,'Sign in to connect a calendar.',401);authRequest=new Request(request.url,{headers:{Authorization:`Bearer ${input.idToken}`}});}
   const user=await authenticate(authRequest,env);assert(user.verified===true,'Verify your email before using your calendar workspace.',403);await rateLimit(env,`user:${user.uid}`,90);
   if(path==='/holiday-options'&&method==='GET'){
    const zone=url.searchParams.get('timezone')||'UTC';assert(validZone(zone),'Choose a valid time zone.');return json(holidayOptions(zone));
@@ -79,20 +72,13 @@ export function createHandler({authenticate=identity,provider=providers}={}){asy
    await run(db,'INSERT INTO connections(id,uid,provider,account_id,email,refresh_token,calendars) VALUES(?,?,?,?,?,?,?) ON CONFLICT(uid,provider,account_id) DO UPDATE SET email=excluded.email,refresh_token=excluded.refresh_token,calendars=excluded.calendars',id,user.uid,'ical',accountId,input.name.trim(),await encrypt(url,env),calendars);
    return json({connected:true});
   }
-  if(path==='/connections'&&method==='GET')return json({accounts:(await connections(db,user.uid)).map(c=>({id:c.id,email:c.email,provider:c.provider,mailEnabled:c.mail_enabled===1,calendars:JSON.parse(c.calendars)}))});
+  if(path==='/connections'&&method==='GET')return json({accounts:(await connections(db,user.uid)).map(c=>({id:c.id,email:c.email,provider:c.provider,calendars:JSON.parse(c.calendars)}))});
   if(path.startsWith('/connect/')&&method==='POST'){
-   const name=path.split('/')[2],input=connectInput||await body(request,16000),mailId=input.mailConnectionId||null;
-   let mailAccount=null;
-   if(mailId){
-    const profile=await one(db,'SELECT data FROM profiles WHERE uid=?',user.uid);
-    assert(profile&&JSON.parse(profile.data).destination?.connectionId===mailId,'Email sending is only enabled for your saved booking destination.',403);
-    mailAccount=await one(db,'SELECT * FROM connections WHERE id=? AND uid=? AND provider=?',mailId,user.uid,name);
-    assert(mailAccount,'Booking destination account not found.',403);
-   }
-   const config=provider.providerConfig(name,env,{mail:Boolean(mailAccount)}),state=random(),browser=random(),verifier=random();
-   await run(db,'INSERT INTO oauth_states(state,uid,provider,verifier,browser_hash,expires,mail_connection_id) VALUES(?,?,?,?,?,?,?)',await hash(state),user.uid,name,verifier,await hash(browser),Date.now()+600000,mailId);
+   const name=path.split('/')[2];
+   const config=provider.providerConfig(name,env),state=random(),browser=random(),verifier=random();
+   await run(db,'INSERT INTO oauth_states(state,uid,provider,verifier,browser_hash,expires) VALUES(?,?,?,?,?,?)',await hash(state),user.uid,name,verifier,await hash(browser),Date.now()+600000);
    const challenge=btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier))))).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
-   const url=new URL(config.authorize);for(const [k,v] of Object.entries({client_id:config.clientId,redirect_uri:config.redirect,response_type:'code',scope:config.scope,...(mailAccount?{login_hint:mailAccount.email}:{}),state,code_challenge:challenge,code_challenge_method:'S256',...(name==='google'?{access_type:'offline',prompt:'consent select_account'}:{prompt:'select_account'})}))url.searchParams.set(k,v);
+   const url=new URL(config.authorize);for(const [k,v] of Object.entries({client_id:config.clientId,redirect_uri:config.redirect,response_type:'code',scope:config.scope,state,code_challenge:challenge,code_challenge_method:'S256',...(name==='google'?{access_type:'offline',prompt:'consent select_account'}:{prompt:'select_account'})}))url.searchParams.set(k,v);
    const response=navigation?new Response(null,{status:303,headers:{Location:url.href,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}}):json({url:url.href});response.headers.set('Set-Cookie',`crown_oauth=${browser}; Path=/calendar/api/oauth; HttpOnly; SameSite=Lax; Max-Age=600${new URL(request.url).protocol==='https:'?'; Secure':''}`);return response;
   }
   if(path.startsWith('/connections/')){

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {database} from '../database.js';
-import {bookingNotification,sendResendBookingNotifications as sendBookingNotifications} from '../src/notifications.js';
+import {bookingNotification,sendBookingNotifications} from '../src/notifications.js';
 const now=Date.parse('2026-10-01T09:00:00Z');
 const data={title:'30 Minute Meeting',hostName:'Julia',hostEmail:'host@example.test',name:'Guest <script>alert(1)</script>',email:'guest@example.test',timezone:'Asia/Jerusalem',inviteeTimezone:'Europe/London',location:'javascript:alert(1)',manageUrl:'https://example.test/calendar/meet/?booking=test#token'};
 test('Branded notification escapes guest content, formats time zones and excludes unsafe links',()=>{

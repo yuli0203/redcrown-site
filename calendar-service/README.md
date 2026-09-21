@@ -81,15 +81,15 @@ A UI or fixture-only pass does not complete the review loop. Verify a real conne
 Local live evidence, 2026-09-19: Google authorization completed; the primary calendar was selected and saved. September returned 17 authoritative busy intervals and 29 event details. The UI showed 20 busy days and 10 free days, and October loaded all 31 days. Reload retained selection and populated the preview. A read-only scheduling check using 30-minute meetings, 15-minute buffers and all-day test hours excluded 956 of 2,820 candidate starts, with zero buffered overlaps among returned slots. These are test-rule counts, not the user's published availability. No real invitation was sent by this check. Public deployment and full live booking acceptance remain pending.
 
 
-## Host booking notifications from connected accounts
+## Host booking notifications
 
-Apply migrations 0008 and 0009 before deploying. Confirmed bookings send a plain-text notification from the connected booking destination account to itself. No Resend configuration is needed for these notifications. Google/Microsoft calendar invitations to guests remain separate.
+Confirmed bookings send a branded notification to the calendar account recorded with the booking, through the same Resend service as reminders: set RESEND_API_KEY and NOTIFICATION_FROM (REMINDER_FROM is used when NOTIFICATION_FROM is unset). Guests and the host are also notified by the calendar provider, because booking events are created with sendUpdates=all.
 
-Enable Gmail API in the Google OAuth project and include gmail.send in its consent configuration and sensitive-scope verification. Microsoft connections request delegated Mail.Send. Availability-only connections do not request email scopes. Hosts enable email sending separately for the saved booking destination account and explicitly approve permission. The callback must return the same destination account. Organization policy can require administrator approval. Mail permission never authorizes inbox reads. ICS-only connections cannot send mail.
+No Gmail or Microsoft mail sending permission is requested. Google's OAuth review ruled on 21 September 2026 that application notifications must not be sent through a host's own mailbox, so gmail.send and delegated Mail.Send were removed from the consent request. Migrations 0008 and 0009 stay applied, but their mail_enabled and mail_connection_id columns are no longer read or written.
 
-The recipient is derived exclusively from the authenticated calendar connection, never guest input. A database claim prevents concurrent duplicate submissions. Accepted means provider acceptance, not verified inbox delivery. Rate limits and pre-submission token failures retry on the minute cron. Ambiguous submissions (network errors, server failures or interrupted sends) are marked uncertain and are not automatically resent, because these APIs offer no idempotency key. Rejected permissions require reconnection. Cancelled, pending and past bookings are excluded. Previously unnotified upcoming bookings become eligible after reconnecting.
+The recipient is derived exclusively from the authenticated calendar connection recorded at booking time, never guest input. A database claim and a stable idempotency key prevent concurrent duplicate submissions, and retries stop after 23 hours to stay inside the provider deduplication window. Sent means Resend accepted the message, not verified inbox delivery. Cancelled, pending and past bookings are excluded.
 
-Provider mailbox quotas still apply. No paid email service is enabled. Existing optional timed reminders remain a separate Resend-based feature. Validate actual receipt with each provider before claiming end-to-end delivery.
+Resend sending quotas apply to notifications and reminders together. Validate actual receipt before claiming end-to-end delivery.
 
 
 ## Automatic national public holidays (2026-09-20)
