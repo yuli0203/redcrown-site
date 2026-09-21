@@ -66,12 +66,14 @@
       <span class="admin-count" id="count"></span>
       <div class="admin-actions">
         <a class="btn btn-ghost btn-sm" href="../" target="_blank" rel="noopener">צפייה באתר</a>
-        <button class="btn btn-gold btn-sm" type="button" id="download">הורדת העדכון לפרסום</button>
+        <button class="btn btn-gold btn-sm" type="button" id="publish">פרסום לאתר</button>
+        <button class="btn btn-ghost btn-sm" type="button" id="download">הורדת העדכון (גיבוי)</button>
         <button class="btn btn-ghost btn-sm" type="button" id="signout">יציאה</button>
       </div>
     </div>
+    <p class="publish-status" id="publish-status" role="status" aria-live="polite"></p>
     <div class="admin-dirty" id="dirty" hidden>
-      יש שינויים שעוד לא פורסמו. הורידו את הקובץ והעלו אותו לשרת כדי שהם יופיעו באתר.
+      יש שינויים שעוד לא פורסמו. לחצו על <strong>פרסום לאתר</strong> כדי שהם יופיעו באתר.
     </div>
   </header>
 
@@ -244,13 +246,50 @@
   <section class="admin-help">
     <h2>איך מפרסמים את השינויים</h2>
     <ol>
-      <li>עורכים כאן את הדירות ומוסיפים תמונות. השינויים נשמרים בדפדפן הזה בלבד.</li>
-      <li>לוחצים על <strong>הורדת העדכון לפרסום</strong>. יירד קובץ ZIP אחד שמכיל את
-          <code>data/listings.js</code> ואת כל התמונות החדשות בתיקייה <code>assets/img</code>.</li>
-      <li>פותחים את ה-ZIP ומעלים את התוכן שלו לאתר, לאותן תיקיות בדיוק:
-          את <code>listings.js</code> לתיקייה <code>data</code>, ואת התמונות לתיקייה <code>assets/img</code>.</li>
-      <li>מרעננים את האתר. הדירות המעודכנות מופיעות בעברית וברוסית.</li>
+      <li>עורכים כאן את הדירות ומוסיפים תמונות. עד הפרסום השינויים נשמרים בדפדפן הזה בלבד.</li>
+      <li>לוחצים על <strong>פרסום לאתר</strong> בראש המסך. הדירות והתמונות נכתבות ישר לאתר.</li>
+      <li>אחרי כדקה מרעננים את האתר. הדירות המעודכנות מופיעות בעברית וברוסית, וכל דירה מקבלת עמוד משלה.</li>
+      <li>אם הפרסום לא עובד, למשל בלי אינטרנט, אפשר ללחוץ על <strong>הורדת העדכון</strong>,
+          לקבל קובץ ZIP עם <code>data/listings.js</code> ועם התמונות, ולהעלות אותו לאתר ידנית.</li>
     </ol>
+
+    <h2 class="pw-head">חיבור לאתר (פעם אחת)</h2>
+    <p class="hint">
+      כדי שהמסך הזה יוכל לכתוב ישר לאתר, צריך להדביק כאן פעם אחת מפתח גישה שמוגבל
+      לאתר הזה בלבד. יוצרים אותו ב-<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub</a>:
+      בוחרים Only select repositories ואת המחסן של האתר, ותחת Repository permissions
+      מגדירים <code>Contents: Read and write</code>. מעתיקים את המפתח, מדביקים כאן, ולוחצים על בדיקת החיבור.
+    </p>
+    <div class="connect">
+      <div class="form-row">
+        <label for="c-repo">המחסן של האתר</label>
+        <input id="c-repo" type="text" autocomplete="off" spellcheck="false" placeholder="yuli0203/kertsman-site">
+      </div>
+      <div class="form-row">
+        <label for="c-branch">ענף</label>
+        <input id="c-branch" type="text" autocomplete="off" spellcheck="false" placeholder="main">
+      </div>
+      <div class="form-row connect-wide">
+        <label for="c-token">מפתח הגישה</label>
+        <input id="c-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_...">
+      </div>
+      <div class="form-row connect-wide">
+        <label for="c-prefix">תיקייה בתוך המחסן (רק אם האתר לא יושב בשורש)</label>
+        <input id="c-prefix" type="text" autocomplete="off" spellcheck="false" placeholder="ריק ברוב המקרים">
+      </div>
+    </div>
+    <div class="connect-foot">
+      <label class="connect-remember"><input type="checkbox" id="c-remember" checked> לזכור את המפתח במחשב הזה</label>
+      <button class="btn btn-primary btn-sm" type="button" id="c-test">בדיקת החיבור</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="c-save">שמירה</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="c-forget">מחיקת המפתח מהדפדפן</button>
+    </div>
+    <p class="form-status" id="connect-status" role="status" aria-live="polite"></p>
+    <p class="admin-note">
+      המפתח נשמר בדפדפן שבו הדבקתם אותו, ולא נשלח לשום מקום חוץ מ-GitHub. כדאי להדביק
+      אותו רק במחשב או בטלפון האישי, ולא במחשב משותף. אם מחשב אובד, נכנסים ל-GitHub
+      ומבטלים את המפתח (Revoke) — ומאותו רגע הוא כבר לא יכול לשנות דבר.
+    </p>
     <h2 class="pw-head">שינוי סיסמת הניהול</h2>
     <p class="hint">
       הקלידו סיסמה חדשה, העתיקו את השורה שנוצרת, והחליפו בה את השורה
@@ -267,9 +306,9 @@
     </div>
 
     <p class="admin-note">
-      חשוב לדעת: האתר בנוי כאתר סטטי, בלי שרת ובלי בסיס נתונים. לכן המסך הזה עורך עותק
-      מקומי ומייצר את קובץ הדירות, והעלאת הקובץ היא הפעולה שמפרסמת בפועל. כך אין צורך
-      בתשלום חודשי על מערכת ניהול, ואין סיכון שמישהו ישנה את האתר מרחוק.
+      חשוב לדעת: האתר בנוי כאתר סטטי, בלי שרת ובלי בסיס נתונים. המסך הזה מייצר את קובץ
+      הדירות, ובפרסום כותב אותו ישר לאתר. כך אין תשלום חודשי על מערכת ניהול, האתר נשאר
+      מהיר, ואף אחד לא יכול לשנות אותו בלי מפתח הגישה.
     </p>
   </section>
 </main>

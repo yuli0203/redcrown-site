@@ -1,12 +1,14 @@
 /* ============================================================================
    מסך ניהול הדירות / Kertsman admin screen
    ----------------------------------------------------------------------------
-   עורך עותק מקומי של רשימת הדירות ומייצר מחדש את data/listings.js להעלאה.
-   האתר סטטי ואין בו שרת, ולכן אין כאן שמירה מרחוק: ההעלאה של הקובץ היא הפרסום.
+   עורך את רשימת הדירות ומייצר מחדש את data/listings.js. יש שתי דרכים לפרסם:
+   "פרסום לאתר" כותב את הקובץ ואת התמונות ישר למחסן של האתר (דרך מפתח גישה
+   שנשמר בדפדפן), ו"הורדת העדכון" מייצר קובץ ZIP להעלאה ידנית, כגיבוי.
 
-   Edits a local copy of the listing catalogue and regenerates data/listings.js
-   for upload. The site is static with no server, so uploading the produced file
-   is what publishes the change.
+   Edits the listing catalogue and regenerates data/listings.js. There are two
+   ways to publish: "publish" writes the file and the photos straight to the
+   site's own repository (through a token kept in the browser), while the
+   download produces a ZIP for manual upload as a fallback.
    ============================================================================ */
 (function () {
   'use strict';
@@ -750,12 +752,269 @@
     });
   }
 
+  /* ==========================================================================
+     פרסום ישר מהאתר / publishing straight from the site
+     --------------------------------------------------------------------------
+     האתר סטטי ואין בו שרת שישמור נתונים, אבל יש לו מחסן קבצים משלו, ואפשר
+     לכתוב אליו ישר מהדפדפן. פעם אחת מדביקים כאן מפתח גישה (Token) שמוגבל
+     למחסן של האתר בלבד, ומאז כל לחיצה על "פרסום לאתר" כותבת את
+     data/listings.js ואת התמונות החדשות ישר לאתר. תוך דקה בערך הן באוויר,
+     בלי להוריד ולהעלות שום קובץ.
+
+     The site is static, with no server to save to, but it does have its own
+     file store and the browser can write to it. A fine-grained token, scoped
+     to that single repository, is pasted here once; from then on every
+     "publish" writes data/listings.js and the new photos straight to the live
+     site, and they are up within a minute — no file to download and re-upload.
+     ========================================================================== */
+
+  var GH_KEY = 'kertsman:admin:github';
+  var GH_API = 'https://api.github.com';
+  var uploaded = {};        // תמונות שכבר נכתבו למחסן / images already written
+
+  function ghRead() {
+    var raw = null;
+    try { raw = localStorage.getItem(GH_KEY) || sessionStorage.getItem(GH_KEY); } catch (err) { /* ignore */ }
+    var saved = {};
+    if (raw) { try { saved = JSON.parse(raw) || {}; } catch (err) { saved = {}; } }
+    return {
+      repo: saved.repo || 'yuli0203/kertsman-site',
+      branch: saved.branch || 'main',
+      prefix: saved.prefix || '',
+      token: saved.token || '',
+      remember: saved.remember !== false
+    };
+  }
+
+  function ghWrite(settings) {
+    var body = JSON.stringify(settings);
+    try {
+      if (settings.remember) {
+        localStorage.setItem(GH_KEY, body);
+        sessionStorage.removeItem(GH_KEY);
+      } else {
+        sessionStorage.setItem(GH_KEY, body);
+        localStorage.removeItem(GH_KEY);
+      }
+    } catch (err) { /* private mode */ }
+  }
+
+  function ghFields() {
+    var repo = (byId('c-repo').value || '')
+      .trim()
+      .replace(/^https?:\/\/(www\.)?github\.com\//i, '')
+      .replace(/\.git$/i, '')
+      .replace(/^\/+|\/+$/g, '');
+    var prefix = (byId('c-prefix').value || '').trim().replace(/^\/+/, '');
+    if (prefix && prefix.slice(-1) !== '/') prefix += '/';
+    return {
+      repo: repo,
+      branch: (byId('c-branch').value || '').trim() || 'main',
+      prefix: prefix,
+      token: (byId('c-token').value || '').trim(),
+      remember: byId('c-remember').checked
+    };
+  }
+
+  function ghCall(settings, path, options) {
+    var init = options || {};
+    init.headers = {
+      Accept: 'application/vnd.github+json',
+      Authorization: 'Bearer ' + settings.token,
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+    if (init.json) {
+      init.body = JSON.stringify(init.json);
+      init.headers['Content-Type'] = 'application/json';
+      delete init.json;
+    }
+    return fetch(GH_API + path, init).then(function (response) {
+      if (response.status === 204) return {};
+      return response.json().catch(function () { return {}; }).then(function (body) {
+        if (response.ok) return body;
+        var error = new Error((body && body.message) || ('HTTP ' + response.status));
+        error.status = response.status;
+        throw error;
+      });
+    });
+  }
+
+  function ghProblem(error) {
+    var status = error && error.status;
+    if (status === 401) return 'מפתח הגישה אינו תקף או שפג תוקפו. צרו מפתח חדש והדביקו אותו כאן.';
+    if (status === 403) return 'למפתח אין הרשאת כתיבה. בדקו שההרשאה Contents מוגדרת ל-Read and write.';
+    if (status === 404) return 'לא נמצא מחסן בשם הזה, או שהמפתח לא מורשה עליו. בדקו את השם ואת שם הענף.';
+    if (status === 409) return 'הענף ריק או חסום. בדקו את שם הענף.';
+    if (error && error.message) return 'GitHub החזיר שגיאה: ' + error.message;
+    return 'לא הצלחנו להתחבר. בדקו את חיבור האינטרנט ונסו שוב.';
+  }
+
+  function base64(blob) {
+    return blob.arrayBuffer().then(function (buffer) {
+      var bytes = new Uint8Array(buffer);
+      var text = '';
+      for (var i = 0; i < bytes.length; i += 0x8000) {
+        text += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      }
+      return btoa(text);
+    });
+  }
+
+  function ghSay(id, text, state) {
+    var box = byId(id);
+    if (!box) return;
+    box.textContent = text;
+    if (state) box.setAttribute('data-state', state);
+    else box.removeAttribute('data-state');
+  }
+
+  function needsToken(settings) {
+    if (settings.token && settings.repo) return false;
+    ghSay('publish-status', 'כדי לפרסם ישר לאתר צריך להדביק פעם אחת מפתח גישה, בקטע "חיבור לאתר" שבתחתית המסך.', 'err');
+    var field = byId('c-token');
+    if (field) {
+      field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      field.focus({ preventScroll: true });
+    }
+    return true;
+  }
+
+  function wireConnect() {
+    var saved = ghRead();
+    byId('c-repo').value = saved.repo;
+    byId('c-branch').value = saved.branch;
+    byId('c-prefix').value = saved.prefix;
+    byId('c-token').value = saved.token;
+    byId('c-remember').checked = saved.remember;
+    if (saved.token) ghSay('connect-status', 'מפתח גישה שמור בדפדפן הזה. אפשר לפרסם.', 'ok');
+
+    byId('c-save').addEventListener('click', function () {
+      var settings = ghFields();
+      if (!/^[\w.-]+\/[\w.-]+$/.test(settings.repo)) {
+        ghSay('connect-status', 'שם המחסן צריך להיות בצורה user/repo, למשל yuli0203/kertsman-site.', 'err');
+        return;
+      }
+      ghWrite(settings);
+      ghSay('connect-status', settings.token ? 'החיבור נשמר בדפדפן הזה.' : 'הפרטים נשמרו, אבל בלי מפתח גישה אי אפשר לפרסם.', settings.token ? 'ok' : 'err');
+    });
+
+    byId('c-test').addEventListener('click', function () {
+      var settings = ghFields();
+      if (!settings.token) { ghSay('connect-status', 'הדביקו קודם מפתח גישה.', 'err'); return; }
+      ghSay('connect-status', 'בודק את החיבור...');
+      ghCall(settings, '/repos/' + settings.repo).then(function (repo) {
+        if (repo.permissions && repo.permissions.push === false) {
+          ghSay('connect-status', 'המפתח קורא את ' + repo.full_name + ' אבל אינו יכול לכתוב אליו. הגדירו Contents: Read and write.', 'err');
+          return;
+        }
+        return ghCall(settings, '/repos/' + settings.repo + '/git/ref/heads/' + encodeURIComponent(settings.branch)).then(function () {
+          ghWrite(settings);
+          ghSay('connect-status', 'החיבור עובד. ' + repo.full_name + ', ענף ' + settings.branch + '. אפשר לפרסם.', 'ok');
+        });
+      }).catch(function (error) {
+        ghSay('connect-status', ghProblem(error), 'err');
+      });
+    });
+
+    byId('c-forget').addEventListener('click', function () {
+      if (!window.confirm('למחוק את מפתח הגישה מהדפדפן הזה? אחר כך יהיה צריך להדביק אותו שוב כדי לפרסם.')) return;
+      try { localStorage.removeItem(GH_KEY); sessionStorage.removeItem(GH_KEY); } catch (err) { /* ignore */ }
+      byId('c-token').value = '';
+      ghSay('connect-status', 'המפתח נמחק מהדפדפן הזה.', 'ok');
+    });
+  }
+
+  function wirePublish() {
+    var button = byId('publish');
+    if (!button) return;
+
+    button.addEventListener('click', function () {
+      var settings = ghFields();
+      if (needsToken(settings)) return;
+      ghWrite(settings);
+
+      var fresh = usedPending();
+      var paths = Object.keys(fresh).filter(function (path) { return !uploaded[path]; });
+      var label = button.textContent;
+      var ref, baseTree;
+
+      button.disabled = true;
+      ghSay('publish-status', 'מתחבר לאתר...');
+
+      ghCall(settings, '/repos/' + settings.repo + '/git/ref/heads/' + encodeURIComponent(settings.branch))
+        .then(function (data) {
+          ref = data.object.sha;
+          return ghCall(settings, '/repos/' + settings.repo + '/git/commits/' + ref);
+        })
+        .then(function (commit) {
+          baseTree = commit.tree.sha;
+          var entries = [];
+          var chain = Promise.resolve();
+          paths.forEach(function (path, index) {
+            chain = chain.then(function () {
+              var step = 'מעלה תמונה ' + (index + 1) + ' מתוך ' + paths.length + '...';
+              button.textContent = step;
+              ghSay('publish-status', step);
+              return base64(fresh[path].blob).then(function (content) {
+                return ghCall(settings, '/repos/' + settings.repo + '/git/blobs', {
+                  method: 'POST', json: { content: content, encoding: 'base64' }
+                });
+              }).then(function (blob) {
+                entries.push({ path: settings.prefix + path, mode: '100644', type: 'blob', sha: blob.sha });
+              });
+            });
+          });
+          return chain.then(function () { return entries; });
+        })
+        .then(function (entries) {
+          button.textContent = 'מפרסם...';
+          ghSay('publish-status', 'כותב את רשימת הדירות...');
+          entries.push({
+            path: settings.prefix + 'data/listings.js',
+            mode: '100644', type: 'blob', content: serialise()
+          });
+          return ghCall(settings, '/repos/' + settings.repo + '/git/trees', {
+            method: 'POST', json: { base_tree: baseTree, tree: entries }
+          });
+        })
+        .then(function (tree) {
+          return ghCall(settings, '/repos/' + settings.repo + '/git/commits', {
+            method: 'POST',
+            json: {
+              message: 'עדכון הדירות ממסך הניהול (' + listings.length + ' דירות)',
+              tree: tree.sha,
+              parents: [ref]
+            }
+          });
+        })
+        .then(function (commit) {
+          return ghCall(settings, '/repos/' + settings.repo + '/git/refs/heads/' + encodeURIComponent(settings.branch), {
+            method: 'PATCH', json: { sha: commit.sha }
+          });
+        })
+        .then(function () {
+          paths.forEach(function (path) { uploaded[path] = true; });
+          PUBLISHED = JSON.parse(JSON.stringify(listings));
+          markDirty();
+          button.textContent = label;
+          button.disabled = false;
+          var shots = paths.length === 0 ? '' : (paths.length === 1 ? ', כולל תמונה אחת' : ', כולל ' + paths.length + ' תמונות');
+          ghSay('publish-status', 'פורסם לאתר' + shots + '. השינויים יופיעו באתר בתוך דקה בערך, אחרי רענון הדף.', 'ok');
+        })
+        .catch(function (error) {
+          button.textContent = label;
+          button.disabled = false;
+          ghSay('publish-status', ghProblem(error) + ' אם זה נמשך, אפשר להוריד את העדכון ולהעלות אותו ידנית.', 'err');
+        });
+    });
+  }
+
   function wireSignOut() {
     var button = byId('signout');
     if (!button) return;
     button.addEventListener('click', function () {
       var dirty = JSON.stringify(listings) !== JSON.stringify(PUBLISHED);
-      if (dirty && !window.confirm('יש שינויים שעוד לא הורדתם לפרסום. לצאת בכל זאת? השינויים יישמרו בדפדפן הזה.')) return;
+      if (dirty && !window.confirm('יש שינויים שעוד לא פורסמו. לצאת בכל זאת? השינויים יישמרו בדפדפן הזה.')) return;
       try { sessionStorage.removeItem(UNLOCK_KEY); } catch (err) { /* ignore */ }
       byId('shell').hidden = true;
       byId('gate').hidden = false;
@@ -768,6 +1027,8 @@
   }
 
   wireSignOut();
+  wireConnect();
+  wirePublish();
   wireRecovery();
   wirePasswordTool();
   wireGate();

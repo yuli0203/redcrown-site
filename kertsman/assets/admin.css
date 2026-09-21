@@ -291,3 +291,40 @@ body.admin { background: var(--paper); }
 .paths summary { cursor: pointer; font-size: 13.5px; color: var(--muted); }
 .paths summary:hover { color: var(--brand); }
 .paths .form-row { margin-block-start: 10px; }
+
+/* ---------- publishing straight to the site ---------- */
+
+.publish-status {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: 0 var(--gutter);
+  font-size: 14.5px;
+  color: var(--ink-2);
+  min-height: 0;
+}
+.publish-status:not(:empty) { padding-block: 10px; }
+.publish-status[data-state="ok"] { color: #1f7a4d; }
+.publish-status[data-state="err"] { color: #b0392f; }
+
+.connect {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-block-start: 14px;
+}
+.connect .connect-wide { grid-column: 1 / -1; }
+.connect input { direction: ltr; text-align: left; }
+
+.connect-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-block-start: 16px;
+}
+.connect-remember { display: flex; align-items: center; gap: 8px; font-size: 14.5px; cursor: pointer; }
+.connect-remember input { width: 18px; height: 18px; accent-color: var(--brand); }
+
+@media (max-width: 620px) {
+  .connect { grid-template-columns: 1fr; }
+}
