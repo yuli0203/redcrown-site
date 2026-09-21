@@ -106,6 +106,7 @@ const LANGS = {
       'LiveMol research tool': 'Исследовательский инструмент LiveMol',
       'Fugacity VR experiment': 'VR-эксперимент Fugacity',
       'Enzymatic lab AR project': 'AR-проект ферментной лаборатории',
+      'Technion website': 'Сайт Техниона',
       'Change language': 'Сменить язык',
       'Chat on WhatsApp': 'Написать в WhatsApp',
       'Legal': 'Правовая информация',
