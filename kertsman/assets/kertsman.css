@@ -9,12 +9,15 @@
 :root {
   color-scheme: light;
 
-  --paper: #f8f7fb;
-  --surface: #ffffff;
-  --sand: #efecf8;
-  --sand-deep: #ded8f0;
-  --line: #e3dff0;
-  --line-soft: #efedf7;
+  /* רקעים בגוון שמנת חם, שמבדיל בין השכבות ומתחבר לזהב שבלוגו
+     Warm cream backgrounds, which separate the layers and sit with the
+     gold in the logo. */
+  --paper: #fbf6e9;
+  --surface: #fffdf6;
+  --sand: #f5ecd6;
+  --sand-deep: #e9dcbc;
+  --line: #ece0c6;
+  --line-soft: #f4ecda;
 
   --ink: #100c1c;
   --ink-2: #3a3450;
@@ -314,7 +317,8 @@ html[dir='ltr'] .hero::after {
   from { opacity: 0; transform: translateY(10px) scale(.86); }
   to { opacity: 1; transform: none; }
 }
-.hero-title:hover .hero-mark, .hero-title:focus-within .hero-mark {
+.hero-mark { pointer-events: all; }
+.hero-mark:hover {
   animation: houseHop 1.1s cubic-bezier(.3, .8, .4, 1) infinite;
   filter: drop-shadow(0 10px 26px rgba(254, 215, 0, .6));
 }
@@ -326,7 +330,7 @@ html[dir='ltr'] .hero::after {
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-mark { animation: none; }
-  .hero-title:hover .hero-mark, .hero-title:focus-within .hero-mark { animation: none; }
+  .hero-mark:hover { animation: none; }
 }
 @media (max-width: 520px) { .hero-title { gap: 12px; } }
 
@@ -746,7 +750,7 @@ dialog.sheet::backdrop { background: rgba(18, 0, 73, .6); backdrop-filter: blur(
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
   padding: 12px 14px;
-  background: var(--paper);
+  background: #fffaec;
   font-size: 16px;
   width: 100%;
   transition: border-color .2s ease, background-color .2s ease;
