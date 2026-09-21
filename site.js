@@ -1,8 +1,8 @@
 const I18N = {
   en: {
     "journal.kicker":"FROM THE JOURNAL",
-    "journal.title":"Ideas for your next product",
-    "journal.intro":"Selected articles in Hebrew on app development, interactive 3D and XR.",
+    "journal.title":"Articles",
+    "journal.intro":"Software development, 3D and XR. Articles in Hebrew.",
     "journal.all":"ALL ARTICLES",
     "journal.prev":"Previous articles",
     "journal.next":"Next articles",
@@ -73,8 +73,8 @@ const I18N = {
   },
   he: {
     "journal.kicker":"ידע מהסטודיו",
-    "journal.title":"מרעיון למוצר - גם במילים",
-    "journal.intro":"מאמרים על פיתוח אפליקציות, תלת-ממד ו-XR, שיעזרו לקבל החלטות טובות יותר.",
+    "journal.title":"מאמרים",
+    "journal.intro":"פיתוח תוכנה, תלת-ממד ו-XR.",
     "journal.all":"לכל המאמרים",
     "journal.prev":"המאמרים הקודמים",
     "journal.next":"המאמרים הבאים",
@@ -149,8 +149,8 @@ const I18N = {
   },
   ru: {
     "journal.kicker":"ЖУРНАЛ СТУДИИ",
-    "journal.title":"Идеи для вашего продукта",
-    "journal.intro":"Статьи на иврите о разработке приложений, интерактивном 3D и XR.",
+    "journal.title":"Статьи",
+    "journal.intro":"Разработка ПО, 3D и XR. Статьи на иврите.",
     "journal.all":"ВСЕ СТАТЬИ",
     "journal.prev":"Предыдущие статьи",
     "journal.next":"Следующие статьи",
