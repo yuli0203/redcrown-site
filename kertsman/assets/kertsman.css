@@ -490,7 +490,18 @@ dialog.sheet::backdrop { background: rgba(18, 0, 73, .6); backdrop-filter: blur(
 .gallery { position: relative; background: var(--sand); }
 .gallery-main { aspect-ratio: 16 / 9; max-height: 46vh; }
 .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
-.thumbs { display: flex; gap: 10px; padding: 12px; background: var(--surface); }
+/* התמונות הקטנות ממורכזות מתחת לתמונה הגדולה, ונשברות לשורה נוספת כשיש
+   הרבה, כדי ששום תמונה לא תיחתך.
+   The thumbnails are centred under the photo and wrap onto another row
+   when there are many, so none of them gets cut off. */
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface);
+}
 .thumbs button {
   width: 88px;
   aspect-ratio: 4 / 3;
