@@ -286,17 +286,26 @@
      כתובת היעד שמורה אצל השירות ולא מופיעה בקוד העמוד.
      The form is delivered by e-mail through Web3Forms when a key is configured.
      The destination address is held by the service, never in the page source. */
-  function sendByMail(form, fields) {
+  function sendByMail(fields, summary) {
+    /* Web3Forms מצפה לשדות ברמה העליונה של ה-JSON, ולא בתוך אובייקט מקונן.
+       השדה message מכיל גם את הסיכום המלא, כך שגם אם שדה בודד לא יוצג,
+       כל הפרטים נמצאים בגוף המייל.
+       Web3Forms expects the fields at the top level of the JSON rather than
+       nested. message also carries the full summary, so every detail is in the
+       mail body even if an individual field is not rendered. */
+    var payload = {
+      access_key: CFG.formKey,
+      subject: t('mailSubject') + ': ' + (fields.name || ''),
+      from_name: loc(CFG.agent),
+      botcheck: '',
+      message: summary
+    };
+    Object.keys(fields).forEach(function (key) { payload[key] = fields[key]; });
+
     return fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        access_key: CFG.formKey,
-        subject: t('mailSubject') + ': ' + (fields[t('name')] || ''),
-        from_name: loc(CFG.agent),
-        botcheck: '',
-        data: fields
-      })
+      body: JSON.stringify(payload)
     }).then(function (response) { return response.json(); });
   }
 
@@ -323,19 +332,17 @@
         return;
       }
 
-      var fields = {};
-      fields[t('name')] = name;
-      fields[t('phone')] = phone;
-      ['subject', 'address', 'message'].forEach(function (key) {
+      var fields = { name: name, phone: phone };
+      var lines = [t('leadContact'), '', t('name') + ': ' + name, t('phone') + ': ' + phone];
+      ['topic', 'address', 'details'].forEach(function (key) {
         var field = form.querySelector('[name="' + key + '"]');
         var value = (data.get(key) || '').toString().trim();
         if (!value) return;
         var label = field && field.labels && field.labels[0] ? field.labels[0].textContent.trim() : key;
-        fields[label] = value;
+        fields[key] = value;
+        lines.push(label + ': ' + value);
       });
-
-      var lines = [t('leadContact'), ''];
-      Object.keys(fields).forEach(function (label) { lines.push(label + ': ' + fields[label]); });
+      var summary = lines.slice(2).join('\n');
 
       if (!CFG.formKey) {
         // no mail key configured yet, so the message goes out over WhatsApp
@@ -348,7 +355,7 @@
 
       say(t('sending'));
       if (button) button.disabled = true;
-      sendByMail(form, fields).then(function (result) {
+      sendByMail(fields, summary).then(function (result) {
         if (result && result.success) {
           say(t('formOk'), 'ok');
           form.reset();
