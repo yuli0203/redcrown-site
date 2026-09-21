@@ -19,7 +19,7 @@ html[lang="he"] .reading-home [data-i18n="wwd.intro"]{display:grid;grid-template
 .reading-home .about-in{grid-template-columns:230px minmax(0,1fr);gap:64px;max-width:1040px;margin:36px auto 0;align-items:start}
 .reading-home .about-lead{max-width:65ch}
 .reading-home .about-lead p{font-size:1rem}
-.reading-home .about-lead h3{line-height:1.45;max-width:28ch}
+.reading-home .about-lead h3{line-height:1.45;max-width:none}
 .reading-home .home-journal{background:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:40px 24px 24px;margin-block:40px}
 .reading-home .journal-card{background:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:24px 4px;gap:14px}
 .reading-home .journal-grid{gap:40px}
