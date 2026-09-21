@@ -195,6 +195,7 @@ html[lang="ru"] .hero h1{font-size:clamp(1.28rem,6.4vw,3.2rem)}
 /* ---------------- platform cards ---------------- */
 .services-intro{margin-top:40px;text-align:center}
 .services-intro h2,html[lang="he"] .work-heading{font-family:var(--display);font-size:clamp(1.55rem,3vw,2.5rem);line-height:1.12;letter-spacing:.025em}
+.services-intro h2 .brand-name{color:var(--hot-text)}
 html[lang="he"] .services-intro h2 .brand-name{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:1em;letter-spacing:0;white-space:nowrap;unicode-bidi:isolate}
 html[lang="he"] .work-heading{text-align:center;color:var(--bone);margin:0}
 html[lang="he"] .journey-heading{margin-top:40px}
