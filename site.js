@@ -1,5 +1,10 @@
 const I18N = {
   en: {
+    "journal.kicker":"FROM THE JOURNAL",
+    "journal.title":"Ideas for your next product",
+    "journal.intro":"Selected articles in Hebrew on app development, interactive 3D and XR.",
+    "journal.all":"ALL ARTICLES",
+
     "float.cta":"GET A PROPOSAL",
     "doc.title":"App, 3D & VR/AR/XR Development in Unity | Red Crown Interactive",
     "a11y.skip":"Skip to content","nav.home":"HOME","nav.services":"SERVICES","nav.tech":"TECHNOLOGIES","nav.work":"WORK","nav.about":"ABOUT","nav.faq":"FAQ","nav.contact":"CONTACT","nav.cta":"GET A PROPOSAL",
@@ -64,6 +69,11 @@ const I18N = {
     "foot.blog":"Articles (Hebrew)","foot.privacy":"Privacy Policy","foot.terms":"Terms of Use","foot.a11y":"Accessibility Statement"
   },
   he: {
+    "journal.kicker":"ידע מהסטודיו",
+    "journal.title":"מרעיון למוצר - גם במילים",
+    "journal.intro":"מאמרים על פיתוח אפליקציות, תלת-ממד ו-XR, שיעזרו לקבל החלטות טובות יותר.",
+    "journal.all":"לכל המאמרים",
+
     "float.cta":"לייעוץ חינם",
     "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive",
     "a11y.skip":"דלג לתוכן","nav.home":"בית","nav.services":"שירותים","nav.tech":"תהליך","nav.work":"עבודות","nav.about":"אודות","nav.faq":"שאלות נפוצות","nav.contact":"צרו קשר","nav.cta":"לייעוץ חינם",
@@ -132,6 +142,11 @@ const I18N = {
     "foot.blog":"מאמרים","foot.privacy":"מדיניות פרטיות","foot.terms":"תנאי שימוש","foot.a11y":"הצהרת נגישות"
   },
   ru: {
+    "journal.kicker":"ЖУРНАЛ СТУДИИ",
+    "journal.title":"Идеи для вашего продукта",
+    "journal.intro":"Статьи на иврите о разработке приложений, интерактивном 3D и XR.",
+    "journal.all":"ВСЕ СТАТЬИ",
+
     "float.cta":"Получить предложение",
     "doc.title":"Разработка приложений, 3D и VR на Unity | Red Crown Interactive",
     "a11y.skip":"Перейти к содержанию","nav.home":"Главная","nav.services":"Услуги","nav.tech":"Технологии","nav.work":"Работы","nav.about":"О нас","nav.faq":"Вопросы","nav.contact":"Контакты","nav.cta":"Получить предложение",
