@@ -24,7 +24,10 @@
       emptyNote: 'הנכסים שלנו נסגרים מהר. השאירו פרטים ונעדכן אתכם ראשונים על דירה שעולה לשיווק.',
       results: 'נכסים', priceOnRequest: 'מחיר במשא ומתן',
       close: 'סגירה', features: 'מה יש בדירה', gallery: 'תמונה', sending: 'שולח...',
-      formOk: 'תודה! נפתח עבורכם חלון וואטסאפ עם הפרטים. אם הוא לא נפתח, התקשרו אלינו ישירות.',
+      formOk: 'תודה! הפרטים נשלחו ואנחנו נחזור אליכם בהקדם.',
+      formOkWa: 'תודה! נפתח עבורכם חלון וואטסאפ עם הפרטים. אם הוא לא נפתח, התקשרו אלינו ישירות.',
+      formFallback: 'השליחה לא עברה, אז פתחנו לכם וואטסאפ עם אותם פרטים.',
+      mailSubject: 'פנייה חדשה מהאתר',
       formErr: 'נא למלא שם וטלפון כדי שנוכל לחזור אליכם.',
       askAbout: 'שלום, אני מתעניין/ת בדירה',
       leadContact: 'שלום, הגעתי מהאתר ואשמח לחזרה.',
@@ -39,7 +42,10 @@
       emptyNote: 'Наши объекты уходят быстро. Оставьте контакты, и мы сообщим вам первыми о новой квартире.',
       results: 'объектов', priceOnRequest: 'Цена по договорённости',
       close: 'Закрыть', features: 'Что есть в квартире', gallery: 'Фото', sending: 'Отправляем...',
-      formOk: 'Спасибо! Мы открыли WhatsApp с вашими данными. Если окно не открылось, позвоните нам напрямую.',
+      formOk: 'Спасибо! Данные отправлены, мы свяжемся с вами в ближайшее время.',
+      formOkWa: 'Спасибо! Мы открыли WhatsApp с вашими данными. Если окно не открылось, позвоните нам напрямую.',
+      formFallback: 'Отправка не прошла, поэтому мы открыли WhatsApp с теми же данными.',
+      mailSubject: 'Новое обращение с сайта',
       formErr: 'Укажите имя и телефон, чтобы мы могли перезвонить.',
       askAbout: 'Здравствуйте! Интересует объект',
       leadContact: 'Здравствуйте! Я с сайта, прошу связаться со мной.',
@@ -274,34 +280,86 @@
 
   /* ---------- contact form ---------- */
 
+  /* הטופס נשלח למייל דרך Web3Forms כשיש מפתח בהגדרות, ותמיד אפשר גם וואטסאפ.
+     כתובת היעד שמורה אצל השירות ולא מופיעה בקוד העמוד.
+     The form is delivered by e-mail through Web3Forms when a key is configured.
+     The destination address is held by the service, never in the page source. */
+  function sendByMail(form, fields) {
+    return fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: CFG.formKey,
+        subject: t('mailSubject') + ': ' + (fields[t('name')] || ''),
+        from_name: loc(CFG.agent),
+        botcheck: '',
+        data: fields
+      })
+    }).then(function (response) { return response.json(); });
+  }
+
   function handleForm(form) {
     form.addEventListener('submit', function (event) {
       event.preventDefault();
       var status = form.querySelector('.form-status');
+      var button = form.querySelector('button[type="submit"]');
       var data = new FormData(form);
       var name = (data.get('name') || '').toString().trim();
       var phone = (data.get('phone') || '').toString().trim();
 
+      var say = function (text, state) {
+        if (!status) return;
+        status.textContent = text;
+        if (state) status.setAttribute('data-state', state);
+        else status.removeAttribute('data-state');
+      };
+
       if (!name || !phone) {
-        if (status) { status.textContent = t('formErr'); status.setAttribute('data-state', 'err'); }
+        say(t('formErr'), 'err');
         var firstEmpty = !name ? form.querySelector('[name="name"]') : form.querySelector('[name="phone"]');
         if (firstEmpty) firstEmpty.focus();
         return;
       }
 
-      var lines = [t('leadContact'), '', t('name') + ': ' + name, t('phone') + ': ' + phone];
+      var fields = {};
+      fields[t('name')] = name;
+      fields[t('phone')] = phone;
       ['subject', 'address', 'message'].forEach(function (key) {
         var field = form.querySelector('[name="' + key + '"]');
         var value = (data.get(key) || '').toString().trim();
         if (!value) return;
-        var label = field && field.labels && field.labels[0] ? field.labels[0].textContent : key;
-        lines.push(label + ': ' + value);
+        var label = field && field.labels && field.labels[0] ? field.labels[0].textContent.trim() : key;
+        fields[label] = value;
       });
 
-      if (status) { status.textContent = t('sending'); status.removeAttribute('data-state'); }
-      window.open(waLink(lines.join('\n')), '_blank', 'noopener');
-      if (status) { status.textContent = t('formOk'); status.setAttribute('data-state', 'ok'); }
-      form.reset();
+      var lines = [t('leadContact'), ''];
+      Object.keys(fields).forEach(function (label) { lines.push(label + ': ' + fields[label]); });
+
+      if (!CFG.formKey) {
+        // no mail key configured yet, so the message goes out over WhatsApp
+        say(t('sending'));
+        window.open(waLink(lines.join('\n')), '_blank', 'noopener');
+        say(t('formOkWa'), 'ok');
+        form.reset();
+        return;
+      }
+
+      say(t('sending'));
+      if (button) button.disabled = true;
+      sendByMail(form, fields).then(function (result) {
+        if (result && result.success) {
+          say(t('formOk'), 'ok');
+          form.reset();
+        } else {
+          say(t('formFallback'), 'err');
+          window.open(waLink(lines.join('\n')), '_blank', 'noopener');
+        }
+      }).catch(function () {
+        say(t('formFallback'), 'err');
+        window.open(waLink(lines.join('\n')), '_blank', 'noopener');
+      }).then(function () {
+        if (button) button.disabled = false;
+      });
     });
   }
 
