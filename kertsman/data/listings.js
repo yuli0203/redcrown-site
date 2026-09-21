@@ -14,6 +14,7 @@ window.KERTSMAN_CONFIG = {
     he: "עסק בוטיק משפחתי באזור חיפה",
     ru: "Семейный бутиковый бизнес в районе Хайфы"
   },
+  siteUrl: "https://www.kertsman.com",
   licence: "3212416, 3212396",
   phone: "052-227-5710",
   phoneIntl: "972522275710",

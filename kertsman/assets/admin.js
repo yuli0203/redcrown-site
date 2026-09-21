@@ -805,6 +805,41 @@
     return out.join('\n');
   }
 
+  /* מפת האתר נכתבת מחדש בכל פרסום, כדי שהיא תמיד תשקף את הדירות שבאוויר.
+     robots.txt מצביע עליה, ולכן היא חייבת להתקיים ולהיות מעודכנת.
+     The sitemap is rewritten on every publish so it always matches the
+     apartments that are live; robots.txt points at it. */
+  function buildSitemap() {
+    var config = window.KERTSMAN_CONFIG || {};
+    var base = (config.siteUrl || location.origin).replace(/\/+$/, '');
+    var today = new Date().toISOString().slice(0, 10);
+    var urls = ['/', '/ru/', '/legal/privacy/', '/legal/accessibility/',
+                '/ru/legal/privacy/', '/ru/legal/accessibility/'];
+
+    listings.forEach(function (item) {
+      if (!item.id || item.status === 'sold') return;
+      urls.push('/dira/?id=' + encodeURIComponent(item.id));
+      urls.push('/ru/dira/?id=' + encodeURIComponent(item.id));
+    });
+
+    var out = ['<?xml version="1.0" encoding="UTF-8"?>',
+               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'];
+    urls.forEach(function (path) {
+      out.push('  <url>');
+      out.push('    <loc>' + escapeHtml(base + path) + '</loc>');
+      out.push('    <lastmod>' + today + '</lastmod>');
+      out.push('  </url>');
+    });
+    out.push('</urlset>');
+    out.push('');
+    return out.join('\n');
+  }
+
+  function escapeHtml(text) {
+    return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+  }
+
   function saveAs(blob, filename) {
     var url = URL.createObjectURL(blob);
     var link = document.createElement('a');
@@ -1195,6 +1230,7 @@
     var paths = Object.keys(fresh).filter(function (path) { return !uploaded[path]; });
     var snapshot = JSON.parse(JSON.stringify(listings));
     var text = serialise();
+    var sitemap = buildSitemap();
 
     publishing = true;
     if (button) button.disabled = true;
@@ -1231,6 +1267,10 @@
         entries.push({
           path: settings.prefix + 'data/listings.js',
           mode: '100644', type: 'blob', content: text
+        });
+        entries.push({
+          path: settings.prefix + 'sitemap.xml',
+          mode: '100644', type: 'blob', content: sitemap
         });
         return commitTree(settings, entries, 'עדכון הדירות ממסך הניהול (' + snapshot.length + ' דירות)');
       })
