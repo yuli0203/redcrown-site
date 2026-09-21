@@ -15,6 +15,14 @@
     $('#auth-password').value = '';
   }
   const form = $('#auth-form');
+  const linkMicrosoft = document.createElement('button');
+  linkMicrosoft.id = 'auth-link-microsoft';
+  linkMicrosoft.type = 'button';
+  linkMicrosoft.className = 'auth-button';
+  linkMicrosoft.textContent = 'Enable Microsoft sign-in';
+  linkMicrosoft.title = 'Use Microsoft to sign in to this same account. Calendar access is separate.';
+  linkMicrosoft.hidden = true;
+  $('#auth-account').append(linkMicrosoft);
   let sdk, auth, ready = false, busy = false, creating = false, lastVerificationSent = 0;
   const verificationPanel = document.createElement('section');
   verificationPanel.hidden = true;
@@ -45,6 +53,7 @@
     $('#auth-microsoft').disabled = !ready || busy || !microsoftEnabled;
     $('#auth-microsoft').title = microsoftEnabled ? '' : 'Microsoft sign-in is coming soon. Use Google or email.';
     $('#auth-signout').disabled = busy;
+    linkMicrosoft.disabled = !ready || busy;
   };
   const errors = {
     'auth/invalid-credential': 'Unable to sign in. Check your email and password.',
@@ -61,7 +70,10 @@
     'auth/cancelled-popup-request': 'Another sign-in window is already open.',
     'auth/unauthorized-domain': 'Sign-in is not enabled for this website address yet.',
     'auth/operation-not-allowed': 'This sign-in method has not been enabled yet.',
-    'auth/account-exists-with-different-credential': 'Use the sign-in method you originally used for this email.',
+    'auth/account-exists-with-different-credential': 'This email already has an account. Sign in with your original method, then select Enable Microsoft sign-in to connect Microsoft to the same account.',
+    'auth/credential-already-in-use': 'This Microsoft account is connected to another Crown Calendar account. Sign in with Microsoft to use that account.',
+    'auth/provider-already-linked': 'Microsoft sign-in is already enabled for this account.',
+    'auth/requires-recent-login': 'Sign out and sign in again, then retry enabling Microsoft sign-in.',
     'auth/user-disabled': 'This account is unavailable.',
     'auth/web-storage-unsupported': 'Allow browser storage to use sign-in.'
   };
@@ -116,6 +128,17 @@
     await sdk.signInWithPopup(auth, provider);
     closeAuth();
   }));
+  linkMicrosoft.addEventListener('click', () => run(async () => {
+    if (!microsoftEnabled || !auth.currentUser?.emailVerified) return;
+    const provider = new sdk.OAuthProvider('microsoft.com');
+    provider.setCustomParameters({prompt:'select_account', tenant:'common'});
+    // Firebase links only after both the current user and Microsoft authenticate.
+    // Keep the existing UID so calendar ownership and saved settings stay intact.
+    await sdk.linkWithPopup(auth.currentUser, provider);
+    await auth.currentUser.getIdToken(true);
+    renderUser(auth.currentUser);
+    message('Microsoft sign-in is enabled. You can now use Microsoft to sign in to this same account.');
+  }));
   form.addEventListener('submit', event => {
     event.preventDefault();
     if (!form.reportValidity()) return;
@@ -155,6 +178,7 @@
   });
   function renderUser(user) {
     const verified = Boolean(user?.emailVerified);
+    linkMicrosoft.hidden = !microsoftEnabled || !verified || user.providerData.some(provider => provider.providerId === 'microsoft.com');
     verificationPanel.hidden = !user || verified;
     if ($('.footer-signin')) $('.footer-signin').textContent = user ? 'Calendar workspace' : 'Sign in / Create account';
     if ($('#auth-open')) $('#auth-open').hidden = Boolean(user);

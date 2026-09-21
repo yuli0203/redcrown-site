@@ -10,7 +10,7 @@
     "googleClientId": "846983787-lhc0lbb3sujmdbqqfa5094febohqup6p.apps.googleusercontent.com"
   },
   "providers": {
-    "microsoft": false
+    "microsoft": true
   },
   "apiOrigin": "https://red-crown-calendar-api.yuli0203.workers.dev"
 }

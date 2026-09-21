@@ -1,0 +1,38 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const source = fs.readFileSync(path.join(__dirname,'../calendar/auth.js'),'utf8')
+ .replace("import('https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js')", 'Promise.resolve(globalThis.appSDK)')
+ .replace("import('https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js')", 'Promise.resolve(globalThis.authSDK)');
+async function fixture({verified=true,linked=false,enabled=true,failLink=false}={}) {
+ const nodes=new Map();
+ const element=()=>({hidden:false,disabled:false,value:'',textContent:'',events:{},append(){},querySelectorAll(){return [];},setAttribute(){},addEventListener(name,fn){this.events[name]=fn;},reportValidity(){return true;},scrollIntoView(){},focus(){}});
+ const get=id=>{if(!nodes.has(id))nodes.set(id,element());return nodes.get(id);};
+ const user={uid:'existing-owner',email:'owner@example.test',emailVerified:verified,providerData:[{providerId:'google.com'},...(linked?[{providerId:'microsoft.com'}]:[])],async getIdToken(){return 'test-token';}};
+ const auth={currentUser:user,async authStateReady(){}};
+ let linkCalls=0,createdButton;
+ class OAuthProvider {constructor(id){this.providerId=id;} setCustomParameters(p){this.parameters=p;}}
+ const sdk={OAuthProvider,getAuth:()=>auth,setPersistence:async()=>{},onAuthStateChanged:(a,fn)=>fn(a.currentUser),
+  async linkWithPopup(target,provider){linkCalls++;assert.equal(target,user);assert.equal(provider.providerId,'microsoft.com');if(failLink)throw {code:'auth/popup-closed-by-user'};target.providerData.push({providerId:'microsoft.com'});return {user:target};},
+  async signOut(a){a.currentUser=null;}};
+ const document={querySelector:id=>id==='#auth-dialog'?null:get(id),createElement:tag=>{const el=element();if(tag==='button')createdButton=el;return el;},dispatchEvent(){}};
+ vm.runInNewContext(source,{document,window:{},location:{origin:'https://test.example'},fetch:async()=>({ok:true,json:async()=>({firebase:{apiKey:'a',authDomain:'b',projectId:'c',appId:'d'},providers:{microsoft:enabled}})}),appSDK:{initializeApp:()=>({})},authSDK:sdk,CustomEvent:class{},Date});
+ for(let i=0;i<5;i++)await new Promise(setImmediate);
+ return {button:createdButton,user,auth,nodes,get,calls:()=>linkCalls};
+}
+test('Linking Microsoft keeps the existing owner UID and hides the option afterwards',async()=>{
+ const f=await fixture();assert.equal(f.button.hidden,false);
+ await f.button.events.click();assert.equal(f.calls(),1);assert.equal(f.user.uid,'existing-owner');assert.equal(f.button.hidden,true);
+ assert.match(f.get('#auth-message').textContent,/Microsoft sign-in is enabled/);
+});
+test('Unverified or disabled-provider sessions cannot link Microsoft',async()=>{
+ for(const opts of [{verified:false},{enabled:false}]){const f=await fixture(opts);assert.equal(f.button.hidden,true);await f.button.events.click();assert.equal(f.calls(),0);}
+});
+test('Already-linked users do not see an extra linking action',async()=>{
+ const f=await fixture({linked:true});assert.equal(f.button.hidden,true);assert.equal(f.calls(),0);
+});
+test('Cancelled Microsoft linking retains the existing session and allows retry',async()=>{
+ const f=await fixture({failLink:true});await f.button.events.click();assert.equal(f.auth.currentUser,f.user);assert.equal(f.button.disabled,false);assert.equal(f.button.hidden,false);assert.match(f.get('#auth-message').textContent,/cancelled/);
+});
