@@ -1,0 +1,50 @@
+/* Hebrew homepage: stable reading edges with varied, open section layouts. */
+html[lang="he"] .reading-home :is(.services-intro p,.work-sub,.about-lead,.contact-intro,.journal-card,.pcard,.wd-body,.faq-item){text-align:start}
+.reading-home :is(.services-intro p,.work-sub p,.about-lead p,.contact-intro p,.journal-card p){text-wrap:pretty;line-height:1.85}
+.reading-home :is(.work-heading,.services-intro h2,.about-lead h3,.journal-card h3){text-wrap:balance}
+html[lang="he"] .reading-home .services-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:56px;align-items:start;margin-block:76px 44px;padding:0 24px;text-align:start}
+.reading-home .services-intro h2{margin:0;padding-block-start:8px}
+html[lang="he"] .reading-home .services-intro p{max-width:65ch;margin:0;font-size:1rem}
+.reading-home .services-intro p>strong{font-size:1.15rem;line-height:1.65;color:var(--bone);padding-inline-start:20px;border-inline-start:2px solid var(--red)}
+html[lang="he"] .reading-home #work{margin-top:76px}
+html[lang="he"] .reading-home #work>.work-sub{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:48px;max-width:1040px;width:100%;margin:30px auto 40px;padding-inline:24px;align-items:start}
+.reading-home #work>.work-sub>p:first-child{font-size:1.2rem;line-height:1.75;color:var(--bone);border-inline-start:2px solid var(--red);padding-inline-start:22px}
+html[lang="he"] .reading-home #work>.work-sub p+p{margin:0;max-width:60ch}
+.reading-home .work-sub strong{display:block;margin-bottom:10px}
+html[lang="he"] .reading-home .journey-heading{margin-top:76px}
+html[lang="he"] .reading-home [data-i18n="wwd.intro"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;max-width:1040px;width:100%;padding-inline:24px;margin:30px auto 36px}
+.reading-home [data-i18n="wwd.intro"] p+p{margin:0;padding-inline-start:32px;border-inline-start:1px solid var(--line)}
+.reading-home [data-i18n="wwd.intro"] strong{font-size:1.05rem}
+.reading-home .about{background:none;border:0;border-radius:0;margin-top:76px;padding:0 24px 32px}
+.reading-home .about-in{grid-template-columns:230px minmax(0,1fr);gap:64px;max-width:1040px;margin:36px auto 0;align-items:start}
+.reading-home .about-lead{max-width:65ch}
+.reading-home .about-lead p{font-size:1rem}
+.reading-home .about-lead h3{line-height:1.45;max-width:28ch}
+.reading-home .home-journal{background:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:40px 24px 24px;margin-block:40px}
+.reading-home .journal-card{background:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:24px 4px;gap:14px}
+.reading-home .journal-grid{gap:40px}
+.reading-home .journal-grid>.journal-card{flex-basis:calc((100% - 40px)/2)}
+.reading-home .journal-card h3{font-size:1.22rem;max-width:32ch}
+.reading-home .journal-card p{max-width:58ch;font-size:.94rem}
+.reading-home .journal-card:hover{border-color:var(--hot-text);transform:none}
+.reading-home .journal-footer{justify-content:flex-end;margin-top:12px}
+.reading-home .faq{background:none;border:0;border-radius:0;padding:32px 24px;margin-top:24px}
+.reading-home .faq-list{max-width:920px;gap:0}
+.reading-home .faq-item{background:none;border:0;border-bottom:1px solid var(--line);border-radius:0}
+.reading-home .faq-item summary{padding:22px 0}
+.reading-home .faq-item p{max-width:65ch;padding:0 0 22px;line-height:1.85}
+@media(max-width:800px){
+  html[lang="he"] .reading-home .services-intro{grid-template-columns:1fr;gap:22px;margin-block:48px 32px;padding-inline:20px}
+  .reading-home .services-intro h2{text-align:center}
+  html[lang="he"] .reading-home #work>.work-sub,html[lang="he"] .reading-home [data-i18n="wwd.intro"]{grid-template-columns:1fr;gap:24px;padding-inline:20px;margin-block:26px 32px}
+  .reading-home [data-i18n="wwd.intro"] p+p{border-inline-start:0;border-top:1px solid var(--line);padding:24px 0 0}
+  .reading-home .about{padding-inline:20px;margin-top:48px}
+  .reading-home .about-in{grid-template-columns:1fr;gap:28px}
+  .reading-home .founder-card{width:min(100%,230px);margin-inline:auto}
+  .reading-home .about-lead{max-width:100%}
+  .reading-home .home-journal,.reading-home .faq{padding-inline:20px}
+  .reading-home .journal-grid{gap:24px}
+  .reading-home .journal-grid>.journal-card{flex-basis:90%}
+  html[lang="he"] .reading-home :is(#work,.journey-heading){margin-top:48px}
+  .reading-home .keep-together{white-space:normal}
+}
