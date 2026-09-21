@@ -2,6 +2,9 @@
 html[lang="he"] .reading-home :is(.services-intro p,.work-sub,.about-lead,.contact-intro,.journal-card,.pcard,.wd-body,.faq-item){text-align:start}
 .reading-home :is(.services-intro p,.work-sub p,.about-lead p,.contact-intro p,.journal-card p){text-wrap:pretty;line-height:1.85}
 .reading-home :is(.work-heading,.services-intro h2,.about-lead h3,.journal-card h3){text-wrap:balance}
+/* The contact lead-in is one short line under a centred heading, not a reading
+   column, so it keeps the centred alignment the start rule above takes away. */
+html[lang="he"] .reading-home #contact>.work-sub{text-align:center}
 html[lang="he"] .reading-home .services-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:48px;align-items:center;max-width:1040px;width:100%;box-sizing:border-box;margin:76px auto 44px;padding:0 24px;text-align:start}
 .reading-home .services-intro h2{margin:0;padding:0;text-align:center}
 html[lang="he"] .reading-home .services-intro p{max-width:none;width:100%;margin:0;font-size:1rem}
