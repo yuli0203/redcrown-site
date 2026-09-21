@@ -113,7 +113,7 @@ function head(p) {
     '<script type="application/ld+json">',
     JSON.stringify(crumbs, null, 2),
     '</script>',
-    ...(p.video ? ['<link rel="stylesheet" href="/landing-showcase.css?v=20260916">'] : []),
+    ...(p.video ? ['<link rel="stylesheet" href="/landing-showcase.css?v=20260921">'] : []),
     '</head>',
     p.video ? '<body class="enzyme-showcase">' : '<body>',
   ].join(EOL);
