@@ -360,3 +360,7 @@ dialog.ask::backdrop { background: rgba(18, 0, 73, .55); backdrop-filter: blur(3
 .ask-card h2 { font-size: 22px; }
 .ask-card p { color: var(--ink-2); font-size: 15.5px; line-height: 1.6; }
 .ask-foot { display: flex; gap: 10px; justify-content: flex-end; margin-block-start: 6px; }
+
+.key-row { display: flex; gap: 8px; align-items: stretch; }
+.key-row input { flex: 1; min-width: 0; }
+.key-row .btn { flex: none; white-space: nowrap; }

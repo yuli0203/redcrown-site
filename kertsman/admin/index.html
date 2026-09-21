@@ -9,7 +9,12 @@
 <title>ניהול הדירות | קרצמן נדל״ן</title>
 <link rel="icon" href="../assets/favicon.png" type="image/png">
 <link rel="stylesheet" href="../assets/kertsman.css">
-<link rel="stylesheet" href="../assets/admin.css">
+<script>
+  /* קבצי מסך הניהול נטענים עם חותמת זמן, כך שעדכון שלהם מגיע מיד ולא אחרי
+     שהמטמון של הדפדפן מתפנה. / The admin's own files are loaded with a
+     timestamp so an update to them arrives at once. */
+  document.write('<link rel="stylesheet" href="../assets/admin.css?t=' + Date.now() + '">');
+</script>
 </head>
 <body class="admin">
 
@@ -274,7 +279,13 @@
       </div>
       <div class="form-row connect-wide">
         <label for="c-token">מפתח הגישה</label>
-        <input id="c-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_...">
+        <div class="key-row">
+          <input id="c-token" type="password" autocomplete="new-password" autocorrect="off"
+                 autocapitalize="off" spellcheck="false" placeholder="להדביק כאן את המפתח מ-GitHub">
+          <button class="btn btn-ghost btn-sm" type="button" id="c-show">הצגה</button>
+          <button class="btn btn-ghost btn-sm" type="button" id="c-clear">ניקוי</button>
+        </div>
+        <p class="hint" id="c-token-note" hidden>כבר שמור כאן מפתח. אפשר להחליף אותו: לוחצים על "ניקוי" ומדביקים מפתח חדש.</p>
       </div>
       <div class="form-row connect-wide">
         <label for="c-prefix">תיקייה בתוך המחסן (רק אם האתר לא יושב בשורש)</label>
@@ -337,6 +348,8 @@
      old data back on the site. */
   document.write('<script src="../data/listings.js?t=' + Date.now() + '"><\/script>');
 </script>
-<script src="../assets/admin.js" defer></script>
+<script>
+  document.write('<script src="../assets/admin.js?t=' + Date.now() + '" defer><\/script>');
+</script>
 </body>
 </html>

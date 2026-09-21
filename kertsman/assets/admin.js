@@ -1151,6 +1151,22 @@
     byId('c-token').value = saved.token;
     byId('c-remember').checked = saved.remember;
     byId('c-auto').checked = saved.auto;
+    if (byId('c-token-note')) byId('c-token-note').hidden = !saved.token;
+
+    byId('c-show').addEventListener('click', function () {
+      var field = byId('c-token');
+      var showing = field.type === 'text';
+      field.type = showing ? 'password' : 'text';
+      byId('c-show').textContent = showing ? 'הצגה' : 'הסתרה';
+      field.focus();
+    });
+
+    byId('c-clear').addEventListener('click', function () {
+      byId('c-token').value = '';
+      byId('c-token').focus();
+      if (byId('c-token-note')) byId('c-token-note').hidden = true;
+      ghSay('connect-status', 'השדה רוקן. הדביקו מפתח חדש ולחצו על בדיקת החיבור.');
+    });
     byId('c-auto').addEventListener('change', function () { ghWrite(ghFields()); });
     if (saved.token) ghSay('connect-status', 'מפתח גישה שמור בדפדפן הזה. אפשר לפרסם.', 'ok');
 
