@@ -4,21 +4,35 @@
 .journal-intro>[data-i18n="journal.kicker"]::after{content:" /";padding-inline-start:10px;color:var(--maroon)}
 .journal-footer{display:flex;justify-content:center;margin-top:22px}
 .journal-footer>.btn{white-space:nowrap}
-.journal-grid{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:var(--maroon) transparent;padding:4px 2px 14px;scroll-padding-inline:2px}
-.journal-grid>.journal-card{flex:0 0 calc((100% - 20px)/2);box-sizing:border-box;scroll-snap-align:start}
-.journal-controls{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:16px}
+.journal-viewport{position:relative}
+.journal-grid{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;padding:4px 2px 6px;scroll-padding-inline:2px}
+.journal-grid::-webkit-scrollbar{display:none}
+.journal-grid>.journal-card{flex:0 0 calc((100% - 40px)/3);box-sizing:border-box;scroll-snap-align:start}
+/* Arrows and dots only steer a scroller that JS is driving; without it they are inert. */
+.journal-arrow{display:none;position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--bone);font:inherit;font-size:20px;line-height:1;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:2}
+.journal-viewport.is-scrollable .journal-arrow{display:grid}
+.journal-arrow-prev{inset-inline-start:-10px}
+.journal-arrow-next{inset-inline-end:-10px}
+.journal-arrow:hover:not(:disabled){border-color:var(--hot-text);color:var(--hot-text)}
+.journal-arrow:disabled{opacity:.25;cursor:default}
+[dir="rtl"] .journal-arrow span{display:inline-block;transform:scaleX(-1)}
+.journal-controls{display:flex;align-items:center;justify-content:center;margin-top:18px}
 .journal-controls[hidden]{display:none}
-.journal-controls button{width:46px;height:46px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--bone);font:inherit;font-size:22px;cursor:pointer}
-.journal-controls button:hover:not(:disabled){border-color:var(--hot-text);color:var(--hot-text)}
-.journal-controls button:disabled{opacity:.3;cursor:default}
-.journal-controls button:focus-visible,.journal-grid:focus-visible,.journal-card:focus-visible{outline:2px solid var(--hot-text);outline-offset:3px}
-.journal-controls:dir(rtl) button span{display:inline-block;transform:scaleX(-1)}
-.journal-position{font-size:14px;color:var(--dim);font-variant-numeric:tabular-nums;min-width:50px;text-align:center}
+.journal-dots{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px}
+.journal-dot{display:grid;place-items:center;width:20px;height:20px;padding:0;border:0;background:none;cursor:pointer}
+.journal-dot::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(240,234,228,.22);transition:background .2s}
+.journal-dot[aria-current="true"]::before{background:var(--hot-text)}
+.journal-dot:hover::before{background:var(--dim)}
+.journal-dot[aria-current="true"]:hover::before{background:var(--hot-text)}
+.journal-arrow:focus-visible,.journal-dot:focus-visible,.journal-grid:focus-visible,.journal-card:focus-visible{outline:2px solid var(--hot-text);outline-offset:3px}
+/* The dot row carries the position visually; screen readers get it as text. */
+.journal-position{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 .journal-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:24px;background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:14px;text-decoration:none;transition:border-color .2s,transform .2s;min-width:0;overflow-wrap:anywhere}
 .journal-card:hover{border-color:var(--maroon);transform:translateY(-3px)}
 .journal-card time{font-size:13px;color:var(--dim)}
 .journal-card h3{font-family:var(--body);font-size:1.12rem;line-height:1.5;font-weight:600;margin:0;color:var(--bone);text-wrap:pretty}
 .journal-card p{font-size:.88rem;line-height:1.8;color:var(--dim);margin:0}
 .journal-read{margin-top:auto;padding-top:8px;font-size:.82rem;font-weight:600;color:var(--hot-text);display:flex;align-items:center;gap:12px}
-@media(max-width:700px){.journal-grid>.journal-card{flex-basis:90%}.journal-grid{gap:14px}.home-journal{margin-block:28px;padding:28px 18px}.journal-card{padding:20px}.journal-heading{margin-bottom:20px}.journal-intro{font-size:.82rem}.journal-card h3{font-size:1.05rem}}
-@media(prefers-reduced-motion:reduce){.journal-card{transition:none}.journal-card:hover{transform:none}}
+@media(max-width:1040px){.journal-grid>.journal-card{flex-basis:calc((100% - 20px)/2)}}
+@media(max-width:700px){.journal-grid>.journal-card{flex-basis:90%}.journal-grid{gap:14px}.home-journal{margin-block:28px;padding:28px 18px}.journal-card{padding:20px}.journal-heading{margin-bottom:20px}.journal-intro{font-size:.82rem}.journal-card h3{font-size:1.05rem}.journal-arrow{width:38px;height:38px;font-size:17px}.journal-arrow-prev{inset-inline-start:-6px}.journal-arrow-next{inset-inline-end:-6px}}
+@media(prefers-reduced-motion:reduce){.journal-card{transition:none}.journal-card:hover{transform:none}.journal-dot::before{transition:none}}

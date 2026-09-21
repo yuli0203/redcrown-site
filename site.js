@@ -7,6 +7,7 @@ const I18N = {
     "journal.prev":"Previous articles",
     "journal.next":"Next articles",
     "journal.browse":"Browse articles",
+    "journal.goto":"Article",
 
     "float.cta":"GET A PROPOSAL",
     "doc.title":"App, 3D & VR/AR/XR Development in Unity | Red Crown Interactive",
@@ -79,6 +80,7 @@ const I18N = {
     "journal.prev":"המאמרים הקודמים",
     "journal.next":"המאמרים הבאים",
     "journal.browse":"דפדוף במאמרים",
+    "journal.goto":"מאמר",
 
     "float.cta":"לייעוץ חינם",
     "doc.title":"פיתוח אפליקציות, תלת-ממד ו-VR/AR/XR ב-Unity | Red Crown Interactive",
@@ -155,6 +157,7 @@ const I18N = {
     "journal.prev":"Предыдущие статьи",
     "journal.next":"Следующие статьи",
     "journal.browse":"Просмотр статей",
+    "journal.goto":"Статья",
 
     "float.cta":"Получить предложение",
     "doc.title":"Разработка приложений, 3D и VR на Unity | Red Crown Interactive",
