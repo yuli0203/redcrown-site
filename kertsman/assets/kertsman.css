@@ -1183,3 +1183,65 @@ html { font-size: calc(100% * var(--a11y-scale, 1)); }
 /* הכותרת של שלבי העבודה יושבת באותו מרווח כמו שאר המקטעים
    The process heading keeps the same rhythm as every other band. */
 .steps-head { margin-block-start: calc(var(--section-y) * 1.4); }
+
+/* ============================================================
+   רצועת הקרדיט של Red Crown Interactive / studio credit bar
+   פס אדום בתחתית העמוד, בצבעי הסטודיו, עם הלוגו על עיגול לבן
+   כדי שהסמל האדום ייראה על הרקע האדום.
+   A red band at the very bottom in the studio's colours; the mark sits on a
+   white disc so the crimson logo reads against the crimson background.
+   ============================================================ */
+
+.credit-bar {
+  --rc-red: #C8102E;
+  --rc-red-dark: #9E0C24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2vw, 20px);
+  background: var(--rc-red);
+  color: #fff;
+  padding: 14px var(--gutter);
+  text-decoration: none;
+  transition: background-color .22s ease;
+}
+.credit-bar:hover,
+.credit-bar:focus-visible { background: var(--rc-red-dark); }
+
+.credit-mark {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+}
+.credit-mark img { width: 30px; height: 30px; object-fit: contain; }
+
+.credit-text { display: grid; gap: 2px; line-height: 1.35; }
+.credit-text b { font-family: var(--display); font-size: 16.5px; font-weight: 700; color: #fff; }
+.credit-text span { font-size: 13.5px; color: rgba(255, 255, 255, .86); }
+
+.credit-cta {
+  flex: none;
+  border: 1.5px solid rgba(255, 255, 255, .75);
+  border-radius: var(--r-pill);
+  padding: 7px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.credit-bar:hover .credit-cta { background: #fff; border-color: #fff; color: var(--rc-red); }
+
+@media (max-width: 620px) {
+  /* בנייד כפתורי הוואטסאפ והנגישות צפים מעל תחתית העמוד, ולכן הרצועה
+     מסודרת למעלה ומשאירה מתחתיה שטח פנוי שהם יכולים לשבת עליו.
+     On a phone the floating WhatsApp and accessibility buttons hover over the
+     bottom of the page, so the bar keeps its content up top and leaves room
+     underneath for them to sit on. */
+  .credit-bar { flex-direction: column; text-align: center; gap: 10px; padding-block: 18px 74px; }
+  .credit-text b { font-size: 15.5px; }
+}
