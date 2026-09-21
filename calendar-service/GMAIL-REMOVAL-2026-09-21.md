@@ -12,3 +12,12 @@
 Historical preparation notes in GOOGLE-VERIFICATION.md predate the saved console update and this live test. This record supersedes their assertions that the demo is missing, submission is blocked, or Resend is configured.
 
 Test cleanup: cancellation succeeded through the public management page; production database status verified as cancelled. The temporary slot is released.
+
+## Follow-up regression review
+
+- Re-ran the complete suite after adding two real-scope OAuth regression tests: 67 passed, zero failures. Tests exercise Google and Microsoft form-based connection, PKCE parameters, rejection of legacy mail-scope widening, callback acceptance with the exact calendar-only scopes, encrypted token persistence, reconnect without a replacement refresh token, and retained calendar selections.
+- Existing tests cover overlap prevention, retry/idempotency, cancellation, rescheduling, participant invitations, busy-calendar fallback, ICS feeds, holidays, time zones and DST, and workspace ownership.
+- Wrangler dry-run passed. Production deployment remains 741700e1-8e1d-462e-972b-d48703374cd1 at 100 percent.
+- Fresh live health and published-page requests succeeded. Julia's two meeting types load and the seven-day availability request succeeds against connected calendars. The previously cancelled test time is offered again.
+- No core calendar regression found. Live Google booking, invitation inbox receipt, and cancellation were verified earlier in this record. Microsoft behavior is covered by automated provider tests, not a live Microsoft account test.
+- Minor UI finding remains: workspace.js can describe the disabled separate host-email path as Notification not sent yet, and stale permission_required records can suggest reconnecting. Neither describes delivery of the native Calendar invitation. This is a status-label issue, not evidence that event creation or guest invitations failed. No production behavior was changed during this review.
