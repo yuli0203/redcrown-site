@@ -574,8 +574,18 @@
   try{
     if(!('IntersectionObserver' in window) || (window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){showAll();return;}
     var ioFired=false;
-    var io=new IntersectionObserver(function(es){ioFired=true;for(var i=0;i<es.length;i++){if(es[i].isIntersecting){es[i].target.classList.add('in');io.unobserve(es[i].target);}}},{threshold:.12});
+    function reveal(el){el.classList.add('in');io.unobserve(el);}
+    var io=new IntersectionObserver(function(es){ioFired=true;for(var i=0;i<es.length;i++){if(es[i].isIntersecting)reveal(es[i].target);}},{threshold:.12});
     var els=document.querySelectorAll('.rv');for(var j=0;j<els.length;j++)io.observe(els[j]);
+    // a jump past a section -- an anchor, End, a restored position, a fast flick --
+    // can carry it by without the observer ever sampling it intersecting, and the
+    // observer never looks again, so it would stay invisible for good. Sweep what is
+    // level with the fold or already above it on every scroll and reveal it directly.
+    var sweeping=false;
+    function sweep(){sweeping=false;var left=document.querySelectorAll('.rv:not(.in)');
+      for(var k=0;k<left.length;k++){var r=left[k].getBoundingClientRect();
+        if(r.height>0&&r.top<innerHeight*.88)reveal(left[k]);}}
+    addEventListener('scroll',function(){if(!sweeping){sweeping=true;requestAnimationFrame(sweep);}},{passive:true});
     // safety net: if the observer never fires (present but broken on a device), reveal everything so content is never stuck invisible
     setTimeout(function(){if(!ioFired)showAll();},1500);
   }catch(e){showAll();}
