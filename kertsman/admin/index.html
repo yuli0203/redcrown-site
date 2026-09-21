@@ -24,10 +24,37 @@
     </div>
     <button class="btn btn-primary" type="submit">כניסה</button>
     <p class="gate-status" id="gate-status" role="status" aria-live="polite"></p>
+    <button class="gate-forgot" type="button" id="forgot">שכחתי את הסיסמה</button>
     <p class="gate-note">
       הסיסמה מגנה על המסך הזה מפני מבקרים מזדמנים בלבד. היא אינה מגנה על השרת,
       ולכן אין להשתמש בסיסמה שמשמשת אתכם במקום אחר.
     </p>
+  </form>
+
+  <form class="gate-card recover" id="recover" hidden>
+    <h1>שחזור גישה</h1>
+    <p>
+      אין צורך לזכור את הסיסמה הישנה. בוחרים כאן סיסמה חדשה, מקבלים שורה אחת
+      להחלפה בקובץ, ומאותו רגע הסיסמה החדשה עובדת.
+    </p>
+    <div class="form-row">
+      <label for="rec-pass">הסיסמה החדשה</label>
+      <input id="rec-pass" type="text" autocomplete="off" placeholder="לפחות 6 תווים">
+    </div>
+    <div class="form-row">
+      <label for="rec-email">לאן לשלוח את ההוראות</label>
+      <input id="rec-email" type="email" autocomplete="email" placeholder="הכתובת שרשומה בשירות הטפסים">
+    </div>
+    <button class="btn btn-primary" type="submit">יצירת סיסמה חדשה ושליחה למייל</button>
+    <p class="form-status" id="rec-status" role="status" aria-live="polite"></p>
+    <output class="pw-out" id="rec-out"></output>
+    <ol class="rec-steps" id="rec-steps" hidden>
+      <li>העתיקו את השורה שלמעלה.</li>
+      <li>היכנסו לניהול האחסון, לתיקייה <code>assets</code>, ופתחו את הקובץ <code>admin.js</code>.</li>
+      <li>החליפו את השורה שמתחילה ב-<code>var PASS_HASH</code> בשורה שהעתקתם, ושמרו.</li>
+      <li>חזרו לכאן והיכנסו עם הסיסמה החדשה.</li>
+    </ol>
+    <button class="gate-forgot" type="button" id="back-to-login">חזרה למסך הכניסה</button>
   </form>
 </div>
 

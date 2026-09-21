@@ -385,6 +385,91 @@
     });
   }
 
+  /* שחזור גישה בלי שרת: אי אפשר "לשלוח את הסיסמה הישנה", כי נשמרת רק טביעה
+     שלה ולא הסיסמה עצמה, ואין שרת שיאפס משהו. מה שכן אפשר, וזה מה שקורה כאן:
+     לבחור סיסמה חדשה, לייצר את השורה שמחליפה את הקיימת בקובץ, ולשלוח אותה
+     במייל דרך אותו שירות טפסים שהאתר כבר משתמש בו.
+
+     Recovery without a server: the old password cannot be sent, because only
+     its hash is stored and there is nothing to reset. What is possible, and
+     what happens here, is choosing a new password, producing the line that
+     replaces the current one in the file, and mailing it through the same form
+     service the site already uses. */
+  function wireRecovery() {
+    var open = byId('forgot');
+    var back = byId('back-to-login');
+    var form = byId('recover');
+    if (!open || !form) return;
+
+    var show = function (recovering) {
+      byId('gate-form').hidden = recovering;
+      form.hidden = !recovering;
+      if (recovering) byId('rec-pass').focus();
+    };
+    open.addEventListener('click', function () { show(true); });
+    if (back) back.addEventListener('click', function () { show(false); });
+
+    var config = window.KERTSMAN_CONFIG || {};
+    var emailField = byId('rec-email');
+    if (emailField && config.recoveryEmail) emailField.value = config.recoveryEmail;
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var status = byId('rec-status');
+      var out = byId('rec-out');
+      var steps = byId('rec-steps');
+      var value = byId('rec-pass').value.trim();
+
+      if (value.length < 6) {
+        status.textContent = 'בחרו סיסמה באורך 6 תווים לפחות.';
+        status.setAttribute('data-state', 'err');
+        return;
+      }
+
+      sha256(value).then(function (hash) {
+        var line = "var PASS_HASH = '" + hash + "';";
+        out.textContent = line;
+        steps.hidden = false;
+
+        if (!config.formKey) {
+          status.textContent = 'השורה מוכנה למטה. העתיקו אותה לפי ההוראות.';
+          status.setAttribute('data-state', 'ok');
+          return;
+        }
+
+        status.textContent = 'שולח את ההוראות למייל...';
+        status.removeAttribute('data-state');
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: config.formKey,
+            subject: 'שחזור סיסמה למסך הניהול של האתר',
+            from_name: 'מסך הניהול',
+            message: 'התקבלה בקשה לסיסמת ניהול חדשה.\n\n' +
+              'השורה להחלפה בקובץ assets/admin.js:\n' + line + '\n\n' +
+              'שלבים:\n1. פתחו את assets/admin.js בניהול האחסון.\n' +
+              '2. החליפו את השורה שמתחילה ב-var PASS_HASH בשורה שלמעלה.\n' +
+              '3. שמרו והיכנסו עם הסיסמה החדשה.\n\n' +
+              'אם לא אתם ביקשתם זאת, אפשר להתעלם: בלי גישה לקבצי האתר השורה הזו לא משנה דבר.'
+          })
+        }).then(function (response) { return response.json(); }).then(function (result) {
+          if (result && result.success) {
+            status.textContent = 'ההוראות נשלחו למייל. השורה מופיעה גם כאן למטה.';
+            status.setAttribute('data-state', 'ok');
+          } else {
+            status.textContent = 'המייל לא נשלח, אבל השורה מוכנה למטה להעתקה.';
+            status.setAttribute('data-state', 'err');
+          }
+        }).catch(function () {
+          status.textContent = 'המייל לא נשלח, אבל השורה מוכנה למטה להעתקה.';
+          status.setAttribute('data-state', 'err');
+        });
+      });
+    });
+  }
+
+  wireRecovery();
   wirePasswordTool();
   wireGate();
   wireEditor();

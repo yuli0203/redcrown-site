@@ -188,3 +188,21 @@ body.admin { background: var(--paper); }
   word-break: break-all;
   min-height: 40px;
 }
+
+/* ---------- forgotten password ---------- */
+
+.gate-forgot {
+  background: none;
+  border: 0;
+  padding: 4px;
+  color: var(--brand);
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gate-forgot:hover { color: var(--brand-soft); }
+.recover { text-align: start; }
+.recover h1 { text-align: center; }
+.rec-steps { margin: 4px 0 0; padding-inline-start: 20px; display: grid; gap: 8px; font-size: 14px; color: var(--ink-2); }
+.rec-steps code { background: var(--sand); padding: 1px 6px; border-radius: 4px; font-size: 13px; }
