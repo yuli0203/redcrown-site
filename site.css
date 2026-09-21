@@ -133,7 +133,9 @@ html[lang="he"] .logo i{font-family:'Chakra Petch',sans-serif;font-size:9px;line
 .crown-particles{display:block;width:100%;max-width:340px;aspect-ratio:1;margin-top:20px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 @media(max-width:900px){.crown-particles{max-width:250px;margin:14px auto 0}}
 /* founder-experience logos (white monochrome, uniform cells + names) */
-.xp-item{display:flex;flex-direction:column;align-items:center;gap:11px;width:88px;text-align:center}
+.xp-item{display:flex;flex-direction:column;align-items:center;gap:11px;width:88px;text-align:center;text-decoration:none;color:inherit}
+a.xp-item:hover .xp-name{color:var(--hot-text)}
+a.xp-item:focus-visible{outline:2px solid var(--hot-text);outline-offset:4px;border-radius:6px}
 .xp-logo-box{height:36px;display:flex;align-items:center;justify-content:center}
 .xp-logo{max-height:34px;max-width:76px;width:auto;object-fit:contain;opacity:.72;transition:opacity .2s,transform .2s}
 .xp-item:hover .xp-logo{opacity:1;transform:translateY(-2px)}
