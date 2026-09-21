@@ -19,10 +19,11 @@
       forSale: 'למכירה',
       exclusive: 'בלעדי', fresh: 'חדש', underOffer: 'בתהליך', sold: 'נמכר',
       rooms: 'חדרים', sqm: 'מ"ר', floor: 'קומה', outOf: 'מתוך', parking: 'חניות',
-      balcony: 'מרפסת', year: 'שנת בנייה', details: 'לפרטי הנכס', whatsapp: 'וואטסאפ',
+      balcony: 'מרפסת', year: 'שנת בנייה', details: 'לפרטי הדירה', whatsapp: 'וואטסאפ',
+      page: 'דף הדירה', propPath: 'dira/',
       call: 'להתקשר', empty: 'כרגע אין נכסים מפורסמים',
-      emptyNote: 'הנכסים שלנו נסגרים מהר. השאירו פרטים ונעדכן אתכם ראשונים על דירה שעולה לשיווק.',
-      results: 'נכסים', priceOnRequest: 'מחיר במשא ומתן',
+      emptyNote: 'הדירות שלנו נסגרות מהר. השאירו פרטים ונעדכן אתכם ראשונים על דירה שעולה לשיווק.',
+      results: 'דירות', priceOnRequest: 'מחיר במשא ומתן',
       close: 'סגירה', features: 'מה יש בדירה', gallery: 'תמונה', sending: 'שולח...',
       formOk: 'תודה! הפרטים נשלחו ואנחנו נחזור אליכם בהקדם.',
       formOkWa: 'תודה! נפתח עבורכם חלון וואטסאפ עם הפרטים. אם הוא לא נפתח, התקשרו אלינו ישירות.',
@@ -38,6 +39,7 @@
       exclusive: 'Эксклюзив', fresh: 'Новое', underOffer: 'В сделке', sold: 'Продано',
       rooms: 'комн.', sqm: 'м²', floor: 'Этаж', outOf: 'из', parking: 'Парковка',
       balcony: 'Балкон', year: 'Год постройки', details: 'Подробнее', whatsapp: 'WhatsApp',
+      page: 'Страница квартиры', propPath: 'ru/dira/',
       call: 'Позвонить', empty: 'Сейчас нет опубликованных объектов',
       emptyNote: 'Наши объекты уходят быстро. Оставьте контакты, и мы сообщим вам первыми о новой квартире.',
       results: 'объектов', priceOnRequest: 'Цена по договорённости',
@@ -79,6 +81,12 @@
 
   function price(item) {
     return item.price ? money.format(item.price) : t('priceOnRequest');
+  }
+
+  /* כתובת ייעודית לכל דירה, לשיתוף ולמודעות גוגל.
+     A dedicated URL per apartment, for sharing and for Google Ads. */
+  function propUrl(item) {
+    return BASE + t('propPath') + '?id=' + encodeURIComponent(item.id);
   }
 
   function waLink(text) {
@@ -158,7 +166,7 @@
             '<strong>' + esc(price(item)) + '</strong>' +
             '<span class="card-deal">' + esc(t('forSale')) + '</span>' +
           '</div>' +
-          '<h3>' + esc(loc(item.title)) + '</h3>' +
+          '<h3><a href="' + esc(propUrl(item)) + '">' + esc(loc(item.title)) + '</a></h3>' +
           '<p class="card-where">' + I.pin + '<span>' + esc(loc(item.area)) + ', ' + esc(loc(item.city)) + '</span></p>' +
           '<div class="specs">' +
             '<span>' + I.bed + item.rooms + ' ' + esc(t('rooms')) + '</span>' +
@@ -167,7 +175,7 @@
             (item.parking ? '<span>' + I.car + item.parking + '</span>' : '') +
           '</div>' +
           '<div class="card-actions">' +
-            '<button class="btn btn-primary btn-sm" type="button" data-open="' + esc(item.id) + '">' + esc(t('details')) + '</button>' +
+            '<a class="btn btn-primary btn-sm" href="' + esc(propUrl(item)) + '">' + esc(t('details')) + '</a>' +
             '<a class="btn btn-wa btn-sm" href="' + esc(waLink(t('askAbout') + ' "' + loc(item.title) + '" (' + item.id + ')')) + '" target="_blank" rel="noopener">' + I.wa + esc(t('whatsapp')) + '</a>' +
           '</div>' +
         '</div>' +
@@ -251,6 +259,7 @@
             '<div class="stack">' +
               '<a class="btn btn-gold" href="' + esc(waLink(t('askAbout') + ' "' + loc(item.title) + '" (' + item.id + ')')) + '" target="_blank" rel="noopener">' + I.wa + esc(t('whatsapp')) + '</a>' +
               '<a class="btn btn-ghost" href="' + esc(telLink()) + '">' + esc(t('call')) + ' ' + esc(CFG.phone || '') + '</a>' +
+              '<a class="btn btn-ghost" href="' + esc(propUrl(item)) + '">' + esc(t('page')) + '</a>' +
             '</div>' +
           '</aside>' +
         '</div>' +

@@ -294,13 +294,32 @@ html[dir='ltr'] .hero::after {
 }
 
 .hero-inner { padding-block: clamp(72px, 12vw, 148px); max-width: var(--maxw); }
-.hero-copy { max-width: 42ch; }
+.hero-copy { max-width: min(700px, 100%); }
 .hero .eyebrow { color: var(--gold); }
 .hero .eyebrow::before { background: var(--gold); }
 
+/* סמל בית בזהב לצד הכותרת, שמוסיף חמימות ומשפחתיות
+   A gold house mark beside the headline, for warmth and a family feel. */
+.hero-title { display: flex; align-items: center; gap: clamp(14px, 2vw, 24px); }
+.hero-title h1 { flex: 1 1 auto; }
+@media (max-width: 480px) { .hero-title { align-items: flex-start; } }
+.hero-mark {
+  width: clamp(54px, 7vw, 88px);
+  height: auto;
+  flex: none;
+  filter: drop-shadow(0 6px 20px rgba(254, 215, 0, .35));
+  animation: markIn 1s cubic-bezier(.2, .7, .3, 1) .1s both;
+}
+@keyframes markIn {
+  from { opacity: 0; transform: translateY(10px) scale(.86); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-mark { animation: none; } }
+@media (max-width: 520px) { .hero-title { gap: 12px; } }
+
 .hero h1 { font-size: clamp(38px, 6.2vw, 72px); line-height: 1.06; letter-spacing: -0.02em; color: #fff; text-shadow: 0 2px 24px rgba(10, 0, 40, .5); }
 .hero h1 em { font-style: normal; color: var(--gold); }
-.hero-lede { margin-block-start: 22px; font-size: clamp(17px, 1.8vw, 20.5px); color: rgba(255, 255, 255, .92); text-shadow: 0 1px 14px rgba(10, 0, 40, .55); }
+.hero-lede { max-width: 44ch; margin-block-start: 22px; font-size: clamp(17px, 1.8vw, 20.5px); color: rgba(255, 255, 255, .92); text-shadow: 0 1px 14px rgba(10, 0, 40, .55); }
 .hero-sign {
   margin-block-start: 18px;
   font-family: var(--display);
@@ -336,15 +355,16 @@ html[dir='ltr'] .hero::after {
 }
 .promise { background: var(--surface); padding: clamp(26px, 3.4vw, 40px) clamp(18px, 2.4vw, 30px); }
 .promise-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: var(--gold-wash);
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(150deg, var(--gold-wash), #fff3b8);
+  border: 1px solid #f5e3a1;
   display: grid;
   place-items: center;
   margin-block-end: 16px;
 }
-.promise-icon svg { width: 21px; height: 21px; color: var(--gold-deep); }
+.promise-icon svg { width: 27px; height: 27px; color: #7a5c00; }
 .promise b { display: block; font-family: var(--display); font-size: 20px; font-weight: 700; margin-block-end: 8px; }
 .promise span { color: var(--ink-2); font-size: 15.5px; }
 
@@ -889,3 +909,60 @@ dialog.sheet[open] { animation: sheetIn .32s cubic-bezier(.2, .7, .3, 1); }
 .foot-credit { width: 100%; padding-block-start: 10px; color: rgba(255, 255, 255, .42); }
 .foot-credit a { color: rgba(255, 255, 255, .62); text-decoration: underline; text-underline-offset: 3px; }
 .foot-credit a:hover { color: var(--gold); }
+
+/* ============================================================
+   דף דירה בודדת / single apartment page
+   ============================================================ */
+
+.prop-page { padding-block: clamp(22px, 3.4vw, 40px) clamp(50px, 7vw, 90px); }
+
+.nav-slim { gap: 2px; }
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--muted);
+  margin-block-end: clamp(18px, 2.6vw, 28px);
+}
+.crumbs a:hover { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+
+.prop-head { margin-block-end: clamp(18px, 2.4vw, 26px); }
+.prop-head h1 { font-size: clamp(28px, 4.4vw, 46px); margin-block: 14px 10px; }
+
+.prop-gallery {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--sand);
+  box-shadow: var(--shadow-md);
+}
+.prop-gallery .gallery-main { aspect-ratio: 16 / 9; max-height: 62vh; }
+.prop-gallery .thumbs { background: var(--surface); }
+
+.prop-body {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: clamp(26px, 3.6vw, 48px);
+  margin-block-start: clamp(26px, 3.6vw, 44px);
+  align-items: start;
+}
+.prop-body .agent-card { top: 96px; }
+.prop-body .share-title { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .66); margin-block-end: 10px; }
+.prop-body .sheet-desc { font-size: 17.5px; }
+
+.prop-back { margin-block-start: clamp(30px, 4vw, 48px); }
+
+@media (max-width: 900px) {
+  .prop-body { grid-template-columns: 1fr; }
+  .prop-body .agent-card { position: static; }
+}
+
+/* כותרת הכרטיס מקושרת לדף הדירה / the card heading links to the apartment page */
+.card h3 a { color: inherit; }
+.card h3 a:hover { color: var(--brand); }
+
+/* איור העסקה בסעיף "עלינו" / the deal illustration in the about block */
+.portrait-art { aspect-ratio: 9 / 7; background: none; box-shadow: var(--shadow-md); }
+.portrait-art img { position: static; width: 100%; height: 100%; object-fit: cover; }
