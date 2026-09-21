@@ -73,3 +73,16 @@ test('The account row wraps, so the linking button cannot overflow a narrow head
  // rule is asserted here instead.
  assert.match(fs.readFileSync(path.join(__dirname,'../calendar/calendar.css'),'utf8'),/#auth-account\{[^}]*flex-wrap:wrap/);
 });
+test('Every message the sign-in flow can show has a Hebrew translation',()=>{
+ const dict=JSON.parse(fs.readFileSync(path.join(__dirname,'../calendar/he/strings.json'),'utf8'));
+ const src=fs.readFileSync(path.join(__dirname,'../calendar/auth.js'),'utf8');
+ const literals=new Set();
+ for(const line of src.split('\n')) for(const m of line.matchAll(/'([^'\\\n]*)'/g)) literals.add(m[1]);
+ // The verification panel ships as markup, so take its copy from the tags.
+ for(const m of src.matchAll(/<(?:h3|p|button[^>]*)>([^<]+)</g)) literals.add(m[1]);
+ const shown=[...literals].filter(s=>s.length>8&&s.includes(' ')&&/^[A-Z]/.test(s)
+   &&!/^(auth\/|#|\.|http|\[)/.test(s)&&!s.includes('<')&&!s.includes('=>'));
+ const missing=shown.filter(s=>!dict[s]);
+ assert.deepEqual(missing,[],'untranslated sign-in copy: '+JSON.stringify(missing,null,1));
+ assert.ok(shown.length>40,'expected the sign-in copy to be discovered, found '+shown.length);
+});
