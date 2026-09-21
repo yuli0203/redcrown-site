@@ -1253,7 +1253,13 @@ html { font-size: calc(100% * var(--a11y-scale, 1)); }
 
 /* ---------- חצי מעבר בין תמונות / gallery arrows ---------- */
 
-.gallery, .prop-gallery { position: relative; }
+/* תיבת התמונה מתמרכזת בתוך הגלריה ומחזיקה את החצים בעצמה, כך שהחצים יושבים
+   בדיוק על אמצע התמונה ובמרחק זהה משני צדדיה — ולא על אמצע הגלריה, שכוללת
+   גם את שורת התמונות הקטנות.
+   The media box centres itself and owns the arrows, so they sit exactly on
+   the image's middle and at an equal distance from both of its edges, rather
+   than on the middle of the gallery, which also contains the thumbnail row. */
+.gallery-main { position: relative; margin-inline: auto; }
 
 .gal-nav {
   position: absolute;

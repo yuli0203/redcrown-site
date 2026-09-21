@@ -246,11 +246,13 @@
       '<button class="sheet-close" type="button" data-close aria-label="' + esc(t('close')) + '">&times;</button>' +
       '<div class="sheet-scroll">' +
         '<div class="gallery">' +
-          '<div class="gallery-main"><img id="gallery-img" src="' + esc(images[0] || '') + '" alt="' + esc(loc(item.title)) + '" width="1600" height="900"></div>' +
-          (images.length > 1
-            ? '<button class="gal-nav gal-prev" type="button" data-gal="-1" aria-label="' + esc(t('prevShot')) + '">' + I.chev + '</button>' +
-              '<button class="gal-nav gal-next" type="button" data-gal="1" aria-label="' + esc(t('nextShot')) + '">' + I.chev + '</button>'
-            : '') +
+          '<div class="gallery-main">' +
+            '<img id="gallery-img" src="' + esc(images[0] || '') + '" alt="' + esc(loc(item.title)) + '" width="1600" height="900">' +
+            (images.length > 1
+              ? '<button class="gal-nav gal-prev" type="button" data-gal="-1" aria-label="' + esc(t('prevShot')) + '">' + I.chev + '</button>' +
+                '<button class="gal-nav gal-next" type="button" data-gal="1" aria-label="' + esc(t('nextShot')) + '">' + I.chev + '</button>'
+              : '') +
+          '</div>' +
           (images.length > 1 ? '<div class="thumbs">' + images.map(function (src, i) {
             return '<button type="button" data-thumb="' + i + '" aria-current="' + (i === 0 ? 'true' : 'false') + '" aria-label="' + esc(t('gallery') + ' ' + (i + 1)) + '"><img src="' + esc(src) + '" alt="" loading="lazy"></button>';
           }).join('') + '</div>' : '') +
