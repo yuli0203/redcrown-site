@@ -155,8 +155,8 @@ kertsman/
 │   ├── admin.js            מסך הניהול ויצירת קובץ הדירות
 │   ├── admin.css           עיצוב מסך הניהול
 │   ├── fonts.css           הגדרות הפונטים
-│   ├── fonts/              פונטים מאוחסנים מקומית (Frank Ruhl Libre, Heebo,
-│   │                       Playfair Display, Manrope) — בלי קריאות לגוגל
+│   ├── fonts/              פונטים מאוחסנים מקומית: Rubik לכותרות,
+│   │                       Assistant לעברית, Manrope לרוסית. בלי קריאות לגוגל
 │   ├── img/                תמונת ההירו ותמונות הדירות (ממלאי מקום כרגע)
 │   ├── logo.png            ← הלוגו
 │   └── favicon.png         אייקון הלשונית

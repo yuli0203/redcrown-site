@@ -33,8 +33,10 @@
   --ok: #1f7a4d;
   --warn: #8a6a00;
 
-  --display: 'Frank Ruhl Libre', 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --sans: 'Heebo', 'Manrope', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  /* Rubik לכותרות, Assistant לגוף הטקסט. שניהם עם כיסוי עברי מלא.
+     Rubik for headings, Assistant for body text, both with full Hebrew coverage. */
+  --display: 'Rubik', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  --sans: 'Assistant', 'Manrope', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
 
   --r-sm: 8px;
   --r-md: 14px;
@@ -51,7 +53,8 @@
 }
 
 html[lang='ru'] {
-  --display: 'Playfair Display', Georgia, serif;
+  /* Assistant אין לו קירילית, ולכן הרוסית משתמשת ב-Manrope לגוף הטקסט.
+     Assistant has no Cyrillic, so the Russian page sets its body text in Manrope. */
   --sans: 'Manrope', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
 }
 
@@ -76,9 +79,9 @@ body.is-locked { overflow: hidden; }
 h1, h2, h3, h4 {
   font-family: var(--display);
   font-weight: 500;
-  line-height: 1.14;
+  line-height: 1.16;
   margin: 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 p { margin: 0; }
