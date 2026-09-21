@@ -328,7 +328,15 @@
   </form>
 </dialog>
 
-<script src="../data/listings.js"></script>
+<script>
+  /* טוענים את קובץ הדירות עם חותמת זמן, כדי שהדפדפן לא יעבוד על עותק ישן
+     מהמטמון. מסך הניהול כותב מחדש את כל הקובץ, ולכן עותק ישן היה מחזיר
+     לאתר נתונים שכבר עודכנו במקום אחר.
+     The listing file is loaded with a timestamp so the browser cannot serve a
+     cached copy: the admin rewrites the whole file, so a stale copy would put
+     old data back on the site. */
+  document.write('<script src="../data/listings.js?t=' + Date.now() + '"><\/script>');
+</script>
 <script src="../assets/admin.js" defer></script>
 </body>
 </html>

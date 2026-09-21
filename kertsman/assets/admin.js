@@ -25,19 +25,35 @@
 
   function byId(id) { return document.getElementById(id); }
 
+  /* הטיוטה המקומית נשמרת יחד עם צילום של הקובץ שפורסם באותו רגע. אם מאז
+     פורסם עדכון ממכשיר אחר, הטיוטה כבר לא רלוונטית ואנחנו הולכים עם מה
+     שנמצא באתר — אחרת עריכה ישנה בדפדפן אחד הייתה דורסת עדכון חדש.
+     The local draft is stored with a snapshot of the published file it was
+     based on. If the site has moved on since, the draft is stale and the
+     published file wins, so an old draft in one browser cannot overwrite a
+     newer update made elsewhere. */
   function load() {
     try {
-      var raw = sessionStorage.getItem(STORE_KEY) || localStorage.getItem(STORE_KEY);
+      var raw = localStorage.getItem(STORE_KEY);
       if (raw) {
         var parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) return parsed;
+        if (parsed && Array.isArray(parsed.draft) &&
+            JSON.stringify(parsed.baseline) === JSON.stringify(PUBLISHED)) {
+          return parsed.draft;
+        }
       }
     } catch (err) { /* private mode or cleared storage */ }
     return JSON.parse(JSON.stringify(PUBLISHED));
   }
 
+  function persist() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({ baseline: PUBLISHED, draft: listings }));
+    } catch (err) { /* ignore */ }
+  }
+
   function save() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(listings)); } catch (err) { /* ignore */ }
+    persist();
     markDirty();
     autoPublish();
   }
@@ -1221,6 +1237,7 @@
       .then(function () {
         paths.forEach(function (path) { uploaded[path] = true; });
         PUBLISHED = snapshot;
+        persist();
         markDirty();
         finish();
         var shots = paths.length === 0 ? '' : (paths.length === 1 ? ', כולל תמונה אחת' : ', כולל ' + paths.length + ' תמונות');
