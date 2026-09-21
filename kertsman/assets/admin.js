@@ -48,6 +48,90 @@
     if (banner) banner.hidden = !dirty;
   }
 
+  /* ---------- too many guesses ---------- */
+
+  /* הגנה על הכניסה: אחרי חמישה ניסיונות שגויים המסך ננעל לזמן שהולך וגדל,
+     וכל ניסיון לוקח זמן קבוע כך שגם ניחוש אוטומטי מתקדם לאט. הנעילה נשמרת
+     בדפדפן, ולכן היא מעכבת בעיקר ניסיון ידני; מול סקריפט מה שמגן באמת הוא
+     שאין דרך לשנות משהו באתר בלי מפתח הגישה, שאינו נמצא בקוד האתר.
+
+     Sign-in protection: five wrong guesses lock the screen for a growing
+     delay, and every attempt costs a fixed amount of time so automated
+     guessing crawls. The lock lives in the browser, so it mostly slows a
+     person down; against a script what protects the site is that nothing can
+     be changed without the access token, which is not in the site's code. */
+
+  var TRY_KEY = 'kertsman:admin:tries';
+  var LOCK_STEPS = [30, 60, 120, 300, 900, 1800];
+  var FREE_TRIES = 5;
+  var ATTEMPT_COST = 600;     // מילישניות לכל ניסיון / milliseconds per attempt
+  var lockTimer = null;
+
+  function readTries() {
+    try {
+      var raw = localStorage.getItem(TRY_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && typeof parsed.n === 'number') return parsed;
+      }
+    } catch (err) { /* ignore */ }
+    return { n: 0, until: 0 };
+  }
+
+  function writeTries(value) {
+    try { localStorage.setItem(TRY_KEY, JSON.stringify(value)); } catch (err) { /* ignore */ }
+  }
+
+  function lockLeft() {
+    return Math.max(0, readTries().until - Date.now());
+  }
+
+  function clock(ms) {
+    var total = Math.ceil(ms / 1000);
+    var m = Math.floor(total / 60);
+    var s = total % 60;
+    return m ? m + ':' + (s < 10 ? '0' : '') + s + ' דקות' : total + ' שניות';
+  }
+
+  function showLock() {
+    var status = byId('gate-status');
+    var button = byId('gate-form').querySelector('button[type="submit"]');
+    var field = byId('gate-pass');
+    clearInterval(lockTimer);
+    var tick = function () {
+      var left = lockLeft();
+      if (left <= 0) {
+        clearInterval(lockTimer);
+        button.disabled = false;
+        field.disabled = false;
+        status.textContent = 'אפשר לנסות שוב.';
+        field.focus();
+        return;
+      }
+      button.disabled = true;
+      field.disabled = true;
+      status.textContent = 'יותר מדי ניסיונות. אפשר לנסות שוב בעוד ' + clock(left) + '.';
+    };
+    tick();
+    if (lockLeft() > 0) lockTimer = setInterval(tick, 1000);
+  }
+
+  function noteFail() {
+    var state = readTries();
+    state.n += 1;
+    if (state.n >= FREE_TRIES) {
+      var step = LOCK_STEPS[Math.min(state.n - FREE_TRIES, LOCK_STEPS.length - 1)];
+      state.until = Date.now() + step * 1000;
+    }
+    writeTries(state);
+    return state;
+  }
+
+  function noteOk() {
+    try { localStorage.removeItem(TRY_KEY); } catch (err) { /* ignore */ }
+    clearInterval(lockTimer);
+  }
+
   /* ---------- the gate ---------- */
 
   function sha256(text) {
@@ -69,25 +153,49 @@
   function wireGate() {
     var form = byId('gate-form');
     var status = byId('gate-status');
+    var button = form.querySelector('button[type="submit"]');
+
     try {
       if (sessionStorage.getItem(UNLOCK_KEY) === '1') { unlock(); return; }
     } catch (err) { /* ignore */ }
 
+    if (lockLeft() > 0) showLock();
+
     form.addEventListener('submit', function (event) {
       event.preventDefault();
+      if (lockLeft() > 0) { showLock(); return; }
+
       var value = byId('gate-pass').value;
       if (!window.crypto || !crypto.subtle) {
         status.textContent = 'הדפדפן הזה לא תומך בבדיקת הסיסמה. נסו בדפדפן מעודכן.';
         return;
       }
+
+      button.disabled = true;
+      status.textContent = 'בודק...';
+      var started = Date.now();
+
       sha256(value).then(function (hash) {
-        if (hash === PASS_HASH) {
+        // כל ניסיון עולה אותו זמן, כך שאי אפשר ללמוד מהמהירות ואי אפשר לנחש מהר
+        var wait = Math.max(0, ATTEMPT_COST - (Date.now() - started));
+        return new Promise(function (resolve) {
+          setTimeout(function () { resolve(hash === PASS_HASH); }, wait);
+        });
+      }).then(function (good) {
+        button.disabled = false;
+        if (good) {
+          noteOk();
           try { sessionStorage.setItem(UNLOCK_KEY, '1'); } catch (err) { /* ignore */ }
+          status.textContent = '';
           unlock();
-        } else {
-          status.textContent = 'סיסמה שגויה. נסו שוב.';
-          byId('gate-pass').select();
+          return;
         }
+        var state = noteFail();
+        if (state.until > Date.now()) { showLock(); return; }
+        var left = FREE_TRIES - state.n;
+        var warn = left > 2 ? '' : (left === 1 ? ' נשאר ניסיון אחד לפני נעילה זמנית.' : ' נשארו ' + left + ' ניסיונות לפני נעילה זמנית.');
+        status.textContent = 'סיסמה שגויה.' + warn;
+        byId('gate-pass').select();
       });
     });
   }
@@ -1020,7 +1128,6 @@
     var paths = Object.keys(fresh).filter(function (path) { return !uploaded[path]; });
     var snapshot = JSON.parse(JSON.stringify(listings));
     var text = serialise();
-    var ref, baseTree;
 
     publishing = true;
     if (button) button.disabled = true;
@@ -1033,56 +1140,32 @@
 
     ghSay('publish-status', paths.length ? 'מעלה לאתר...' : 'מעלה את השינוי לאתר...');
 
-    ghCall(settings, '/repos/' + settings.repo + '/git/ref/heads/' + encodeURIComponent(settings.branch))
-      .then(function (data) {
-        ref = data.object.sha;
-        return ghCall(settings, '/repos/' + settings.repo + '/git/commits/' + ref);
-      })
-      .then(function (commit) {
-        baseTree = commit.tree.sha;
-        var entries = [];
-        var chain = Promise.resolve();
-        paths.forEach(function (path, index) {
-          chain = chain.then(function () {
-            var step = 'מעלה תמונה ' + (index + 1) + ' מתוך ' + paths.length + '...';
-            if (button) button.textContent = step;
-            ghSay('publish-status', step);
-            return base64(fresh[path].blob).then(function (content) {
-              return ghCall(settings, '/repos/' + settings.repo + '/git/blobs', {
-                method: 'POST', json: { content: content, encoding: 'base64' }
-              });
-            }).then(function (blob) {
-              entries.push({ path: settings.prefix + path, mode: '100644', type: 'blob', sha: blob.sha });
-            });
+    var entries = [];
+    var chain = Promise.resolve();
+    paths.forEach(function (path, index) {
+      chain = chain.then(function () {
+        var step = 'מעלה תמונה ' + (index + 1) + ' מתוך ' + paths.length + '...';
+        if (button) button.textContent = step;
+        ghSay('publish-status', step);
+        return base64(fresh[path].blob).then(function (content) {
+          return ghCall(settings, '/repos/' + settings.repo + '/git/blobs', {
+            method: 'POST', json: { content: content, encoding: 'base64' }
           });
+        }).then(function (blob) {
+          entries.push({ path: settings.prefix + path, mode: '100644', type: 'blob', sha: blob.sha });
         });
-        return chain.then(function () { return entries; });
-      })
-      .then(function (entries) {
+      });
+    });
+
+    chain
+      .then(function () {
         if (button) button.textContent = 'מפרסם...';
         ghSay('publish-status', 'כותב את רשימת הדירות...');
         entries.push({
           path: settings.prefix + 'data/listings.js',
           mode: '100644', type: 'blob', content: text
         });
-        return ghCall(settings, '/repos/' + settings.repo + '/git/trees', {
-          method: 'POST', json: { base_tree: baseTree, tree: entries }
-        });
-      })
-      .then(function (tree) {
-        return ghCall(settings, '/repos/' + settings.repo + '/git/commits', {
-          method: 'POST',
-          json: {
-            message: 'עדכון הדירות ממסך הניהול (' + snapshot.length + ' דירות)',
-            tree: tree.sha,
-            parents: [ref]
-          }
-        });
-      })
-      .then(function (commit) {
-        return ghCall(settings, '/repos/' + settings.repo + '/git/refs/heads/' + encodeURIComponent(settings.branch), {
-          method: 'PATCH', json: { sha: commit.sha }
-        });
+        return commitTree(settings, entries, 'עדכון הדירות ממסך הניהול (' + snapshot.length + ' דירות)');
       })
       .then(function () {
         paths.forEach(function (path) { uploaded[path] = true; });
@@ -1095,6 +1178,33 @@
       .catch(function (error) {
         finish();
         ghSay('publish-status', ghProblem(error) + ' השינוי שמור בדפדפן. אפשר לנסות שוב בכפתור "פרסום לאתר".', 'err');
+      });
+  }
+
+  /* כתיבת קבוצת קבצים ב-commit אחד. משמש גם לפרסום הדירות וגם לשמירת
+     המפתח המוצפן. / Writes a set of files as one commit: used both for the
+     listings and for the encrypted key. */
+  function commitTree(settings, entries, message) {
+    var ref;
+    return ghCall(settings, '/repos/' + settings.repo + '/git/ref/heads/' + encodeURIComponent(settings.branch))
+      .then(function (data) {
+        ref = data.object.sha;
+        return ghCall(settings, '/repos/' + settings.repo + '/git/commits/' + ref);
+      })
+      .then(function (commit) {
+        return ghCall(settings, '/repos/' + settings.repo + '/git/trees', {
+          method: 'POST', json: { base_tree: commit.tree.sha, tree: entries }
+        });
+      })
+      .then(function (tree) {
+        return ghCall(settings, '/repos/' + settings.repo + '/git/commits', {
+          method: 'POST', json: { message: message, tree: tree.sha, parents: [ref] }
+        });
+      })
+      .then(function (commit) {
+        return ghCall(settings, '/repos/' + settings.repo + '/git/refs/heads/' + encodeURIComponent(settings.branch), {
+          method: 'PATCH', json: { sha: commit.sha }
+        });
       });
   }
 
