@@ -179,6 +179,7 @@
     byId('f-features-he').value = (item.features || []).map(function (f) { return loc(f, 'he'); }).join('\n');
     byId('f-features-ru').value = (item.features || []).map(function (f) { return (f && f.ru) || ''; }).join('\n');
     byId('f-images').value = (item.images || []).join('\n');
+    renderShots();
 
     byId('editor').hidden = false;
     byId('editor').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -290,6 +291,247 @@
     render();
   }
 
+
+  /* ==========================================================================
+     תמונות / images
+     --------------------------------------------------------------------------
+     הדפדפן מקטין כל תמונה שנבחרת, שומר אותה בזיכרון, ומציג תצוגה מקדימה.
+     בלחיצה על הפרסום נוצר קובץ ZIP אחד עם listings.js ועם התמונות החדשות.
+
+     The browser downsizes each chosen image, keeps it in memory and previews
+     it. Publishing produces one ZIP holding listings.js and the new images.
+     ========================================================================== */
+
+  var MAX_EDGE = 1600;
+  var pending = {};          // path -> { blob, url }
+
+  function readableSize(bytes) {
+    return bytes > 900000 ? (bytes / 1048576).toFixed(1) + 'MB' : Math.round(bytes / 1024) + 'KB';
+  }
+
+  function shrink(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('read')); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('decode')); };
+        img.onload = function () {
+          var scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height));
+          var w = Math.round(img.width * scale);
+          var h = Math.round(img.height * scale);
+          var canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob(function (blob) {
+            if (blob) resolve({ blob: blob, width: w, height: h });
+            else reject(new Error('encode'));
+          }, 'image/jpeg', 0.82);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function imageName(index) {
+    var base = slug(byId('f-id').value || byId('f-area-he').value || 'dira');
+    var stamp = Date.now().toString(36).slice(-4);
+    return 'assets/img/' + base + '-' + stamp + '-' + index + '.jpg';
+  }
+
+  function currentPaths() {
+    return lines(byId('f-images').value);
+  }
+
+  function setPaths(list) {
+    byId('f-images').value = list.join('\n');
+    renderShots();
+  }
+
+  function previewSrc(path) {
+    return pending[path] ? pending[path].url : '../' + path;
+  }
+
+  function renderShots() {
+    var host = byId('shots');
+    if (!host) return;
+    var paths = currentPaths();
+    host.innerHTML = paths.map(function (path, i) {
+      return '<li class="shot' + (i === 0 ? ' is-cover' : '') + '">' +
+        '<img src="' + previewSrc(path) + '" alt="">' +
+        (i === 0 ? '<span class="shot-badge">תמונה ראשית</span>' : '') +
+        '<span class="shot-tools">' +
+          '<button class="icon-btn" type="button" data-shot-up="' + i + '" aria-label="הזזה אחורה"' + (i === 0 ? ' disabled' : '') + '>&#8594;</button>' +
+          '<button class="icon-btn" type="button" data-shot-down="' + i + '" aria-label="הזזה קדימה"' + (i === paths.length - 1 ? ' disabled' : '') + '>&#8592;</button>' +
+          '<button class="icon-btn danger" type="button" data-shot-del="' + i + '" aria-label="הסרת התמונה">&times;</button>' +
+        '</span>' +
+      '</li>';
+    }).join('');
+
+    var note = byId('shots-note');
+    if (note) {
+      var fresh = paths.filter(function (path) { return pending[path]; });
+      if (fresh.length) {
+        var total = fresh.reduce(function (sum, path) { return sum + pending[path].blob.size; }, 0);
+        note.textContent = fresh.length + ' תמונות חדשות ממתינות לפרסום (' + readableSize(total) + '). הן ייכללו בקובץ ה-ZIP.';
+        note.hidden = false;
+      } else {
+        note.hidden = true;
+      }
+    }
+  }
+
+  function addFiles(files) {
+    var list = Array.prototype.slice.call(files).filter(function (f) { return /^image\//.test(f.type); });
+    if (!list.length) return;
+    var status = byId('editor-status');
+    status.textContent = 'מכין ' + list.length + ' תמונות...';
+    status.removeAttribute('data-state');
+
+    var start = currentPaths().length;
+    var jobs = list.map(function (file, i) {
+      return shrink(file).then(function (out) {
+        var path = imageName(start + i + 1);
+        pending[path] = { blob: out.blob, url: URL.createObjectURL(out.blob) };
+        return path;
+      }).catch(function () { return null; });
+    });
+
+    Promise.all(jobs).then(function (paths) {
+      var good = paths.filter(Boolean);
+      setPaths(currentPaths().concat(good));
+      status.textContent = good.length === list.length
+        ? 'התמונות נוספו. אל תשכחו לשמור את הדירה.'
+        : 'נוספו ' + good.length + ' מתוך ' + list.length + ' תמונות.';
+      status.setAttribute('data-state', good.length ? 'ok' : 'err');
+    });
+  }
+
+  function wireImages() {
+    var input = byId('f-files');
+    var drop = byId('drop');
+    if (!input || !drop) return;
+
+    input.addEventListener('change', function () {
+      addFiles(input.files);
+      input.value = '';
+    });
+
+    ['dragenter', 'dragover'].forEach(function (name) {
+      drop.addEventListener(name, function (event) {
+        event.preventDefault();
+        drop.classList.add('is-over');
+      });
+    });
+    ['dragleave', 'drop'].forEach(function (name) {
+      drop.addEventListener(name, function (event) {
+        event.preventDefault();
+        drop.classList.remove('is-over');
+        if (name === 'drop' && event.dataTransfer) addFiles(event.dataTransfer.files);
+      });
+    });
+
+    byId('shots').addEventListener('click', function (event) {
+      var paths = currentPaths();
+      var move = function (from, to) {
+        if (to < 0 || to >= paths.length) return;
+        var moved = paths.splice(from, 1)[0];
+        paths.splice(to, 0, moved);
+        setPaths(paths);
+      };
+      var up = event.target.closest('[data-shot-up]');
+      if (up) { var i = Number(up.getAttribute('data-shot-up')); move(i, i - 1); return; }
+      var down = event.target.closest('[data-shot-down]');
+      if (down) { var j = Number(down.getAttribute('data-shot-down')); move(j, j + 1); return; }
+      var del = event.target.closest('[data-shot-del]');
+      if (del) {
+        var k = Number(del.getAttribute('data-shot-del'));
+        paths.splice(k, 1);
+        setPaths(paths);
+      }
+    });
+
+    byId('f-images').addEventListener('input', renderShots);
+  }
+
+  /* ---------- a minimal store-only ZIP writer ---------- */
+
+  var CRC_TABLE = (function () {
+    var table = new Uint32Array(256);
+    for (var n = 0; n < 256; n++) {
+      var c = n;
+      for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      table[n] = c >>> 0;
+    }
+    return table;
+  })();
+
+  function crc32(bytes) {
+    var c = 0xFFFFFFFF;
+    for (var i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  function zip(entries) {
+    // entries: [{ name, bytes }] — stored without compression, which suits
+    // JPEGs and keeps this to a few dozen lines with no library.
+    var chunks = [];
+    var central = [];
+    var offset = 0;
+    var encoder = new TextEncoder();
+
+    entries.forEach(function (entry) {
+      var nameBytes = encoder.encode(entry.name);
+      var crc = crc32(entry.bytes);
+      var size = entry.bytes.length;
+
+      var local = new DataView(new ArrayBuffer(30));
+      local.setUint32(0, 0x04034b50, true);
+      local.setUint16(4, 20, true);
+      local.setUint16(6, 0x0800, true);      // UTF-8 names
+      local.setUint16(8, 0, true);           // stored
+      local.setUint32(14, crc, true);
+      local.setUint32(18, size, true);
+      local.setUint32(22, size, true);
+      local.setUint16(26, nameBytes.length, true);
+      chunks.push(new Uint8Array(local.buffer), nameBytes, entry.bytes);
+
+      var dir = new DataView(new ArrayBuffer(46));
+      dir.setUint32(0, 0x02014b50, true);
+      dir.setUint16(4, 20, true);
+      dir.setUint16(6, 20, true);
+      dir.setUint16(8, 0x0800, true);
+      dir.setUint16(10, 0, true);
+      dir.setUint32(16, crc, true);
+      dir.setUint32(20, size, true);
+      dir.setUint32(24, size, true);
+      dir.setUint16(28, nameBytes.length, true);
+      dir.setUint32(42, offset, true);
+      central.push(new Uint8Array(dir.buffer), nameBytes);
+
+      offset += 30 + nameBytes.length + size;
+    });
+
+    var centralSize = central.reduce(function (sum, part) { return sum + part.length; }, 0);
+    var end = new DataView(new ArrayBuffer(22));
+    end.setUint32(0, 0x06054b50, true);
+    end.setUint16(8, entries.length, true);
+    end.setUint16(10, entries.length, true);
+    end.setUint32(12, centralSize, true);
+    end.setUint32(16, offset, true);
+
+    return new Blob(chunks.concat(central, [new Uint8Array(end.buffer)]), { type: 'application/zip' });
+  }
+
+  function blobBytes(blob) {
+    return blob.arrayBuffer().then(function (buffer) { return new Uint8Array(buffer); });
+  }
+
   /* ---------- producing data/listings.js ---------- */
 
   // U+2028/U+2029 are legal in JSON strings but illegal in JS source, so they
@@ -347,17 +589,56 @@
     return out.join('\n');
   }
 
+  function saveAs(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+
+  function usedPending() {
+    // only images that some apartment still points at
+    var wanted = {};
+    listings.forEach(function (item) {
+      (item.images || []).forEach(function (path) { if (pending[path]) wanted[path] = pending[path]; });
+    });
+    return wanted;
+  }
+
   function wireDownload() {
     byId('download').addEventListener('click', function () {
-      var blob = new Blob([serialise()], { type: 'text/javascript;charset=utf-8' });
-      var url = URL.createObjectURL(blob);
-      var link = document.createElement('a');
-      link.href = url;
-      link.download = 'listings.js';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      var button = byId('download');
+      var fresh = usedPending();
+      var paths = Object.keys(fresh);
+      var encoder = new TextEncoder();
+
+      if (!paths.length) {
+        saveAs(new Blob([serialise()], { type: 'text/javascript;charset=utf-8' }), 'listings.js');
+        return;
+      }
+
+      button.disabled = true;
+      var label = button.textContent;
+      button.textContent = 'אורז ' + paths.length + ' תמונות...';
+
+      Promise.all(paths.map(function (path) {
+        return blobBytes(fresh[path].blob).then(function (bytes) {
+          return { name: path, bytes: bytes };
+        });
+      })).then(function (imageEntries) {
+        var entries = [{ name: 'data/listings.js', bytes: encoder.encode(serialise()) }].concat(imageEntries);
+        saveAs(zip(entries), 'kertsman-update.zip');
+        button.textContent = label;
+        button.disabled = false;
+      }).catch(function () {
+        button.textContent = label;
+        button.disabled = false;
+        window.alert('לא הצלחנו לארוז את הקובץ. נסו שוב, או הורידו את listings.js בלבד.');
+      });
     });
 
     byId('reset').addEventListener('click', function () {
@@ -469,9 +750,28 @@
     });
   }
 
+  function wireSignOut() {
+    var button = byId('signout');
+    if (!button) return;
+    button.addEventListener('click', function () {
+      var dirty = JSON.stringify(listings) !== JSON.stringify(PUBLISHED);
+      if (dirty && !window.confirm('יש שינויים שעוד לא הורדתם לפרסום. לצאת בכל זאת? השינויים יישמרו בדפדפן הזה.')) return;
+      try { sessionStorage.removeItem(UNLOCK_KEY); } catch (err) { /* ignore */ }
+      byId('shell').hidden = true;
+      byId('gate').hidden = false;
+      byId('gate-form').hidden = false;
+      byId('recover').hidden = true;
+      byId('gate-pass').value = '';
+      byId('gate-status').textContent = '';
+      byId('gate-pass').focus();
+    });
+  }
+
+  wireSignOut();
   wireRecovery();
   wirePasswordTool();
   wireGate();
   wireEditor();
+  wireImages();
   wireDownload();
 })();

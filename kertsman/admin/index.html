@@ -15,7 +15,7 @@
 
 <div class="gate" id="gate">
   <form class="gate-card" id="gate-form">
-    <img class="brand-logo" src="../assets/logo.png" alt="קרצמן נדל״ן" width="492" height="136">
+    <img class="brand-logo" src="../assets/logo.png" alt="קרצמן נדל״ן" width="486" height="160">
     <h1>ניהול הדירות</h1>
     <p>הזינו את סיסמת הניהול כדי להיכנס.</p>
     <div class="form-row">
@@ -61,12 +61,13 @@
 <main class="admin-shell" id="shell" hidden>
   <header class="admin-bar">
     <div class="admin-bar-in">
-      <img class="brand-logo" src="../assets/logo.png" alt="קרצמן נדל״ן" width="492" height="136">
+      <img class="brand-logo" src="../assets/logo.png" alt="קרצמן נדל״ן" width="486" height="160">
       <span class="admin-title">ניהול הדירות</span>
       <span class="admin-count" id="count"></span>
       <div class="admin-actions">
         <a class="btn btn-ghost btn-sm" href="../" target="_blank" rel="noopener">צפייה באתר</a>
-        <button class="btn btn-gold btn-sm" type="button" id="download">הורדת הקובץ לפרסום</button>
+        <button class="btn btn-gold btn-sm" type="button" id="download">הורדת העדכון לפרסום</button>
+        <button class="btn btn-ghost btn-sm" type="button" id="signout">יציאה</button>
       </div>
     </div>
     <div class="admin-dirty" id="dirty" hidden>
@@ -206,13 +207,30 @@
       <fieldset>
         <legend>תמונות</legend>
         <p class="hint">
-          מעלים את הצילומים לתיקייה <code>assets/img/</code> בשרת, ורושמים כאן שורה לכל תמונה,
-          למשל <code>assets/img/ahuza-1.jpg</code>. התמונה הראשונה היא זו שמופיעה בכרטיס.
+          בוחרים תמונות מהמחשב או מהטלפון. הן מוקטנות אוטומטית לגודל שמתאים לאתר,
+          והתמונה הראשונה היא זו שמופיעה בכרטיס. אפשר לגרור תמונות לתוך המסגרת.
         </p>
-        <div class="form-row">
-          <label for="f-images">נתיבי תמונות</label>
-          <textarea id="f-images" rows="4" placeholder="assets/img/p1-a.svg&#10;assets/img/p1-b.svg"></textarea>
-        </div>
+
+        <label class="drop" id="drop">
+          <input id="f-files" type="file" accept="image/*" multiple hidden>
+          <span class="drop-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="m4 17 5-5 4 4 3-2 4 4"/>
+            </svg>
+          </span>
+          <span class="drop-text"><b>בחירת תמונות</b><span>או גררו לכאן קבצים</span></span>
+        </label>
+
+        <ul class="shots" id="shots"></ul>
+        <p class="hint" id="shots-note" hidden></p>
+
+        <details class="paths">
+          <summary>נתיבי התמונות (למתקדמים)</summary>
+          <div class="form-row">
+            <label for="f-images">שורה לכל תמונה</label>
+            <textarea id="f-images" rows="3" placeholder="assets/img/ahuza-1.jpg"></textarea>
+          </div>
+        </details>
       </fieldset>
 
       <div class="editor-foot">
@@ -226,10 +244,11 @@
   <section class="admin-help">
     <h2>איך מפרסמים את השינויים</h2>
     <ol>
-      <li>עורכים כאן את הדירות. השינויים נשמרים בדפדפן הזה בלבד.</li>
-      <li>לוחצים על <strong>הורדת הקובץ לפרסום</strong>. יירד קובץ בשם <code>listings.js</code>.</li>
-      <li>נכנסים לניהול האחסון (GoDaddy File Manager), לתיקייה <code>data</code> שבאתר,
-          ומעלים את הקובץ במקום הקובץ הקיים.</li>
+      <li>עורכים כאן את הדירות ומוסיפים תמונות. השינויים נשמרים בדפדפן הזה בלבד.</li>
+      <li>לוחצים על <strong>הורדת העדכון לפרסום</strong>. יירד קובץ ZIP אחד שמכיל את
+          <code>data/listings.js</code> ואת כל התמונות החדשות בתיקייה <code>assets/img</code>.</li>
+      <li>פותחים את ה-ZIP ומעלים את התוכן שלו לאתר, לאותן תיקיות בדיוק:
+          את <code>listings.js</code> לתיקייה <code>data</code>, ואת התמונות לתיקייה <code>assets/img</code>.</li>
       <li>מרעננים את האתר. הדירות המעודכנות מופיעות בעברית וברוסית.</li>
     </ol>
     <h2 class="pw-head">שינוי סיסמת הניהול</h2>
