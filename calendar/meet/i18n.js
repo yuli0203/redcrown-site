@@ -89,6 +89,7 @@
   "Host logo": "לוגו המארח",
   "Host profile photo": "תמונת הפרופיל של המארח",
   "A free scheduling tool by": "כלי חינמי לקביעת פגישות מבית",
+  "You can get a free meeting page too:": "גם אתם יכולים לקבל דף פגישות חינם:",
   "We build apps, websites and interactive experiences.": "אנחנו מפתחים אפליקציות, אתרים וחוויות אינטראקטיביות.",
   "Red Crown Interactive. All rights reserved.": "Red Crown Interactive. כל הזכויות שמורות.",
   " - unavailable": " - לא זמין",
@@ -100,4 +101,4 @@
   "THU": "ה׳",
   "FRI": "ו׳",
   "SAT": "ש׳"
-};const t=value=>he?(dict[value]||value):value;window.CrownBookingLanguage={he,locale:he?'he-IL':'en-US',t};document.documentElement.lang=he?'he':'en';document.documentElement.dir=he?'rtl':'ltr';document.addEventListener('DOMContentLoaded',()=>{const selected=document.querySelector('.calendar-languages a[hreflang="'+(he?'he':'en')+'"]');if(selected){selected.setAttribute('aria-current','page');document.querySelector('.lang-cur').innerHTML=selected.innerHTML;}document.title=he?'קביעת פגישה | Red Crown Calendar':document.title;const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);while(walker.nextNode()){const n=walker.currentNode;if(n.parentElement.closest('script,style'))continue;const key=n.textContent.trim();if(dict[key])n.textContent=n.textContent.replace(key,t(key));}document.querySelectorAll('[aria-label]').forEach(n=>n.setAttribute('aria-label',t(n.getAttribute('aria-label'))));});})();
+};const t=value=>he?(dict[value]||value):value;window.CrownBookingLanguage={he,locale:he?'he-IL':'en-US',t};document.documentElement.lang=he?'he':'en';document.documentElement.dir=he?'rtl':'ltr';document.addEventListener('DOMContentLoaded',()=>{const selected=document.querySelector('.calendar-languages a[hreflang="'+(he?'he':'en')+'"]');if(selected){selected.setAttribute('aria-current','page');document.querySelector('.lang-cur').innerHTML=selected.innerHTML;}document.title=he?'קביעת פגישה | Red Crown Calendar':document.title;const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);while(walker.nextNode()){const n=walker.currentNode;if(n.parentElement.closest('script,style'))continue;const key=n.textContent.trim();if(dict[key])n.textContent=n.textContent.replace(key,t(key));}document.querySelectorAll('[aria-label]').forEach(n=>n.setAttribute('aria-label',t(n.getAttribute('aria-label'))));const home=document.querySelector('[data-calendar-home]');if(he&&home){home.href='https://redcrowninteractive.com/calendar/he/';home.textContent='redcrowninteractive.com/calendar/he/';}});})();
