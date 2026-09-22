@@ -12,14 +12,20 @@
 .project-carousel button.lcard{order:1;aspect-ratio:4/5;padding:0;border-radius:18px;border-color:rgba(255,255,255,.14);box-shadow:0 16px 32px rgba(0,0,0,.24);transition:border-color .3s;transform:none!important}
 .project-carousel .swiper-slide-active .lcard{border-color:#ec3555}
 .project-carousel .swiper-slide-active .lcap{opacity:1}
-.project-carousel .carousel-controls{display:flex;align-items:center;justify-content:center;gap:24px;margin:12px 0 24px}
+/* The arrows ride on the card band itself, so the panel that opens below sits close
+   enough to read as part of the carousel. 40% keeps them on the cards at every width:
+   the band runs from 8% to 68-78% of this box, depending on the caption. */
+.project-carousel .carousel-controls{display:flex;align-items:center;justify-content:center;gap:24px;margin:0 0 18px}
+.project-carousel .carousel-arrow{position:absolute;top:40%;transform:translateY(-50%);z-index:3}
+.project-carousel [data-direction="prev"]{inset-inline-start:6px}
+.project-carousel [data-direction="next"]{inset-inline-end:6px}
 .project-carousel .carousel-arrow{display:grid;place-items:center;width:46px;height:46px;border:1px solid rgba(240,234,228,.22);border-radius:50%;background:#1a1013;color:#f0eae4;cursor:pointer;font:24px Arial,sans-serif;transition:border-color .2s,background .2s}
 .project-carousel .carousel-arrow:hover{border-color:#ec3555;background:#2a111a}
 .project-carousel :is(.lcard,.carousel-arrow):focus-visible{outline:3px solid #fff;outline-offset:3px}
 .project-carousel .carousel-arrow svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .project-carousel .carousel-count{min-width:50px;text-align:center;font-size:14px;color:var(--dim);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
 .project-carousel .carousel-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-@media(max-width:600px){.project-carousel{margin-inline:-8px}.project-carousel button.lcard{border-radius:12px}.project-carousel .carousel-controls{margin-top:4px}}
+@media(max-width:600px){.project-carousel{margin-inline:-8px}.project-carousel button.lcard{border-radius:12px}.project-carousel .carousel-controls{margin-bottom:12px}.project-carousel [data-direction="prev"]{inset-inline-start:2px}.project-carousel [data-direction="next"]{inset-inline-end:2px}}
 @media(prefers-reduced-motion:reduce){.project-carousel *{transition:none!important}}
 
 /* Blend the artwork's black backing into the original warm card surface. */
