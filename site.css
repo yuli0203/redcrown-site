@@ -250,7 +250,7 @@ html[lang="he"] .roadmap-step:nth-child(even)::before{right:-43px}
 html[lang="he"] .roadmap-number{grid-column:1;grid-row:1 / span 2;font-family:var(--display);font-size:.78rem;color:var(--hot-text);line-height:1.5}
 html[lang="he"] .roadmap-step h3{grid-column:2;font-family:var(--display);font-size:1.05rem;line-height:1.35;margin:0}
 html[lang="he"] .roadmap-step p{grid-column:2;font-size:.9rem;line-height:1.65;color:var(--dim);margin:0}
-html[lang="he"] .roadmap-shell{position:relative;max-width:940px;margin:40px auto 0}
+html[lang="he"] .roadmap-shell{position:relative;max-width:940px;margin:58px auto 0}
 html[lang="he"] .roadmap-shell .home-roadmap{margin:0}
 html[lang="he"] .roadmap-shell .home-roadmap::before{display:none}
 html[lang="he"] .roadmap-rail{position:absolute;top:0;bottom:0;left:calc(50% - 1px);width:2px;background:var(--line);pointer-events:none}
@@ -264,7 +264,7 @@ html[lang="he"] .home-roadmap.has-motion .roadmap-step::before{background:#3a252
 html[lang="he"] .home-roadmap.has-motion .roadmap-step.is-active{opacity:1;border-color:rgba(255,73,102,.2)}
 html[lang="he"] .home-roadmap.has-motion .roadmap-step.is-current{border-color:rgba(255,100,130,.65);background:linear-gradient(145deg,#28131b,#160e12)}
 html[lang="he"] .home-roadmap.has-motion .roadmap-step.is-active::before{background:#ff4966;box-shadow:0 0 0 5px rgba(200,16,46,.1),0 0 16px rgba(255,73,102,.55)}
-@media(max-width:820px){html[lang="he"] .roadmap-shell{margin-top:30px}html[lang="he"] .roadmap-rail{left:auto;right:5px}}
+@media(max-width:820px){html[lang="he"] .roadmap-shell{margin-top:48px}html[lang="he"] .roadmap-rail{left:auto;right:5px}}
 @media(prefers-reduced-motion:reduce){html[lang="he"] .roadmap-shell .roadmap-rail b{display:none}html[lang="he"] .roadmap-shell .roadmap-rail i{transform:none!important}html[lang="he"] .home-roadmap.has-motion .roadmap-step{opacity:1}html[lang="he"] .home-roadmap.has-motion .roadmap-step :is(h3,p){transform:none}}
 @media(max-width:820px){html[lang="he"] .home-roadmap{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:30px;padding-right:30px}html[lang="he"] .home-roadmap::before{left:auto;right:5px;transform:none}html[lang="he"] .roadmap-step{padding:20px 16px;grid-template-columns:24px minmax(0,1fr);column-gap:8px}html[lang="he"] .roadmap-step:nth-child(n){grid-column:1}html[lang="he"] .roadmap-step:nth-child(n)::before{left:auto;right:-32px}}
 
@@ -734,5 +734,5 @@ html[lang="he"] #work > .work-sub p+p{max-width:900px;margin-inline:auto}
 
 
 /* Free introductory meeting label on the first roadmap card. */
-.roadmap-free-badge{position:absolute;top:-25px;right:4px;z-index:2;display:block;padding:6px 13px;border:1px solid #f03f5c;border-radius:6px;background:#a40d27;color:#fff;font-size:.78rem;font-weight:700;line-height:1.4;white-space:nowrap;transform:rotate(7deg);box-shadow:0 3px 12px rgba(0,0,0,.24)}
-@media(max-width:820px){html[lang="he"] .roadmap-step-free{padding-top:34px}.roadmap-free-badge{right:2px;transform:rotate(5deg)}}
+.roadmap-free-badge{position:absolute;bottom:100%;right:4px;z-index:2;display:block;margin-bottom:9px;padding:6px 13px;border:1px solid #f03f5c;border-radius:6px;background:#a40d27;color:#fff;font-size:.78rem;font-weight:700;line-height:1.4;white-space:nowrap;box-shadow:0 3px 12px rgba(0,0,0,.24)}
+@media(max-width:820px){.roadmap-free-badge{right:2px}}
