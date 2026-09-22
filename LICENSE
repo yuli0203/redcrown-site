@@ -1,0 +1,52 @@
+Copyright © 2026 Red Crown Interactive. All rights reserved.
+
+This repository, and the website it builds, are proprietary work of Red Crown
+Interactive: the source code, the build tooling, the page copy, the layouts and
+designs, the photographs and the other media, except for the third-party
+components listed at the end of this file.
+
+No license is granted. You may not copy, reproduce, modify, adapt, translate,
+distribute, publish, host, or create derivative works from any part of this
+repository, in whole or in part, without prior written permission from Red Crown
+Interactive. Viewing the published website in a browser, or receiving its files
+the way any web page is received, does not grant any of these rights.
+
+For permission, write to hello@redcrowninteractive.com.
+
+The Red Crown Interactive name, the crown mark, and the logo files under
+assets/logo-kit/ are trademarks of Red Crown Interactive. Written permission for
+other material in this repository never extends to them.
+
+Logos of other organizations (for example under assets/Companies/ and
+assets/Tech/) belong to their respective owners and appear here only to identify
+those organizations and technologies.
+
+
+Third-party components
+----------------------
+
+These keep their own licenses, and nothing above limits the rights those
+licenses grant:
+
+  vendor/swiper-14.2.0.min.js, vendor/swiper-14.2.0.min.css
+      Swiper 14.2.0, copyright 2014-2026 Vladimir Kharlampidi. MIT License.
+      https://swiperjs.com
+
+  vendor/model-viewer.min.js
+      <model-viewer>, copyright Google LLC. Apache License 2.0, bundled with
+      components under BSD-3-Clause; see the license headers inside the file.
+      https://modelviewer.dev
+
+  lenis.min.js
+      Lenis, by Darkroom Engineering. MIT License.
+      https://lenis.darkroom.engineering
+
+  fonts/ChakraPetch-Bold.woff2, fonts/ChakraPetch-SemiBold.woff2
+  fonts/IBMPlexSans-var.woff2
+  fonts/Michroma-Regular.woff2
+      Chakra Petch, IBM Plex Sans and Michroma. SIL Open Font License 1.1.
+
+  assets/models/meta_quest_3_opt.glb
+      "Meta Quest 3" by Elin, Creative Commons Attribution 4.0, optimized for
+      web display. Attributed on every page that shows it.
+      https://sketchfab.com/3d-models/meta-quest-3-65a813833dc04eeeb7d33bdca58c184c
