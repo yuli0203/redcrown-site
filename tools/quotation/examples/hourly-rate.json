@@ -2,7 +2,6 @@
   "quotation_no": "RCI-Q-2026-0000-EX",
   "date": "1 Jan 2026",
   "valid_for": "30 days",
-
   "supplier": {
     "company": "Red Crown Interactive",
     "tagline": "Custom software  |  Mobile - PC - XR - Web",
@@ -12,10 +11,8 @@
     "name": "Example Client",
     "subtitle": "Custom software development - hourly engagement"
   },
-
   "title": "Hourly Rate Engagement",
   "subtitle": "Custom software development billed against logged hours. The rate below is final - no VAT is added to it.",
-
   "scope": {
     "heading": "Included in the Rate",
     "items": [
@@ -29,13 +26,11 @@
       }
     ]
   },
-
   "headline": {
     "label": "Hourly Rate",
     "value": "000 NIS / hour",
     "note": "Final price - no VAT is added"
   },
-
   "info_boxes": [
     {
       "label": "Engagement Model",
@@ -48,16 +43,30 @@
       "note": "All prices are stated in NIS. No VAT is added to the amounts above."
     }
   ],
-
   "signatures": {
-    "label": "Acceptance",
-    "note": "Signing below confirms the hourly rate and the terms set out in this quotation.",
+    "label": "Agreed by both parties",
+    "note": "Signing below - or confirming this quotation by email - constitutes agreement to the rate and to the hours bank ordered above.",
     "blocks": [
-      { "caption": "Example Client - signature & date" },
-      { "caption": "Red Crown Interactive - signature & date" }
+      {
+        "party": "Client",
+        "name": "Example Client",
+        "fields": [
+          "Name",
+          "Signature",
+          "Date"
+        ]
+      },
+      {
+        "party": "Supplier",
+        "name": "Red Crown Interactive",
+        "fields": [
+          "Name",
+          "Signature",
+          "Date"
+        ]
+      }
     ]
   },
-
   "notes": [
     {
       "term": "Billing",
@@ -67,5 +76,19 @@
       "term": "Scope changes",
       "text": "Work outside an approved estimate requires separate written approval."
     }
-  ]
+  ],
+  "order": {
+    "label": "Hours Bank Ordered",
+    "note": "Fill in the number of hours being purchased.",
+    "fields": [
+      {
+        "label": "Number of hours ordered",
+        "suffix": "hours"
+      },
+      {
+        "label": "Amount payable (hours x 000 NIS)",
+        "suffix": "NIS"
+      }
+    ]
+  }
 }

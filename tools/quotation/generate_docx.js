@@ -36,6 +36,7 @@ const RED = 'D30B34';
 const LINE = 'DEDEE3';
 const SOFT = 'F5F5F7';
 const BLUSH = 'FFF3F6';
+const RULE = 'A0A0A8';       // the line you write or sign on
 
 // A4 at 1440 dxa/inch, with the same half-inch side margins as the PDF.
 const PAGE_W = 11906;
@@ -123,6 +124,13 @@ function spacer(points) {
   return line('', { size: points, spacingLine: points * 20 });
 }
 
+/** Rough DXA width of a string at `points`. Word sizes a cell from its
+ * column width, not its text, so label columns are estimated from the string --
+ * Arial's average glyph is a little over half its point size. */
+function textWidth(text, points) {
+  return Math.round(text.length * points * 0.58 * 20) + 60;
+}
+
 // --- sections --------------------------------------------------------------
 
 function header(cfg, logoPath) {
@@ -205,11 +213,6 @@ function title(cfg) {
     out.push(line(cfg.subtitle, { size: 8.3, color: MUTED, after: 320 }));
   }
   return out;
-}
-
-/** Rough DXA width of a string at `points`, for underlining a heading. */
-function textWidth(text, points) {
-  return Math.round(text.length * points * 0.58 * 20) + 60;
 }
 
 function scope(cfg) {
@@ -368,23 +371,104 @@ function addons(cfg) {
   return out;
 }
 
+/** A cell whose bottom border is the line someone writes on. */
+function blankCell(width, opts = {}) {
+  return cell([line(opts.prefill || '', { size: 7, color: INK })], {
+    width,
+    borders: {
+      ...NO_BORDERS,
+      bottom: { style: BorderStyle.SINGLE, size: 6, color: RULE, space: 2 },
+    },
+    margins: { top: 60, bottom: 30, left: 0, right: 0 },
+    valign: VerticalAlign.BOTTOM,
+  });
+}
+
+/** The order box: how many hours the client is actually ordering. */
+function orderForm(cfg) {
+  const order = cfg.order;
+  if (!order) return [];
+
+  const labelW = Math.max(...order.fields.map((f) => textWidth(f.label, 7.6)));
+  const suffixW = 900;
+  const blankW = CONTENT_W - labelW - suffixW - 800;
+
+  const fieldRows = order.fields.map((field) => new TableRow({
+    children: [
+      cell([line(field.label, { size: 7.6, bold: true, color: INK })],
+        { width: labelW, margins: { top: 60, bottom: 30, left: 0, right: 160 },
+          valign: VerticalAlign.BOTTOM }),
+      blankCell(blankW),
+      cell([line(field.suffix || '', { size: 7, color: MUTED })],
+        { width: suffixW, margins: { top: 60, bottom: 30, left: 140, right: 0 },
+          valign: VerticalAlign.BOTTOM }),
+    ],
+  }));
+
+  const box = { style: BorderStyle.SINGLE, size: 4, color: LINE };
+  return [
+    new Table({
+      columnWidths: [CONTENT_W],
+      width: { size: CONTENT_W, type: WidthType.DXA },
+      borders: { top: box, bottom: box, left: box, right: box,
+                 insideHorizontal: NO_BORDER, insideVertical: NO_BORDER },
+      rows: [new TableRow({
+        children: [new TableCell({
+          width: { size: CONTENT_W, type: WidthType.DXA },
+          margins: { top: 160, bottom: 160, left: 240, right: 240 },
+          children: [
+            eyebrow(order.label),
+            ...(order.note
+              ? [line(order.note, { size: 6.6, color: MUTED, after: 160 })]
+              : []),
+            layoutTable(fieldRows, [labelW, blankW, suffixW]),
+            // Word needs a paragraph after a nested table.
+            line('', { size: 4 }),
+          ],
+        })],
+      })],
+    }),
+    spacer(12),
+  ];
+}
+
 function signatures(cfg) {
   const sign = cfg.signatures;
   if (!sign) return [];
-  const panel = (block) => [
-    // An empty paragraph whose bottom border is the line you sign on.
-    line('', {
-      size: 9, spacingLine: 520,
-      borders: { bottom: { style: BorderStyle.SINGLE, size: 6, color: 'A0A0A8', space: 2 } },
-      after: 80,
-    }),
-    line(block.caption, { size: 6.4, color: MUTED }),
-  ];
+
+  const blocks = sign.blocks.slice(0, 2);
+  const labelW = Math.max(
+    ...blocks.flatMap((b) => b.fields.map((f) => textWidth(f, 6.8))),
+  );
+
+  const panel = (block) => {
+    const rows = block.fields.map((field) => new TableRow({
+      children: [
+        cell([line(field, { size: 6.8, color: MUTED })],
+          { width: labelW,
+            margins: { top: 100, bottom: 30, left: 0, right: 100 },
+            valign: VerticalAlign.BOTTOM }),
+        // The party's own name is already known; signature and date are blank.
+        blankCell(HALF_W - labelW - 400, {
+          prefill: field.toLowerCase() === 'name' ? block.name : '',
+        }),
+      ],
+    }));
+    return [
+      line(block.party, {
+        size: 6.6, bold: true, color: RED, allCaps: true,
+        characterSpacing: 12, after: 60,
+      }),
+      layoutTable(rows, [labelW, HALF_W - labelW - 400]),
+      line('', { size: 4 }),
+    ];
+  };
+
   return [
     spacer(8),
     eyebrow(sign.label),
-    ...(sign.note ? [line(sign.note, { size: 6.6, color: MUTED, after: 160 })] : []),
-    twoUp(panel(sign.blocks[0]), panel(sign.blocks[1] || { caption: '' })),
+    ...(sign.note ? [line(sign.note, { size: 6.6, color: MUTED, after: 200 })] : []),
+    twoUp(panel(blocks[0]), blocks[1] ? panel(blocks[1]) : [line('', { size: 1 })]),
     spacer(12),
   ];
 }
@@ -452,6 +536,7 @@ function build(cfg, logoPath) {
         ...headline(cfg),
         ...infoBoxes(cfg),
         ...addons(cfg),
+        ...orderForm(cfg),
         ...signatures(cfg),
         ...notes(cfg),
       ],

@@ -64,8 +64,24 @@ when absent.
   "info_boxes":  [ { "label": "...", "value": "...", "note": "..." } ],  // max 2
   "addons":      [ { "label": "Optional add-on", "description": "...",
                      "price": "2,000 NIS" } ],
-  "signatures":  { "label": "Acceptance", "note": "...",
-                   "blocks": [ { "caption": "..." }, { "caption": "..." } ] },
+
+  // A box the client fills in by hand: blanks with a rule to write on.
+  "order": {
+    "label": "Hours Bank Ordered",
+    "note": "Fill in the number of hours being purchased.",
+    "fields": [ { "label": "Number of hours ordered", "suffix": "hours" } ]
+  },
+
+  // One panel per party. A field named "Name" is pre-filled from `name`;
+  // the rest are left blank to write on.
+  "signatures": {
+    "label": "Agreed by both parties",
+    "note": "...",
+    "blocks": [
+      { "party": "Client",   "name": "...", "fields": ["Name", "Signature", "Date"] },
+      { "party": "Supplier", "name": "...", "fields": ["Name", "Signature", "Date"] }
+    ]
+  },
   "notes":       [ { "term": "Scope changes", "text": "..." } ],
 
   "footer": "overrides the default contact line"
@@ -91,5 +107,5 @@ soffice --headless --convert-to pdf --outdir /tmp /tmp/q.docx   # then view it
 
 `examples/fixed-price.json` exercises the scope table with an amount column, a
 total row and an add-on; `examples/hourly-rate.json` exercises the list with no
-amount column and the acceptance block. Between them they cover every optional
-section.
+amount column, the order box and the two-party signing block. Between them they
+cover every optional section.

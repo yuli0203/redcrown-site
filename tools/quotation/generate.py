@@ -287,9 +287,51 @@ def draw_addons(pdf, cfg, y):
     return y
 
 
+RULE = (160, 160, 168)          # the line you write or sign on
+
+
+def draw_order(pdf, cfg, y):
+    """A box the client fills in: how many hours they are ordering. Without
+    it the quotation states a rate but nothing anyone can act on."""
+    order = cfg.get("order")
+    if not order:
+        return y
+
+    fields = order["fields"]
+    body_w = RIGHT - LEFT - PAD * 2
+    note_lines = (pdf.wrap(order["note"], body_w, size=6.6)
+                  if order.get("note") else [])
+    first_field = 28 + 7.6 * len(note_lines) + 14
+    h = first_field + 20 * (len(fields) - 1) + 10
+
+    pdf.card(LEFT, y, RIGHT - LEFT, h, fill=(255, 255, 255), border=LINE)
+    pdf.label(LEFT + PAD, y + 16, order["label"].upper(), size=6.8, bold=True,
+              color=MUTED)
+
+    ly = y + 28
+    for note in note_lines:
+        pdf.label(LEFT + PAD, ly, note, size=6.6, color=MUTED)
+        ly += 7.6
+
+    pdf._font(True, 7.6)
+    label_w = max(pdf.get_string_width(f["label"]) for f in fields) + 14
+    ly = y + first_field
+    for field in fields:
+        pdf.label(LEFT + PAD, ly, field["label"], size=7.6, bold=True,
+                  color=INK)
+        x0 = LEFT + PAD + label_w
+        x1 = x0 + 150
+        pdf.hairline(ly + 2, x0=x0, x1=x1, color=RULE, width=0.6)
+        if field.get("suffix"):
+            pdf.label(x1 + 6, ly, field["suffix"], size=7, color=MUTED)
+        ly += 20
+
+    return y + h + 12
+
+
 def draw_signatures(pdf, cfg, y):
-    """An acceptance block. A quotation that is signed on the page itself
-    saves a round of "please confirm in writing"."""
+    """Both parties sign the same page, so the signed copy carries the rate,
+    the hours ordered and the terms together."""
     sign = cfg.get("signatures")
     if not sign:
         return y
@@ -300,13 +342,30 @@ def draw_signatures(pdf, cfg, y):
         y = pdf.paragraph(LEFT, y + 13, sign["note"], RIGHT - LEFT, size=6.6,
                           color=MUTED, leading=7.6)
 
-    y += 44
-    rule_w = HALF_W - 40
-    for i, block in enumerate(sign["blocks"][:2]):
+    blocks = sign["blocks"][:2]
+    rows = max(len(b["fields"]) for b in blocks)
+    pdf._font(False, 6.8)
+    label_w = max(pdf.get_string_width(f) for b in blocks for f in b["fields"])
+    label_w += 10
+
+    y += 26
+    for i, block in enumerate(blocks):
         x = LEFT if i == 0 else COL2
-        pdf.hairline(y, x0=x, x1=x + rule_w, color=(160, 160, 168), width=0.6)
-        pdf.label(x, y + 10, block["caption"], size=6.4, color=MUTED)
-    return y + 10
+        by = y
+        pdf.label(x, by, block["party"].upper(), size=6.6, bold=True,
+                  color=RED)
+        by += 20
+        for field in block["fields"]:
+            pdf.label(x, by, field, size=6.8, color=MUTED)
+            fx = x + label_w
+            pdf.hairline(by + 2, x0=fx, x1=x + HALF_W, color=RULE, width=0.6)
+            # The party's own name is already known; only the signature and
+            # the date are left blank.
+            if field.lower() == "name" and block.get("name"):
+                pdf.label(fx + 5, by, block["name"], size=7, color=INK)
+            by += 22
+
+    return y + 20 + 22 * rows
 
 
 def draw_notes(pdf, cfg, y):
@@ -347,6 +406,7 @@ def build(cfg, logo: Path) -> Quotation:
     y = draw_headline(pdf, cfg, y)
     y = draw_info_boxes(pdf, cfg, y)
     y = draw_addons(pdf, cfg, y)
+    y = draw_order(pdf, cfg, y)
     y = draw_signatures(pdf, cfg, y)
     draw_notes(pdf, cfg, y)
 
