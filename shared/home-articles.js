@@ -15,16 +15,23 @@
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');
   let current=0,labelled='';
   function rtlNow(){return getComputedStyle(root).direction==='rtl';}
-  // One dot per scroll position a card can actually snap to, so every dot leads somewhere.
+  // One dot per scroll position a card can actually settle at. Cards whose start sits
+  // past the end of the scroll range all share the final stop, so they share one dot.
   function stops(count){
     const cards=[...root.children];
     const max=root.scrollWidth-root.clientWidth;
     if(max<=4||cards.length<2)return 1;
-    // Subpixel card widths are common, so measure the step from rects, not rounded offsets.
-    const first=cards[0].getBoundingClientRect();
-    const step=Math.abs(cards[1].getBoundingClientRect().left-first.left)||first.width;
-    if(step<1)return 1;
-    return Math.min(count,Math.max(1,Math.floor((max+2)/step)+1));
+    const rtl=rtlNow();
+    const box=root.getBoundingClientRect();
+    const scrolled=Math.abs(root.scrollLeft);
+    let reachable=0;
+    cards.forEach(card=>{
+      const rect=card.getBoundingClientRect();
+      // Subpixel card widths are common, so measure offsets from rects, not rounded steps.
+      const offset=scrolled+(rtl?box.right-rect.right:rect.left-box.left);
+      if(offset<max-2)reachable++;
+    });
+    return Math.min(count,Math.max(1,reachable+1));
   }
   function renderDots(total){
     const label=dotLabel?dotLabel.textContent.trim():'';
