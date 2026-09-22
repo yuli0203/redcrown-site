@@ -1,0 +1,71 @@
+{
+  "quotation_no": "RCI-Q-2026-0000-EX",
+  "date": "1 Jan 2026",
+  "valid_for": "30 days",
+
+  "supplier": {
+    "company": "Red Crown Interactive",
+    "tagline": "Custom software  |  Mobile - PC - XR - Web",
+    "contact": "Julia Pavlov | Founder & Lead Engineer"
+  },
+  "client": {
+    "name": "Example Client",
+    "subtitle": "Custom software development - hourly engagement"
+  },
+
+  "title": "Hourly Rate Engagement",
+  "subtitle": "Custom software development billed against logged hours. The rate below is final - no VAT is added to it.",
+
+  "scope": {
+    "heading": "Included in the Rate",
+    "items": [
+      {
+        "name": "Development & Implementation",
+        "note": "Hands-on engineering on the agreed stack, across mobile, PC, XR and web targets."
+      },
+      {
+        "name": "Integration & Testing",
+        "note": "Integration into the existing codebase or environment, functional testing and performance tuning on the target devices."
+      }
+    ]
+  },
+
+  "headline": {
+    "label": "Hourly Rate",
+    "value": "000 NIS / hour",
+    "note": "Final price - no VAT is added"
+  },
+
+  "info_boxes": [
+    {
+      "label": "Engagement Model",
+      "value": "Time & materials",
+      "note": "Each task is estimated in hours in writing before work begins. Only hours actually worked are billed."
+    },
+    {
+      "label": "Commercial Terms",
+      "value": "Monthly invoicing",
+      "note": "All prices are stated in NIS. No VAT is added to the amounts above."
+    }
+  ],
+
+  "signatures": {
+    "label": "Acceptance",
+    "note": "Signing below confirms the hourly rate and the terms set out in this quotation.",
+    "blocks": [
+      { "caption": "Example Client - signature & date" },
+      { "caption": "Red Crown Interactive - signature & date" }
+    ]
+  },
+
+  "notes": [
+    {
+      "term": "Billing",
+      "text": "Time is logged in 15-minute increments. Invoices are issued monthly and are payable within 14 days of issue."
+    },
+    {
+      "term": "Scope changes",
+      "text": "Work outside an approved estimate requires separate written approval."
+    }
+  ]
+}

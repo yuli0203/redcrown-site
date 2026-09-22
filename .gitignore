@@ -1,3 +1,9 @@
 .DS_Store
 *.log
 __pycache__/
+
+# Quotation renderer output, and the client configs behind it: this repo is
+# the public site, so neither belongs in it.
+tools/quotation/out/
+tools/quotation/quotations/
+node_modules/

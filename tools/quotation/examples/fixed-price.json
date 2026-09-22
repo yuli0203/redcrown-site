@@ -1,0 +1,86 @@
+{
+  "quotation_no": "RCI-Q-2026-0000-EX",
+  "date": "1 Jan 2026",
+  "valid_for": "30 days",
+
+  "supplier": {
+    "company": "Red Crown Interactive",
+    "tagline": "Custom software  |  Mobile - PC - XR - Web",
+    "contact": "Julia Pavlov | Founder & Lead Engineer"
+  },
+  "client": {
+    "name": "Example Client",
+    "subtitle": "Mobile AR proof of concept"
+  },
+
+  "title": "Mobile AR PoC - Manual Placement",
+  "subtitle": "Lower-cost proof of concept in which the user manually defines positions in AR.",
+
+  "scope": {
+    "heading": "PoC Scope",
+    "amount_header": "Estimated Hours",
+    "items": [
+      {
+        "name": "Manual Placement",
+        "amount": "7",
+        "note": "User places and repositions anchors directly in the physical environment before approving the layout."
+      },
+      {
+        "name": "Minimal Functional UI",
+        "amount": "4",
+        "note": "Dedicated controls for the required PoC workflow. Functional UI only; no advanced UI/UX design."
+      },
+      {
+        "name": "Android Testing & Optimization",
+        "amount": "5",
+        "note": "Integration, performance tuning and validation on an Android target device."
+      }
+    ],
+    "total": {
+      "label": "Total estimated development effort",
+      "value": "16 hours"
+    }
+  },
+
+  "headline": {
+    "label": "Fixed Project Price",
+    "value": "00,000 NIS",
+    "note": "Fixed price for the PoC scope above"
+  },
+
+  "info_boxes": [
+    {
+      "label": "Delivery",
+      "value": "Target: 5-6 weeks",
+      "note": "Up to 8 weeks from kickoff and receipt of the required technical materials."
+    },
+    {
+      "label": "Commercial Terms",
+      "value": "50% kickoff / 50% on delivery",
+      "note": "All prices are stated in NIS."
+    }
+  ],
+
+  "addons": [
+    {
+      "label": "Optional Add-on",
+      "description": "Custom 3D modeling of the client's hardware",
+      "price": "0,000 NIS"
+    }
+  ],
+
+  "notes": [
+    {
+      "term": "Assumptions",
+      "text": "The client supplies dimensions, reference materials and photographs required for the PoC."
+    },
+    {
+      "term": "Not included",
+      "text": "ML, automatic object recognition, advanced UI/UX, backend, or engineering-grade physical simulation."
+    },
+    {
+      "term": "Scope changes",
+      "text": "Work outside the scope above requires separate written approval and quotation."
+    }
+  ]
+}
