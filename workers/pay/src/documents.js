@@ -10,9 +10,7 @@
 // original). It is marked מקור (original, to the payer), העתק (copy, kept) or
 // העתק נאמן למקור (a later reprint). A digitally signed one is marked מסמך
 // ממוחשב (סעיף 18ב).
-import { PDFDocument, PDFName, PDFString, rgb } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
-import { fontRegular, fontBold, logoPng } from './assets.js';
+import { Pdf, rgb } from './pdf.js';
 import { visual, hasHebrew } from './bidi.js';
 
 const A4 = [595.28, 841.89];
@@ -24,27 +22,8 @@ const DIM = rgb(0.42, 0.4, 0.4);
 const LINE = rgb(0.85, 0.83, 0.83);
 const BRAND = rgb(0.784, 0.063, 0.18);   // #C8102E
 const TZ = 'Asia/Jerusalem';
-
-const fromB64 = b64 => Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-
-// fontkit (inside pdf-lib) picks a direction for each string from its first
-// letter and reverses the glyphs of right-to-left strings. Our lines are
-// already in visual order, so each line is drawn in chunks that start at a
-// letter change: a chunk whose letters are Hebrew is passed reversed (fontkit
-// turns it back), any other chunk as is.
-const HEB = /[\u0590-\u05FF\uFB1D-\uFB4F]/;
-const isLetter = c => /\p{L}/u.test(c);
-export function glyphChunks(v) {
-  const chunks = [];
-  let cur = null;
-  for (const c of v) {
-    const kind = isLetter(c) ? (HEB.test(c) ? 'H' : 'L') : null;
-    if (!cur || (kind && cur.kind && kind !== cur.kind)) { cur = { kind, text: '' }; chunks.push(cur); }
-    if (kind && !cur.kind) cur.kind = kind;
-    cur.text += c;
-  }
-  return chunks.map(ch => (ch.kind === 'H' ? [...ch.text].reverse().join('') : ch.text));
-}
+// Room for the CMS signature: the signature, your certificate and its chain.
+const SIGNATURE_BYTES = 16384;
 
 export const METHODS = {
   paypal: 'PayPal',
@@ -94,24 +73,17 @@ export function methodLines(method, d = {}) {
 
 class Layout {
   static async create(title) {
-    const doc = await PDFDocument.create();
-    doc.registerFontkit(fontkit);
-    doc.setTitle(title);
-    doc.setAuthor('Red Crown Interactive');
-    doc.setCreator('Red Crown Interactive payments');
-    doc.setProducer('Red Crown Interactive payments');
     const l = new Layout();
-    l.doc = doc;
-    l.regular = await doc.embedFont(fromB64(fontRegular), { subset: true });
-    l.bold = await doc.embedFont(fromB64(fontBold), { subset: true });
-    l.logo = await doc.embedPng(fromB64(logoPng));
+    l.pdf = new Pdf({ title, author: 'Red Crown Interactive', creator: 'Red Crown Interactive payments' });
+    l.regular = l.pdf.regular;
+    l.bold = l.pdf.bold;
     l.pages = [];
     l.newPage();
     return l;
   }
 
   newPage() {
-    this.page = this.doc.addPage(A4);
+    this.page = this.pdf.addPage(A4);
     this.pages.push(this.page);
     this.y = A4[1] - M;
   }
@@ -121,8 +93,7 @@ class Layout {
   }
 
   width(text, size, bold) {
-    const font = bold ? this.bold : this.regular;
-    return glyphChunks(visual(text)).reduce((w, ch) => w + font.widthOfTextAtSize(ch, size), 0);
+    return (bold ? this.bold : this.regular).widthOfTextAtSize(String(text ?? ''), size);
   }
 
   // Draws one line. align: 'right' (x is the right edge), 'left' or 'center'.
@@ -130,11 +101,10 @@ class Layout {
     const s = String(str ?? '');
     if (!s) return;
     const font = bold ? this.bold : this.regular;
-    const chunks = glyphChunks(visual(s, hasHebrew(s) ? 'rtl' : 'ltr'));
-    const widths = chunks.map(ch => font.widthOfTextAtSize(ch, size));
-    const w = widths.reduce((a, b) => a + b, 0);
-    let left = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
-    chunks.forEach((ch, i) => { this.page.drawText(ch, { x: left, y, size, font, color }); left += widths[i]; });
+    const v = visual(s, hasHebrew(s) ? 'rtl' : 'ltr');
+    const w = font.widthOfTextAtSize(v, size);
+    const left = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    this.page.drawText(v, { x: left, y, size, font, color });
   }
 
   // Splits logical text into lines no wider than maxWidth.
@@ -173,13 +143,7 @@ class Layout {
   }
 
   link(url, x, y, w, h) {
-    const annot = this.doc.context.obj({
-      Type: 'Annot', Subtype: 'Link', Rect: [x, y, x + w, y + h], Border: [0, 0, 0],
-      A: { Type: 'Action', S: 'URI', URI: PDFString.of(url) },
-    });
-    const ref = this.doc.context.register(annot);
-    const annots = this.page.node.lookup(PDFName.of('Annots'));
-    if (annots) annots.push(ref); else this.page.node.set(PDFName.of('Annots'), this.doc.context.obj([ref]));
+    this.page.addLink(url, [x, y, x + w, y + h]);
   }
 
   footer(line) {
@@ -197,7 +161,7 @@ class Layout {
 // Header: logo and issuer on the left, document title and number on the right.
 function header(l, business, { title, number, mark, lines }) {
   const top = l.y;
-  l.page.drawImage(l.logo, { x: M, y: top - 46, width: 46, height: 46 });
+  l.page.drawLogo({ x: M, y: top - 46, width: 46, height: 46 });
   l.text(business.tradingName, { x: M + 56, y: top - 14, size: 12, bold: true, align: 'left' });
   const issuer = [
     business.ownerName,
@@ -303,12 +267,13 @@ export async function buildRequestPdf({ business, request, payUrl }) {
   l.para('מסמך זה אינו קבלה ואינו חשבונית מס. קבלה תישלח לאחר קבלת התשלום.', { size: 8.5, color: DIM });
   l.para('This document is not a receipt or a tax invoice. A receipt is issued once payment is received.', { size: 8.5, color: DIM });
   l.footer(`${business.tradingName} · ${business.website || 'redcrowninteractive.com'}`);
-  return l.doc.save();
+  return l.pdf.save();
 }
 
 // ---- Receipt (קבלה).
 // signature: { name, reason, location, contactInfo } adds a digital signature
-// placeholder (sign.js fills it); without it the original gets a signature line.
+// placeholder and returns { bytes, placeholder } for sign.js to fill in;
+// without it the original gets a signature line and plain bytes come back.
 export async function buildReceiptPdf({ business, receipt, mark = 'original', signature = null }) {
   const l = await Layout.create(`Receipt ${receipt.number}`);
   header(l, business, {
@@ -346,13 +311,5 @@ export async function buildReceiptPdf({ business, receipt, mark = 'original', si
   }
   l.footer(`${business.tradingName} · ${business.website || 'redcrowninteractive.com'}`);
 
-  if (signature) {
-    const { pdflibAddPlaceholder } = await import('@signpdf/placeholder-pdf-lib');
-    pdflibAddPlaceholder({
-      pdfDoc: l.doc, pdfPage: l.pages[0], reason: signature.reason, contactInfo: signature.contactInfo,
-      name: signature.name, location: signature.location, signatureLength: 16384,
-    });
-    return l.doc.save({ useObjectStreams: false });
-  }
-  return l.doc.save();
+  return signature ? l.pdf.save({ signature: { ...signature, size: SIGNATURE_BYTES } }) : l.pdf.save();
 }

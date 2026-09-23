@@ -2,6 +2,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import forge from 'node-forge';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { sign, verify, toQuery } from '../src/links.js';
 import worker from '../src/index.js';
 import { LedgerCore } from '../src/ledger.js';
@@ -87,16 +91,45 @@ const hook = async (env, event) => {
   return call(env, post('/webhook/mock', raw, { 'x-mock-signature': await mock.hmacHex('hook-secret', raw) }));
 };
 
-// A self-signed PKCS#12 certificate standing in for the real one.
-const testP12 = () => {
-  const keys = forge.pki.rsa.generateKeyPair(1024);
-  const cert = forge.pki.createCertificate();
-  cert.publicKey = keys.publicKey; cert.serialNumber = '01';
-  cert.validity.notBefore = new Date(); cert.validity.notAfter = new Date(Date.now() + 864e5);
-  const attrs = [{ name: 'commonName', value: 'Test Signer' }];
-  cert.setSubject(attrs); cert.setIssuer(attrs); cert.sign(keys.privateKey, forge.md.sha256.create());
-  const der = forge.asn1.toDer(forge.pkcs12.toPkcs12Asn1(keys.privateKey, [cert], 'pw', { algorithm: '3des' })).getBytes();
-  return Buffer.from(der, 'binary').toString('base64');
+// A self-signed RSA-2048 certificate standing in for the real one, stored the
+// way tools/import-certificate.mjs stores it: SIGNING_KEY (PKCS#8, base64)
+// and KV "signing:cert".
+const testSigner = (() => {
+  let made;
+  return () => (made ??= (() => {
+    const keys = forge.pki.rsa.generateKeyPair(2048);
+    const cert = forge.pki.createCertificate();
+    cert.publicKey = keys.publicKey; cert.serialNumber = '0a1b';
+    cert.validity.notBefore = new Date(); cert.validity.notAfter = new Date(Date.now() + 864e5);
+    const attrs = [{ name: 'commonName', value: 'Test Signer' }];
+    cert.setSubject(attrs); cert.setIssuer(attrs); cert.sign(keys.privateKey, forge.md.sha256.create());
+    const der = x => Buffer.from(forge.asn1.toDer(x).getBytes(), 'binary');
+    const certDer = der(forge.pki.certificateToAsn1(cert));
+    return {
+      key: der(forge.pki.wrapRsaPrivateKey(forge.pki.privateKeyToAsn1(keys.privateKey))).toString('base64'),
+      certJson: JSON.stringify({ alg: 'RSA', certs: [certDer.toString('base64')] }),
+      certPem: forge.pki.certificateToPem(cert),
+    };
+  })());
+})();
+
+// Checks a signed PDF with OpenSSL, independently of our own code: the
+// ByteRange covers the whole file except the signature, and the CMS signature
+// verifies over exactly those bytes with the signer's certificate.
+const verifyWithOpenssl = pdf => {
+  const text = pdf.toString('latin1');
+  const [a, b, c, d] = text.match(/\/ByteRange \[(\d+) (\d+) (\d+) (\d+)\s*\]/).slice(1).map(Number);
+  assert.equal(a, 0);
+  assert.equal(c + d, pdf.length, 'ByteRange reaches the end of the file');
+  assert.equal(text[b], '<'); assert.equal(text[c - 1], '>');
+  const hex = text.slice(b + 1, c - 1).replace(/0+$/, '');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sig-'));
+  fs.writeFileSync(path.join(dir, 'sig.der'), Buffer.from(hex.length % 2 ? hex + '0' : hex, 'hex'));
+  fs.writeFileSync(path.join(dir, 'content'), Buffer.concat([pdf.subarray(0, b), pdf.subarray(c)]));
+  fs.writeFileSync(path.join(dir, 'cert.pem'), testSigner().certPem);
+  execFileSync('openssl', ['cms', '-verify', '-binary', '-inform', 'DER', '-in', path.join(dir, 'sig.der'),
+    '-content', path.join(dir, 'content'), '-CAfile', path.join(dir, 'cert.pem'), '-purpose', 'any', '-out', '/dev/null'], { stdio: 'pipe' });
+  fs.rmSync(dir, { recursive: true });
 };
 
 // ---------------------------------------------------------------------------
@@ -159,8 +192,8 @@ test('full flow: request emailed, client pays by card, receipt issued, client an
 
 test('with a signing certificate and consent, the client receives the signed receipt', async () => {
   mailbox = [];
-  const env = envFor({ SIGNING_P12_PASSWORD: 'pw' });
-  await env.PAYMENTS.put('signing:p12', testP12());
+  const env = envFor({ SIGNING_KEY: testSigner().key });
+  await env.PAYMENTS.put('signing:cert', testSigner().certJson);
   const pr = await newRequest(env, { lang: 'en' });
   mailbox = [];
   await returnFrom(env, await openCheckout(env, pr.link, { consent: true }));
@@ -169,6 +202,7 @@ test('with a signing certificate and consent, the client receives the signed rec
   assert.match(toClient.subject, /^Receipt 1 from Red Crown Interactive/);
   const pdf = pdfOf(toClient.attachments[0]);
   assert.ok(pdf.includes('/ByteRange') && pdf.includes('/adbe.pkcs7.detached'), 'digitally signed');
+  verifyWithOpenssl(pdf);
   const toOwner = mailbox.find(m => m.to[0] === 'hello@redcrowninteractive.com');
   assert.match(toOwner.subject, /^Payment received: receipt 1/);
   assert.deepEqual(toOwner.attachments.map(a => a.filename), ['receipt-1-copy.pdf']);

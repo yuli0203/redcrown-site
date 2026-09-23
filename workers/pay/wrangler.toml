@@ -6,12 +6,10 @@
 #   OWNER_NAME             your name as registered, e.g. "Julia Pavlov / יוליה פבלוב"
 #   BUSINESS_ID            your עוסק פטור number (printed on documents)
 #   RESEND_API_KEY         email
-#   SIGNING_P12_PASSWORD   password of your signing certificate (see pay/README.md)
+#   SIGNING_KEY            your signing key, from tools/import-certificate.mjs (see pay/README.md)
 name = "red-crown-pay-api"
 main = "src/worker.js"
 compatibility_date = "2026-09-01"
-# Buffer for the PDF signing library.
-compatibility_flags = ["nodejs_compat"]
 
 [vars]
 ENVIRONMENT = "production"

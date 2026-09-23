@@ -24,8 +24,8 @@ jobs:
       # request, receipts (numbering, PDFs, signing), emails, admin API.
       - run: npm ci --prefix workers/pay
       - run: node --test workers/pay/test/pay.test.js
-      # The PDF fonts and logo embedded in the Worker match workers/pay/assets.
-      - run: node workers/pay/tools/embed-assets.mjs --check
+      # The prebuilt PDF template (fonts, logo) matches workers/pay/assets.
+      - run: node workers/pay/tools/build-pdf-template.mjs --check
       # Public repository: fail if a payment secret or private key is committed.
       - run: node tools/check_no_secrets.mjs
       # Payment pages must reference the current CSS/JS (no stale cached copies).
