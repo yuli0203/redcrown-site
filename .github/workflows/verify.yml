@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: '20'
       - run: node --test tools/test_microsoft_auth.cjs
+      # Payment API: signed links, checkout, webhook verification, idempotency.
+      - run: node --test workers/pay/test/pay.test.js
+      # Public repository: fail if a payment secret or private key is committed.
+      - run: node tools/check_no_secrets.mjs
       - run: node --test tools/test_contact_form.js
       - run: node --test tools/test_contact_form.js
         env:

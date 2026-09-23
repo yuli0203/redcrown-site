@@ -1,58 +1,55 @@
-// Invoice payment page. Not connected to a payment provider yet: PROVIDER is null,
-// so starting any payment shows a notice and nothing is sent anywhere.
+// Invoice payment page. Hands off to the payment API (workers/pay), which
+// verifies the signed link and returns the provider's hosted checkout URL.
 //
 // Security model (see pay/README.md):
 // - Card data never enters this page. The provider collects it in its own hosted
 //   fields or hosted checkout, which keeps card numbers out of our code.
-// - Everything here is client-side and therefore untrusted. Anyone can edit the
-//   link's amount, so the backend must look the invoice up and charge ITS amount,
-//   never a number sent from the browser.
+// - Everything here is client-side and therefore untrusted. The Worker checks
+//   the link's signature, so an edited amount is rejected, and only the
+//   provider's signed webhook marks an invoice paid.
 'use strict';
 
 (() => {
-  // Wire a provider here later. Expected shape:
-  //   { start: async ({ method, invoice, amountMinor, currency, name?, email? }) => void }
-  // `method` is card | paypal | googlepay | applepay. Wallets supply the payer's
-  // name and email themselves. For card, the provider mounts its hosted fields
-  // into #card-fields. Apple Pay and Google Pay must open their payment sheet
-  // directly inside the click handler (a user gesture), so keep `start` free of
-  // awaits before that point.
-  const PROVIDER = null;
+  // Settings live in config.js. With no API origin, every button shows a
+  // "not enabled yet" notice and nothing is sent.
+  const { apiOrigin: API_ORIGIN, checkoutHosts: CHECKOUT_HOSTS } = self.RC_PAY_CONFIG || {};
 
   const CURRENCIES = { ILS: 'he-IL', USD: 'en-US', EUR: 'de-DE', GBP: 'en-GB' };
-  const INVOICE_RE = /^[A-Za-z0-9][A-Za-z0-9-]{2,31}$/;
-  const AMOUNT_RE = /^\d{1,7}(?:\.\d{1,2})?$/;
+  const INVOICE_RE = /^[A-Z0-9][A-Z0-9-]{2,31}$/;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  const MIN_AMOUNT = 1;
-  const MAX_AMOUNT = 1000000;
 
   const $ = id => document.getElementById(id);
   const form = $('pay-form');
   if (!form) return;
 
-  // The invoice comes only from the payment link we send, e.g.
-  // /pay/?invoice=RC-2026-014&amount=1250&currency=USD. Clients can't edit it.
-  // Values are validated and only ever written with .textContent.
-  const readInvoice = () => {
+  // The invoice comes only from the signed payment link we send
+  // (tools/pay-link.mjs), e.g. /pay/?i=RC-2026-014&a=125000&c=USD&x=<expiry>&s=<sig>.
+  // The page can't check the signature (only the Worker holds the secret), so it
+  // checks the format here and the Worker rejects anything altered.
+  // Values are only ever written with .textContent.
+  const readLink = () => {
     try {
       const q = new URLSearchParams(location.search);
-      const invoice = (q.get('invoice') || '').toUpperCase();
-      const amount = q.get('amount') || '';
-      const currency = (q.get('currency') || '').toUpperCase();
-      if (!INVOICE_RE.test(invoice) || !AMOUNT_RE.test(amount) || !Object.hasOwn(CURRENCIES, currency)) return null;
-      const value = Number(amount);
-      if (value < MIN_AMOUNT || value > MAX_AMOUNT) return null;
-      return { invoice, amount: value, currency };
+      const link = { i: (q.get('i') || '').toUpperCase(), a: q.get('a') || '', c: (q.get('c') || '').toUpperCase(), x: q.get('x') || '', s: q.get('s') || '' };
+      if (!INVOICE_RE.test(link.i) || !/^\d{3,9}$/.test(link.a) || !Object.hasOwn(CURRENCIES, link.c) ||
+          !/^\d{1,12}$/.test(link.x) || !/^[A-Za-z0-9_-]{43}$/.test(link.s)) return null;
+      return link;
     } catch {
       return null;
     }
   };
-  const invoice = readInvoice();
-  if (!invoice) {
+  const showProblem = (title, text) => {
     $('pay-grid').hidden = true;
+    $('no-invoice-title').textContent = title;
+    $('no-invoice-text').textContent = text;
     $('no-invoice').hidden = false;
-    return;
-  }
+  };
+  const link = readLink();
+  if (!link) return showProblem('Use the payment link from your invoice',
+    'This page opens with your invoice details already filled in. Please use the payment link in the invoice email we sent you.');
+  if (Number(link.x) * 1000 < Date.now()) return showProblem('This payment link has expired',
+    'For your security, payment links are valid for a limited time. Email us and we will send you a new one.');
+  const invoice = { invoice: link.i, amount: Number(link.a) / 100, currency: link.c };
   const total = new Intl.NumberFormat(CURRENCIES[invoice.currency], { style: 'currency', currency: invoice.currency }).format(invoice.amount);
   $('sum-invoice').textContent = invoice.invoice;
   $('sum-total').textContent = total;
@@ -96,27 +93,42 @@
     $('pay-btn-label').textContent = on ? 'Processing…' : 'Pay ' + total;
   };
 
+  const notice = text => {
+    status.classList.add('is-notice');
+    status.textContent = text;
+  };
+  const ERRORS = {
+    400: 'This payment link is not valid. Please use the link from your invoice email.',
+    409: 'This invoice has already been paid. Thank you!',
+    410: 'This payment link has expired. Email us and we will send a new one.',
+    429: 'Too many attempts. Please wait a minute and try again.',
+  };
+
   const start = async payment => {
     if (busy) return;
     status.textContent = '';
     status.classList.remove('is-notice');
-    if (!PROVIDER) {
-      status.classList.add('is-notice');
-      status.textContent = 'Online payments are not enabled yet, so nothing has been charged. ' +
-        'To pay invoice ' + invoice.invoice + ' now, email hello@redcrowninteractive.com for bank transfer details.';
+    if (!API_ORIGIN) {
+      notice('Online payments are not enabled yet, so nothing has been charged. ' +
+        'To pay invoice ' + invoice.invoice + ' now, email hello@redcrowninteractive.com for bank transfer details.');
       return;
     }
     setBusy(true);
     try {
-      await PROVIDER.start({
-        ...payment,
-        invoice: invoice.invoice,
-        // Integer minor units (agorot / cents) avoid floating-point rounding.
-        amountMinor: Math.round(invoice.amount * 100),
-        currency: invoice.currency,
+      const res = await fetch(API_ORIGIN + '/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ link, ...payment }),
+        credentials: 'omit',
+        referrerPolicy: 'no-referrer',
       });
-    } catch {
-      status.textContent = 'The payment could not be started. You have not been charged. Please try again.';
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw Object.assign(new Error('checkout failed'), { status: res.status });
+      const target = new URL(data.url);
+      if (target.protocol !== 'https:' || !CHECKOUT_HOSTS.includes(target.hostname)) throw new Error('unexpected checkout host');
+      location.assign(target.href);
+    } catch (e) {
+      notice((ERRORS[e.status] || 'The payment could not be started. You have not been charged. Please try again.'));
       setBusy(false);
     }
   };

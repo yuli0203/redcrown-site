@@ -17,6 +17,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/site.css">
 <link rel="stylesheet" href="/pay/pay.css">
+<script src="/pay/config.js" defer></script>
 <script src="/pay/pay.js" defer></script>
 </head>
 <body>
@@ -35,9 +36,9 @@
     <!-- Shown when the page is opened without a valid invoice link. Invoice details
          always come from the link we send; clients never type them. -->
     <div id="no-invoice" class="py-card py-empty" hidden>
-      <h2>Use the payment link from your invoice</h2>
-      <p>This page opens with your invoice details already filled in. Please use the payment link in the invoice email we sent you.</p>
-      <p>Can't find it? Email <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a> and we'll send it again.</p>
+      <h2 id="no-invoice-title">Use the payment link from your invoice</h2>
+      <p id="no-invoice-text">This page opens with your invoice details already filled in. Please use the payment link in the invoice email we sent you.</p>
+      <p>Need a new link? Email <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a> and we'll send it again.</p>
     </div>
 
     <div class="py-grid" id="pay-grid">

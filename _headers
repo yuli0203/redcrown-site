@@ -1,0 +1,13 @@
+# Cloudflare Pages response headers (GitHub Pages ignores this file).
+
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+
+# Payment pages: never framed by another site (clickjacking), never cached,
+# never leak their URL. The rest of their policy is the <meta> CSP in each page.
+/pay/*
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'
+  Referrer-Policy: no-referrer
+  Cache-Control: no-store

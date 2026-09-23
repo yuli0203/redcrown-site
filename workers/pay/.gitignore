@@ -1,0 +1,5 @@
+# Local secrets for `wrangler dev`. Never commit: the repository is public.
+.dev.vars
+.env
+node_modules/
+.wrangler/

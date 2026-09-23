@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Same policy as /pay/: same-origin files only. Add the payment API origin to
+     connect-src when it is set in /pay/config.js. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E080A">
+<title>Payment Status | Red Crown Interactive</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/pay/pay.css">
+<script src="/pay/config.js" defer></script>
+<script src="/pay/success/success.js" defer></script>
+</head>
+<body>
+<div class="py-wrap">
+  <header class="py-top">
+    <a class="py-brand" href="/"><img src="/assets/redcrown-primary.svg" alt="" width="34" height="34"><span>Red Crown Interactive</span></a>
+    <span class="py-secure"><svg class="py-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Secure payment</span>
+  </header>
+
+  <main id="main" class="py-main">
+    <!-- The page only reports what the payment API says. Payment is confirmed by
+         the provider's signed webhook, never by arriving at this URL. -->
+    <div class="py-card py-result" role="status" aria-live="polite">
+      <div id="result-icon" class="py-result-icon is-pending" aria-hidden="true"></div>
+      <h1 id="result-title">Checking your payment…</h1>
+      <p id="result-text">This usually takes a few seconds.</p>
+      <dl id="result-details" hidden>
+        <div><dt>Invoice</dt><dd id="result-invoice"></dd></div>
+        <div><dt>Amount</dt><dd id="result-amount"></dd></div>
+      </dl>
+      <p class="py-help">Questions? <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></p>
+    </div>
+  </main>
+
+  <footer class="py-foot">© 2026 Red Crown Interactive · <a href="/legal/#privacy">Privacy</a> · <a href="/legal/#terms">Terms</a></footer>
+</div>
+</body>
+</html>

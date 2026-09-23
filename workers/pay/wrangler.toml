@@ -1,0 +1,29 @@
+# Red Crown payment API. Public repository: no secrets in this file.
+# Secrets are set once with:
+#   npx wrangler secret put PAY_LINK_SECRET
+#   npx wrangler secret put PAYPLUS_API_KEY
+#   npx wrangler secret put PAYPLUS_SECRET_KEY
+name = "red-crown-pay-api"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+ENVIRONMENT = "production"
+PROVIDER = "payplus"
+ALLOWED_ORIGIN = "https://redcrowninteractive.com"
+SITE_URL = "https://redcrowninteractive.com"
+# Sandbox until the PayPlus integration is verified; production is
+# https://restapi.payplus.co.il/api/v1.0
+PAYPLUS_API_URL = "https://restapidev.payplus.co.il/api/v1.0"
+PAYPLUS_PAYMENT_PAGE_UID = ""
+
+# Create with: npx wrangler kv namespace create PAYMENTS  (then paste the id)
+[[kv_namespaces]]
+binding = "PAYMENTS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# 10 checkout attempts per minute per IP.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
