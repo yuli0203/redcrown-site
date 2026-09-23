@@ -102,5 +102,10 @@ GitHub Pages cannot send response headers. On Cloudflare Pages, `_headers` and
 ```
 node --test workers/pay/test/pay.test.js   # Worker tests
 node tools/check_no_secrets.mjs            # secret scan
-python3 -m http.server 8000                # then open a link made with PAY_BASE_URL=http://localhost:8000/pay/
+node tools/stamp_pay_assets.mjs            # after editing pay CSS/JS: refresh ?v= stamps
+python3 -m http.server 8000
+# Local preview link (a throwaway random secret is fine for viewing; only the
+# Worker checks signatures):
+PAY_LINK_SECRET=$(openssl rand -hex 32) \
+PAY_BASE_URL=http://localhost:8000/pay/ node tools/pay-link.mjs RC-2026-014 1250 USD 365
 ```

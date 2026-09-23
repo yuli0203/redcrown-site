@@ -24,6 +24,8 @@ jobs:
       - run: node --test workers/pay/test/pay.test.js
       # Public repository: fail if a payment secret or private key is committed.
       - run: node tools/check_no_secrets.mjs
+      # Payment pages must reference the current CSS/JS (no stale cached copies).
+      - run: node tools/stamp_pay_assets.mjs --check
       - run: node --test tools/test_contact_form.js
       - run: node --test tools/test_contact_form.js
         env:
