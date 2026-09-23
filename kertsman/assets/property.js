@@ -242,7 +242,7 @@
   function missing() {
     byId('crumb-current').textContent = t('missing');
     byId('property').innerHTML =
-      '<div class="empty"><strong>' + esc(t('missing')) + '</strong>' +
+      '<div class="empty"><h1>' + esc(t('missing')) + '</h1>' +
       '<p>' + esc(t('missingNote')) + '</p>' +
       '<p style="margin-block-start:18px"><a class="btn btn-primary" href="' + BASE + '#properties">' + esc(t('back')) + '</a></p></div>';
   }

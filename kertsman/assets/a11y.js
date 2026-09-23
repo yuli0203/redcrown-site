@@ -96,7 +96,7 @@
           '<button class="a11y-close" id="a11y-close" type="button" aria-label="' + t('close') + '">&times;</button></div>' +
         '<div class="a11y-size-row">' +
           '<button class="a11y-btn" type="button" data-size="-1" aria-label="' + t('smaller') + '">A-</button>' +
-          '<span id="a11y-size">100%</span>' +
+          '<span id="a11y-size" role="status" aria-live="polite">100%</span>' +
           '<button class="a11y-btn" type="button" data-size="1" aria-label="' + t('bigger') + '">A+</button>' +
         '</div>' +
         '<button class="a11y-item" type="button" data-toggle="contrast" aria-pressed="false">' + t('contrast') + '</button>' +

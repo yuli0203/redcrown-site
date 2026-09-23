@@ -361,6 +361,13 @@
         else status.removeAttribute('data-state');
       };
 
+      ['name', 'phone'].forEach(function (key) {
+        var field = form.querySelector('[name="' + key + '"]');
+        if (!field) return;
+        if (!(data.get(key) || '').toString().trim()) field.setAttribute('aria-invalid', 'true');
+        else field.removeAttribute('aria-invalid');
+      });
+
       if (!name || !phone) {
         say(t('formErr'), 'err');
         var firstEmpty = !name ? form.querySelector('[name="name"]') : form.querySelector('[name="phone"]');
