@@ -5,7 +5,7 @@ Invoice payment page. **Not connected to any payment provider yet**: `PROVIDER` 
 charged.
 
 Invoice links can prefill the form:
-`/pay/?invoice=RC-2026-014&amount=1250&currency=USD` (ILS, USD, EUR). The query is
+`/pay/?invoice=RC-2026-014&amount=1250&currency=USD` (ILS, USD, EUR, GBP). The query is
 validated, then removed from the address bar.
 
 ## Security design
@@ -23,11 +23,23 @@ validated, then removed from the address bar.
   rest of the site loads — third-party JS on a payment page can read the form.
 - `noindex`, `no-referrer`, and not listed in `sitemap.xml`.
 
+## Payment methods
+
+The page offers Card, PayPal, Google Pay and Apple Pay. The card boxes are
+placeholders (divs, not inputs); the provider's hosted fields replace them in
+`#card-fields`. Whether each method actually works depends on the provider:
+it must support the merchant's country, and Apple Pay also needs the domain
+verified with Apple through the provider.
+
 ## Connecting a provider (later)
 
-1. Build a small backend endpoint (GitHub Pages cannot run one; e.g. a
-   Cloudflare Worker) that validates the invoice and creates a checkout session
-   with the provider's **secret** key. Secret keys never go in this repository.
+1. Build a small backend endpoint (GitHub Pages cannot run one) that validates
+   the invoice and creates a checkout session with the provider's **secret** key.
+   The Cloudflare account behind the calendar API
+   (`red-crown-calendar-api.yuli0203.workers.dev`, see `calendar/auth-config.json`)
+   can host it as a separate Worker, e.g. `red-crown-pay-api`, with the secret key
+   stored as a Worker secret. Secret keys never go in this repository. Turnstile,
+   already used by the booking page, can guard the endpoint against bots.
 2. Set `PROVIDER.start` in `pay.js` to call that endpoint and redirect to the
    returned checkout URL (or mount the provider's hosted fields in
    `#provider-slot`).

@@ -55,6 +55,7 @@
                 <option value="ILS">ILS ₪</option>
                 <option value="USD">USD $</option>
                 <option value="EUR">EUR €</option>
+                <option value="GBP">GBP £</option>
               </select>
             </div>
           </div>
@@ -76,12 +77,36 @@
 
         <fieldset>
           <legend>Payment method</legend>
-          <!-- Card details are never entered into this page. A PCI-compliant provider
-               renders its own hosted fields here (or takes the payer to its hosted
-               checkout), so card numbers never touch our code or our servers. -->
-          <div id="provider-slot" class="py-provider" aria-live="polite">
-            <svg class="py-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-            <p>Card details are entered on our payment provider's secure, encrypted form. Red Crown Interactive never sees or stores your card number.</p>
+          <div class="py-methods">
+            <label class="py-method"><input type="radio" name="method" value="card" checked><span>Card</span></label>
+            <label class="py-method"><input type="radio" name="method" value="paypal"><span>PayPal</span></label>
+            <label class="py-method"><input type="radio" name="method" value="googlepay"><span>Google Pay</span></label>
+            <label class="py-method"><input type="radio" name="method" value="applepay"><span>Apple Pay</span></label>
+          </div>
+
+          <!-- Card details are never typed into elements this page owns. The boxes below
+               are placeholders (divs, not inputs). When a provider is connected, it mounts
+               its hosted card fields into #card-fields: each one is an iframe served from
+               the provider, so card numbers never touch our code or our servers. -->
+          <div id="panel-card" class="py-panel" data-method="card">
+            <div id="card-fields" class="py-hosted" aria-label="Card details">
+              <div class="py-hf-label">Card number</div>
+              <div class="py-hf" data-hosted-field="number">1234 1234 1234 1234</div>
+              <div class="py-hf-row">
+                <div><div class="py-hf-label">Expiry</div><div class="py-hf" data-hosted-field="expiry">MM / YY</div></div>
+                <div><div class="py-hf-label">Security code</div><div class="py-hf" data-hosted-field="cvc">CVC</div></div>
+              </div>
+              <p class="py-hf-note"><svg class="py-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Card fields are provided and encrypted by our payment provider. Red Crown Interactive never sees or stores your card number. Visa, Mastercard, American Express and international cards.</p>
+            </div>
+          </div>
+          <div id="panel-paypal" class="py-panel" data-method="paypal" hidden>
+            <p class="py-provider">You'll log in to PayPal to approve the payment, then return here for your receipt.</p>
+          </div>
+          <div id="panel-googlepay" class="py-panel" data-method="googlepay" hidden>
+            <p class="py-provider">Google Pay opens on the next step. Available in supported browsers and on Android.</p>
+          </div>
+          <div id="panel-applepay" class="py-panel" data-method="applepay" hidden>
+            <p class="py-provider">Apple Pay opens on the next step. Available in Safari on iPhone, iPad and Mac.</p>
           </div>
         </fieldset>
 
@@ -93,7 +118,7 @@
 
         <button id="pay-btn" class="py-btn" type="submit">
           <svg class="py-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-          <span id="pay-btn-label">Continue to secure payment</span>
+          <span id="pay-btn-label">Pay by card</span>
         </button>
         <p id="form-status" class="py-status" role="status" aria-live="polite"></p>
       </form>

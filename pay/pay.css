@@ -63,3 +63,17 @@ legend{font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacin
 .py-alert{background:var(--panel-2);border:1px solid var(--hot);border-radius:10px;padding:12px;margin-bottom:20px;font-size:.88rem}
 .py-foot{border-top:1px solid var(--line);color:var(--dim);font-size:.78rem;text-align:center;padding:22px 0 30px;margin-top:20px}
 .py-foot a:hover{color:var(--hot-text)}
+
+.py-methods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}
+@media(max-width:560px){.py-methods{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.py-method{position:relative;display:flex;align-items:center;justify-content:center;min-height:46px;padding:8px;text-align:center;font-size:.84rem;font-weight:600;background:var(--panel-2);border:1px solid rgba(240,234,228,.18);border-radius:10px;cursor:pointer}
+.py-method input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.py-method:has(input:checked){border-color:var(--hot);box-shadow:inset 0 0 0 1px var(--hot);background:rgba(200,16,46,.1)}
+.py-method:has(input:focus-visible){outline:2px solid var(--hot);outline-offset:2px}
+.py-panel[hidden]{display:none}
+.py-hosted{background:var(--panel-2);border:1px dashed rgba(240,234,228,.22);border-radius:10px;padding:14px}
+.py-hf-label{font-size:.8rem;font-weight:600;margin-bottom:5px}
+.py-hf{min-height:44px;display:flex;align-items:center;padding:0 12px;margin-bottom:12px;border:1px solid rgba(240,234,228,.14);border-radius:8px;background:var(--black);color:rgba(168,157,160,.6);font-size:.95rem;letter-spacing:.04em;user-select:none}
+.py-hf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.py-hf-note{display:flex;gap:9px;align-items:flex-start;font-size:.78rem;line-height:1.5;color:var(--dim);margin-top:2px}
+.py-hf-note .py-lock{margin-top:2px;color:var(--bone)}

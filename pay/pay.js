@@ -11,12 +11,14 @@
 
 (() => {
   // Wire a provider here later. Expected shape:
-  //   { start: async ({ invoice, amountMinor, currency, name, email }) => void }
+  //   { start: async ({ method, invoice, amountMinor, currency, name, email }) => void }
+  // `method` is card | paypal | googlepay | applepay. For card, the provider also
+  // mounts its hosted fields into #card-fields.
   // `start` should ask our backend to create a checkout session for the invoice and
   // then redirect to / mount the provider's hosted checkout.
   const PROVIDER = null;
 
-  const CURRENCIES = { ILS: 'he-IL', USD: 'en-US', EUR: 'de-DE' };
+  const CURRENCIES = { ILS: 'he-IL', USD: 'en-US', EUR: 'de-DE', GBP: 'en-GB' };
   const INVOICE_RE = /^[A-Za-z0-9][A-Za-z0-9-]{2,31}$/;
   const AMOUNT_RE = /^\d{1,7}(?:\.\d{1,2})?$/;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -33,6 +35,8 @@
   const btn = $('pay-btn');
   const btnLabel = $('pay-btn-label');
   const status = $('form-status');
+  const METHOD_LABELS = { card: 'Pay by card', paypal: 'Continue to PayPal', googlepay: 'Continue to Google Pay', applepay: 'Continue to Apple Pay' };
+  const method = () => form.elements.method.value;
 
   // "1,234.50" or "1234,5" -> 1234.5; anything else -> NaN.
   const parseAmount = raw => {
@@ -102,8 +106,16 @@
   const setBusy = on => {
     busy = on;
     btn.disabled = on;
-    btnLabel.textContent = on ? 'Processing…' : 'Continue to secure payment';
+    btnLabel.textContent = on ? 'Processing…' : METHOD_LABELS[method()];
   };
+
+  const showMethod = () => {
+    const m = method();
+    form.querySelectorAll('.py-panel').forEach(panel => { panel.hidden = panel.dataset.method !== m; });
+    if (!busy) btnLabel.textContent = METHOD_LABELS[m];
+  };
+  form.querySelectorAll('input[name=method]').forEach(r => r.addEventListener('change', showMethod));
+  showMethod();
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
@@ -119,6 +131,7 @@
     }
 
     const payment = {
+      method: method(),
       invoice: fields.invoice.value.trim().toUpperCase(),
       // Integer minor units (agorot / cents) avoid floating-point rounding.
       amountMinor: Math.round(parseAmount(fields.amount.value) * 100),
@@ -129,7 +142,7 @@
 
     if (!PROVIDER) {
       status.classList.add('is-notice');
-      status.textContent = 'Online card payments are not enabled yet, so nothing has been charged. ' +
+      status.textContent = 'Online payments are not enabled yet, so nothing has been charged. ' +
         'To pay invoice ' + payment.invoice + ' now, email hello@redcrowninteractive.com for bank transfer details.';
       return;
     }
