@@ -37,6 +37,16 @@
         show('paid', 'Payment received', 'Thank you! A receipt is on its way to your email.', data);
         return;
       }
+      if (data.status === 'already_paid') {
+        show('paid', 'This invoice is already paid',
+          'It was paid in another window or with an earlier link, so this payment was not taken. You have not been charged again.', data);
+        return;
+      }
+      if (data.status === 'duplicate') {
+        show('pending-final', 'This invoice was already paid',
+          'Your payment went through, but the invoice had already been paid, so we will refund this second payment in full. You don’t need to do anything.', data);
+        return;
+      }
       if (data.status === 'pending' && attempt + 1 < DELAYS.length) {
         setTimeout(() => poll(attempt + 1), DELAYS[attempt + 1]);
         return;

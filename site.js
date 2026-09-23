@@ -70,7 +70,7 @@ const I18N = {
     "form.thanksTitle":"Thank you. Your next chapter starts here.","form.thanksBody":"Your message has been sent. We look forward to hearing more about your idea.","form.bookPrompt":"Can’t wait? Book a meeting now.","form.bookAction":"Book a meeting",
     "form.success":"Thanks! I'll get back to you soon.","form.error":"Something went wrong. Please email hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. All rights reserved.",
-    "foot.blog":"Articles (Hebrew)","foot.privacy":"Privacy Policy","foot.terms":"Terms of Use","foot.a11y":"Accessibility Statement"
+    "foot.blog":"Articles (Hebrew)","foot.privacy":"Privacy Policy","foot.terms":"Terms of Use","foot.a11y":"Accessibility Statement","foot.pay":"Pay an Invoice"
   },
   he: {
     "journal.kicker":"ידע מהסטודיו",
@@ -147,7 +147,7 @@ const I18N = {
     "form.thanksTitle":"תודה, ההודעה שלכם התקבלה!","form.thanksBody":"נחזור אליכם בדרך כלל תוך יום עסקים אחד כדי להכיר את הפרויקט.","form.bookPrompt":"רוצים לתאם זמן לשיחה? אפשר לקבוע פגישה כבר עכשיו.","form.bookAction":"לקביעת פגישה",
     "form.success":"תודה! אחזור אליכם בקרוב.","form.error":"משהו השתבש. אנא כתבו ל-hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. כל הזכויות שמורות.",
-    "foot.blog":"מאמרים","foot.privacy":"מדיניות פרטיות","foot.terms":"תנאי שימוש","foot.a11y":"הצהרת נגישות"
+    "foot.blog":"מאמרים","foot.privacy":"מדיניות פרטיות","foot.terms":"תנאי שימוש","foot.a11y":"הצהרת נגישות","foot.pay":"תשלום חשבונית"
   },
   ru: {
     "journal.kicker":"ЖУРНАЛ СТУДИИ",
@@ -220,7 +220,7 @@ const I18N = {
     "form.thanksTitle":"Спасибо. Здесь начинается новая глава.","form.thanksBody":"Ваше сообщение отправлено. Будем рады узнать больше о вашей идее.","form.bookPrompt":"Не хотите ждать? Запланируйте встречу прямо сейчас.","form.bookAction":"Назначить встречу",
     "form.success":"Спасибо! Я скоро свяжусь с вами.","form.error":"Что-то пошло не так. Напишите на hello@redcrowninteractive.com.",
     "foot.copy":"© 2026 Red Crown Interactive. Все права защищены.",
-    "foot.blog":"Статьи (на иврите)","foot.privacy":"Политика конфиденциальности","foot.terms":"Условия использования","foot.a11y":"Заявление о доступности"
+    "foot.blog":"Статьи (на иврите)","foot.privacy":"Политика конфиденциальности","foot.terms":"Условия использования","foot.a11y":"Заявление о доступности","foot.pay":"Оплата счёта"
   }
 };
 const RTL = new Set(['he']);

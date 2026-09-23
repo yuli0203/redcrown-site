@@ -42,14 +42,27 @@ const api = async (env, path, init = {}) => {
 };
 
 // A completed capture from an order or capture response -> our event shape.
-const fromCapture = (capture, ref) => capture && {
-  ref: capture.custom_id || ref,
-  status: capture.status === 'COMPLETED' ? 'paid' : String(capture.status || 'unknown').toLowerCase(),
-  amountMinor: toMinor(capture.amount?.value),
-  currency: String(capture.amount?.currency_code || '').toUpperCase(),
-  transactionId: capture.id,
+// The payer (from the order) and PayPal's fee and net (from the capture) are
+// kept for the receipt; a webhook's capture has the fee but not the payer.
+const fromCapture = (capture, payer) => {
+  if (!capture) return null;
+  const optional = {
+    payerName: [payer?.name?.given_name, payer?.name?.surname].filter(Boolean).join(' '),
+    payerEmail: payer?.email_address,
+    feeMinor: toMinor(capture.seller_receivable_breakdown?.paypal_fee?.value),
+    netMinor: toMinor(capture.seller_receivable_breakdown?.net_amount?.value),
+  };
+  return {
+    ref: capture.custom_id || null,
+    status: capture.status === 'COMPLETED' ? 'paid' : String(capture.status || 'unknown').toLowerCase(),
+    amountMinor: toMinor(capture.amount?.value),
+    currency: String(capture.amount?.currency_code || '').toUpperCase(),
+    transactionId: capture.id,
+    ...Object.fromEntries(Object.entries(optional).filter(([, v]) => v && !Number.isNaN(v))),
+  };
 };
 const firstCapture = order => order?.purchase_units?.[0]?.payments?.captures?.[0];
+const fromOrder = order => fromCapture(firstCapture(order), order?.payer);
 
 export default {
   checkoutHosts: env => (String(env.PAYPAL_API_URL).includes('sandbox') ? ['www.sandbox.paypal.com'] : ['www.paypal.com']),
@@ -93,13 +106,15 @@ export default {
     const id = encodeURIComponent(session.providerRef);
     const { res, data } = await api(env, `/v2/checkout/orders/${id}/capture`, {
       method: 'POST',
-      headers: { 'PayPal-Request-Id': 'capture-' + session.providerRef },
+      // The default (minimal) response can omit the capture amount, which would
+      // fail the amount check; ask for the full order.
+      headers: { 'PayPal-Request-Id': 'capture-' + session.providerRef, Prefer: 'return=representation' },
       body: '{}',
     });
-    if (res.ok) return fromCapture(firstCapture(data), null);
+    if (res.ok) return fromOrder(data);
     // Already captured (a refresh, or the webhook got there first): read the order.
     const order = await api(env, `/v2/checkout/orders/${id}`);
-    return order.res.ok ? fromCapture(firstCapture(order.data), null) : null;
+    return order.res.ok ? fromOrder(order.data) : null;
   },
 
   async verifyWebhook(request, raw, env) {

@@ -21,6 +21,25 @@
   const grid = $('pay-grid');
   if (!grid) return;
 
+  // Clickjacking guard. GitHub Pages cannot send X-Frame-Options or a
+  // frame-ancestors header, so if another site frames this page the buttons are
+  // never activated and the client is sent to open the page directly.
+  let framed = true;
+  try { framed = window.top !== window.self; } catch { /* cross-origin parent */ }
+  if (framed) {
+    grid.hidden = true;
+    $('no-invoice-title').textContent = 'Open this page directly';
+    $('no-invoice-text').textContent = 'For your security, payments only work on redcrowninteractive.com itself, not inside another site.';
+    const open = document.createElement('a');
+    open.href = location.href;
+    open.target = '_top';
+    open.rel = 'noopener';
+    open.textContent = 'Open the secure payment page';
+    $('no-invoice-text').append(document.createElement('br'), open);
+    $('no-invoice').hidden = false;
+    return;
+  }
+
   // The invoice comes only from the signed payment link we send
   // (tools/pay-link.mjs), e.g. /pay/?i=RC-2026-014&a=125000&c=USD&x=<expiry>&s=<sig>.
   // The page can't check the signature (only the Worker holds the secret), so it

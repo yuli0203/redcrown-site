@@ -3,6 +3,7 @@
 #   npx wrangler secret put PAY_LINK_SECRET
 #   npx wrangler secret put PAYPAL_CLIENT_ID
 #   npx wrangler secret put PAYPAL_CLIENT_SECRET
+#   npx wrangler secret put RESEND_API_KEY      (optional: payment emails)
 name = "red-crown-pay-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
@@ -17,6 +18,14 @@ PAYPAL_API_URL = "https://api-m.sandbox.paypal.com"
 # From developer.paypal.com > your app > Webhooks, after adding
 # https://<worker>/webhook/paypal for PAYMENT.CAPTURE.COMPLETED. Not a secret.
 PAYPAL_WEBHOOK_ID = ""
+# Payment and duplicate-payment emails (sent only when RESEND_API_KEY is set).
+# NOTIFY_FROM must be on a domain verified in Resend.
+NOTIFY_TO = "hello@redcrowninteractive.com"
+NOTIFY_FROM = "Red Crown Payments <payments@redcrowninteractive.com>"
+
+# Keeps Worker logs (every payment is logged) in the Cloudflare dashboard.
+[observability]
+enabled = true
 
 # Create with: npx wrangler kv namespace create PAYMENTS  (then paste the id)
 [[kv_namespaces]]
