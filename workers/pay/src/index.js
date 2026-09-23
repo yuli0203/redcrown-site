@@ -5,6 +5,8 @@
 //                           issue the receipt, redirect to the success page
 //   POST /webhook/<name>    PayPal's signed payment notification (backup)
 //   GET  /status?ref=...    paid / duplicate / already_paid / pending
+//   GET  /request?<link>    the payment request's details, for the pay page
+//   GET  /request.pdf?<link> the payment request PDF (stored when it was issued)
 //   /admin...               your document generator (admin.js)
 //
 // Trust rules:
@@ -40,16 +42,65 @@ const linkQuery = l => new URLSearchParams({ i: l.i, a: l.a, c: l.c, x: l.x, s: 
 const getSession = async (env, ref) => JSON.parse(await env.PAYMENTS.get('session:' + ref) || 'null');
 const putSession = (env, ref, session) => env.PAYMENTS.put('session:' + ref, JSON.stringify(session), { expirationTtl: SESSION_TTL });
 
+const rateLimited = async (request, env, scope) => {
+  if (!env.RATE_LIMITER) return false;
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  return !(await env.RATE_LIMITER.limit({ key: `${scope}:${ip}` })).success;
+};
+
+// A signed link from the query string -> its payment request, or an error
+// status. The link must match the request's amount and currency exactly.
+async function requestForLink(env, params) {
+  const link = await verify(params, env.PAY_LINK_SECRET);
+  if (!link) return { error: 'invalid link', status: 400 };
+  const pr = await ledger(env).getRequest(link.invoice);
+  if (!pr || pr.amountMinor !== link.amountMinor || pr.currency !== link.currency) return { error: 'invalid link', status: 400 };
+  return { link, pr };
+}
+
+// What the pay page shows about a request: only what the client already has
+// on the request itself (no address, tax ID or email, in case a link is
+// forwarded).
+async function requestDetails(request, env) {
+  const headers = cors(request, env);
+  if (!headers) return json({ error: 'forbidden' }, 403);
+  if (await rateLimited(request, env, 'request')) return json({ error: 'too many requests' }, 429, headers);
+  const { link, pr, error, status } = await requestForLink(env, Object.fromEntries(new URL(request.url).searchParams));
+  if (error) return json({ error }, status, headers);
+  const state = pr.status === 'paid' ? 'paid'
+    : pr.status !== 'open' ? pr.status
+    : link.expired ? 'expired' : 'open';
+  return json({
+    number: pr.number,
+    created: pr.created,
+    expires: link.expires,
+    status: state,
+    client: { name: pr.client.name, company: pr.client.company || '' },
+    items: pr.items.map(it => ({ description: it.description, quantity: it.quantity, unitMinor: it.unitMinor, totalMinor: it.totalMinor ?? Math.round(it.unitMinor * it.quantity) })),
+    notes: pr.notes || '',
+    amountMinor: pr.amountMinor,
+    currency: pr.currency,
+    pdf: pr.hasPdf,
+  }, 200, headers);
+}
+
+// The request PDF, as issued. Opened from a link on the pay page, so it is a
+// plain navigation (no CORS); the signed link is the only key.
+async function requestPdf(request, env) {
+  if (await rateLimited(request, env, 'request')) return json({ error: 'too many requests' }, 429);
+  const { pr, error, status } = await requestForLink(env, Object.fromEntries(new URL(request.url).searchParams));
+  if (error) return json({ error }, status);
+  const pdf = await ledger(env).requestPdf(pr.number);
+  if (!pdf) return json({ error: 'not found' }, 404);
+  return new Response(pdf, { headers: { ...baseHeaders, 'Content-Type': 'application/pdf', 'Content-Disposition': `inline; filename="payment-request-${pr.number}.pdf"` } });
+}
+
 async function checkout(request, env) {
   const headers = cors(request, env);
   if (!headers) return json({ error: 'forbidden' }, 403);
   if (!(request.headers.get('Content-Type') || '').startsWith('application/json')) return json({ error: 'expected JSON' }, 415, headers);
 
-  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (env.RATE_LIMITER) {
-    const { success } = await env.RATE_LIMITER.limit({ key: 'checkout:' + ip });
-    if (!success) return json({ error: 'too many requests' }, 429, headers);
-  }
+  if (await rateLimited(request, env, 'checkout')) return json({ error: 'too many requests' }, 429, headers);
 
   let body;
   try { body = JSON.parse(await readBody(request)); } catch { return json({ error: 'bad request' }, 400, headers); }
@@ -235,6 +286,8 @@ export default {
       }
       if (url.pathname === '/checkout' && request.method === 'POST') return await checkout(request, env);
       if (url.pathname === '/status' && request.method === 'GET') return await status(request, env);
+      if (url.pathname === '/request' && request.method === 'GET') return await requestDetails(request, env);
+      if (url.pathname === '/request.pdf' && request.method === 'GET') return await requestPdf(request, env);
       const back = url.pathname.match(/^\/return\/([a-z]+)$/);
       if (back && request.method === 'GET') return await providerReturn(request, env, back[1], defer);
       const hook = url.pathname.match(/^\/webhook\/([a-z]+)$/);

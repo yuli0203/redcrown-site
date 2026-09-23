@@ -76,3 +76,17 @@ body{min-height:100vh}
 .py-result-icon.is-paid::after{content:"";width:18px;height:10px;border:solid #2FB36B;border-width:0 0 3px 3px;transform:translateY(-3px) rotate(-45deg)}
 .py-result-icon.is-unknown::after,.py-result-icon.is-pending-final::after{content:"?";font:700 1.5rem var(--display);color:var(--dim)}
 @keyframes py-spin{to{transform:rotate(360deg)}}
+
+.py-details{margin-top:16px}
+.py-details-h{font-size:.76rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.py-items{list-style:none}
+.py-items li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.86rem}
+.py-items .py-item-desc{overflow-wrap:anywhere}
+.py-items .py-item-amt{text-align:end;white-space:nowrap}
+.py-items .py-item-qty{grid-column:1 / -1;color:var(--dim);font-size:.78rem}
+.py-notes{margin-top:10px;font-size:.84rem;color:var(--dim);white-space:pre-line;overflow-wrap:anywhere}
+.py-pdf{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-size:.84rem;font-weight:600;color:var(--hot-text)}
+.py-pdf:hover{text-decoration:underline}
+.py-paid{text-align:center;padding:10px 0 4px}
+.py-paid b{display:block;font-family:var(--display);font-size:1.15rem;margin-bottom:6px;color:var(--bone)}
+.py-paid span{color:var(--dim);font-size:.9rem}

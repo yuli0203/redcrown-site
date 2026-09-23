@@ -68,9 +68,11 @@
   if (Number(link.x) * 1000 < Date.now()) return showProblem('This payment link has expired',
     'For your security, payment links are valid for a limited time. Email us and we will send you a new one.');
 
-  const total = new Intl.NumberFormat(CURRENCIES[link.c], { style: 'currency', currency: link.c }).format(Number(link.a) / 100);
+  const money = minor => new Intl.NumberFormat(CURRENCIES[link.c], { style: 'currency', currency: link.c }).format(minor / 100);
   $('sum-invoice').textContent = link.i;
-  $('sum-total').textContent = total;
+  $('sum-total').textContent = money(Number(link.a));
+  $('sum-valid').textContent = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jerusalem' }).format(new Date(Number(link.x) * 1000));
+  $('sum-valid-row').hidden = false;
 
   const buttons = [...document.querySelectorAll('.py-wallet')];
   const status = $('form-status');
@@ -120,6 +122,66 @@
       setBusy(false);
     }
   };
+
+  // The request's details (who it is for, line items, notes, the PDF) come
+  // from the payment API for this signed link. Everything is written with
+  // .textContent; a failure leaves the basic summary above.
+  const query = new URLSearchParams(link).toString();
+  const showPaid = () => {
+    const section = grid.querySelector('section.py-card');
+    section.replaceChildren();
+    const box = document.createElement('div');
+    box.className = 'py-paid';
+    box.setAttribute('role', 'status');
+    const title = document.createElement('b');
+    title.textContent = 'This payment request has been paid';
+    const text = document.createElement('span');
+    text.textContent = 'Thank you! Your receipt was sent when the payment was received. Questions? hello@redcrowninteractive.com';
+    box.append(title, text);
+    section.append(box);
+  };
+  const loadDetails = async () => {
+    if (!API_ORIGIN) return;
+    try {
+      const res = await fetch(`${API_ORIGIN}/request?${query}`, { credentials: 'omit', referrerPolicy: 'no-referrer' });
+      if (res.status === 400) return showProblem('This payment link is not valid', 'Please use the link from the payment request we emailed you, or email hello@redcrowninteractive.com.');
+      if (!res.ok) return;
+      const d = await res.json();
+      if (d.status === 'paid') showPaid();
+      else if (d.status === 'cancelled') return showProblem('This payment request was cancelled', 'Email hello@redcrowninteractive.com if you think this is a mistake.');
+      else if (d.status === 'expired') return showProblem('This payment link has expired', 'For your security, payment links are valid for a limited time. Email us and we will send you a new one.');
+
+      $('sum-billto').textContent = [d.client?.name, d.client?.company].filter(Boolean).join(', ');
+      $('sum-billto-row').hidden = !$('sum-billto').textContent;
+      const list = $('sum-items');
+      list.replaceChildren(...(d.items || []).map(it => {
+        const li = document.createElement('li');
+        const desc = document.createElement('span');
+        desc.className = 'py-item-desc';
+        desc.dir = 'auto';
+        desc.textContent = it.description;
+        const amt = document.createElement('span');
+        amt.className = 'py-item-amt';
+        amt.textContent = money(it.totalMinor);
+        li.append(desc, amt);
+        if (Number(it.quantity) !== 1) {
+          const qty = document.createElement('span');
+          qty.className = 'py-item-qty';
+          qty.textContent = `${it.quantity} × ${money(it.unitMinor)}`;
+          li.append(qty);
+        }
+        return li;
+      }));
+      $('sum-notes').textContent = d.notes || '';
+      $('sum-notes').hidden = !d.notes;
+      $('sum-details').hidden = !(d.items || []).length && !d.notes;
+      if (d.pdf) {
+        $('sum-pdf').href = `${API_ORIGIN}/request.pdf?${query}`;
+        $('sum-pdf').hidden = false;
+      }
+    } catch { /* keep the basic summary */ }
+  };
+  loadDetails();
 
   // One click starts checkout: PayPal login, or PayPal's guest card form.
   buttons.forEach(b => b.addEventListener('click', () => start(b.dataset.wallet)));

@@ -16,9 +16,9 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/site.css?v=80359f6ea233">
-<link rel="stylesheet" href="/pay/pay.css?v=7ce1dd73d10f">
+<link rel="stylesheet" href="/pay/pay.css?v=285ef67b515c">
 <script src="/pay/config.js?v=696eef1320b8" defer></script>
-<script src="/pay/pay.js?v=b6ac9eb4a485" defer></script>
+<script src="/pay/pay.js?v=a5ca7cb37e00" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to payment form</a>
@@ -63,7 +63,17 @@
         <p class="py-amount-big" id="sum-total">—</p>
         <dl>
           <div><dt>Payment request</dt><dd id="sum-invoice">—</dd></div>
+          <div id="sum-billto-row" hidden><dt>Bill to</dt><dd id="sum-billto" dir="auto"></dd></div>
+          <div id="sum-valid-row" hidden><dt>Valid until</dt><dd id="sum-valid"></dd></div>
         </dl>
+        <!-- Filled from the payment API (GET /request) once it is connected: the
+             request's line items and notes, as on the PDF the client received. -->
+        <div id="sum-details" class="py-details" hidden>
+          <p class="py-details-h">Details</p>
+          <ul id="sum-items" class="py-items"></ul>
+          <p id="sum-notes" class="py-notes" dir="auto" hidden></p>
+        </div>
+        <a id="sum-pdf" class="py-pdf" target="_blank" rel="noopener" hidden><svg class="py-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg>Download payment request (PDF)</a>
         <p class="py-help">Questions about this payment? <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></p>
       </aside>
     </div>

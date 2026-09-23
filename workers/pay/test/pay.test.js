@@ -122,9 +122,12 @@ const verifyWithOpenssl = pdf => {
   assert.equal(a, 0);
   assert.equal(c + d, pdf.length, 'ByteRange reaches the end of the file');
   assert.equal(text[b], '<'); assert.equal(text[c - 1], '>');
-  const hex = text.slice(b + 1, c - 1).replace(/0+$/, '');
+  // The placeholder is zero-padded; take exactly the DER length from its header.
+  const padded = Buffer.from(text.slice(b + 1, c - 1), 'hex');
+  const lenBytes = padded[1] & 0x80 ? padded[1] & 0x7F : 0;
+  const bodyLen = lenBytes ? padded.subarray(2, 2 + lenBytes).reduce((n, x) => n * 256 + x, 0) : padded[1];
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sig-'));
-  fs.writeFileSync(path.join(dir, 'sig.der'), Buffer.from(hex.length % 2 ? hex + '0' : hex, 'hex'));
+  fs.writeFileSync(path.join(dir, 'sig.der'), padded.subarray(0, 2 + lenBytes + bodyLen));
   fs.writeFileSync(path.join(dir, 'content'), Buffer.concat([pdf.subarray(0, b), pdf.subarray(c)]));
   fs.writeFileSync(path.join(dir, 'cert.pem'), testSigner().certPem);
   execFileSync('openssl', ['cms', '-verify', '-binary', '-inform', 'DER', '-in', path.join(dir, 'sig.der'),
@@ -188,6 +191,38 @@ test('full flow: request emailed, client pays by card, receipt issued, client an
 
   // A second payment of the same request is refused.
   assert.equal((await checkout(env, { link: pr.link, method: 'paypal' })).status, 409);
+});
+
+test('pay page details: only for a valid link, without private details, status follows payment', async () => {
+  mailbox = [];
+  const env = envFor();
+  const pr = await newRequest(env);
+  const get = (path, link, origin = ORIGIN) => call(env, new Request(`${API}${path}?${new URLSearchParams(link)}`, { headers: origin ? { Origin: origin } : {} }));
+
+  const res = await get('/request', pr.link);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('Access-Control-Allow-Origin'), ORIGIN);
+  const d = await res.json();
+  assert.equal(d.number, pr.link.i);
+  assert.equal(d.status, 'open');
+  assert.equal(d.amountMinor, 125000);
+  assert.deepEqual(d.client, { name: client.name, company: client.company });
+  assert.deepEqual(d.items.map(it => [it.description, it.quantity, it.totalMinor]), [['סימולציית VR, שלב 1', 1, 100000], ['QA hours', 10, 25000]]);
+  assert.equal(d.notes, 'תודה!');
+  const text = JSON.stringify(d);
+  for (const secret of [client.email, client.address, client.taxId]) assert.ok(!text.includes(secret), `does not expose ${secret}`);
+
+  assert.equal((await get('/request', { ...pr.link, a: '100' })).status, 400, 'tampered amount');
+  assert.equal((await get('/request', { ...pr.link, s: 'x'.repeat(43) })).status, 400, 'forged signature');
+  assert.equal((await get('/request', pr.link, 'https://evil.test')).status, 403, 'other sites');
+
+  const pdf = await get('/request.pdf', pr.link, null);
+  assert.equal(pdf.headers.get('Content-Type'), 'application/pdf');
+  assert.equal(Buffer.from(await pdf.arrayBuffer()).subarray(0, 5).toString(), '%PDF-');
+  assert.equal((await get('/request.pdf', { ...pr.link, a: '100' }, null)).status, 400);
+
+  await returnFrom(env, await openCheckout(env, pr.link));
+  assert.equal((await (await get('/request', pr.link)).json()).status, 'paid');
 });
 
 test('with a signing certificate and consent, the client receives the signed receipt', async () => {
