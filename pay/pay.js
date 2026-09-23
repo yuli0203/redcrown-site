@@ -1,12 +1,12 @@
 // Invoice payment page. Hands off to the payment API (workers/pay), which
-// verifies the signed link and returns the provider's hosted checkout URL.
+// verifies the signed link and returns PayPal's checkout URL.
 //
 // Security model (see pay/README.md):
-// - Card data never enters this page. The provider collects it in its own hosted
-//   fields or hosted checkout, which keeps card numbers out of our code.
+// - Card data never enters this page. Clients pay in PayPal's own checkout,
+//   by PayPal or as a guest by card.
 // - Everything here is client-side and therefore untrusted. The Worker checks
-//   the link's signature, so an edited amount is rejected, and only the
-//   provider's signed webhook marks an invoice paid.
+//   the link's signature, so an edited amount is rejected, and only PayPal's
+//   server-side confirmation marks an invoice paid.
 'use strict';
 
 (() => {
@@ -16,11 +16,10 @@
 
   const CURRENCIES = { ILS: 'he-IL', USD: 'en-US', EUR: 'de-DE', GBP: 'en-GB' };
   const INVOICE_RE = /^[A-Z0-9][A-Z0-9-]{2,31}$/;
-  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   const $ = id => document.getElementById(id);
-  const form = $('pay-form');
-  if (!form) return;
+  const grid = $('pay-grid');
+  if (!grid) return;
 
   // The invoice comes only from the signed payment link we send
   // (tools/pay-link.mjs), e.g. /pay/?i=RC-2026-014&a=125000&c=USD&x=<expiry>&s=<sig>.
@@ -39,7 +38,7 @@
     }
   };
   const showProblem = (title, text) => {
-    $('pay-grid').hidden = true;
+    grid.hidden = true;
     $('no-invoice-title').textContent = title;
     $('no-invoice-text').textContent = text;
     $('no-invoice').hidden = false;
@@ -49,50 +48,19 @@
     'This page opens with your invoice details already filled in. Please use the payment link in the invoice email we sent you.');
   if (Number(link.x) * 1000 < Date.now()) return showProblem('This payment link has expired',
     'For your security, payment links are valid for a limited time. Email us and we will send you a new one.');
-  const invoice = { invoice: link.i, amount: Number(link.a) / 100, currency: link.c };
-  const total = new Intl.NumberFormat(CURRENCIES[invoice.currency], { style: 'currency', currency: invoice.currency }).format(invoice.amount);
-  $('sum-invoice').textContent = invoice.invoice;
+
+  const total = new Intl.NumberFormat(CURRENCIES[link.c], { style: 'currency', currency: link.c }).format(Number(link.a) / 100);
+  $('sum-invoice').textContent = link.i;
   $('sum-total').textContent = total;
-  $('pay-btn-label').textContent = 'Pay ' + total;
 
-  const fields = { email: $('email'), name: $('name') };
-  const btn = $('pay-btn');
-  const wallets = [...document.querySelectorAll('.py-wallet')];
+  const buttons = [...document.querySelectorAll('.py-wallet')];
   const status = $('form-status');
-
-  // Apple's guidelines: show Apple Pay only where the device can use it.
-  try {
-    if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
-      document.querySelector('[data-wallet=applepay]').hidden = false;
-    }
-  } catch {}
-
-  const validators = {
-    email: v => EMAIL_RE.test(v.trim()) ? '' : 'Enter a valid email address for your receipt.',
-    name: v => v.trim().length >= 2 ? '' : 'Enter the name on the card.',
-  };
-  const check = key => {
-    const el = fields[key];
-    const msg = validators[key](el.value);
-    $(key + '-err').textContent = msg;
-    if (msg) el.setAttribute('aria-invalid', 'true');
-    else el.removeAttribute('aria-invalid');
-    return !msg;
-  };
-  Object.keys(validators).forEach(key => {
-    const el = fields[key];
-    el.addEventListener('blur', () => { if (el.value) check(key); });
-    el.addEventListener('input', () => { if (el.getAttribute('aria-invalid')) check(key); });
-  });
-
   let busy = false;
   const setBusy = on => {
     busy = on;
-    btn.disabled = on;
-    wallets.forEach(w => { w.disabled = on; });
-    $('pay-btn-label').textContent = on ? 'Processing…' : 'Pay ' + total;
+    buttons.forEach(b => { b.disabled = on; });
+    grid.setAttribute('aria-busy', String(on));
   };
-
   const notice = text => {
     status.classList.add('is-notice');
     status.textContent = text;
@@ -104,21 +72,22 @@
     429: 'Too many attempts. Please wait a minute and try again.',
   };
 
-  const start = async payment => {
+  const start = async method => {
     if (busy) return;
     status.textContent = '';
     status.classList.remove('is-notice');
     if (!API_ORIGIN) {
       notice('Online payments are not enabled yet, so nothing has been charged. ' +
-        'To pay invoice ' + invoice.invoice + ' now, email hello@redcrowninteractive.com for bank transfer details.');
+        'To pay invoice ' + link.i + ' now, email hello@redcrowninteractive.com for bank transfer details.');
       return;
     }
     setBusy(true);
+    status.textContent = 'Opening PayPal secure checkout…';
     try {
       const res = await fetch(API_ORIGIN + '/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ link, ...payment }),
+        body: JSON.stringify({ link, method }),
         credentials: 'omit',
         referrerPolicy: 'no-referrer',
       });
@@ -128,25 +97,20 @@
       if (target.protocol !== 'https:' || !CHECKOUT_HOSTS.includes(target.hostname)) throw new Error('unexpected checkout host');
       location.assign(target.href);
     } catch (e) {
-      notice((ERRORS[e.status] || 'The payment could not be started. You have not been charged. Please try again.'));
+      notice(ERRORS[e.status] || 'The payment could not be started. You have not been charged. Please try again.');
       setBusy(false);
     }
   };
 
-  // Express checkout: one click starts the wallet's own payment flow.
-  wallets.forEach(w => w.addEventListener('click', () => start({ method: w.dataset.wallet })));
+  // One click starts checkout: PayPal login, or PayPal's guest card form.
+  buttons.forEach(b => b.addEventListener('click', () => start(b.dataset.wallet)));
 
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    const results = Object.keys(validators).map(check);
-    if (results.includes(false)) {
-      fields[Object.keys(validators)[results.indexOf(false)]].focus();
-      return;
+  // Returning via the back button from PayPal restores a page with disabled
+  // buttons; re-enable them.
+  window.addEventListener('pageshow', e => {
+    if (e.persisted) {
+      setBusy(false);
+      status.textContent = '';
     }
-    start({ method: 'card', email: fields.email.value.trim(), name: fields.name.value.trim() });
   });
-
-  // Returning via the back button from a hosted checkout restores a page with
-  // disabled buttons; re-enable them.
-  window.addEventListener('pageshow', e => { if (e.persisted) setBusy(false); });
 })();

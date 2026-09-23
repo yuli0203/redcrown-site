@@ -4,6 +4,7 @@ import { sign, verify, toQuery } from '../src/links.js';
 import worker from '../src/index.js';
 import mock from '../src/providers/mock.js';
 import payplus from '../src/providers/payplus.js';
+import paypal from '../src/providers/paypal.js';
 
 const SECRET = 'test-secret-that-is-at-least-32-characters-long';
 const ORIGIN = 'https://redcrowninteractive.com';
@@ -96,4 +97,60 @@ test('payplus: webhook signature check and amount parsing', async () => {
   assert.deepEqual(await payplus.verifyWebhook(signed, raw, env), { ref: 'r', status: 'paid', amountMinor: 125050, currency: 'USD', transactionId: 'u1' });
   const forged = new Request('https://x.test', { method: 'POST', headers: { hash: 'AAAA' } });
   assert.equal(await payplus.verifyWebhook(forged, raw, env), null);
+});
+
+test('return route: captures with the matching order id only', async () => {
+  const env = envFor();
+  const res = await checkout(env, { link: await linkParams(), method: 'paypal' });
+  const { url, ref } = await res.json();
+  const order = new URL(url).searchParams.get('token');
+  const statusOf = async () => (await (await worker.fetch(new Request('https://pay-api.test/status?ref=' + ref), env)).json()).status;
+
+  const wrong = await worker.fetch(new Request(`https://pay-api.test/return/mock?ref=${ref}&token=ORDER-forged`), env);
+  assert.equal(wrong.status, 303);
+  assert.equal(await statusOf(), 'pending');
+
+  const back = await worker.fetch(new Request(`https://pay-api.test/return/mock?ref=${ref}&token=${order}`), env);
+  assert.equal(back.status, 303);
+  assert.equal(back.headers.get('Location'), `${ORIGIN}/pay/success/?ref=${ref}`);
+  assert.equal(await statusOf(), 'paid');
+});
+
+test('paypal: order creation, capture and webhook verification', async () => {
+  const env = { PAYPAL_API_URL: 'https://api-m.sandbox.paypal.com', PAYPAL_CLIENT_ID: 'id', PAYPAL_CLIENT_SECRET: 'sec', PAYPAL_WEBHOOK_ID: 'wh' };
+  const calls = [];
+  const realFetch = globalThis.fetch;
+  let verifyStatus = 'SUCCESS';
+  globalThis.fetch = async (url, init = {}) => {
+    const path = new URL(url).pathname;
+    const body = init.body && init.body !== 'grant_type=client_credentials' ? JSON.parse(init.body) : null;
+    calls.push({ path, body, headers: init.headers });
+    const reply = (data, status = 200) => new Response(JSON.stringify(data), { status });
+    if (path === '/v1/oauth2/token') return reply({ access_token: 'tok' });
+    if (path === '/v2/checkout/orders') return reply({ id: 'ORD1', links: [{ rel: 'payer-action', href: 'https://www.sandbox.paypal.com/checkoutnow?token=ORD1' }] }, 201);
+    if (path === '/v2/checkout/orders/ORD1/capture') return reply({ purchase_units: [{ payments: { captures: [{ id: 'CAP1', status: 'COMPLETED', custom_id: 'r1', amount: { currency_code: 'USD', value: '1250.50' } }] } }] }, 201);
+    if (path === '/v1/notifications/verify-webhook-signature') return reply({ verification_status: verifyStatus });
+    return reply({}, 404);
+  };
+  try {
+    const out = await paypal.createCheckout({ ref: 'r1', invoice: 'RC-2026-014', amountMinor: 125050, currency: 'USD', method: 'card', returnUrl: 'https://w/return', cancelUrl: 'https://s/pay/' }, env);
+    assert.deepEqual(out, { url: 'https://www.sandbox.paypal.com/checkoutnow?token=ORD1', providerRef: 'ORD1' });
+    const order = calls.find(c => c.path === '/v2/checkout/orders').body;
+    assert.equal(order.purchase_units[0].amount.value, '1250.50');
+    assert.equal(order.purchase_units[0].custom_id, 'r1');
+    assert.equal(order.payment_source.paypal.experience_context.landing_page, 'GUEST_CHECKOUT');
+    assert.deepEqual(paypal.checkoutHosts(env), ['www.sandbox.paypal.com']);
+
+    assert.deepEqual(await paypal.capture({ providerRef: 'ORD1' }, env),
+      { ref: 'r1', status: 'paid', amountMinor: 125050, currency: 'USD', transactionId: 'CAP1' });
+
+    const raw = JSON.stringify({ event_type: 'PAYMENT.CAPTURE.COMPLETED', resource: { id: 'CAP1', status: 'COMPLETED', custom_id: 'r1', amount: { currency_code: 'USD', value: '1250.50' } } });
+    const req = new Request('https://x.test', { method: 'POST', headers: { 'paypal-transmission-sig': 'sig', 'paypal-transmission-id': 't', 'paypal-transmission-time': 'now', 'paypal-cert-url': 'https://api.paypal.com/cert', 'paypal-auth-algo': 'SHA256withRSA' } });
+    assert.equal((await paypal.verifyWebhook(req, raw, env)).status, 'paid');
+    verifyStatus = 'FAILURE';
+    assert.equal(await paypal.verifyWebhook(req, raw, env), null);
+    assert.equal(await paypal.verifyWebhook(new Request('https://x.test', { method: 'POST' }), raw, env), null);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
 });

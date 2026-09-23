@@ -16,9 +16,9 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/site.css?v=80359f6ea233">
-<link rel="stylesheet" href="/pay/pay.css?v=724fcc17b2ca">
-<script src="/pay/config.js?v=4ac863462ad7" defer></script>
-<script src="/pay/pay.js?v=c5686e98d02e" defer></script>
+<link rel="stylesheet" href="/pay/pay.css?v=2b703ce334bc">
+<script src="/pay/config.js?v=696eef1320b8" defer></script>
+<script src="/pay/pay.js?v=ffc4c3a2a900" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to payment form</a>
@@ -42,53 +42,19 @@
     </div>
 
     <div class="py-grid" id="pay-grid">
-      <section class="py-card" aria-labelledby="express-h">
-        <!-- Express checkout: each wallet button starts its payment on click. When a
-             provider is connected, its SDK renders the official Apple Pay / Google Pay /
-             PayPal buttons here in place of these brand-standard placeholders. The
-             wallet supplies the payer's name and email, so no form is needed. -->
-        <h2 id="express-h" class="py-sec">Express checkout</h2>
-        <div class="py-express">
-          <button type="button" class="py-wallet" data-wallet="applepay" hidden><span class="py-sr">Pay with </span><img src="/pay/icons/apple-pay-logo.svg" alt="Apple Pay" width="54" height="22"></button>
-          <button type="button" class="py-wallet" data-wallet="googlepay"><span class="py-sr">Pay with </span><img src="/pay/icons/google-pay-logo.svg" alt="Google Pay" width="62" height="25"></button>
+      <section class="py-card" aria-labelledby="pay-h">
+        <!-- PayPal's standard vertical buttons. Both open PayPal's secure checkout;
+             "Debit or Credit Card" opens it on the card form, so no PayPal account
+             is needed. Card details are entered only at PayPal. -->
+        <h2 id="pay-h" class="py-sec">Choose how to pay</h2>
+        <div class="py-buttons">
           <button type="button" class="py-wallet" data-wallet="paypal"><span class="py-sr">Pay with </span><img src="/pay/icons/paypal-monogram.svg" alt="" width="17" height="20"><b>PayPal</b></button>
+          <button type="button" class="py-wallet py-cardbtn" data-wallet="card"><svg class="py-cardicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19M6 15h4"/></svg>Debit or Credit Card</button>
         </div>
-
-        <div class="py-or"><span>Or pay with card</span></div>
-
-        <form id="pay-form" novalidate autocomplete="on">
-          <div class="py-field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-err">
-            <p id="email-err" class="py-err" aria-live="polite"></p>
-          </div>
-
-          <!-- Card details are never typed into elements this page owns. The boxes below
-               are placeholders (divs, not inputs). When a provider is connected, it mounts
-               its hosted card fields into #card-fields: each one is an iframe served from
-               the provider, so card numbers never touch our code or our servers. -->
-          <div class="py-field">
-            <div class="py-label" id="card-label">Card information</div>
-            <div id="card-fields" class="py-hosted" role="group" aria-labelledby="card-label">
-              <div class="py-hf py-hf-number" data-hosted-field="number"><span>1234 1234 1234 1234</span><span class="py-hf-brands" aria-hidden="true"><img src="/pay/icons/visa.svg" alt="" width="30" height="19"><img src="/pay/icons/mastercard.svg" alt="" width="30" height="19"><img src="/pay/icons/amex.svg" alt="" width="30" height="19"></span></div>
-              <div class="py-hf-row">
-                <div class="py-hf" data-hosted-field="expiry">MM / YY</div>
-                <div class="py-hf" data-hosted-field="cvc">CVC</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="py-field">
-            <label for="name">Name on card</label>
-            <input id="name" name="name" type="text" autocomplete="cc-name" maxlength="120" required aria-describedby="name-err">
-            <p id="name-err" class="py-err" aria-live="polite"></p>
-          </div>
-
-          <button id="pay-btn" class="py-btn" type="submit"><svg class="py-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span id="pay-btn-label">Pay</span></button>
-        </form>
+        <p class="py-accepts"><span class="py-marks" aria-hidden="true"><img src="/pay/icons/visa.svg" alt="" width="30" height="19"><img src="/pay/icons/mastercard.svg" alt="" width="30" height="19"><img src="/pay/icons/amex.svg" alt="" width="30" height="19"></span>Visa, Mastercard and Amex from any country. Most cards can pay without a PayPal account.</p>
 
         <p id="form-status" class="py-status" role="status" aria-live="polite"></p>
-        <p class="py-legal">By paying, you agree to our <a href="/legal/#terms" target="_blank" rel="noopener">terms</a> and <a href="/legal/#privacy" target="_blank" rel="noopener">privacy policy</a>. Card details are handled by our payment provider; Red Crown Interactive never sees or stores your card number.</p>
+        <p class="py-legal">By paying, you agree to our <a href="/legal/#terms" target="_blank" rel="noopener">terms</a> and <a href="/legal/#privacy" target="_blank" rel="noopener">privacy policy</a>. Payments are processed securely by PayPal; Red Crown Interactive never sees your card or PayPal login.</p>
       </section>
 
       <aside class="py-card py-summary" aria-labelledby="summary-h">

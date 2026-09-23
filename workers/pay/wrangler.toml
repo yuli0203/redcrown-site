@@ -1,21 +1,22 @@
 # Red Crown payment API. Public repository: no secrets in this file.
 # Secrets are set once with:
 #   npx wrangler secret put PAY_LINK_SECRET
-#   npx wrangler secret put PAYPLUS_API_KEY
-#   npx wrangler secret put PAYPLUS_SECRET_KEY
+#   npx wrangler secret put PAYPAL_CLIENT_ID
+#   npx wrangler secret put PAYPAL_CLIENT_SECRET
 name = "red-crown-pay-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
 [vars]
 ENVIRONMENT = "production"
-PROVIDER = "payplus"
+PROVIDER = "paypal"
 ALLOWED_ORIGIN = "https://redcrowninteractive.com"
 SITE_URL = "https://redcrowninteractive.com"
-# Sandbox until the PayPlus integration is verified; production is
-# https://restapi.payplus.co.il/api/v1.0
-PAYPLUS_API_URL = "https://restapidev.payplus.co.il/api/v1.0"
-PAYPLUS_PAYMENT_PAGE_UID = ""
+# Sandbox until tested end to end; live is https://api-m.paypal.com
+PAYPAL_API_URL = "https://api-m.sandbox.paypal.com"
+# From developer.paypal.com > your app > Webhooks, after adding
+# https://<worker>/webhook/paypal for PAYMENT.CAPTURE.COMPLETED. Not a secret.
+PAYPAL_WEBHOOK_ID = ""
 
 # Create with: npx wrangler kv namespace create PAYMENTS  (then paste the id)
 [[kv_namespaces]]

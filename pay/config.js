@@ -5,6 +5,6 @@
 'use strict';
 self.RC_PAY_CONFIG = Object.freeze({
   apiOrigin: '',
-  // The only hosts the browser may be sent to: the provider's hosted checkout.
-  checkoutHosts: Object.freeze(['payments.payplus.co.il', 'paymentsdev.payplus.co.il']),
+  // The only hosts the browser may be sent to: PayPal's checkout (live, sandbox).
+  checkoutHosts: Object.freeze(['www.paypal.com', 'www.sandbox.paypal.com']),
 });

@@ -16,73 +16,75 @@ committed.
    → `https://redcrowninteractive.com/pay/?i=RC-2026-014&a=125000&c=USD&x=…&s=…`
    The signature (HMAC-SHA256) covers invoice, amount, currency and expiry, so
    changing any of them makes the link invalid. Links expire (30 days by default).
-2. **The client opens it.** The page shows the invoice read-only: express
-   checkout (Apple Pay, Google Pay, PayPal) and "or pay with card".
-3. **They click a method.** The page calls the Worker (`workers/pay`), which
-   verifies the signature and expiry, refuses already-paid invoices, and asks
-   the provider for a hosted checkout for exactly the signed amount. The browser
-   is sent only to the provider's own hosts.
-4. **The provider notifies the Worker** with a signed webhook. Only then, and
-   only if amount and currency match, is the invoice marked paid (idempotent,
-   so retries change nothing).
-5. **The client lands on `/pay/success/`**, which asks the Worker for the
-   status and shows "Payment received" once the webhook has confirmed it.
+2. **The client opens it.** The page shows the invoice read-only and PayPal's
+   standard buttons: **PayPal** and **Debit or Credit Card**.
+3. **They click one.** The page calls the Worker (`workers/pay`), which verifies
+   the signature and expiry, refuses already-paid invoices, and creates a PayPal
+   order for exactly the signed amount. The browser goes to PayPal: to log in,
+   or straight to PayPal's guest card form.
+4. **PayPal sends them back to the Worker,** which captures the payment with our
+   API credentials and records it only if amount and currency match
+   (idempotent, so repeats change nothing). A verified PayPal webhook does the
+   same if the client closes the window before returning.
+5. **The client lands on `/pay/success/`**, which shows "Payment received" once
+   the Worker has recorded it.
 
 ## Security design
 
-- **No card data on our pages, ever.** Card numbers are entered only in the
-  provider's hosted page or fields (PCI DSS SAQ A scope).
+- **No card data on our pages, ever.** Card numbers are entered only at PayPal
+  (PCI DSS SAQ A scope).
 - **The browser is untrusted.** Amounts come from signed links; payment is
-  confirmed only by the provider's signed webhook, never by a redirect.
+  confirmed only server-to-server (our capture call, or a verified webhook),
+  never by a redirect.
 - **Payment pages load only our own files.** No analytics, ad or other
   third-party scripts; strict CSP in each page. On Cloudflare Pages, `_headers`
   adds anti-framing, HSTS, no-store and no-referrer.
 - **Worker:** CORS locked to the site origin, JSON only, 4 KB body limit,
   per-IP rate limit, test provider refused in production.
 
-## Provider: PayPlus
+## Provider: PayPal
 
-Chosen because it accepts Israeli businesses and covers cards (including
-international), Apple Pay, Google Pay and PayPal in one integration, verifies
-callbacks with a signature, and can issue Israeli tax invoices automatically.
-`workers/pay/src/providers/payplus.js` was written from PayPlus's public API
-reference without access to their docs site; **every line marked `VERIFY` must be
-checked against docs.payplus.co.il and tested in their sandbox before going live.**
-
-With PayPlus, card details are entered on PayPlus's secure page (redirect or
-embedded iframe). Before launch, replace the placeholder card boxes in
-`pay/index.html` with PayPlus's embedded page, or turn the card section into
-"email, name, Continue to card payment".
+No monthly fee; PayPal charges per transaction (check PayPal Israel's current
+rates, including cross-border and currency conversion). Clients pay with a
+PayPal account or, via guest checkout, by card without one. PayPal decides per
+buyer whether the guest card form is offered (location, risk, history), so a
+few buyers may be asked to log in or create an account. No Apple Pay or Google
+Pay. `workers/pay/src/providers/payplus.js` remains as an alternative (PayPlus:
+Israeli processor with Apple Pay and Google Pay, monthly fees); it is untested
+and its `VERIFY` lines must be checked before use.
 
 Brand marks in `icons/` come from Shopify's MIT-licensed
 [payment_icons](https://github.com/activemerchant/payment_icons)
-(`icons/LICENSE-payment_icons.txt`); the `*-logo.svg` / `paypal-monogram.svg`
-files are cropped from those.
+(`icons/LICENSE-payment_icons.txt`); `paypal-monogram.svg` is cropped from them.
 
 ## Go-live checklist
 
-1. **PayPlus account:** sign up, get sandbox API key, secret key and payment
-   page UID; ask PayPlus support to enable Apple Pay, Google Pay and PayPal on
-   the page, and to verify the domain for Apple Pay.
-2. **Worker:** in `workers/pay`:
+1. **PayPal business account (Israel):** in Account Settings → Website
+   payments, turn on **PayPal Account Optional** (guest checkout by card).
+2. **PayPal app:** at developer.paypal.com create a REST app; note the sandbox
+   client ID and secret. Create sandbox business and personal test accounts.
+3. **Worker:** in `workers/pay`:
    ```
    npx wrangler kv namespace create PAYMENTS      # paste the id into wrangler.toml
    npx wrangler secret put PAY_LINK_SECRET         # 32+ random characters, e.g. `openssl rand -base64 48`
-   npx wrangler secret put PAYPLUS_API_KEY
-   npx wrangler secret put PAYPLUS_SECRET_KEY
-   # set PAYPLUS_PAYMENT_PAGE_UID in wrangler.toml
+   npx wrangler secret put PAYPAL_CLIENT_ID
+   npx wrangler secret put PAYPAL_CLIENT_SECRET
    npx wrangler deploy
    ```
-3. **Site:** set `apiOrigin` in `pay/config.js` to the Worker URL and add that
+4. **Webhook:** in the PayPal app add `https://<worker>/webhook/paypal` for
+   `PAYMENT.CAPTURE.COMPLETED`; put its webhook ID in `PAYPAL_WEBHOOK_ID` in
+   `wrangler.toml` and redeploy.
+5. **Site:** set `apiOrigin` in `pay/config.js` to the Worker URL, add that
    origin to `connect-src` in the CSP of `pay/index.html` and
-   `pay/success/index.html`. Set `checkoutHosts` to PayPlus's confirmed hosts.
-4. **Sandbox test:** create a link, pay with PayPlus test cards and each wallet,
-   confirm the webhook marks it paid, a tampered link is refused, and a second
-   payment is refused.
-5. **Production:** switch `PAYPLUS_API_URL` to production, update secrets,
-   redeploy, make one small real payment and refund it.
-6. **Privacy policy:** add PayPlus to the third-party services list in
-   `tools/legal-content.cjs` and rebuild the legal pages.
+   `pay/success/index.html`, then run `node tools/stamp_pay_assets.mjs`.
+6. **Sandbox test:** create a link; pay with a sandbox PayPal account and with a
+   test card via Debit or Credit Card; confirm "Payment received", that a
+   tampered link is refused and that a second payment is refused.
+7. **Live:** set `PAYPAL_API_URL` to `https://api-m.paypal.com`, put the live
+   client ID/secret and live webhook ID in place, redeploy, make one small real
+   payment and refund it.
+8. **Privacy policy:** add PayPal as payment processor to the third-party
+   services list in `tools/legal-content.cjs` and rebuild the legal pages.
 
 ## Moving hosting to Cloudflare Pages
 

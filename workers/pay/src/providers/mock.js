@@ -12,7 +12,12 @@ export default {
   testOnly: true,
   checkoutHosts: () => ['checkout.mock.test'],
   async createCheckout(s) {
-    return `https://checkout.mock.test/pay?ref=${s.ref}&method=${s.method}`;
+    const providerRef = 'ORDER-' + s.ref.slice(0, 8);
+    return { url: `https://checkout.mock.test/pay?ref=${s.ref}&method=${s.method}&return=${encodeURIComponent(s.returnUrl)}&token=${providerRef}`, providerRef };
+  },
+  // Pretends the client approved: a completed capture for the session's amount.
+  async capture(session) {
+    return { status: 'paid', amountMinor: session.amountMinor, currency: session.currency, transactionId: 'cap-' + session.providerRef };
   },
   async verifyWebhook(request, raw, env) {
     const given = request.headers.get('x-mock-signature') || '';

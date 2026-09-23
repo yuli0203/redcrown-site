@@ -1,15 +1,17 @@
 // Red Crown payment API (Cloudflare Worker).
 //
 //   POST /checkout          signed link + method -> provider checkout URL
+//   GET  /return/<name>     provider sends the client back; capture, then
+//                           redirect to the success page (providers that need it)
 //   POST /webhook/<name>    provider's signed payment notification
 //   GET  /status?ref=...    paid / pending, for the success page
 //
 // Trust rules:
 // - The amount charged is the amount in a link we signed (links.js), never a
 //   number the browser chose.
-// - An invoice counts as paid only when the provider's signed webhook says so
-//   and its amount and currency match the checkout we created. A redirect back
-//   to the success page proves nothing.
+// - An invoice counts as paid only when the provider says so server-to-server
+//   (a signed webhook, or a capture call made with our credentials) and the
+//   amount and currency match the checkout we created. A redirect proves nothing.
 // - Secrets come from Worker secrets (wrangler secret put). None are in this
 //   public repository.
 import { verify } from './links.js';
@@ -84,26 +86,54 @@ async function checkout(request, env) {
   await env.PAYMENTS.put('session:' + ref, JSON.stringify(session), { expirationTtl: SESSION_TTL });
 
   const p = provider(env);
-  let url;
+  const workerOrigin = new URL(request.url).origin;
+  let url, providerRef;
   try {
-    url = await p.createCheckout({
+    const result = await p.createCheckout({
       ...session, ref, email, name,
       successUrl: `${env.SITE_URL}/pay/success/?ref=${ref}`,
+      returnUrl: `${workerOrigin}/return/${env.PROVIDER}?ref=${ref}`,
       // Cancelling returns the client to the same payment link.
       cancelUrl: `${env.SITE_URL}/pay/?${linkQuery(body.link)}`,
-      callbackUrl: `${new URL(request.url).origin}/webhook/${env.PROVIDER}`,
+      callbackUrl: `${workerOrigin}/webhook/${env.PROVIDER}`,
     }, env);
+    ({ url, providerRef } = typeof result === 'string' ? { url: result } : result);
   } catch (e) {
     console.error('createCheckout failed', e.message);
     return json({ error: 'provider error' }, 502, headers);
   }
+  if (providerRef) {
+    await env.PAYMENTS.put('session:' + ref, JSON.stringify({ ...session, providerRef }), { expirationTtl: SESSION_TTL });
+  }
   // Only ever send the browser to the provider's own pages.
-  const target = new URL(url);
+  let target;
+  try { target = new URL(url); } catch { return json({ error: 'provider error' }, 502, headers); }
   if (target.protocol !== 'https:' || !p.checkoutHosts(env).includes(target.hostname)) {
     console.error('unexpected checkout host', target.hostname);
     return json({ error: 'provider error' }, 502, headers);
   }
   return json({ url: target.href, ref }, 200, headers);
+}
+
+const getSession = async (env, ref) => JSON.parse(await env.PAYMENTS.get('session:' + ref) || 'null');
+
+// Records a provider-confirmed payment. Returns true if the invoice is paid.
+// Idempotent: providers retry, and a repeat must change nothing.
+async function markPaid(env, event) {
+  if (!event || !REF_RE.test(event.ref || '') || event.status !== 'paid') return false;
+  const session = await getSession(env, event.ref);
+  if (!session) return false;
+  if (event.amountMinor !== session.amountMinor || event.currency !== session.currency) {
+    console.error('amount mismatch', event.ref, event.amountMinor, event.currency);
+    return false;
+  }
+  const existing = JSON.parse(await env.PAYMENTS.get('paid:' + session.invoice) || 'null');
+  if (!existing) {
+    const record = { ...session, ref: event.ref, transactionId: event.transactionId, paidAt: Date.now() };
+    await env.PAYMENTS.put('paid:' + session.invoice, JSON.stringify(record));
+  }
+  await env.PAYMENTS.put('session:' + event.ref, JSON.stringify({ ...session, status: 'paid' }), { expirationTtl: SESSION_TTL });
+  return true;
 }
 
 async function webhook(request, env, name) {
@@ -114,31 +144,37 @@ async function webhook(request, env, name) {
 
   const event = await p.verifyWebhook(request, raw, env);
   if (!event) return json({ error: 'invalid signature' }, 401);
-  if (!REF_RE.test(event.ref || '')) return json({ ok: true, ignored: 'no reference' });
+  return json({ ok: true, recorded: await markPaid(env, event) });
+}
 
-  const session = JSON.parse(await env.PAYMENTS.get('session:' + event.ref) || 'null');
-  if (!session) return json({ ok: true, ignored: 'unknown reference' });
-  if (event.status !== 'paid') return json({ ok: true, ignored: event.status });
-  if (event.amountMinor !== session.amountMinor || event.currency !== session.currency) {
-    console.error('amount mismatch', event.ref, event.amountMinor, event.currency);
-    return json({ ok: true, ignored: 'amount mismatch' });
+// The provider sends the client here after they approve. We capture with our
+// own credentials, then send them to the success page, which reads /status.
+async function providerReturn(request, env, name) {
+  const url = new URL(request.url);
+  const ref = url.searchParams.get('ref') || '';
+  const done = Response.redirect(`${env.SITE_URL}/pay/success/?ref=${REF_RE.test(ref) ? ref : ''}`, 303);
+  if (name !== env.PROVIDER || !REF_RE.test(ref)) return done;
+  const p = provider(env);
+  if (!p.capture) return done;
+  const session = await getSession(env, ref);
+  // The provider's order id comes back in the URL; it must be the one we created.
+  const returned = url.searchParams.get('token') || url.searchParams.get('order_id') || '';
+  if (!session || !session.providerRef || returned !== session.providerRef || session.status === 'paid') return done;
+  try {
+    const event = await p.capture(session, env);
+    // If the provider echoes our reference, it must be this checkout's.
+    if (event && (!event.ref || event.ref === ref)) await markPaid(env, { ...event, ref });
+  } catch (e) {
+    console.error('capture failed', e.message);
   }
-
-  // Idempotent: providers retry webhooks, and a repeat must change nothing.
-  const existing = JSON.parse(await env.PAYMENTS.get('paid:' + session.invoice) || 'null');
-  if (!existing) {
-    const record = { ...session, ref: event.ref, transactionId: event.transactionId, paidAt: Date.now() };
-    await env.PAYMENTS.put('paid:' + session.invoice, JSON.stringify(record));
-  }
-  await env.PAYMENTS.put('session:' + event.ref, JSON.stringify({ ...session, status: 'paid' }), { expirationTtl: SESSION_TTL });
-  return json({ ok: true });
+  return done;
 }
 
 async function status(request, env) {
   const headers = cors(request, env) || {};
   const ref = new URL(request.url).searchParams.get('ref') || '';
   if (!REF_RE.test(ref)) return json({ status: 'unknown' }, 400, headers);
-  const session = JSON.parse(await env.PAYMENTS.get('session:' + ref) || 'null');
+  const session = await getSession(env, ref);
   if (!session) return json({ status: 'unknown' }, 404, headers);
   const paid = session.status === 'paid' || !!(await env.PAYMENTS.get('paid:' + session.invoice));
   return json({ status: paid ? 'paid' : 'pending', invoice: session.invoice, amountMinor: session.amountMinor, currency: session.currency }, 200, headers);
@@ -155,6 +191,8 @@ export default {
       }
       if (url.pathname === '/checkout' && request.method === 'POST') return await checkout(request, env);
       if (url.pathname === '/status' && request.method === 'GET') return await status(request, env);
+      const back = url.pathname.match(/^\/return\/([a-z]+)$/);
+      if (back && request.method === 'GET') return await providerReturn(request, env, back[1]);
       const hook = url.pathname.match(/^\/webhook\/([a-z]+)$/);
       if (hook && request.method === 'POST') return await webhook(request, env, hook[1]);
       return json({ error: 'not found' }, 404);
