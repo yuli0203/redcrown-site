@@ -4,9 +4,13 @@ Invoice payment page. **Not connected to any payment provider yet**: `PROVIDER` 
 `pay.js` is `null`, so a valid submission only shows a notice. Nothing is sent or
 charged.
 
-Invoice links can prefill the form:
-`/pay/?invoice=RC-2026-014&amount=1250&currency=USD` (ILS, USD, EUR, GBP). The query is
-validated, then removed from the address bar.
+Clients never type invoice details. Each invoice email carries a payment link,
+`/pay/?invoice=RC-2026-014&amount=1250&currency=USD` (ILS, USD, EUR, GBP), and the
+page shows those details read-only. Opened without a valid link, the page asks
+the client to use the link from their invoice. Anyone can edit a link, so the
+backend must charge the amount on record for the invoice. Once a backend exists,
+the link can carry a single opaque token instead, with the details looked up
+server-side.
 
 ## Security design
 
@@ -23,12 +27,25 @@ validated, then removed from the address bar.
   rest of the site loads — third-party JS on a payment page can read the form.
 - `noindex`, `no-referrer`, and not listed in `sitemap.xml`.
 
-## Payment methods
+## Layout and payment methods
 
-The page offers Card, PayPal, Google Pay and Apple Pay. The card boxes are
-placeholders (divs, not inputs); the provider's hosted fields replace them in
-`#card-fields`. Whether each method actually works depends on the provider:
-it must support the merchant's country, and Apple Pay also needs the domain
+Standard checkout layout: order summary ("Pay Red Crown Interactive", amount,
+invoice) on the left, payment on the right.
+
+- **Express checkout:** Apple Pay, Google Pay and PayPal buttons in their
+  brand-standard styles (white Apple Pay / Google Pay on a dark background, PayPal
+  gold). One click starts that wallet's flow; the wallet supplies the payer's
+  name and email. Apple Pay appears only on devices that support it, per Apple's
+  guidelines. When a provider is connected, its SDK renders the official buttons.
+- **Or pay with card:** email, card information, name on card, and a
+  "Pay <amount>" button. The card boxes are placeholders (divs, not inputs); the
+  provider's hosted fields replace them in `#card-fields`.
+
+Brand marks in `icons/` come from Shopify's MIT-licensed
+[payment_icons](https://github.com/activemerchant/payment_icons)
+(`icons/LICENSE-payment_icons.txt`); the `*-logo.svg` / `paypal-monogram.svg`
+files are cropped from those. Whether each method works depends on the
+provider supporting the merchant's country; Apple Pay also needs the domain
 verified with Apple through the provider.
 
 ## Connecting a provider (later)

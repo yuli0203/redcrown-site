@@ -1,4 +1,8 @@
+[hidden]{display:none!important}
+.py-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
 .py-wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+@media(max-width:480px){.py-wrap{padding:0 16px}}
 .py-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
 .py-brand{display:flex;min-width:0;align-items:center;gap:10px;font-family:var(--brand);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase}
 .py-brand img{width:34px;height:34px}
@@ -7,73 +11,72 @@
 .py-lock{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 .py-main{padding:34px 0 20px}
-.py-main h1{font-family:var(--display);font-size:clamp(1.5rem,4vw,2rem);margin-bottom:6px}
-.py-lede{color:var(--dim);font-size:.95rem;margin-bottom:28px}
 .py-main a{color:var(--hot-text)}
 .py-main a:hover{text-decoration:underline}
 
-.py-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
-@media(max-width:820px){.py-grid{grid-template-columns:minmax(0,1fr)}.py-summary{order:-1}}
+/* Standard checkout layout: order summary left, payment right; stacked on phones. */
+.py-grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;align-items:start}
+.py-summary{order:-1}
+@media(max-width:820px){.py-grid{grid-template-columns:minmax(0,1fr)}}
 .py-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px}
 @media(max-width:480px){.py-card{padding:20px 16px}}
 
-fieldset{border:0;margin:0 0 22px;min-width:0}
-legend{font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bone);margin-bottom:14px}
+.py-merchant{display:flex;align-items:center;gap:10px;font-size:.92rem;font-weight:600;color:var(--dim)}
+.py-merchant img{width:28px;height:28px}
+.py-amount-big{font-family:var(--display);font-weight:700;font-size:2.2rem;line-height:1.2;margin:10px 0 16px}
+.py-summary dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:.88rem}
+.py-summary dt{color:var(--dim)}
+.py-summary dd{text-align:end;overflow-wrap:anywhere}
+.py-help{font-size:.8rem;color:var(--dim);margin-top:16px}
+
+.py-sec{font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+
+/* Wallet buttons follow each brand's conventions on dark backgrounds: white
+   Apple Pay and Google Pay buttons, PayPal gold. */
+.py-express{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+@media(max-width:560px){.py-express{grid-template-columns:1fr}}
+.py-wallet{display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;border:0;border-radius:8px;background:#fff;cursor:pointer;font:500 1.05rem var(--body);color:#2C2E2F}
+.py-wallet:hover{filter:brightness(.94)}
+.py-wallet:disabled{opacity:.6;cursor:not-allowed}
+.py-wallet[data-wallet=applepay] img{height:22px;width:auto}
+.py-wallet[data-wallet=googlepay] img{height:25px;width:auto}
+.py-wallet[data-wallet=paypal]{background:#FFC439}
+.py-wallet[data-wallet=paypal]:hover{background:#F2BA36;filter:none}
+.py-wallet[data-wallet=paypal] b{font-weight:700;font-style:italic;color:#003087}
+
+.py-or{display:flex;align-items:center;gap:12px;margin:24px 0 20px;color:var(--dim);font-size:.82rem}
+.py-or::before,.py-or::after{content:"";flex:1;height:1px;background:rgba(240,234,228,.14)}
+
 .py-field{margin-bottom:16px}
-.py-field label{display:block;font-size:.84rem;font-weight:600;margin-bottom:6px}
-.py-field input[type=text],.py-field input[type=email],.py-field select{
-  width:100%;font:inherit;font-size:1rem;color:var(--bone);background:var(--panel-2);
-  border:1px solid rgba(240,234,228,.18);border-radius:10px;padding:11px 13px;min-height:46px}
-.py-field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-inline-end:34px}
-.py-field input:focus,.py-field select:focus{outline:2px solid var(--hot);outline-offset:1px;border-color:transparent}
+.py-field label,.py-label{display:block;font-size:.84rem;font-weight:600;margin-bottom:6px}
+.py-field input{width:100%;font:inherit;font-size:1rem;color:var(--bone);background:var(--panel-2);border:1px solid rgba(240,234,228,.18);border-radius:10px;padding:11px 13px;min-height:46px}
+.py-field input:focus{outline:2px solid var(--hot);outline-offset:1px;border-color:transparent}
 .py-field input[aria-invalid=true]{border-color:var(--hot-text)}
-.py-row{display:flex;gap:12px}
-.py-amount{flex:1 1 auto;min-width:0}
-.py-currency{flex:0 0 118px}
-.py-hint{color:var(--dim);font-size:.78rem;margin-top:5px}
 .py-err{color:var(--hot-text);font-size:.8rem;margin-top:5px}
 .py-err:empty{display:none}
 
-.py-provider{display:flex;gap:12px;align-items:flex-start;background:var(--panel-2);border:1px dashed rgba(240,234,228,.22);border-radius:10px;padding:14px;color:var(--dim);font-size:.86rem;line-height:1.55}
-.py-provider .py-lock{margin-top:3px;color:var(--bone)}
+/* Placeholder for the provider's hosted card fields: one grouped box, number on
+   top, expiry and CVC below, the usual card-form arrangement. */
+.py-hosted{border:1px solid rgba(240,234,228,.18);border-radius:10px;background:var(--panel-2);overflow:hidden}
+.py-hf{min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 13px;color:rgba(168,157,160,.6);font-size:1rem;letter-spacing:.03em;user-select:none}
+.py-hf-number{border-bottom:1px solid rgba(240,234,228,.18)}
+.py-hf-row{display:grid;grid-template-columns:1fr 1fr}
+.py-hf-row .py-hf:first-child{border-inline-end:1px solid rgba(240,234,228,.18)}
+.py-hf-brands{display:flex;gap:4px;flex:none}
+.py-hf-brands img{width:30px;height:auto;display:block}
+@media(max-width:380px){.py-hf-brands img:nth-child(n+2){display:none}}
 
-.py-check{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start}
-.py-check input{width:18px;height:18px;margin-top:3px;accent-color:var(--hot)}
-.py-check label{font-weight:400;font-size:.84rem;color:var(--dim);margin:0}
-.py-check .py-err{grid-column:2}
-
-.py-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:50px;font-family:var(--display);font-weight:600;font-size:.92rem;letter-spacing:.06em;color:#fff;background:var(--hot);border:0;border-radius:12px;cursor:pointer;transition:filter .15s ease}
+.py-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:50px;margin-top:6px;font-family:var(--display);font-weight:600;font-size:1rem;letter-spacing:.04em;color:#fff;background:var(--hot);border:0;border-radius:10px;cursor:pointer;transition:filter .15s ease}
 .py-btn:hover{filter:brightness(1.12)}
 .py-btn:disabled{opacity:.6;cursor:not-allowed;filter:none}
-.py-status{font-size:.86rem;color:var(--dim);margin-top:12px;text-align:center}
+.py-status{font-size:.86rem;margin-top:14px}
 .py-status:empty{display:none}
-.py-status.is-notice{color:var(--bone);background:var(--panel-2);border:1px solid rgba(240,234,228,.18);border-radius:10px;padding:12px;text-align:start}
+.py-status.is-notice{color:var(--bone);background:var(--panel-2);border:1px solid rgba(240,234,228,.18);border-radius:10px;padding:12px}
+.py-legal{font-size:.76rem;line-height:1.55;color:var(--dim);margin-top:16px;text-align:center}
 
-.py-summary h2{font-family:var(--display);font-size:1.05rem;margin-bottom:14px}
-.py-summary dl div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.88rem}
-.py-summary dt{color:var(--dim)}
-.py-summary dd{text-align:end;overflow-wrap:anywhere}
-.py-total{font-weight:700;font-size:1rem!important;border-bottom:0!important}
-.py-total dd{font-family:var(--display);font-size:1.15rem}
-.py-trust{list-style:none;margin:16px 0;font-size:.8rem;color:var(--dim)}
-.py-trust li{padding-inline-start:18px;position:relative;margin-bottom:6px}
-.py-trust li::before{content:"";position:absolute;inset-inline-start:2px;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--hot)}
-.py-help{font-size:.8rem;color:var(--dim)}
-
+.py-empty{max-width:560px}
+.py-empty h2{font-family:var(--display);font-size:1.1rem;margin-bottom:10px}
+.py-empty p{color:var(--dim);font-size:.92rem;margin-bottom:10px}
 .py-alert{background:var(--panel-2);border:1px solid var(--hot);border-radius:10px;padding:12px;margin-bottom:20px;font-size:.88rem}
 .py-foot{border-top:1px solid var(--line);color:var(--dim);font-size:.78rem;text-align:center;padding:22px 0 30px;margin-top:20px}
 .py-foot a:hover{color:var(--hot-text)}
-
-.py-methods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}
-@media(max-width:560px){.py-methods{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.py-method{position:relative;display:flex;align-items:center;justify-content:center;min-height:46px;padding:8px;text-align:center;font-size:.84rem;font-weight:600;background:var(--panel-2);border:1px solid rgba(240,234,228,.18);border-radius:10px;cursor:pointer}
-.py-method input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-.py-method:has(input:checked){border-color:var(--hot);box-shadow:inset 0 0 0 1px var(--hot);background:rgba(200,16,46,.1)}
-.py-method:has(input:focus-visible){outline:2px solid var(--hot);outline-offset:2px}
-.py-panel[hidden]{display:none}
-.py-hosted{background:var(--panel-2);border:1px dashed rgba(240,234,228,.22);border-radius:10px;padding:14px}
-.py-hf-label{font-size:.8rem;font-weight:600;margin-bottom:5px}
-.py-hf{min-height:44px;display:flex;align-items:center;padding:0 12px;margin-bottom:12px;border:1px solid rgba(240,234,228,.14);border-radius:8px;background:var(--black);color:rgba(168,157,160,.6);font-size:.95rem;letter-spacing:.04em;user-select:none}
-.py-hf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.py-hf-note{display:flex;gap:9px;align-items:flex-start;font-size:.78rem;line-height:1.5;color:var(--dim);margin-top:2px}
-.py-hf-note .py-lock{margin-top:2px;color:var(--bone)}
