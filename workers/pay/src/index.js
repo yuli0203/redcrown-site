@@ -1,54 +1,33 @@
 // Red Crown payment API (Cloudflare Worker).
 //
-//   POST /checkout          signed link + method -> provider checkout URL
-//   GET  /return/<name>     provider sends the client back; capture, then
-//                           redirect to the success page (providers that need it)
-//   POST /webhook/<name>    provider's signed payment notification
-//   GET  /status?ref=...    paid / duplicate / already_paid / pending, for the
-//                           success page
+//   POST /checkout          signed link + method + consent -> PayPal checkout URL
+//   GET  /return/<name>     PayPal sends the client back; claim, capture,
+//                           issue the receipt, redirect to the success page
+//   POST /webhook/<name>    PayPal's signed payment notification (backup)
+//   GET  /status?ref=...    paid / duplicate / already_paid / pending
+//   /admin...               your document generator (admin.js)
 //
 // Trust rules:
-// - The amount charged is the amount in a link we signed (links.js), never a
-//   number the browser chose.
-// - An invoice counts as paid only when the provider says so server-to-server
-//   (a signed webhook, or a capture call made with our credentials) and the
-//   amount and currency match the checkout we created. A redirect proves nothing.
-// - One payment per invoice: checkout refuses paid invoices, and the return
-//   route does not capture when another checkout paid first. If two captures
-//   still race, the second is stored as a duplicate and emailed for refund.
+// - The amount charged is the amount of a payment request in the ledger, via a
+//   link we signed (links.js), never a number the browser chose.
+// - An invoice counts as paid only when PayPal says so server-to-server (our
+//   capture call, or a verified webhook) and amount and currency match.
+// - One payment per request: before capturing, the checkout claims the request
+//   in the ledger (a Durable Object, so claims cannot race). A second checkout
+//   for a paid request is never captured, so the client is not charged.
 // - Secrets come from Worker secrets (wrangler secret put). None are in this
 //   public repository.
 import { verify } from './links.js';
 import { providers } from './providers/index.js';
-import { notify } from './notify.js';
+import { ledger } from './business.js';
+import { issueReceipt, duplicateAlert, receiptFailedAlert, today } from './receipts.js';
+import { admin } from './admin.js';
+import { json, baseHeaders, cors, readBody } from './http.js';
 
-const METHODS = ['card', 'paypal', 'googlepay', 'applepay'];
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const METHODS = ['card', 'paypal'];
 const REF_RE = /^[0-9a-f-]{36}$/;
-const MAX_BODY = 4096;
 const SESSION_TTL = 60 * 60 * 24 * 7;  // a checkout reference lives a week
-
-const baseHeaders = {
-  'Cache-Control': 'no-store',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-};
-
-const json = (body, status = 200, extra = {}) =>
-  new Response(JSON.stringify(body), { status, headers: { ...baseHeaders, 'Content-Type': 'application/json', ...extra } });
-
-const cors = (request, env) => {
-  const origin = request.headers.get('Origin');
-  return origin && origin === env.ALLOWED_ORIGIN
-    ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' }
-    : null;
-};
-
-const readBody = async request => {
-  const text = await request.text();
-  if (text.length > MAX_BODY) throw new Error('body too large');
-  return text;
-};
+export const CONSENT_TEXT = 'I agree to receive receipts and other tax documents from Red Crown Interactive digitally, by email.';
 
 const provider = env => {
   const p = providers[env.PROVIDER];
@@ -58,6 +37,8 @@ const provider = env => {
 };
 
 const linkQuery = l => new URLSearchParams({ i: l.i, a: l.a, c: l.c, x: l.x, s: l.s }).toString();
+const getSession = async (env, ref) => JSON.parse(await env.PAYMENTS.get('session:' + ref) || 'null');
+const putSession = (env, ref, session) => env.PAYMENTS.put('session:' + ref, JSON.stringify(session), { expirationTtl: SESSION_TTL });
 
 async function checkout(request, env) {
   const headers = cors(request, env);
@@ -80,22 +61,28 @@ async function checkout(request, env) {
 
   const method = body.method;
   if (!METHODS.includes(method)) return json({ error: 'invalid method' }, 400, headers);
-  const email = typeof body.email === 'string' ? body.email.trim().slice(0, 254) : '';
-  const name = typeof body.name === 'string' ? body.name.trim().slice(0, 120) : '';
-  if (email && !EMAIL_RE.test(email)) return json({ error: 'invalid email' }, 400, headers);
 
-  if (await env.PAYMENTS.get('paid:' + link.invoice)) return json({ error: 'already paid' }, 409, headers);
+  // The link must match a payment request we issued, still open.
+  const l = ledger(env);
+  const pr = await l.getRequest(link.invoice);
+  if (!pr || pr.amountMinor !== link.amountMinor || pr.currency !== link.currency) return json({ error: 'invalid link' }, 400, headers);
+  if (pr.status === 'paid' || await l.invoiceHolder(link.invoice)) return json({ error: 'already paid' }, 409, headers);
+  if (pr.status !== 'open') return json({ error: 'link expired' }, 410, headers);
+
+  const consent = body.consent === true
+    ? { given: true, at: new Date().toISOString(), via: 'checkbox on the payment page', text: CONSENT_TEXT }
+    : { given: false };
 
   const ref = crypto.randomUUID();
-  const session = { invoice: link.invoice, amountMinor: link.amountMinor, currency: link.currency, method, created: Date.now() };
-  await env.PAYMENTS.put('session:' + ref, JSON.stringify(session), { expirationTtl: SESSION_TTL });
+  const session = { invoice: link.invoice, amountMinor: link.amountMinor, currency: link.currency, method, consent, created: Date.now() };
+  await putSession(env, ref, session);
 
   const p = provider(env);
   const workerOrigin = new URL(request.url).origin;
   let url, providerRef;
   try {
     const result = await p.createCheckout({
-      ...session, ref, email, name,
+      ...session, ref, email: pr.client.email || '', name: pr.client.name,
       successUrl: `${env.SITE_URL}/pay/success/?ref=${ref}`,
       returnUrl: `${workerOrigin}/return/${env.PROVIDER}?ref=${ref}`,
       // Cancelling returns the client to the same payment link.
@@ -107,9 +94,7 @@ async function checkout(request, env) {
     console.error('createCheckout failed', e.message);
     return json({ error: 'provider error' }, 502, headers);
   }
-  if (providerRef) {
-    await env.PAYMENTS.put('session:' + ref, JSON.stringify({ ...session, providerRef }), { expirationTtl: SESSION_TTL });
-  }
+  if (providerRef) await putSession(env, ref, { ...session, providerRef });
   // Only ever send the browser to the provider's own pages.
   let target;
   try { target = new URL(url); } catch { return json({ error: 'provider error' }, 502, headers); }
@@ -120,21 +105,7 @@ async function checkout(request, env) {
   return json({ url: target.href, ref }, 200, headers);
 }
 
-const getSession = async (env, ref) => JSON.parse(await env.PAYMENTS.get('session:' + ref) || 'null');
-const getPaid = async (env, invoice) => JSON.parse(await env.PAYMENTS.get('paid:' + invoice) || 'null');
-const putSession = (env, ref, session) =>
-  env.PAYMENTS.put('session:' + ref, JSON.stringify(session), { expirationTtl: SESSION_TTL });
-
-// Details the provider may add to a confirmed payment, kept for the receipt.
-const RECEIPT_FIELDS = ['transactionId', 'payerName', 'payerEmail', 'feeMinor', 'netMinor'];
-const receiptFields = event => Object.fromEntries(RECEIPT_FIELDS
-  .filter(k => event[k] !== undefined && event[k] !== null && event[k] !== '' && !Number.isNaN(event[k]))
-  .map(k => [k, event[k]]));
-
-// Records a provider-confirmed payment. Returns 'paid', 'duplicate' or null.
-// Idempotent: providers retry, and a repeat changes nothing and notifies once.
-// A confirmed payment for an invoice that another checkout already paid is a
-// duplicate: money was taken twice, so it is stored separately and alerted.
+// Records a provider-confirmed payment and, the first time, issues the receipt.
 async function markPaid(env, event, defer) {
   if (!event || !REF_RE.test(event.ref || '') || event.status !== 'paid') return null;
   const session = await getSession(env, event.ref);
@@ -143,21 +114,51 @@ async function markPaid(env, event, defer) {
     console.error('amount mismatch', event.ref, event.amountMinor, event.currency);
     return null;
   }
-  if (session.status === 'paid' || session.status === 'duplicate') return session.status;
-
-  const record = { invoice: session.invoice, amountMinor: session.amountMinor, currency: session.currency,
-    method: session.method, ref: event.ref, ...receiptFields(event), paidAt: Date.now() };
-  const existing = await getPaid(env, session.invoice);
-  if (existing && existing.ref !== event.ref) {
-    await env.PAYMENTS.put('duplicate:' + event.ref, JSON.stringify({ ...record, firstRef: existing.ref }));
-    await putSession(env, event.ref, { ...session, status: 'duplicate' });
-    defer(notify(env, 'duplicate', record, { firstTransactionId: existing.transactionId }));
-    return 'duplicate';
+  const l = ledger(env);
+  const payment = {
+    amountMinor: event.amountMinor, currency: event.currency, transactionId: event.transactionId,
+    payerName: event.payerName, payerEmail: event.payerEmail, feeMinor: event.feeMinor, netMinor: event.netMinor,
+    method: session.method, consent: session.consent, paidOn: today(),
+  };
+  const { status, first } = await l.recordPayment(session.invoice, event.ref, payment);
+  if (!first) return status;
+  if (status === 'duplicate') {
+    defer(duplicateAlert(env, session.invoice, event.ref, payment));
+    return status;
   }
-  if (!existing) await env.PAYMENTS.put('paid:' + session.invoice, JSON.stringify(record));
-  await putSession(env, event.ref, { ...session, status: 'paid' });
-  if (!existing) defer(notify(env, 'paid', record));
-  return 'paid';
+  // The receipt is built and emailed after the response, so the client is not
+  // kept waiting on PDF generation.
+  defer(receiptFor(env, session.invoice, payment));
+  return status;
+}
+
+// What the payment was for (מהות התקבול): the request and its line items.
+export function receiptDescription(pr) {
+  const head = pr.lang === 'he' ? `תשלום עבור חשבון עסקה ${pr.number}` : `Payment for payment request ${pr.number}`;
+  const what = pr.items.map(it => it.description).join('; ');
+  const text = `${head}: ${what}`;
+  return text.length > 300 ? text.slice(0, 299) + '…' : text;
+}
+
+// Issues the receipt for an online payment. Also used by the admin page to
+// retry when it failed (for example before the business details were set).
+export async function receiptFor(env, invoice, payment) {
+  const l = ledger(env);
+  try {
+    const pr = await l.getRequest(invoice);
+    return await issueReceipt(env, {
+      requestNumber: pr.number, lang: pr.lang, client: pr.client,
+      description: receiptDescription(pr),
+      currency: pr.currency, amountMinor: pr.amountMinor, paidOn: payment.paidOn || today(),
+      method: payment.method === 'card' ? 'card' : 'paypal',
+      methodDetails: { transactionId: payment.transactionId, payerEmail: payment.payerEmail },
+      consent: payment.consent, payment,
+    });
+  } catch (e) {
+    console.error('receipt failed', invoice, e.message);
+    await receiptFailedAlert(env, invoice, e.message);
+    return null;
+  }
 }
 
 async function webhook(request, env, name, defer) {
@@ -165,14 +166,14 @@ async function webhook(request, env, name, defer) {
   const p = provider(env);
   let raw;
   try { raw = await readBody(request); } catch { return json({ error: 'bad request' }, 400); }
-
   const event = await p.verifyWebhook(request, raw, env);
   if (!event) return json({ error: 'invalid signature' }, 401);
   return json({ ok: true, recorded: await markPaid(env, event, defer) });
 }
 
-// The provider sends the client here after they approve. We capture with our
-// own credentials, then send them to the success page, which reads /status.
+// PayPal sends the client here after they approve. We claim the request,
+// capture with our own credentials, record the payment and issue the receipt,
+// then send them to the success page, which reads /status.
 async function providerReturn(request, env, name, defer) {
   const url = new URL(request.url);
   const ref = url.searchParams.get('ref') || '';
@@ -184,46 +185,49 @@ async function providerReturn(request, env, name, defer) {
   // The provider's order id comes back in the URL; it must be the one we created.
   const returned = url.searchParams.get('token') || url.searchParams.get('order_id') || '';
   if (!session || !session.providerRef || returned !== session.providerRef || session.status) return done;
-  // Paid meanwhile through another checkout (a second tab, an old link): do not
-  // capture. The approved order is never collected, so the client is not charged.
-  const paid = await getPaid(env, session.invoice);
-  if (paid && paid.ref !== ref) {
+
+  const l = ledger(env);
+  if (await l.paymentStatus(ref)) return done;          // already recorded (refresh)
+  const claim = await l.claim(session.invoice, ref);
+  if (!claim.ok) {
+    // Paid through another checkout, or cancelled: never capture, so the
+    // approved order is not collected and the client is not charged.
     await putSession(env, ref, { ...session, status: 'not_captured' });
     return done;
   }
+  let event = null;
   try {
-    const event = await p.capture(session, env);
-    // If the provider echoes our reference, it must be this checkout's.
-    if (event && (!event.ref || event.ref === ref)) await markPaid(env, { ...event, ref }, defer);
+    event = await p.capture(session, env);
   } catch (e) {
     console.error('capture failed', e.message);
+  }
+  // If the provider echoes our reference, it must be this checkout's.
+  if (event && event.status === 'paid' && (!event.ref || event.ref === ref)) {
+    await markPaid(env, { ...event, ref }, defer);
+  } else {
+    await l.release(session.invoice, ref);
   }
   return done;
 }
 
-// paid: this checkout paid the invoice. duplicate: this checkout paid an invoice
-// that was already paid (to be refunded). already_paid: the invoice was paid
-// elsewhere and this checkout was not charged. pending: nothing confirmed yet.
 async function status(request, env) {
   const headers = cors(request, env) || {};
   const ref = new URL(request.url).searchParams.get('ref') || '';
   if (!REF_RE.test(ref)) return json({ status: 'unknown' }, 400, headers);
   const session = await getSession(env, ref);
   if (!session) return json({ status: 'unknown' }, 404, headers);
-  let state = { paid: 'paid', duplicate: 'duplicate', not_captured: 'already_paid' }[session.status];
-  if (!state) {
-    const paid = await getPaid(env, session.invoice);
-    state = !paid ? 'pending' : paid.ref === ref ? 'paid' : 'already_paid';
-  }
+  let state = await ledger(env).paymentStatus(ref);
+  if (!state) state = session.status === 'not_captured' ? 'already_paid' : 'pending';
   return json({ status: state, invoice: session.invoice, amountMinor: session.amountMinor, currency: session.currency }, 200, headers);
 }
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    // Notifications run after the response is sent.
+    // Work that runs after the response (receipts, emails).
     const defer = promise => (ctx?.waitUntil ? ctx.waitUntil(promise) : promise);
     try {
+      if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) return await admin(request, env, ctx);
       if (request.method === 'OPTIONS') {
         const headers = cors(request, env);
         if (!headers) return new Response(null, { status: 403, headers: baseHeaders });
@@ -242,4 +246,3 @@ export default {
     }
   },
 };
-

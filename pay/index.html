@@ -12,13 +12,13 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E080A">
 <title>Secure Payment | Red Crown Interactive</title>
-<meta name="description" content="Pay a Red Crown Interactive invoice securely.">
+<meta name="description" content="Pay a Red Crown Interactive payment request securely.">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/site.css?v=80359f6ea233">
-<link rel="stylesheet" href="/pay/pay.css?v=2b703ce334bc">
+<link rel="stylesheet" href="/pay/pay.css?v=7ce1dd73d10f">
 <script src="/pay/config.js?v=696eef1320b8" defer></script>
-<script src="/pay/pay.js?v=c88ffc9ec158" defer></script>
+<script src="/pay/pay.js?v=b6ac9eb4a485" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to payment form</a>
@@ -29,15 +29,15 @@
   </header>
 
   <main id="main" tabindex="-1" class="py-main">
-    <h1 class="py-sr">Pay an invoice</h1>
+    <h1 class="py-sr">Pay a payment request</h1>
     
     <noscript><p class="py-alert" role="alert">This page needs JavaScript to process a payment. To pay by bank transfer instead, email <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a>.</p></noscript>
 
-    <!-- Shown when the page is opened without a valid invoice link. Invoice details
+    <!-- Shown when the page is opened without a valid payment link. Payment details
          always come from the link we send; clients never type them. -->
     <div id="no-invoice" class="py-card py-empty" hidden>
-      <h2 id="no-invoice-title">Use the payment link from your invoice</h2>
-      <p id="no-invoice-text">This page opens with your invoice details already filled in. Please use the payment link in the invoice email we sent you.</p>
+      <h2 id="no-invoice-title">Use the link from your payment request</h2>
+      <p id="no-invoice-text">This page opens with your payment details already filled in. Please use the link in the payment request we emailed you.</p>
       <p>Need a new link? Email <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a> and we'll send it again.</p>
     </div>
 
@@ -47,6 +47,7 @@
              "Debit or Credit Card" opens it on the card form, so no PayPal account
              is needed. Card details are entered only at PayPal. -->
         <h2 id="pay-h" class="py-sec">Choose how to pay</h2>
+        <label class="py-consent"><input type="checkbox" id="consent"><span>Email me the receipt. I agree to receive receipts and other tax documents from Red Crown Interactive digitally, by email.</span></label>
         <div class="py-buttons">
           <button type="button" class="py-wallet" data-wallet="paypal"><span class="py-sr">Pay with </span><img src="/pay/icons/paypal-monogram.svg" alt="" width="17" height="20"><b>PayPal</b></button>
           <button type="button" class="py-wallet py-cardbtn" data-wallet="card"><svg class="py-cardicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19M6 15h4"/></svg>Debit or Credit Card</button>
@@ -61,9 +62,9 @@
         <p class="py-merchant"><img src="/assets/redcrown-primary.svg" alt="" width="28" height="28"><span id="summary-h">Pay Red Crown Interactive</span></p>
         <p class="py-amount-big" id="sum-total">—</p>
         <dl>
-          <div><dt>Invoice</dt><dd id="sum-invoice">—</dd></div>
+          <div><dt>Payment request</dt><dd id="sum-invoice">—</dd></div>
         </dl>
-        <p class="py-help">Questions about this invoice? <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></p>
+        <p class="py-help">Questions about this payment? <a href="mailto:hello@redcrowninteractive.com">hello@redcrowninteractive.com</a></p>
       </aside>
     </div>
   </main>

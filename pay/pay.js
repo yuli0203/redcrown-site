@@ -1,4 +1,4 @@
-// Invoice payment page. Hands off to the payment API (workers/pay), which
+// Payment request page. Hands off to the payment API (workers/pay), which
 // verifies the signed link and returns PayPal's checkout URL.
 //
 // Security model (see pay/README.md):
@@ -6,7 +6,7 @@
 //   by PayPal or as a guest by card.
 // - Everything here is client-side and therefore untrusted. The Worker checks
 //   the link's signature, so an edited amount is rejected, and only PayPal's
-//   server-side confirmation marks an invoice paid.
+//   server-side confirmation marks a request paid.
 'use strict';
 
 (() => {
@@ -40,8 +40,8 @@
     return;
   }
 
-  // The invoice comes only from the signed payment link we send
-  // (tools/pay-link.mjs), e.g. /pay/?i=RC-2026-014&a=125000&c=USD&x=<expiry>&s=<sig>.
+  // The payment request comes only from the signed link we send (the admin
+  // page creates it), e.g. /pay/?i=PR-0001&a=125000&c=USD&x=<expiry>&s=<sig>.
   // The page can't check the signature (only the Worker holds the secret), so it
   // checks the format here and the Worker rejects anything altered.
   // Values are only ever written with .textContent.
@@ -63,8 +63,8 @@
     $('no-invoice').hidden = false;
   };
   const link = readLink();
-  if (!link) return showProblem('Use the payment link from your invoice',
-    'This page opens with your invoice details already filled in. Please use the payment link in the invoice email we sent you.');
+  if (!link) return showProblem('Use the link from your payment request',
+    'This page opens with your payment details already filled in. Please use the link in the payment request we emailed you.');
   if (Number(link.x) * 1000 < Date.now()) return showProblem('This payment link has expired',
     'For your security, payment links are valid for a limited time. Email us and we will send you a new one.');
 
@@ -86,8 +86,8 @@
   };
   const ERRORS = {
     400: 'This payment link is not valid. Please use the link from your invoice email.',
-    409: 'This invoice has already been paid. Thank you!',
-    410: 'This payment link has expired. Email us and we will send a new one.',
+    409: 'This payment request has already been paid. Thank you!',
+    410: 'This payment link has expired or was cancelled. Email us and we will send a new one.',
     429: 'Too many attempts. Please wait a minute and try again.',
   };
 
@@ -97,7 +97,7 @@
     status.classList.remove('is-notice');
     if (!API_ORIGIN) {
       notice('Online payments are not enabled yet, so nothing has been charged. ' +
-        'To pay invoice ' + link.i + ' now, email hello@redcrowninteractive.com for bank transfer details.');
+        'To pay ' + link.i + ' now, email hello@redcrowninteractive.com for bank transfer details.');
       return;
     }
     setBusy(true);
@@ -106,7 +106,7 @@
       const res = await fetch(API_ORIGIN + '/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ link, method }),
+        body: JSON.stringify({ link, method, consent: $('consent').checked }),
         credentials: 'omit',
         referrerPolicy: 'no-referrer',
       });

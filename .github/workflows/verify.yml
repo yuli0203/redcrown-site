@@ -18,10 +18,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - run: node --test tools/test_microsoft_auth.cjs
-      # Payment API: signed links, checkout, webhook verification, idempotency.
+      # Payment API and documents: signed links, checkout, one payment per
+      # request, receipts (numbering, PDFs, signing), emails, admin API.
+      - run: npm ci --prefix workers/pay
       - run: node --test workers/pay/test/pay.test.js
+      # The PDF fonts and logo embedded in the Worker match workers/pay/assets.
+      - run: node workers/pay/tools/embed-assets.mjs --check
       # Public repository: fail if a payment secret or private key is committed.
       - run: node tools/check_no_secrets.mjs
       # Payment pages must reference the current CSS/JS (no stale cached copies).

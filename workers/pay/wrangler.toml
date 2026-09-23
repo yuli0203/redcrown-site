@@ -1,12 +1,17 @@
-# Red Crown payment API. Public repository: no secrets in this file.
-# Secrets are set once with:
-#   npx wrangler secret put PAY_LINK_SECRET
-#   npx wrangler secret put PAYPAL_CLIENT_ID
-#   npx wrangler secret put PAYPAL_CLIENT_SECRET
-#   npx wrangler secret put RESEND_API_KEY      (optional: payment emails)
+# Red Crown payment API and document generator. Public repository: no secrets
+# in this file. Secrets are set once with `npx wrangler secret put <NAME>`:
+#   PAY_LINK_SECRET        32+ random characters (signs pay links)
+#   ADMIN_TOKEN            32+ random characters (opens /admin)
+#   PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET
+#   OWNER_NAME             your name as registered, e.g. "Julia Pavlov / יוליה פבלוב"
+#   BUSINESS_ID            your עוסק פטור number (printed on documents)
+#   RESEND_API_KEY         email
+#   SIGNING_P12_PASSWORD   password of your signing certificate (see pay/README.md)
 name = "red-crown-pay-api"
-main = "src/index.js"
+main = "src/worker.js"
 compatibility_date = "2026-09-01"
+# Buffer for the PDF signing library.
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
 ENVIRONMENT = "production"
@@ -18,22 +23,38 @@ PAYPAL_API_URL = "https://api-m.sandbox.paypal.com"
 # From developer.paypal.com > your app > Webhooks, after adding
 # https://<worker>/webhook/paypal for PAYMENT.CAPTURE.COMPLETED. Not a secret.
 PAYPAL_WEBHOOK_ID = ""
-# Payment and duplicate-payment emails (sent only when RESEND_API_KEY is set).
-# NOTIFY_FROM must be on a domain verified in Resend.
+# Printed on every document.
+TRADING_NAME = "Red Crown Interactive"
+BUSINESS_ADDRESS = "Gutwirth Science Park, Haifa, Israel"
+BUSINESS_EMAIL = "hello@redcrowninteractive.com"
+BUSINESS_PHONE = "+972-77-360-9992"
+# First receipt number if the series has not started (can also be set once on /admin).
+RECEIPT_START = "1"
+# Emails. NOTIFY_FROM must be on a domain verified in Resend.
 NOTIFY_TO = "hello@redcrowninteractive.com"
-NOTIFY_FROM = "Red Crown Payments <payments@redcrowninteractive.com>"
+NOTIFY_FROM = "Red Crown Interactive <payments@redcrowninteractive.com>"
 
-# Keeps Worker logs (every payment is logged) in the Cloudflare dashboard.
-[observability]
-enabled = true
-
+# Sessions, rate limits and the signing certificate file.
 # Create with: npx wrangler kv namespace create PAYMENTS  (then paste the id)
 [[kv_namespaces]]
 binding = "PAYMENTS"
 id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# The ledger: payment requests, receipts, numbering (SQLite Durable Object).
+[[durable_objects.bindings]]
+name = "LEDGER"
+class_name = "Ledger"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Ledger"]
 
 # 10 checkout attempts per minute per IP.
 [[ratelimits]]
 name = "RATE_LIMITER"
 namespace_id = "1001"
 simple = { limit = 10, period = 60 }
+
+# Keeps Worker logs (every payment and email is logged) in the dashboard.
+[observability]
+enabled = true

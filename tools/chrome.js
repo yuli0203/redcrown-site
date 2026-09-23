@@ -123,7 +123,7 @@ function footer(opts) {
     '    <a href="/legal/#privacy">Privacy Policy</a>',
     '    <a href="/legal/#terms">Terms of Use</a>',
     '    <a href="/legal/#accessibility">Accessibility Statement</a>',
-    '    <a href="/pay/">Pay an Invoice</a>',
+    '    <a href="/pay/">Make a Payment</a>',
     '  </nav>',
     '</footer>',
     '',
