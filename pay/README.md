@@ -194,7 +194,7 @@ node ../../tools/stamp_pay_assets.mjs        # after editing pay CSS/JS (from th
 ```
 
 To click through everything locally, create `workers/pay/.dev.vars` (git-ignored)
-with test values (`PAY_LINK_SECRET`, `ADMIN_TOKEN`, `OWNER_NAME`, `BUSINESS_ID`,
+with test values (`PAY_LINK_SECRET`, `ADMIN_TOKEN`, `OWNER_NAME`, `BUSINESS_ID`, `BUSINESS_ADDRESS`,
 `ENVIRONMENT=test`, `PROVIDER=mock`, `MOCK_WEBHOOK_SECRET`,
 `SITE_URL=http://localhost:8000`, `ALLOWED_ORIGIN=http://localhost:8000`,
 `BOI_RATES=off`), run `npx wrangler dev` and `python3 -m http.server 8000` in the
