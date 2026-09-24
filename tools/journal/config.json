@@ -1,0 +1,123 @@
+{
+  "site": {
+    "url": "https://redcrowninteractive.com",
+    "name": "Red Crown Interactive",
+    "language": "he",
+    "direction": "rtl",
+    "locale": "he_IL",
+    "eyebrow": "RED CROWN JOURNAL",
+    "logo": "/assets/logo-kit/redcrown-primary-scarlet.svg"
+  },
+  "brandDna": {
+    "contentLanguage": "עברית",
+    "businessType": "Red Crown Interactive היא חברת פיתוח תוכנה וסטודיו לעיצוב מוצרים דיגיטליים, המתמחה בבניית אפליקציות מותאמות אישית ובחוויות VR, AR ו-MR ב-Unity. החברה מספקת פיתוח מקצה לקצה: אפיון, UI/UX, יצירת נכסי תלת-ממד ואנימציה, פיתוח לפלטפורמות מובייל, PC ומשקפי XR, אינטגרציה למערכות נתונים ותשתיות שרת. הלקוחות הם ארגונים, מוסדות אקדמיים וחברות תעשייה שצריכים מוצר עובד ולא הדגמה.",
+    "brandVoiceAndTone": "כתבו כמו מהנדסת מוצר שמסבירה ללקוח: ישיר, מקצועי, בלי הייפ ובלי סופרלטיבים. פתחו במצב מוכר מהשטח, הסבירו את ההחלטה ואת המחיר שלה, ותנו קריטריון שאפשר לבדוק. העדיפו משפטים קצרים, פסקאות של שלוש עד חמש שורות, וכותרות שמתארות החלטה ולא נושא. מותר להשתמש במונחים מקצועיים באנגלית (Unity, Meta Quest 3, hand tracking, draw calls, baked lighting) כשהם המונח המקובל. הימנעו מהבטחות, ממספרים שלא נמדדו ומהכללות שיווקיות.",
+    "targetAudience": "מקבלי החלטות בישראל: מנהלי מוצר ומנהלי הדרכה בתעשייה, מנכ\"לים ומנהלי חדשנות בחברות בינוניות, חוקרים וראשי מעבדות באקדמיה, ומנהלי פיתוח עסקי שמעריכים פרויקט XR ראשון. הם מבינים את הבעיה העסקית אך לא בהכרח את המונחים הטכניים, והם צריכים בסיס להחלטה: מה נדרש, מה הסיכון, ואיך בודקים שזה עובד.",
+    "serviceArea": "ישראל - שירות לחברות ולארגונים בכל הארץ, עם בסיס בחיפה (פארק המדע גוטוירט) ועבודה מרחוק מול לקוחות בחו\"ל.",
+    "topicsToAvoid": "מחירי חומרה והשוואות מחיר למשקפיים, משחקים לצרכנים, SEO ושיווק דיגיטלי, בלוקצ'יין וקריפטו, המלצות רפואיות או משפטיות, ביקורת על מתחרים בשמם, וכל טענה על לקוחות או תוצאות שלא פורסמה באתר. אין להציג פרויקט שלא בוצע בפועל: הפרויקטים היחידים שמותר להציג כניסיון הם מעבדת ה-VR לתרמודינמיקה והמעבדה האנזימטית ב-AR שנעשו עם הטכניון.",
+    "keyThemes": [
+      "פיתוח חוויות VR ו-AR ב-Unity לאפליקציות מובייל iOS ו-Android",
+      "תלת-ממד אינטראקטיבי, מידול ואנימציה למוצרים",
+      "סימולציות ומערכות אינטראקטיביות למחשב ולמשקפי XR",
+      "מעקב ידיים, אינטראקציה טבעית וביצועים ב-Meta Quest 3",
+      "עיצוב UI/UX ומרחב לחוויות משתמש במציאות מדומה",
+      "אופטימיזציה: הפחתת פוליגונים, תאורה אפויה וקריאות ציור",
+      "הקמת כיתות VR והטמעת מערכות הדרכה בארגון",
+      "אפיון, MVP ותהליך עבודה שמקטין סיכון בפרויקט",
+      "אינטגרציה למערכות עסקיות, נתונים וחישוב בצד שרת"
+    ],
+    "createImages": false
+  },
+  "cta": {
+    "text": "נחבר בין עיצוב, פיתוח וטכנולוגיה כדי להפוך אותו למציאות.",
+    "label": "בואו נדבר",
+    "href": "/he/#contact",
+    "meetingHref": "/calendar/meet/?user=julia"
+  },
+  "content": {
+    "wordsMin": 900,
+    "wordsMax": 1500,
+    "sectionsMin": 4,
+    "sectionsMax": 8,
+    "faqMin": 3,
+    "faqMax": 5,
+    "internalLinksMin": 2,
+    "internalLinksMax": 4,
+    "internalLinkTargets": [
+      {
+        "href": "/services/",
+        "label": "שירותי הסטודיו"
+      },
+      {
+        "href": "/services/vr-development/",
+        "label": "פיתוח VR ב-Unity"
+      },
+      {
+        "href": "/services/ar-mr-development/",
+        "label": "פיתוח AR ו-MR"
+      },
+      {
+        "href": "/services/unity-app-development/",
+        "label": "פיתוח אפליקציות ב-Unity"
+      },
+      {
+        "href": "/work/fugacity-vr-lab/",
+        "label": "מעבדת VR לתרמודינמיקה בטכניון"
+      },
+      {
+        "href": "/work/enzymatic-lab-ar/",
+        "label": "מעבדה אנזימטית ב-AR בטכניון"
+      },
+      {
+        "href": "/work/meta-quest-classroom/",
+        "label": "כיתת Meta Quest"
+      },
+      {
+        "href": "/work/livemol-research-tool/",
+        "label": "כלי מחקר LiveMol"
+      },
+      {
+        "href": "/calendar/meet/?user=julia",
+        "label": "קביעת שיחת אפיון"
+      }
+    ]
+  },
+  "seo": {
+    "titleMaxChars": 60,
+    "descriptionMaxChars": 155,
+    "market": "ישראל",
+    "searchLanguage": "he",
+    "competitors": [],
+    "competitorNote": "השאירו ריק כדי שהמחקר יאתר בעצמו מי מדורג על השאילתות. שם דומיין כאן מצמצם את הבדיקה לאותם אתרים.",
+    "minOpportunityScore": 6,
+    "schema": [
+      "BlogPosting",
+      "BreadcrumbList",
+      "FAQPage"
+    ]
+  },
+  "schedule": {
+    "articlesPerRun": 1,
+    "cron": "0 6 * * 1,4",
+    "cronNote": "שני וחמישי, 09:00 שעון ישראל (06:00 UTC)",
+    "researchEveryRuns": 6
+  },
+  "models": {
+    "research": "claude-opus-5",
+    "write": "claude-opus-5",
+    "audit": "claude-opus-5",
+    "effort": "high"
+  },
+  "social": {
+    "facebook": {
+      "enabled": true,
+      "pageIdEnv": "FACEBOOK_PAGE_ID",
+      "tokenEnv": "FACEBOOK_PAGE_TOKEN",
+      "graphVersion": "v21.0",
+      "template": "{title}\n\n{excerpt}\n\n{url}"
+    }
+  },
+  "import": {
+    "soroEmbed": "https://app.trysoro.com/api/embed/231358a2-cbdb-4736-83c3-36facdda3e9c?theme=dark"
+  }
+}

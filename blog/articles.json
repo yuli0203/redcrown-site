@@ -1,0 +1,44 @@
+[
+  {
+    "title": "הקמת כיתת VR מרובת משקפיים לארגון שלכם",
+    "slug": "hakamat-kitat-vr-merubat-mishkafayim",
+    "excerpt": "הקמת כיתת VR מרובת משקפיים דורשת יותר מרכישת ציוד: אפיון תרחישים, ניהול משתמשים, רשת, בטיחות ותפעול. כך בונים פיילוט שמאפשר החלטה מבוססת בארגון שלכם.",
+    "isoDate": "2026-09-24T09:00:00.000+00:00",
+    "url": "/blog/hakamat-kitat-vr-merubat-mishkafayim/"
+  },
+  {
+    "title": "אופטימיזציית ביצועים לאפליקציית Quest 3 בפועל",
+    "slug": "quest-3-performance-optimization",
+    "excerpt": "אופטימיזציית ביצועים לאפליקציית Quest 3 דורשת החלטות נכונות בתאורה, גאומטריה, זיכרון ואינטראקציה - כדי לספק חוויית XR יציבה, חדה ונוחה לאורך זמן בשטח.",
+    "isoDate": "2026-09-23T09:00:00.000+00:00",
+    "url": "/blog/quest-3-performance-optimization/"
+  },
+  {
+    "title": "פיתוח מעקב ידיים ל-Meta Quest למוצר יציב",
+    "slug": "meta-quest-hand-tracking-development",
+    "excerpt": "פיתוח מעקב ידיים ל-Meta Quest דורש יותר מזיהוי אצבעות: תכנון מחוות, ביצועי Unity, בדיקות בתנאי שטח ומדידה אמינה לשימושים מקצועיים בשטח.",
+    "isoDate": "2026-09-22T09:00:00.000+00:00",
+    "url": "/blog/meta-quest-hand-tracking-development/"
+  },
+  {
+    "title": "פיתוח חוויות MR מותאמות אישית שעובדות בשטח",
+    "slug": "custom-mr-experiences-development",
+    "excerpt": "פיתוח חוויות MR מותאמות אישית מחייב אפיון תפעולי, אינטראקציה אמינה, ביצועים יציבים ואינטגרציה לנתונים - כדי שהמערכת תעבוד גם מחוץ להדגמה.",
+    "isoDate": "2026-09-21T09:00:00.000+00:00",
+    "url": "/blog/custom-mr-experiences-development/"
+  },
+  {
+    "title": "איך לבחור חברת פיתוח אפליקציות VR ב-Unity",
+    "slug": "vr-unity-app-development-company",
+    "excerpt": "מחפשים חברת פיתוח אפליקציות VR ב-Unity? מדריך לבחירת שותף לפיתוח: ביצועי Meta Quest, עיצוב תלת-ממד, אינטגרציות, אפיון MVP והטמעה בארגון.",
+    "isoDate": "2026-09-20T15:02:34.544+00:00",
+    "url": "/blog/vr-unity-app-development-company/"
+  },
+  {
+    "title": "פיתוח AR לתהליכי עבודה תעשייתיים בשטח",
+    "slug": "ar-development-industrial-workflows",
+    "excerpt": "פיתוח AR לתהליכי עבודה תעשייתיים מצמצם טעויות, מקצר הכשרות ומחבר הוראות, נתונים ובקרה בזמן אמת למערכת AR יציבה, מדויקת ונוחה לעובדים ברצפת הייצור.",
+    "isoDate": "2026-09-20T14:40:34.420+00:00",
+    "url": "/blog/ar-development-industrial-workflows/"
+  }
+]

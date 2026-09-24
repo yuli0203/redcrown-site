@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Red Crown Journal</title>
+<style>
+:root{color-scheme:dark;--bg:#0e080a;--panel:#1a1013;--line:rgba(240,234,228,.12);--bone:#f0eae4;--dim:#a89da0;--accent:#f03f5c;--red:#c8102e;--ok:#4ade80;--warn:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;display:flex;min-height:100vh;background:var(--bg);color:var(--bone);font:15px/1.6 system-ui,'Segoe UI',Arial,sans-serif}
+a{color:var(--accent)}
+aside{width:250px;flex:none;border-inline-start:1px solid var(--line);padding:22px 16px;background:linear-gradient(200deg,rgba(118,35,47,.18),transparent 40%),var(--panel);position:sticky;top:0;height:100vh;overflow:auto}
+.logo{display:flex;align-items:center;gap:10px;padding:0 8px 18px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.crown{width:34px;height:34px;border-radius:9px;background:var(--red);display:grid;place-items:center;font-size:17px}
+.logo strong{display:block;letter-spacing:2px;font-size:14px}
+.logo small{color:var(--dim);font-size:11px}
+nav button{display:flex;width:100%;align-items:center;gap:10px;padding:10px 12px;margin-bottom:4px;border:0;border-radius:10px;background:transparent;color:var(--dim);font:inherit;cursor:pointer;text-align:start}
+nav button:hover{background:rgba(240,234,228,.06);color:var(--bone)}
+nav button[aria-current=true]{background:rgba(200,16,46,.18);color:var(--bone);font-weight:600}
+nav .group{font-size:11px;letter-spacing:2px;color:var(--dim);padding:16px 12px 6px;opacity:.7}
+main{flex:1;padding:34px 40px 80px;max-width:1100px}
+h1{font-size:30px;margin:0 0 4px}
+.sub{color:var(--dim);margin:0 0 26px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:28px}
+.card{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--panel)}
+.card .k{color:var(--dim);font-size:13px;margin-bottom:8px}
+.card .v{font-size:32px;font-weight:700;line-height:1}
+.row{border:1px solid var(--line);border-inline-start:3px solid #76232f;border-radius:14px;padding:18px 20px;margin-bottom:12px;background:var(--panel)}
+.row h3{margin:0 0 6px;font-size:18px}
+.row p{margin:0 0 10px;color:#c5b9bd;font-size:14px}
+.meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--dim);font-size:13px}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;background:rgba(74,222,128,.14);color:var(--ok)}
+.badge.draft{background:rgba(251,191,36,.14);color:var(--warn)}
+.badge.muted{background:rgba(240,234,228,.08);color:var(--dim)}
+label{display:block;margin:18px 0 6px;font-weight:600;font-size:14px}
+label span{font-weight:400;color:var(--dim);font-size:12px;margin-inline-start:6px}
+textarea,input[type=text],input[type=number],select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#120c0e;color:var(--bone);font:inherit}
+textarea{min-height:130px;resize:vertical;overflow:hidden}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#120c0e;font-size:13px}
+.chip button{border:0;background:transparent;color:var(--dim);cursor:pointer;font-size:15px;line-height:1}
+button.action{padding:11px 20px;border-radius:10px;border:0;background:var(--red);color:#fff;font:inherit;font-weight:600;cursor:pointer;min-height:42px}
+button.action:hover{background:#a80d26}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--bone)}
+button.ghost:hover{background:rgba(240,234,228,.06)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 22px}
+pre.log{background:#120c0e;border:1px solid var(--line);border-radius:12px;padding:16px;max-height:340px;overflow:auto;white-space:pre-wrap;font-size:13px;direction:ltr;text-align:left}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:12px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:13px}
+.score{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:rgba(200,16,46,.18);font-weight:700}
+.switch{display:flex;align-items:center;gap:10px;margin-top:10px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.dot.on{background:var(--ok)}.dot.off{background:#6b5560}
+.hint{color:var(--dim);font-size:13px;margin-top:6px}
+.saved{color:var(--ok);margin-inline-start:12px;font-size:14px}
+.md{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;white-space:pre-wrap;font-size:14px;line-height:1.8}
+@media(max-width:820px){body{flex-direction:column}aside{width:auto;height:auto;position:static}main{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><span class="crown">♛</span><span><strong>RED CROWN</strong><small>JOURNAL ENGINE</small></span></div>
+  <nav id="nav"></nav>
+</aside>
+<main id="view"><p class="sub">טוען…</p></main>
+<script>
+const KEY = new URLSearchParams(location.search).get('key');
+const api = (path, options = {}) => fetch(path, {
+  ...options,
+  headers: { 'x-journal-key': KEY, 'content-type': 'application/json', ...(options.headers || {}) },
+}).then(r => r.json());
+
+const VIEWS = [
+  { id: 'home', label: 'סקירה', icon: '⌂' },
+  { id: 'brand', label: 'Brand DNA', icon: '✶' },
+  { id: 'articles', label: 'מאמרים', icon: '📄' },
+  { id: 'keywords', label: 'מילות מפתח', icon: '🔍', group: 'תובנות' },
+  { id: 'audit', label: 'אודיט SEO', icon: '📈' },
+  { id: 'calendar', label: 'לוח פרסום', icon: '📅' },
+  { id: 'social', label: 'רשתות חברתיות', icon: 'ƒ' },
+  { id: 'settings', label: 'הגדרות', icon: '⚙', group: 'מערכת' },
+];
+
+let state = null;
+let current = 'home';
+let draft = null;   // edited copy of the config
+
+const he = iso => new Date(iso).toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function renderNav() {
+  document.getElementById('nav').innerHTML = VIEWS.map(view => `
+    ${view.group ? `<div class="group">${view.group}</div>` : ''}
+    <button data-view="${view.id}" aria-current="${current === view.id}"><span>${view.icon}</span>${view.label}</button>
+  `).join('');
+  document.querySelectorAll('nav button').forEach(button => {
+    button.onclick = () => { if (draft) collectEdits(); current = button.dataset.view; render(); };
+  });
+}
+
+/* ---------- task runner ---------- */
+async function run(task, extra = {}) {
+  const log = document.getElementById('log');
+  if (log) log.textContent = 'מריץ…';
+  document.querySelectorAll('button.action').forEach(b => { b.disabled = true; });
+  const job = await api('/api/run', { method: 'POST', body: JSON.stringify({ task, ...extra }) });
+  if (job.error) { if (log) log.textContent = job.error; return; }
+  const poll = setInterval(async () => {
+    const status = await api('/api/job/' + job.id);
+    if (log) log.textContent = status.output || 'מריץ…';
+    if (log) log.scrollTop = log.scrollHeight;
+    if (status.done) {
+      clearInterval(poll);
+      document.querySelectorAll('button.action').forEach(b => { b.disabled = false; });
+      state = await api('/api/state');
+      if (log) log.textContent += `\n\n[exit ${status.code}]`;
+      renderNav();
+    }
+  }, 1200);
+}
+
+const taskBar = tasks => `<div class="actions">${tasks.map(t =>
+  `<button class="action ${t.ghost ? 'ghost' : ''}" data-task="${t.task}">${t.label}</button>`).join('')}</div>
+  <pre class="log" id="log">מוכן.</pre>`;
+
+function wireTasks() {
+  document.querySelectorAll('[data-task]').forEach(button => {
+    button.onclick = () => run(button.dataset.task, button.dataset.keyword ? { keyword: button.dataset.keyword } : {});
+  });
+}
+
+/* ---------- views ---------- */
+function home() {
+  const published = state.posts.filter(p => p.rendered).length;
+  const queued = state.keywords.filter(k => k.status === 'queued').length;
+  const shared = state.posts.filter(p => p.shared).length;
+  return `<h1>סקירה</h1><p class="sub">${esc(state.site.url)}</p>
+  <div class="cards">
+    <div class="card"><div class="k">מאמרים</div><div class="v">${state.posts.length}</div></div>
+    <div class="card"><div class="k">מפורסמים באתר</div><div class="v">${published}</div></div>
+    <div class="card"><div class="k">מילות מפתח בתור</div><div class="v">${queued}</div></div>
+    <div class="card"><div class="k">שותפו לפייסבוק</div><div class="v">${shared}</div></div>
+  </div>
+  <h2>הפעלה</h2>
+  ${taskBar([
+    { task: 'research', label: 'מחקר מתחרים ומילות מפתח' },
+    { task: 'write', label: 'כתיבת המאמר הבא' },
+    { task: 'build', label: 'בנייה מחדש', ghost: true },
+    { task: 'audit', label: 'אודיט', ghost: true },
+    { task: 'share', label: 'שיתוף לפייסבוק', ghost: true },
+  ])}
+  <p class="hint">הרצה כאן מריצה את אותם סקריפטים שרצים ב-GitHub Actions. שינויים נשמרים לקבצים בריפו - צריך לעשות commit כדי שיעלו לאתר.</p>`;
+}
+
+function articles() {
+  const drafts = state.posts.filter(p => !p.rendered).length;
+  return `<h1>מאמרים</h1><p class="sub">ניהול התוכן של /blog/</p>
+  <div class="cards">
+    <div class="card"><div class="k">סך הכול</div><div class="v">${state.posts.length}</div></div>
+    <div class="card"><div class="k">טיוטות</div><div class="v">${drafts}</div></div>
+    <div class="card"><div class="k">מפורסמים</div><div class="v">${state.posts.length - drafts}</div></div>
+  </div>
+  ${state.posts.map(post => `<div class="row">
+    <h3>${esc(post.title)}</h3>
+    <p>${esc(post.excerpt)}</p>
+    <div class="meta">
+      <span class="badge ${post.rendered ? '' : 'draft'}">${post.rendered ? 'published' : 'draft'}</span>
+      <span>${he(post.isoDate)}</span><span>·</span><span>${post.words} מילים</span>
+      <span>·</span><span>${post.keyword ? esc(post.keyword) : 'ללא מילת מפתח'}</span>
+      ${post.faq ? '' : '<span class="badge muted">ללא FAQ</span>'}
+      ${post.source === 'soro-import' ? '<span class="badge muted">יובא מ-Soro</span>' : ''}
+      ${post.shared ? '<span class="badge">שותף</span>' : ''}
+      <a href="${esc(state.site.url)}/blog/${esc(post.slug)}/" target="_blank" rel="noopener">פתיחה</a>
+    </div></div>`).join('')}`;
+}
+
+function brand() {
+  const dna = draft.brandDna;
+  const field = (key, label, hint) => `<label for="${key}">${label}${hint ? `<span>${hint}</span>` : ''}</label>
+    <textarea id="${key}" data-dna="${key}">${esc(dna[key])}</textarea>`;
+  return `<h1>Brand DNA</h1><p class="sub">מה שהמנוע יודע על העסק. כל כתיבה מתבססת על השדות האלה.</p>
+  <label for="contentLanguage">שפת התוכן</label>
+  <input type="text" id="contentLanguage" data-dna="contentLanguage" value="${esc(dna.contentLanguage)}">
+  ${field('businessType', 'סוג העסק')}
+  ${field('brandVoiceAndTone', 'קול וטון', 'איך המאמר נשמע')}
+  ${field('targetAudience', 'קהל יעד')}
+  ${field('serviceArea', 'אזור שירות', 'אופציונלי')}
+  ${field('topicsToAvoid', 'נושאים להימנע מהם', 'אופציונלי - כללים שאסור להפר')}
+  <label>נושאי ליבה</label>
+  <div class="chips" id="themes">${dna.keyThemes.map((theme, i) =>
+    `<span class="chip">${esc(theme)}<button data-theme="${i}" title="הסרה">×</button></span>`).join('')}</div>
+  <div class="actions" style="margin-top:12px">
+    <input type="text" id="newTheme" placeholder="נושא חדש" style="max-width:420px">
+    <button class="action ghost" id="addTheme">הוספה</button>
+  </div>
+  <div class="switch"><input type="checkbox" id="createImages" ${dna.createImages ? 'checked' : ''}>
+    <label for="createImages" style="margin:0">ייצור תמונות למאמרים</label></div>
+  <p class="hint">הבלוג הקיים מוגש כטקסט בלבד, בהתאם לעיצוב. הפעלה כאן דורשת גם הוספת שלב תמונות ל-write.js.</p>
+  <div class="actions" style="margin-top:26px"><button class="action" id="save">שמירה</button><span class="saved" id="saved"></span></div>`;
+}
+
+function keywords() {
+  if (!state.keywords.length) {
+    return `<h1>מילות מפתח</h1><p class="sub">התור ריק - הריצו מחקר כדי למלא אותו.</p>${taskBar([{ task: 'research', label: 'מחקר מתחרים ומילות מפתח' }])}`;
+  }
+  return `<h1>מילות מפתח</h1><p class="sub">כל שורה נבדקה מול התוצאות שמדורגות בפועל.</p>
+  ${taskBar([{ task: 'research', label: 'רענון המחקר' }])}
+  <table><thead><tr><th>ציון</th><th>שאילתה</th><th>כוונה</th><th>הפער שזוהה</th><th>מתחרים</th><th></th></tr></thead><tbody>
+  ${state.keywords.map(entry => `<tr>
+    <td><span class="score">${entry.opportunityScore ?? '—'}</span></td>
+    <td><strong>${esc(entry.keyword)}</strong><br><span class="meta">${esc(entry.suggestedTitle || '')}</span></td>
+    <td>${esc(entry.intent || '')}<br><span class="meta">${esc(entry.difficulty || '')}</span></td>
+    <td>${(entry.gaps || []).slice(0, 2).map(g => esc(g)).join('<br>') || '—'}</td>
+    <td>${(entry.competitors || []).map(c => esc(c.domain)).join('<br>') || '—'}</td>
+    <td>${entry.status === 'queued'
+      ? `<button class="action" data-task="write" data-keyword="${esc(entry.keyword)}">כתיבה</button>`
+      : `<span class="badge muted">${esc(entry.status)}</span>`}</td>
+  </tr>`).join('')}</tbody></table>`;
+}
+
+function audit() {
+  return `<h1>אודיט SEO</h1><p class="sub">בדיקות מקומיות על כל מאמר; הבדיקה העמוקה משווה מול התוצאות החיות בגוגל.</p>
+  ${taskBar([{ task: 'audit', label: 'אודיט מקומי' }, { task: 'audit-deep', label: 'אודיט מול גוגל', ghost: true }])}
+  <div class="md">${esc(state.audit || 'עוד לא הורץ אודיט.')}</div>`;
+}
+
+function calendar() {
+  const s = draft.schedule;
+  return `<h1>לוח פרסום</h1><p class="sub">מתי ה-GitHub Action כותב ומפרסם מאמר חדש.</p>
+  <label for="cron">תזמון (cron, UTC)</label>
+  <input type="text" id="cron" data-schedule="cron" value="${esc(s.cron)}">
+  <p class="hint">${esc(s.cronNote)} · שינוי כאן דורש גם עדכון של .github/workflows/journal.yml</p>
+  <label for="articlesPerRun">מאמרים בכל הרצה</label>
+  <input type="number" id="articlesPerRun" data-schedule="articlesPerRun" min="1" max="3" value="${s.articlesPerRun}">
+  <label for="researchEveryRuns">מחקר מחדש כל כמה הרצות</label>
+  <input type="number" id="researchEveryRuns" data-schedule="researchEveryRuns" min="1" max="20" value="${s.researchEveryRuns}">
+  <div class="actions" style="margin-top:26px"><button class="action" id="save">שמירה</button><span class="saved" id="saved"></span></div>`;
+}
+
+function social() {
+  const fb = draft.social.facebook;
+  const dot = ok => `<span class="dot ${ok ? 'on' : 'off'}"></span>`;
+  return `<h1>רשתות חברתיות</h1><p class="sub">שיתוף אוטומטי של כל מאמר חדש.</p>
+  <div class="card" style="margin-bottom:22px">
+    <div class="k">חיבור פייסבוק</div>
+    <p>${dot(state.secrets.facebookPage)} ${esc(fb.pageIdEnv)} ${state.secrets.facebookPage ? 'מוגדר' : 'חסר'}</p>
+    <p>${dot(state.secrets.facebookToken)} ${esc(fb.tokenEnv)} ${state.secrets.facebookToken ? 'מוגדר' : 'חסר'}</p>
+    <p class="hint">הערכים עצמם לא נשמרים בריפו ולא מוצגים כאן - רק משתני סביבה ו-GitHub Secrets.</p>
+  </div>
+  <div class="switch"><input type="checkbox" id="fbEnabled" ${fb.enabled ? 'checked' : ''}>
+    <label for="fbEnabled" style="margin:0">שיתוף אוטומטי לעמוד הפייסבוק</label></div>
+  <label for="template">תבנית הפוסט</label>
+  <textarea id="template" data-social="template">${esc(fb.template)}</textarea>
+  <p class="hint">{title} · {excerpt} · {url}</p>
+  ${taskBar([{ task: 'share', label: 'שיתוף מה שטרם שותף' }])}
+  <div class="actions"><button class="action" id="save">שמירה</button><span class="saved" id="saved"></span></div>`;
+}
+
+function settings() {
+  const c = draft;
+  const num = (path, label) => {
+    const [group, key] = path.split('.');
+    return `<label for="${path}">${label}</label><input type="number" id="${path}" data-num="${path}" value="${c[group][key]}">`;
+  };
+  return `<h1>הגדרות</h1><p class="sub">כללי התוכן, ה-SEO והמודלים.</p>
+  <div class="card" style="margin-bottom:22px">
+    <div class="k">מפתחות</div>
+    <p><span class="dot ${state.secrets.anthropic ? 'on' : 'off'}"></span> ANTHROPIC_API_KEY ${state.secrets.anthropic ? 'מוגדר' : 'חסר - מחקר וכתיבה לא ירוצו'}</p>
+    <p class="hint">המפתח נקרא מהסביבה בלבד. בייצור הוא יושב ב-GitHub Secrets, ורק מי שיש לו הרשאת admin לריפו יכול לראות או להחליף אותו.</p>
+  </div>
+  ${num('content.wordsMin', 'מינימום מילים')}
+  ${num('content.wordsMax', 'מקסימום מילים')}
+  ${num('content.faqMin', 'מינימום שאלות נפוצות')}
+  ${num('content.internalLinksMin', 'מינימום קישורים פנימיים')}
+  ${num('seo.titleMaxChars', 'אורך כותרת מקסימלי')}
+  ${num('seo.descriptionMaxChars', 'אורך תיאור מטא מקסימלי')}
+  ${num('seo.minOpportunityScore', 'ציון הזדמנות מינימלי לכתיבה')}
+  <label for="model">מודל</label>
+  <input type="text" id="model" data-model="write" value="${esc(c.models.write)}">
+  <div class="actions" style="margin-top:26px"><button class="action" id="save">שמירה</button><span class="saved" id="saved"></span></div>`;
+}
+
+const RENDERERS = { home, articles, brand, keywords, audit, calendar, social, settings };
+
+function collectEdits() {
+  document.querySelectorAll('[data-dna]').forEach(el => { draft.brandDna[el.dataset.dna] = el.value; });
+  document.querySelectorAll('[data-schedule]').forEach(el => {
+    const value = el.type === 'number' ? Number(el.value) : el.value;
+    draft.schedule[el.dataset.schedule] = value;
+  });
+  document.querySelectorAll('[data-num]').forEach(el => {
+    const [group, key] = el.dataset.num.split('.');
+    draft[group][key] = Number(el.value);
+  });
+  const images = document.getElementById('createImages');
+  if (images) draft.brandDna.createImages = images.checked;
+  const fbEnabled = document.getElementById('fbEnabled');
+  if (fbEnabled) draft.social.facebook.enabled = fbEnabled.checked;
+  const template = document.querySelector('[data-social="template"]');
+  if (template) draft.social.facebook.template = template.value;
+  const model = document.querySelector('[data-model]');
+  if (model) { draft.models.write = model.value; draft.models.research = model.value; draft.models.audit = model.value; }
+}
+
+function wireEditor() {
+  const save = document.getElementById('save');
+  if (save) save.onclick = async () => {
+    collectEdits();
+    const result = await api('/api/config', { method: 'PUT', body: JSON.stringify(draft) });
+    document.getElementById('saved').textContent = result.saved ? 'נשמר ✓' : (result.error || 'נכשל');
+    state = await api('/api/state');
+  };
+  document.querySelectorAll('[data-theme]').forEach(button => {
+    button.onclick = () => { collectEdits(); draft.brandDna.keyThemes.splice(Number(button.dataset.theme), 1); render(); };
+  });
+  const add = document.getElementById('addTheme');
+  if (add) add.onclick = () => {
+    const input = document.getElementById('newTheme');
+    if (!input.value.trim()) return;
+    collectEdits();
+    draft.brandDna.keyThemes.push(input.value.trim());
+    render();
+  };
+}
+
+/* Long brand copy should be readable without scrolling inside a box. */
+function growTextareas() {
+  document.querySelectorAll('textarea').forEach(area => {
+    const grow = () => { area.style.height = 'auto'; area.style.height = area.scrollHeight + 8 + 'px'; };
+    area.addEventListener('input', grow);
+    grow();
+  });
+}
+
+function render() {
+  renderNav();
+  document.getElementById('view').innerHTML = RENDERERS[current]();
+  wireTasks();
+  wireEditor();
+  growTextareas();
+}
+
+(async () => {
+  state = await api('/api/state');
+  if (state.error) { document.getElementById('view').textContent = state.error; return; }
+  draft = JSON.parse(JSON.stringify(state.config));
+  render();
+})();
+</script>
+</body>
+</html>

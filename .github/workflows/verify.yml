@@ -33,6 +33,10 @@ jobs:
       # Fails if any service/case-study page differs from a fresh render of
       # tools/pages.data.js, so edited content cannot ship half-applied.
       - run: node tools/build_pages.js --check
+      # The journal: renderer, escaping, schema and audit rules, then a check
+      # that /blog/ on disk still matches tools/journal/posts/.
+      - run: node --test tools/test_journal.js
+      - run: node tools/journal/build.js --check
 
   campaign-device-matrix:
     name: Campaign pages work on mobile and desktop

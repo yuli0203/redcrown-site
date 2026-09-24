@@ -1,0 +1,88 @@
+# The journal publishes itself: research, draft, render, commit, share.
+# Nothing here can run without the repository secrets, and only a repository
+# admin can set those.
+
+name: journal
+
+on:
+  schedule:
+    # Mondays and Thursdays, 09:00 Israel time.
+    - cron: '0 6 * * 1,4'
+  workflow_dispatch:
+    inputs:
+      keyword:
+        description: 'Write this keyword instead of the top of the queue'
+        required: false
+      research:
+        description: 'Refresh the keyword research first'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: journal
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+      FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+        working-directory: tools/journal
+
+      # Research runs when asked, and whenever the queue has run dry.
+      - name: Keyword research
+        run: |
+          queued=$(node -e "const fs=require('fs');const f='tools/journal/keywords.json';console.log(fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')).filter(k=>k.status==='queued').length:0)")
+          if [ "${{ inputs.research }}" = "true" ] || [ "$queued" -lt 2 ]; then
+            node tools/journal/research.js
+          else
+            echo "queue has $queued keywords; skipping research"
+          fi
+
+      - name: Draft the article
+        run: |
+          if [ -n "${{ inputs.keyword }}" ]; then
+            node tools/journal/write.js --keyword "${{ inputs.keyword }}"
+          else
+            node tools/journal/write.js
+          fi
+
+      - name: Render the blog
+        run: node tools/journal/build.js
+
+      - name: Audit
+        run: node tools/journal/audit.js --strict
+
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name  'Red Crown Journal'
+          git config user.email 'hello@redcrowninteractive.com'
+          git add blog tools/journal/posts tools/journal/keywords.json tools/journal/audit-report.md sitemap.xml
+          if git diff --cached --quiet; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo 'Nothing new to publish.'
+          else
+            title=$(node -e "const p=require('./tools/journal/lib/posts.js');console.log(p.all()[0].title)")
+            git commit -m "Publish: $title"
+            git push
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Pages needs a moment to serve the new URL before Facebook scrapes it.
+      - name: Share to Facebook
+        if: steps.commit.outputs.published == 'true'
+        run: |
+          sleep 120
+          node tools/journal/facebook.js

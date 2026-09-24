@@ -101,4 +101,12 @@
 <url><loc>https://redcrowninteractive.com/calendar/he/</loc></url>
 <url><loc>https://redcrowninteractive.com/calendar/legal/</loc></url>
 <url><loc>https://redcrowninteractive.com/blog/</loc><changefreq>daily</changefreq></url>
+<!-- journal:start -->
+<url><loc>https://redcrowninteractive.com/blog/hakamat-kitat-vr-merubat-mishkafayim/</loc><lastmod>2026-09-24</lastmod></url>
+<url><loc>https://redcrowninteractive.com/blog/quest-3-performance-optimization/</loc><lastmod>2026-09-23</lastmod></url>
+<url><loc>https://redcrowninteractive.com/blog/meta-quest-hand-tracking-development/</loc><lastmod>2026-09-22</lastmod></url>
+<url><loc>https://redcrowninteractive.com/blog/custom-mr-experiences-development/</loc><lastmod>2026-09-21</lastmod></url>
+<url><loc>https://redcrowninteractive.com/blog/vr-unity-app-development-company/</loc><lastmod>2026-09-20</lastmod></url>
+<url><loc>https://redcrowninteractive.com/blog/ar-development-industrial-workflows/</loc><lastmod>2026-09-20</lastmod></url>
+<!-- journal:end -->
 </urlset>

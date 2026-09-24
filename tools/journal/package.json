@@ -1,0 +1,16 @@
+{
+  "name": "redcrown-journal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The journal engine: keyword research, drafting, rendering and sharing for /blog/.",
+  "scripts": {
+    "research": "node research.js",
+    "write": "node write.js",
+    "build": "node build.js",
+    "audit": "node audit.js",
+    "dashboard": "node dashboard.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0"
+  }
+}

@@ -23,35 +23,44 @@ nav a{display:inline-flex;align-items:center;min-height:44px}
 h1{font-size:clamp(40px,6vw,76px);line-height:1.15;letter-spacing:-1.5px;margin:0 0 26px}
 h1 span{color:#a89da0}.lead{font-size:20px;color:#c5b9bd;max-width:600px;margin:0}
 .articles{min-height:180px;padding-bottom:48px;overflow-wrap:anywhere}
-#soro-blog{width:100%;min-width:0}
-/* Scoped overrides keep Soro's dynamically injected defaults inside the site's brand. */
-#soro-blog.soro-blog,#soro-blog .soro-blog{max-width:none;background:transparent;color:var(--bone);font-family:inherit}
-#soro-blog .soro-blog-list{gap:24px}
-#soro-blog .soro-blog-card{padding:28px;gap:28px;background:linear-gradient(135deg,rgba(118,35,47,.12),transparent),var(--panel);border:1px solid var(--line);border-radius:20px;align-items:center;box-shadow:none}
-#soro-blog .soro-blog-card:hover{border-color:#76232f;box-shadow:0 12px 32px rgba(0,0,0,.2);text-decoration:none}
-#soro-blog .soro-blog-card-image{width:32%;height:auto;aspect-ratio:16/10;border-radius:12px;object-fit:cover}
-#soro-blog .soro-blog-card-title{font-family:inherit;font-size:clamp(22px,2.5vw,30px);line-height:1.35;font-weight:700;color:var(--bone);margin-bottom:14px}
-#soro-blog .soro-blog-card-excerpt{font-size:17px;line-height:1.8;color:#c5b9bd;-webkit-line-clamp:3;margin-bottom:20px}
-#soro-blog .soro-blog-card-date{font-size:14px;color:var(--dim)}
-/* Text-led article presentation; Soro content stays intact. */
-#soro-blog .soro-blog-card-image,#soro-blog .soro-blog-article-image{display:none}
-#soro-blog .soro-blog-card{border-inline-start:3px solid #76232f;padding:32px}
-#soro-blog .soro-blog-card:hover{border-inline-start-color:#c8102e}
-#soro-blog .soro-blog-card-content{max-width:850px}
-#soro-blog .soro-blog-back{background:var(--panel);border-color:var(--line);border-radius:10px;color:var(--bone);min-height:44px;font-family:inherit}
-#soro-blog .soro-blog-back:hover{background:#221519;border-color:#76232f}
-#soro-blog .soro-blog-article{max-width:820px;margin-inline:auto}
-#soro-blog .soro-blog-article-title{font-family:inherit;color:var(--bone);font-size:clamp(30px,4vw,46px);line-height:1.3;letter-spacing:-.5px}
-#soro-blog .soro-blog-article-date{color:var(--dim)}
-#soro-blog .soro-blog-article-image{border-radius:20px;max-height:460px}
-#soro-blog .soro-blog-article-content{color:var(--bone);font-size:18px;line-height:1.95}
-#soro-blog .soro-blog-article-content h1,#soro-blog .soro-blog-article-content h2,#soro-blog .soro-blog-article-content h3{font-family:inherit;color:var(--bone);line-height:1.4}
-#soro-blog .soro-blog-article-content h2{border-inline-start:3px solid #c8102e;padding-inline-start:16px;margin-top:44px}
-#soro-blog .soro-blog-article-content a{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
-#soro-blog .soro-blog-empty,#soro-blog .soro-blog-loading{background:var(--panel);color:var(--dim);border-radius:20px}
-#soro-blog .soro-blog-error{color:#ff899b}
-@media(max-width:640px){#soro-blog .soro-blog-card{flex-direction:column;align-items:stretch;padding:20px;gap:20px}#soro-blog .soro-blog-card-image{width:100%;height:auto}#soro-blog .soro-blog-card-excerpt{font-size:16px}#soro-blog .soro-blog-article-content{font-size:17px}}
-@media(prefers-reduced-motion:reduce){.contact,#soro-blog *{transition:none!important;animation:none!important}}
+/* Article cards. Same presentation the embed had: text-led, no images,
+   a scarlet rule on the leading edge that brightens on hover. */
+.journal-list{display:flex;flex-direction:column;gap:24px}
+.journal-post{display:block;max-width:850px;padding:32px;background:linear-gradient(135deg,rgba(118,35,47,.12),transparent),var(--panel);border:1px solid var(--line);border-inline-start:3px solid #76232f;border-radius:20px}
+.journal-post:hover{border-color:#76232f;border-inline-start-color:#c8102e;box-shadow:0 12px 32px rgba(0,0,0,.2);text-decoration:none}
+.journal-post time{font-size:14px;color:var(--dim)}
+.journal-post h2{font-size:clamp(22px,2.5vw,30px);line-height:1.35;margin:10px 0 14px}
+.journal-post p{font-size:17px;line-height:1.8;color:#c5b9bd;margin:0 0 20px}
+.journal-read{color:var(--accent)}
+.journal-empty{color:var(--dim)}
+/* Article page */
+.crumbs{display:flex;gap:10px;align-items:center;padding-top:28px;font-size:14px;color:var(--dim)}
+.crumbs a{color:var(--dim)}
+.crumbs a:hover{color:var(--bone)}
+.post{max-width:820px;margin-inline:auto;padding-block:20px 48px;font-size:18px;line-height:1.95;overflow-wrap:anywhere}
+.post-head{padding-block:32px 8px}
+.post-head h1{font-size:clamp(30px,4vw,46px);line-height:1.3;letter-spacing:-.5px;margin:0 0 16px}
+.post-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--dim);font-size:15px;margin:0}
+.post-lead{font-size:20px;color:#d8cdd0}
+.post h2{font-size:clamp(22px,2.6vw,30px);line-height:1.4;border-inline-start:3px solid #c8102e;padding-inline-start:16px;margin-top:44px}
+.post p{margin:0 0 22px}
+.post ul,.post ol{padding-inline-start:22px;margin:0 0 22px}
+.post li{margin-bottom:10px}
+.post a{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+.post-faq details{border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:12px;background:var(--panel)}
+.post-faq summary{cursor:pointer;font-weight:700;min-height:28px}
+.post-faq details[open] summary{margin-bottom:12px}
+.post-faq p{margin:0;font-size:17px}
+.post-links{margin-top:44px;padding:28px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.post-links h2{border:0;padding:0;margin:0 0 14px;font-size:20px}
+.post-links ul{margin:0;padding-inline-start:20px}
+.post-links a{color:var(--accent)}
+.post-nav{display:flex;flex-wrap:wrap;gap:16px;max-width:820px;margin:0 auto 48px}
+.post-nav-link{flex:1 1 240px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel);min-height:44px}
+.post-nav-link:hover{border-color:#76232f;text-decoration:none}
+.post-nav-link span{display:block;font-size:13px;color:var(--accent);margin-bottom:8px}
+@media(max-width:640px){.journal-post{padding:20px}.journal-post p{font-size:16px}.post{font-size:17px}.post-lead{font-size:18px}.post-links{padding:20px}}
+@media(prefers-reduced-motion:reduce){.contact,.journal-post,.post-nav-link{transition:none!important;animation:none!important}}
 #blog-error{padding:24px;background:#221519;border:1px solid #76232f;border-radius:10px}
 #blog-error a{text-decoration:underline}
 .project{padding:36px;border:1px solid #f0eae41a;border-radius:16px;background:#1a1013;margin-bottom:60px}

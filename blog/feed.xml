@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>מאמרים | Red Crown Interactive</title>
+  <link>https://redcrowninteractive.com/blog/</link>
+  <description>מאמרים ומדריכים על פיתוח אפליקציות, תלת-ממד ו-XR.</description>
+  <language>he</language>
+  <lastBuildDate>Thu, 24 Sep 2026 09:00:00 GMT</lastBuildDate>
+  <item>
+    <title>הקמת כיתת VR מרובת משקפיים לארגון שלכם</title>
+    <link>https://redcrowninteractive.com/blog/hakamat-kitat-vr-merubat-mishkafayim/</link>
+    <guid isPermaLink="true">https://redcrowninteractive.com/blog/hakamat-kitat-vr-merubat-mishkafayim/</guid>
+    <description>הקמת כיתת VR מרובת משקפיים דורשת יותר מרכישת ציוד: אפיון תרחישים, ניהול משתמשים, רשת, בטיחות ותפעול. כך בונים פיילוט שמאפשר החלטה מבוססת בארגון שלכם.</description>
+    <pubDate>Thu, 24 Sep 2026 09:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>אופטימיזציית ביצועים לאפליקציית Quest 3 בפועל</title>
+    <link>https://redcrowninteractive.com/blog/quest-3-performance-optimization/</link>
+    <guid isPermaLink="true">https://redcrowninteractive.com/blog/quest-3-performance-optimization/</guid>
+    <description>אופטימיזציית ביצועים לאפליקציית Quest 3 דורשת החלטות נכונות בתאורה, גאומטריה, זיכרון ואינטראקציה - כדי לספק חוויית XR יציבה, חדה ונוחה לאורך זמן בשטח.</description>
+    <pubDate>Wed, 23 Sep 2026 09:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>פיתוח מעקב ידיים ל-Meta Quest למוצר יציב</title>
+    <link>https://redcrowninteractive.com/blog/meta-quest-hand-tracking-development/</link>
+    <guid isPermaLink="true">https://redcrowninteractive.com/blog/meta-quest-hand-tracking-development/</guid>
+    <description>פיתוח מעקב ידיים ל-Meta Quest דורש יותר מזיהוי אצבעות: תכנון מחוות, ביצועי Unity, בדיקות בתנאי שטח ומדידה אמינה לשימושים מקצועיים בשטח.</description>
+    <pubDate>Tue, 22 Sep 2026 09:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>פיתוח חוויות MR מותאמות אישית שעובדות בשטח</title>
+    <link>https://redcrowninteractive.com/blog/custom-mr-experiences-development/</link>
+    <guid isPermaLink="true">https://redcrowninteractive.com/blog/custom-mr-experiences-development/</guid>
+    <description>פיתוח חוויות MR מותאמות אישית מחייב אפיון תפעולי, אינטראקציה אמינה, ביצועים יציבים ואינטגרציה לנתונים - כדי שהמערכת תעבוד גם מחוץ להדגמה.</description>
+    <pubDate>Mon, 21 Sep 2026 09:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>איך לבחור חברת פיתוח אפליקציות VR ב-Unity</title>
+    <link>https://redcrowninteractive.com/blog/vr-unity-app-development-company/</link>
+    <guid isPermaLink="true">https://redcrowninteractive.com/blog/vr-unity-app-development-company/</guid>
+    <description>מחפשים חברת פיתוח אפליקציות VR ב-Unity? מדריך לבחירת שותף לפיתוח: ביצועי Meta Quest, עיצוב תלת-ממד, אינטגרציות, אפיון MVP והטמעה בארגון.</description>
+    <pubDate>Sun, 20 Sep 2026 15:02:34 GMT</pubDate>
+  </item>
+  <item>
+    <title>פיתוח AR לתהליכי עבודה תעשייתיים בשטח</title>
+    <link>https://redcrowninteractive.com/blog/ar-development-industrial-workflows/</link>
+    <guid isPermaLink="true">https://redcrowninteractive.com/blog/ar-development-industrial-workflows/</guid>
+    <description>פיתוח AR לתהליכי עבודה תעשייתיים מצמצם טעויות, מקצר הכשרות ומחבר הוראות, נתונים ובקרה בזמן אמת למערכת AR יציבה, מדויקת ונוחה לעובדים ברצפת הייצור.</description>
+    <pubDate>Sun, 20 Sep 2026 14:40:34 GMT</pubDate>
+  </item>
+</channel>
+</rss>
