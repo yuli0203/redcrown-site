@@ -28,7 +28,7 @@ import { json, baseHeaders, cors, readBody } from './http.js';
 
 const METHODS = ['card', 'paypal'];
 const REF_RE = /^[0-9a-f-]{36}$/;
-export const CONSENT_TEXT = 'I agree to receive receipts and other tax documents from Red Crown Interactive digitally, by email.';
+export const CONSENT_TEXT = 'I agree to receive my receipt and other tax documents from Red Crown Interactive digitally, by email.';
 
 const provider = env => {
   const p = providers[env.PROVIDER];
@@ -120,9 +120,10 @@ async function checkout(request, env) {
   if (pr.status === 'paid' || await l.invoiceHolder(link.invoice)) return json({ error: 'already paid' }, 409, headers);
   if (pr.status !== 'open') return json({ error: 'link expired' }, 410, headers);
 
-  const consent = body.consent === true
-    ? { given: true, at: new Date().toISOString(), via: 'checkbox on the payment page', text: CONSENT_TEXT }
-    : { given: false };
+  // Receipts are emailed as signed computerized documents, which needs the
+  // client's agreement (סעיף 18ב); the pay page requires the checkbox.
+  if (body.consent !== true) return json({ error: 'consent required' }, 422, headers);
+  const consent = { given: true, at: new Date().toISOString(), via: 'checkbox on the payment page', text: CONSENT_TEXT };
 
   const ref = crypto.randomUUID();
   const session = { invoice: link.invoice, amountMinor: link.amountMinor, currency: link.currency, method, consent, created: Date.now() };

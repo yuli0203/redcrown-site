@@ -16,9 +16,9 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/site.css?v=80359f6ea233">
-<link rel="stylesheet" href="/pay/pay.css?v=285ef67b515c">
+<link rel="stylesheet" href="/pay/pay.css?v=95f3954bbb64">
 <script src="/pay/config.js?v=696eef1320b8" defer></script>
-<script src="/pay/pay.js?v=50d4884e4659" defer></script>
+<script src="/pay/pay.js?v=cff5335016d4" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to payment form</a>
@@ -47,7 +47,7 @@
              "Debit or Credit Card" opens it on the card form, so no PayPal account
              is needed. Card details are entered only at PayPal. -->
         <h2 id="pay-h" class="py-sec">Choose how to pay</h2>
-        <label class="py-consent"><input type="checkbox" id="consent"><span>Email me the receipt. I agree to receive receipts and other tax documents from Red Crown Interactive digitally, by email.</span></label>
+        <label class="py-consent"><input type="checkbox" id="consent" required aria-describedby="consent-note"><span>I agree to receive my receipt and other tax documents from Red Crown Interactive digitally, by email. <small id="consent-note">Required for paying online; your digitally signed receipt is emailed as soon as you pay.</small></span></label>
         <div class="py-buttons">
           <button type="button" class="py-wallet" data-wallet="paypal"><span class="py-sr">Pay with </span><img src="/pay/icons/paypal-monogram.svg" alt="" width="17" height="20"><b>PayPal</b></button>
           <button type="button" class="py-wallet py-cardbtn" data-wallet="card"><svg class="py-cardicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19M6 15h4"/></svg>Debit or Credit Card</button>

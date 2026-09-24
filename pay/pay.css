@@ -52,6 +52,9 @@ body{min-height:100vh}
 
 .py-consent{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;line-height:1.5;color:var(--dim);margin:-2px 0 14px;cursor:pointer}
 .py-consent input{width:18px;height:18px;margin-top:1px;flex:none;accent-color:var(--hot)}
+.py-consent small{display:block;font-size:.76rem;margin-top:2px;opacity:.85}
+.py-consent.is-missing{color:var(--bone)}
+.py-consent.is-missing input{outline:2px solid var(--hot-text);outline-offset:2px}
 .py-status{font-size:.86rem;margin-top:14px}
 .py-status:empty{display:none}
 .py-status.is-notice{color:var(--bone);background:var(--panel-2);border:1px solid rgba(240,234,228,.18);border-radius:10px;padding:12px}

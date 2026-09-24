@@ -90,13 +90,25 @@
     400: 'This payment link is not valid. Please use the link from your invoice email.',
     409: 'This payment request has already been paid. Thank you!',
     410: 'This payment link has expired or was cancelled. Email us and we will send a new one.',
+    422: 'Please tick the box to agree to receive your receipt by email, then try again.',
     429: 'Too many attempts. Please wait a minute and try again.',
   };
+
+  const consentBox = $('consent');
+  consentBox.addEventListener('change', () => consentBox.closest('.py-consent').classList.remove('is-missing'));
 
   const start = async method => {
     if (busy) return;
     status.textContent = '';
     status.classList.remove('is-notice');
+    // Receipts are emailed as signed documents, which needs the client's agreement.
+    if (!consentBox.checked) {
+      consentBox.closest('.py-consent').classList.add('is-missing');
+      notice('Please tick the box above to agree to receive your receipt by email, then choose how to pay. ' +
+        'If you need a paper receipt, email julia@redcrowninteractive.com to pay by bank transfer instead.');
+      consentBox.focus();
+      return;
+    }
     if (!API_ORIGIN) {
       notice('Online payments are not enabled yet, so nothing has been charged. ' +
         'To pay ' + link.i + ' now, email julia@redcrowninteractive.com for bank transfer details.');
@@ -108,7 +120,7 @@
       const res = await fetch(API_ORIGIN + '/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ link, method, consent: $('consent').checked }),
+        body: JSON.stringify({ link, method, consent: consentBox.checked }),
         credentials: 'omit',
         referrerPolicy: 'no-referrer',
       });

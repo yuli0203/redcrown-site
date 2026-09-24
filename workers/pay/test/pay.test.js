@@ -6,6 +6,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
+import { createSigningKey } from '../tools/create-signing-key.mjs';
 import { sign, verify, toQuery } from '../src/links.js';
 import worker from '../src/index.js';
 import { LedgerCore } from '../src/ledger.js';
@@ -78,8 +80,9 @@ const newRequest = async (env, over = {}) => {
   return { ...out, link: Object.fromEntries(new URL(out.payUrl).searchParams) };
 };
 const checkout = (env, body, headers) => call(env, post('/checkout', body, headers));
+// The pay page always sends consent (the checkbox is required).
 const openCheckout = async (env, link, extra = {}) => {
-  const res = await checkout(env, { link, method: 'card', ...extra });
+  const res = await checkout(env, { link, method: 'card', consent: true, ...extra });
   assert.equal(res.status, 200, await res.clone().text());
   const { url, ref } = await res.json();
   return { ref, token: new URL(url).searchParams.get('token') };
@@ -116,7 +119,7 @@ const testSigner = (() => {
 // Checks a signed PDF with OpenSSL, independently of our own code: the
 // ByteRange covers the whole file except the signature, and the CMS signature
 // verifies over exactly those bytes with the signer's certificate.
-const verifyWithOpenssl = pdf => {
+const verifyWithOpenssl = (pdf, certPem = testSigner().certPem) => {
   const text = pdf.toString('latin1');
   const [a, b, c, d] = text.match(/\/ByteRange \[(\d+) (\d+) (\d+) (\d+)\s*\]/).slice(1).map(Number);
   assert.equal(a, 0);
@@ -129,7 +132,7 @@ const verifyWithOpenssl = pdf => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sig-'));
   fs.writeFileSync(path.join(dir, 'sig.der'), padded.subarray(0, 2 + lenBytes + bodyLen));
   fs.writeFileSync(path.join(dir, 'content'), Buffer.concat([pdf.subarray(0, b), pdf.subarray(c)]));
-  fs.writeFileSync(path.join(dir, 'cert.pem'), testSigner().certPem);
+  fs.writeFileSync(path.join(dir, 'cert.pem'), certPem);
   execFileSync('openssl', ['cms', '-verify', '-binary', '-inform', 'DER', '-in', path.join(dir, 'sig.der'),
     '-content', path.join(dir, 'content'), '-CAfile', path.join(dir, 'cert.pem'), '-purpose', 'any', '-out', '/dev/null'], { stdio: 'pipe' });
   fs.rmSync(dir, { recursive: true });
@@ -243,13 +246,28 @@ test('with a signing certificate and consent, the client receives the signed rec
   assert.deepEqual(toOwner.attachments.map(a => a.filename), ['receipt-1-copy.pdf']);
   assert.equal(env.LEDGER_CORE.getReceipt(1).signed, true);
 
-  // Without consent the same setup sends a confirmation instead.
-  mailbox = [];
+  // Without consent there is no online checkout (nothing is charged).
   const pr2 = await newRequest(env, { lang: 'en' });
+  const refused = await checkout(env, { link: pr2.link, method: 'card' });
+  assert.equal(refused.status, 422);
+  assert.equal((await checkout(env, { link: pr2.link, method: 'card', consent: 'yes' })).status, 422);
+});
+
+test('own signing key: a key made by tools/create-signing-key.mjs signs receipts that OpenSSL verifies', async () => {
+  const own = createSigningKey({ name: 'Test Owner', businessId: '000000018', email: 'owner@example.test', bits: 2048 });
+  const cert = new crypto.X509Certificate(Buffer.from(JSON.parse(own.certJson).certs[0], 'base64'));
+  assert.match(cert.subject, /CN=Test Owner/);
+  assert.match(cert.subject, /serialNumber=000000018/);
+  assert.equal(cert.fingerprint256, own.fingerprint);
+
   mailbox = [];
-  await returnFrom(env, await openCheckout(env, pr2.link));
-  assert.match(mailbox.find(m => m.to[0] === 'dana@acme.test').subject, /^Payment confirmation/);
-  assert.match(mailbox.find(m => m.to[0] === 'hello@redcrowninteractive.com').text, /has not agreed to digital documents/);
+  const env = envFor({ SIGNING_KEY: own.key });
+  await env.PAYMENTS.put('signing:cert', own.certJson);
+  const pr = await newRequest(env, { lang: 'en' });
+  mailbox = [];
+  await returnFrom(env, await openCheckout(env, pr.link));
+  const pdf = pdfOf(mailbox.find(m => m.to[0] === 'dana@acme.test').attachments[0]);
+  verifyWithOpenssl(pdf, own.certPem);
 });
 
 test('second tab: a paid request is not captured again, client not charged', async () => {
@@ -391,7 +409,7 @@ test('admin: token required, validation, cancel, documents and CSV export', asyn
 test('mock provider is refused in production', async () => {
   const env = envFor({ ENVIRONMENT: 'production' });
   const { link } = await newRequest(env);
-  assert.equal((await checkout(env, { link, method: 'card' })).status, 500);
+  assert.equal((await checkout(env, { link, method: 'card', consent: true })).status, 500);
 });
 
 test('bidi: Hebrew with numbers and Latin text in visual order', () => {

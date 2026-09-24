@@ -44,23 +44,35 @@ PDF is written once. Keep records for 7 years: export the CSV monthly
 
 **Emailed receipts** (סעיף 18ב) are legal only when all of these hold:
 
-1. **Signed with your own certificate.** Buy a certified electronic signature
-   (חתימה אלקטרונית מאושרת) that a server can use, from Comsign or Personal ID
-   (ask for a certificate file, .p12/.pfx, for automatic invoice signing).
-   A certified signature has no payment-method restrictions; the weaker
-   "secured" kind is limited to card, cheque and bank-transfer payments.
+1. **Signed electronically by you.** A computerized document may carry a
+   *secured* (חתימה אלקטרונית מאובטחת) or a *certified* (מאושרת) signature.
+   - **Default: your own key (secured, free).** `tools/create-signing-key.mjs`
+     creates a key and certificate naming you and your business number, on
+     your computer; the key is kept only as a Worker secret, under your sole
+     control, and any change to a signed receipt breaks the signature.
+     **Confirm with your accountant** that a secured signature is acceptable
+     for your receipts before relying on it: sources differ on whether some
+     cases require a certified one, and one reading limits secured signatures
+     to receipts for card, cheque and bank-transfer payments (which is what
+     this system takes online).
+   - **Alternative: a certified signature** from Comsign or Personal ID, as a
+     file a server can use (.p12/.pfx), imported with
+     `tools/import-certificate.mjs`. A smart card or USB token does not work
+     for automatic signing: the key never leaves the device, so it would have
+     to be plugged into a computer that is on whenever a client pays.
 2. **Your פקיד שומה was notified** by registered mail before the first emailed
    receipt. Draft below.
-3. **The client consented** before the first document. The pay page checkbox
-   records it with the receipt; for direct payments, tick the box on the admin
-   form and note how they agreed.
+3. **The client consented** before the first document. The pay page requires
+   the checkbox (the Worker refuses a checkout without it) and records it with
+   the receipt; for direct payments, tick the box on the admin form and note
+   how they agreed.
 4. The document says **מסמך ממוחשב**. Done automatically when signed.
 
 Software you develop for your own use does not need Tax Authority
 registration (only software sold or rented to others does), but it must
 follow the computerized bookkeeping rules above.
 
-**Until the certificate is installed** (or when a client did not consent): the
+**Until a signing key is installed** (or, for a direct payment, when the client did not consent): the
 client gets a payment confirmation (not a tax document), and you get the
 original receipt PDF by email. Print it, sign it, and hand or mail it to the
 client. Everything else works the same.
@@ -73,7 +85,7 @@ client. Everything else works the same.
 > (ניהול פנקסי חשבונות), תשל"ג-1973
 >
 > הריני להודיעך כי החל מיום ________ אשלח ללקוחותיי קבלות כמסמכים ממוחשבים,
-> חתומים בחתימה אלקטרונית מאושרת, באמצעות מערכת שפותחה לשימושי העצמי.
+> חתומים בחתימה אלקטרונית מאובטחת, באמצעות מערכת שפותחה לשימושי העצמי.
 >
 > שם: ________  ת"ז / מס' עוסק פטור: ________  כתובת: ________
 >
@@ -89,7 +101,9 @@ client. Everything else works the same.
 - **PayPal:** per-transaction fees only (check PayPal Israel's current rates,
   including cross-border and conversion).
 - **Resend** (email): free tier, 3,000 emails a month.
-- **Signing certificate:** yearly fee from the certifying authority.
+- **Signing:** ₪0 with your own key (secured signature). A certified
+  signature from Comsign or Personal ID costs extra; automatic (server)
+  certified signing is sold as a service.
 
 ## Go-live
 
@@ -131,13 +145,22 @@ In order. Commands run in `workers/pay` after `npm ci`.
 8. **Live:** `PAYPAL_API_URL = "https://api-m.paypal.com"`, live PayPal keys and
    webhook ID, redeploy, one small real payment, then refund it (and issue your
    accountant's recommended cancellation document for that test receipt).
-9. **Certificate** (when it arrives), then send the registered letter. Convert
-   it once on your computer (the key goes into a Worker secret; nothing is
-   written into the repository):
+9. **Signing key**, then send the registered letter (draft above). Once your
+   accountant has confirmed the secured signature, create your key on your
+   own computer (nothing is written into the repository):
+   ```
+   node tools/create-signing-key.mjs --name "Julia Pavlov" --id <business number> \
+        --email julia@redcrowninteractive.com
+   # then run the two commands it prints, keep signing-cert.pem, delete the key file
+   ```
+   It prints the certificate's SHA-256 fingerprint. Keep it with your records
+   (and, if you like, publish it) so anyone can confirm a receipt was signed
+   by you. The key is valid for 5 years; run the tool again before then.
+
+   With a certified certificate instead, convert it once:
    ```
    read -rs P12_PASSWORD; export P12_PASSWORD
    node tools/import-certificate.mjs ~/your-certificate.p12
-   # then run the two commands it prints, and delete its temp folder
    ```
    RSA certificates (the usual kind) are converted by the script. For an EC
    certificate, use OpenSSL instead:
@@ -147,8 +170,8 @@ In order. Commands run in `workers/pay` after `npm ci`.
    ```
    and write `{"alg":"EC","namedCurve":"P-256","certs":["<certificate base64>"]}`
    to `signing:cert` (P-384 if that is your curve).
-   The admin page shows "Digital signature on". From then on, consenting
-   clients receive the signed receipt by email.
+   The admin page shows "Digital signature on". From then on every online
+   payment's client receives the signed receipt by email automatically.
 
 ## Security
 
