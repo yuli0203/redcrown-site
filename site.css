@@ -1,14 +1,15 @@
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-Bold.woff2')format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Chakra Petch';src:url('fonts/ChakraPetch-SemiBold.woff2')format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('fonts/IBMPlexSans-var.woff2')format('woff2');font-weight:100 700;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('fonts/IBMPlexSans-latin.woff2')format('woff2');font-weight:100 700;unicode-range:U+0000-036F,U+2000-2BFF,U+FB00-FB06,U+FEFF,U+FFFD;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('fonts/IBMPlexSans-cyrillic.woff2')format('woff2');font-weight:100 700;unicode-range:U+0400-052F,U+1C80-1C8F,U+2DE0-2DFF,U+A640-A69F;font-display:swap}
 @font-face{font-family:'Michroma';src:url('fonts/Michroma-Regular.woff2')format('woff2');font-weight:400;font-display:swap}
 /* Chakra Petch and Michroma have no Cyrillic, so Russian headings silently fell back
    to whatever font the operating system chose, which differs per platform: the same
    headline measured 214px on Windows and 230px on Linux. Map the Cyrillic range onto
    IBM Plex Sans, which we already ship and which does cover it, so every platform
    renders the same shipped font at the same width. */
-@font-face{font-family:'Chakra Petch';src:url('fonts/IBMPlexSans-var.woff2')format('woff2');font-weight:600 700;unicode-range:U+0400-04FF,U+0500-052F,U+2DE0-2DFF,U+A640-A69F;font-display:swap}
-@font-face{font-family:'Michroma';src:url('fonts/IBMPlexSans-var.woff2')format('woff2');font-weight:400;unicode-range:U+0400-04FF,U+0500-052F,U+2DE0-2DFF,U+A640-A69F;font-display:swap}
+@font-face{font-family:'Chakra Petch';src:url('fonts/IBMPlexSans-cyrillic.woff2')format('woff2');font-weight:600 700;unicode-range:U+0400-04FF,U+0500-052F,U+2DE0-2DFF,U+A640-A69F;font-display:swap}
+@font-face{font-family:'Michroma';src:url('fonts/IBMPlexSans-cyrillic.woff2')format('woff2');font-weight:400;unicode-range:U+0400-04FF,U+0500-052F,U+2DE0-2DFF,U+A640-A69F;font-display:swap}
 :root{
   color-scheme:dark; /* tell auto-darkening browsers (Samsung Internet, Chrome auto-dark) the page is already dark so they don't re-invert it */
   --black:#0E080A; --panel:#1A1013; --panel-2:#221519; --maroon:#76232F;

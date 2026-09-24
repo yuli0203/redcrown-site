@@ -23,6 +23,10 @@ def check():
           }).observe({type:'resource', buffered:true});
         })();""")
         page.goto(BASE + '/he/?test=serial#top', wait_until='load')
+        # Warming waits for the visitor to near #work, so nothing loads at the top.
+        page.wait_for_timeout(1500)
+        assert page.evaluate("[...document.querySelectorAll('.wd-model-wrap')].every(w=>!w.__modelState)")
+        page.evaluate("document.getElementById('work').scrollIntoView()")
         page.wait_for_function("document.querySelector('[data-model=robi]')?.__modelState === 'loaded'")
         # Continuous scroll notifications must defer the next load, even if a
         # previously scheduled idle callback has already fired.
@@ -53,6 +57,7 @@ def check():
         page = browser.new_page()
         page.route('**/enzym_opt.glb', lambda route: route.abort())
         page.goto(BASE + '/he/?test=failure#top', wait_until='load')
+        page.evaluate("document.getElementById('work').scrollIntoView()")
         page.wait_for_function("document.querySelector('[data-model=quest3]')?.__modelState === 'loaded'", timeout=60000)
         assert page.locator('[data-model=enzym]').evaluate('w=>w.__modelState') == 'error'
         page.unroute('**/enzym_opt.glb')

@@ -71,6 +71,8 @@
     const index = realIndex % cards.length;
     const changed = index !== selectedRealIndex % cards.length;
     const moveFocus = focusCardAfterMove || displayCards.includes(document.activeElement);
+    // Swiper fires slideChange while it initialises; that is not a visitor's move.
+    const initial = selectedRealIndex < 0;
     selectedRealIndex = realIndex;
     if (changed) detailsOpen = true;
     // Expose/focus the incoming card BEFORE hiding the old one from AT.
@@ -87,7 +89,8 @@
     controls.querySelector('.carousel-count').textContent = `${index+1}/${cards.length}`;
     if (announce && changed) {
       status.textContent = `${labels.project} ${index+1} ${labels.of} ${cards.length}: ${cards[index].getAttribute('aria-label')}`;
-      if (window.RCModels) window.RCModels.load();
+      // Loading the 3D stack on that initial selection cost ~3 MB for every visitor.
+      if (window.RCModels && !initial) window.RCModels.load();
     }
   }
   const carousel = new Swiper(viewport,{
