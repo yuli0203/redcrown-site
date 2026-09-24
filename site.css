@@ -38,8 +38,8 @@ a{color:inherit;text-decoration:none}
 .k{font-family:var(--brand);letter-spacing:.3em;text-transform:uppercase}
 .icon{width:1em;height:1em;fill:none;stroke:var(--hot);stroke-width:1.7;vertical-align:-.15em}
 .icon-wa{stroke:#25D366}
-.wa-float{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));inset-inline-end:calc(22px + env(safe-area-inset-right));z-index:70;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.45);transition:transform .2s ease,box-shadow .2s ease}
-.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 22px rgba(37,211,102,.45)}
+.wa-float{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom));inset-inline-end:calc(22px + env(safe-area-inset-right));z-index:70;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(37,211,102,.38);transition:transform .2s ease,box-shadow .2s ease}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 12px 34px rgba(37,211,102,.55)}
 .wa-float svg{width:28px;height:28px;fill:#fff}
 /* Soft pulse, so the button reads as an invitation rather than furniture. */
 .wa-float::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid #25D366;animation:waPulse 2.8s ease-out infinite;pointer-events:none}
