@@ -83,3 +83,16 @@ test('the audit catches cannibalisation and broken links', () => {
 test('the rendered blog on disk matches the posts', () => {
   execFileSync(process.execPath, [path.join(ROOT, 'tools/journal/build.js'), '--check'], { stdio: 'pipe' });
 });
+
+test('the /seo snapshot carries no secrets and no unpublished strategy', () => {
+  const { snapshot } = require('./journal/publish-seo.js');
+  const data = snapshot();
+  const serialised = JSON.stringify(data);
+  assert.ok(!/keywords"\s*:\s*\[/.test(serialised), 'the keyword queue must not be published');
+  assert.ok(!/audit/i.test(serialised), 'the audit report must not be published');
+  for (const name of ['ANTHROPIC_API_KEY', 'FACEBOOK_PAGE_TOKEN', 'apiKey', 'token', 'passphrase']) {
+    assert.ok(!serialised.includes(name), `${name} must not appear in the published payload`);
+  }
+  assert.strictEqual(data.posts.length, posts.all().length);
+  assert.strictEqual(typeof data.pipeline.queued, 'number');
+});

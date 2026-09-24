@@ -37,6 +37,7 @@ jobs:
       # that /blog/ on disk still matches tools/journal/posts/.
       - run: node --test tools/test_journal.js
       - run: node tools/journal/build.js --check
+      - run: node tools/journal/publish-seo.js --check
 
   campaign-device-matrix:
     name: Campaign pages work on mobile and desktop

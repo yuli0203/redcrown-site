@@ -64,12 +64,15 @@ jobs:
       - name: Audit
         run: node tools/journal/audit.js --strict
 
+      - name: Refresh the dashboard at /seo/
+        run: node tools/journal/publish-seo.js
+
       - name: Commit
         id: commit
         run: |
           git config user.name  'Red Crown Journal'
           git config user.email 'hello@redcrowninteractive.com'
-          git add blog tools/journal/posts tools/journal/keywords.json tools/journal/audit-report.md sitemap.xml
+          git add blog seo tools/journal/posts tools/journal/keywords.json tools/journal/audit-report.md sitemap.xml
           if git diff --cached --quiet; then
             echo "published=false" >> "$GITHUB_OUTPUT"
             echo 'Nothing new to publish.'

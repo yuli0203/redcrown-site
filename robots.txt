@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# The journal dashboard reports on the blog; it is not content for search.
+Disallow: /seo/
+
 Sitemap: https://redcrowninteractive.com/sitemap.xml

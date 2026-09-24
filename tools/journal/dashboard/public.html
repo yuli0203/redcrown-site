@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E080A">
+<!-- This page reports on the blog; it is not blog content and must not compete
+     with it in search, so it stays out of the index and out of the sitemap. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Journal Engine · Red Crown Interactive</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:Michroma;src:url('/fonts/Michroma-Regular.woff2') format('woff2');font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/fonts/IBMPlexSans-var.woff2') format('woff2');font-weight:100 700;font-display:swap}
+@font-face{font-family:'Chakra Petch';src:url('/fonts/ChakraPetch-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+:root{color-scheme:dark;--bg:#0e080a;--panel:#1a1013;--line:rgba(240,234,228,.12);--bone:#f0eae4;--dim:#a89da0;--accent:#f03f5c;--red:#c8102e;--ok:#4ade80;--warn:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 70% 0,rgba(118,35,47,.26),transparent 48%) var(--bg);color:var(--bone);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.7}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.wrap{width:min(1180px,calc(100% - 48px));margin-inline:auto}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:28px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand strong,.brand small{display:block;font-family:'Chakra Petch',sans-serif;font-weight:600}
+.brand strong{font-size:16px;letter-spacing:3px;line-height:20px}
+.brand small{font-size:9px;letter-spacing:4px;line-height:14px;color:var(--accent);margin-top:2px}
+header.top nav{display:flex;gap:20px;font-size:14px;color:var(--dim)}
+header.top nav a{text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+header.top nav a:hover{color:var(--bone)}
+h1{font-size:clamp(30px,4vw,44px);letter-spacing:-.5px;margin:44px 0 8px}
+.eyebrow{font-family:Michroma,sans-serif;font-size:11px;letter-spacing:3px;color:var(--accent);margin:0}
+.sub{color:var(--dim);margin:0 0 32px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.card{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--panel)}
+.card .k{color:var(--dim);font-size:13px;margin-bottom:10px}
+.card .v{font-size:34px;font-weight:700;line-height:1}
+.card .n{color:var(--dim);font-size:12px;margin-top:8px}
+h2{font-size:24px;margin:40px 0 16px}
+.post{display:block;border:1px solid var(--line);border-inline-start:3px solid #76232f;border-radius:16px;padding:22px 24px;margin-bottom:12px;background:var(--panel);text-decoration:none}
+.post:hover{border-inline-start-color:var(--red);box-shadow:0 12px 32px rgba(0,0,0,.2)}
+.post h3{margin:0 0 6px;font-size:19px}
+.post p{margin:0 0 12px;color:#c5b9bd;font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:var(--dim);font-size:13px}
+.badge{padding:3px 10px;border-radius:999px;font-size:12px;background:rgba(74,222,128,.14);color:var(--ok)}
+.badge.draft{background:rgba(251,191,36,.14);color:var(--warn)}
+.badge.muted{background:rgba(240,234,228,.08);color:var(--dim)}
+dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin:0}
+dt{color:var(--dim);font-size:13px}
+dd{margin:4px 0 0;font-size:17px}
+.note{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--panel);margin:40px 0}
+.note h2{margin-top:0;font-size:20px}
+.note p{color:#c5b9bd;margin:0 0 12px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#120c0e;border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:14px;direction:ltr;display:inline-block}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-block:28px;color:var(--dim);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+#error{display:none;border:1px solid #76232f;background:#221519;border-radius:12px;padding:20px;margin:24px 0}
+@media(max-width:640px){.wrap{width:calc(100% - 32px)}h1{margin-top:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/he/" dir="ltr" aria-label="Red Crown Interactive">
+      <img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="42" height="42" alt="">
+      <span><strong>RED CROWN</strong><small>JOURNAL ENGINE</small></span>
+    </a>
+    <nav>
+      <a href="/blog/">הבלוג</a>
+      <a href="/he/">האתר</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="eyebrow" dir="ltr">JOURNAL ENGINE</p>
+    <h1>מצב הבלוג</h1>
+    <p class="sub" id="generated">טוען…</p>
+
+    <div id="error">לא הצלחנו לטעון את הנתונים. ודאו ש-<code>/seo/data.json</code> פורסם.</div>
+
+    <div class="cards" id="cards"></div>
+
+    <h2>מאמרים</h2>
+    <div id="posts"></div>
+
+    <h2>איך המנוע מוגדר</h2>
+    <div class="card"><dl id="rules"></dl></div>
+
+    <div class="note">
+      <h2>מה לא מוצג כאן</h2>
+      <p>העמוד הזה מתארח ב-GitHub Pages, שמגיש קבצים סטטיים בלבד - אין לפניו מסך התחברות,
+        ולכן כל מי שמגיע לכתובת רואה את מה שכאן. משום כך הוא מציג רק מידע שכבר גלוי ממילא
+        בבלוג עצמו: אילו מאמרים פורסמו, מתי, ובאילו כללים.</p>
+      <p>תור מילות המפתח, ניתוח המתחרים ודוח האודיט הם מידע תחרותי, והם נשארים במחשב שלך.
+        להצגה שלהם, ולעריכת ההגדרות, מריצים את לוח הבקרה המקומי:</p>
+      <p><code>node tools/journal/dashboard.js</code></p>
+    </div>
+  </main>
+
+  <footer>
+    <span dir="ltr">© 2026 Red Crown Interactive</span>
+    <span><a href="/blog/feed.xml">RSS</a> · <a href="/blog/">כל המאמרים</a></span>
+  </footer>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const el = id => document.getElementById(id);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const he = iso => new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso));
+
+  fetch('/seo/data.json', { credentials: 'omit' })
+    .then(response => { if (!response.ok) throw new Error('unavailable'); return response.json(); })
+    .then(data => {
+      el('generated').textContent = `${esc(data.site.url)} · עודכן ב-${he(data.generatedAt)}`;
+
+      const published = data.posts.filter(post => post.rendered).length;
+      const shared = data.posts.filter(post => post.shared).length;
+      const missingFaq = data.posts.filter(post => !post.faq).length;
+      const cards = [
+        { k: 'מאמרים', v: data.posts.length, n: `${published} מפורסמים באתר` },
+        { k: 'מילות מפתח בתור', v: data.pipeline.queued, n: `${data.pipeline.used} כבר נכתבו` },
+        { k: 'שותפו לפייסבוק', v: shared, n: data.social.facebook ? 'שיתוף אוטומטי פעיל' : 'שיתוף אוטומטי כבוי' },
+        { k: 'ללא שאלות נפוצות', v: missingFaq, n: missingFaq ? 'FAQPage חסר בהם' : 'כל המאמרים מכוסים' },
+      ];
+      el('cards').innerHTML = cards.map(card =>
+        `<div class="card"><div class="k">${esc(card.k)}</div><div class="v">${card.v}</div><div class="n">${esc(card.n)}</div></div>`).join('');
+
+      el('posts').innerHTML = data.posts.map(post => `
+        <a class="post" href="/blog/${esc(post.slug)}/">
+          <h3>${esc(post.title)}</h3>
+          <p>${esc(post.excerpt)}</p>
+          <div class="meta">
+            <span class="badge ${post.rendered ? '' : 'draft'}">${post.rendered ? 'published' : 'draft'}</span>
+            <span>${he(post.isoDate)}</span><span aria-hidden="true">·</span>
+            <span>${post.words} מילים</span><span aria-hidden="true">·</span>
+            <span>${post.keyword ? esc(post.keyword) : 'ללא מילת מפתח'}</span>
+            ${post.faq ? '' : '<span class="badge muted">ללא FAQ</span>'}
+            ${post.source === 'soro-import' ? '<span class="badge muted">יובא מ-Soro</span>' : ''}
+            ${post.shared ? '<span class="badge">שותף</span>' : ''}
+          </div>
+        </a>`).join('');
+
+      const rules = [
+        ['תזמון פרסום', data.schedule.note],
+        ['מאמרים בכל הרצה', data.schedule.articlesPerRun],
+        ['אורך מאמר', `${data.rules.wordsMin}-${data.rules.wordsMax} מילים`],
+        ['שאלות נפוצות', `${data.rules.faqMin} לפחות`],
+        ['קישורים פנימיים', `${data.rules.internalLinksMin} לפחות`],
+        ['אורך כותרת', `עד ${data.rules.titleMaxChars} תווים`],
+        ['אורך תיאור מטא', `עד ${data.rules.descriptionMaxChars} תווים`],
+        ['שוק היעד', data.rules.market],
+      ];
+      el('rules').innerHTML = rules.map(([term, value]) =>
+        `<div><dt>${esc(term)}</dt><dd>${esc(value)}</dd></div>`).join('');
+    })
+    .catch(() => { el('error').style.display = 'block'; el('generated').textContent = ''; });
+})();
+</script>
+</body>
+</html>

@@ -42,6 +42,22 @@ brief, which is why an article argues against the current results rather than
 restating them. `write.js` refuses a draft that breaks the rules in
 `config.json` - length, keyword placement, or a link outside the approved list.
 
+### /seo - the published dashboard
+
+`node tools/journal/publish-seo.js` writes `/seo/`, a read-only report that
+ships with the site at `redcrowninteractive.com/seo`. GitHub Pages has no login
+to put in front of it, so it carries only what the blog already reveals: which
+articles exist, when they went out, how long they are, and the rules the engine
+runs under. The keyword queue, the competitor analysis and the audit findings
+are competitive information and stay in the repository - the local dashboard
+shows those. `robots.txt` disallows the path and the page sends `noindex`, so it
+does not compete with the blog in search, and `tools/test_journal.js` fails if
+anything sensitive ever reaches the payload.
+
+To put the full dashboard behind a real login, the site has to move off GitHub
+Pages to a host with access control in front of it (the repository already keeps
+a Cloudflare `_redirects` file for that move).
+
 ### Configuration
 
 `tools/journal/config.json` holds everything: the Brand DNA fields (business
