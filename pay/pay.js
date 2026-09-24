@@ -99,7 +99,7 @@
     status.classList.remove('is-notice');
     if (!API_ORIGIN) {
       notice('Online payments are not enabled yet, so nothing has been charged. ' +
-        'To pay ' + link.i + ' now, email hello@redcrowninteractive.com for bank transfer details.');
+        'To pay ' + link.i + ' now, email julia@redcrowninteractive.com for bank transfer details.');
       return;
     }
     setBusy(true);
@@ -136,7 +136,7 @@
     const title = document.createElement('b');
     title.textContent = 'This payment request has been paid';
     const text = document.createElement('span');
-    text.textContent = 'Thank you! Your receipt was sent when the payment was received. Questions? hello@redcrowninteractive.com';
+    text.textContent = 'Thank you! Your receipt was sent when the payment was received. Questions? julia@redcrowninteractive.com';
     box.append(title, text);
     section.append(box);
   };
@@ -144,11 +144,11 @@
     if (!API_ORIGIN) return;
     try {
       const res = await fetch(`${API_ORIGIN}/request?${query}`, { credentials: 'omit', referrerPolicy: 'no-referrer' });
-      if (res.status === 400) return showProblem('This payment link is not valid', 'Please use the link from the payment request we emailed you, or email hello@redcrowninteractive.com.');
+      if (res.status === 400) return showProblem('This payment link is not valid', 'Please use the link from the payment request we emailed you, or email julia@redcrowninteractive.com.');
       if (!res.ok) return;
       const d = await res.json();
       if (d.status === 'paid') showPaid();
-      else if (d.status === 'cancelled') return showProblem('This payment request was cancelled', 'Email hello@redcrowninteractive.com if you think this is a mistake.');
+      else if (d.status === 'cancelled') return showProblem('This payment request was cancelled', 'Email julia@redcrowninteractive.com if you think this is a mistake.');
       else if (d.status === 'expired') return showProblem('This payment link has expired', 'For your security, payment links are valid for a limited time. Email us and we will send you a new one.');
 
       $('sum-billto').textContent = [d.client?.name, d.client?.company].filter(Boolean).join(', ');

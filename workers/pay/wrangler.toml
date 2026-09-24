@@ -5,6 +5,9 @@
 #   PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET
 #   OWNER_NAME             your name as registered, e.g. "Julia Pavlov / יוליה פבלוב"
 #   BUSINESS_ID            your עוסק פטור number (printed on documents)
+#   BUSINESS_ADDRESS       the address registered for your business with the Tax
+#                          Authority (printed on documents; a secret because this
+#                          repository is public and it may be your home address)
 #   RESEND_API_KEY         email
 #   SIGNING_KEY            your signing key, from tools/import-certificate.mjs (see pay/README.md)
 name = "red-crown-pay-api"
@@ -23,16 +26,15 @@ PAYPAL_API_URL = "https://api-m.sandbox.paypal.com"
 PAYPAL_WEBHOOK_ID = ""
 # Printed on every document.
 TRADING_NAME = "Red Crown Interactive"
-BUSINESS_ADDRESS = "Gutwirth Science Park, Haifa, Israel"
-BUSINESS_EMAIL = "hello@redcrowninteractive.com"
+BUSINESS_EMAIL = "julia@redcrowninteractive.com"
 BUSINESS_PHONE = "+972-77-360-9992"
 # First receipt number if the series has not started (can also be set once on /admin).
 RECEIPT_START = "1"
 # Emails. NOTIFY_FROM must be on a domain verified in Resend.
-NOTIFY_TO = "hello@redcrowninteractive.com"
+NOTIFY_TO = "julia@redcrowninteractive.com"
 NOTIFY_FROM = "Red Crown Interactive <payments@redcrowninteractive.com>"
 
-# Sessions, rate limits and the signing certificate file.
+# The signing certificate (public data; see pay/README.md).
 # Create with: npx wrangler kv namespace create PAYMENTS  (then paste the id)
 [[kv_namespaces]]
 binding = "PAYMENTS"

@@ -28,7 +28,6 @@ import { json, baseHeaders, cors, readBody } from './http.js';
 
 const METHODS = ['card', 'paypal'];
 const REF_RE = /^[0-9a-f-]{36}$/;
-const SESSION_TTL = 60 * 60 * 24 * 7;  // a checkout reference lives a week
 export const CONSENT_TEXT = 'I agree to receive receipts and other tax documents from Red Crown Interactive digitally, by email.';
 
 const provider = env => {
@@ -39,8 +38,9 @@ const provider = env => {
 };
 
 const linkQuery = l => new URLSearchParams({ i: l.i, a: l.a, c: l.c, x: l.x, s: l.s }).toString();
-const getSession = async (env, ref) => JSON.parse(await env.PAYMENTS.get('session:' + ref) || 'null');
-const putSession = (env, ref, session) => env.PAYMENTS.put('session:' + ref, JSON.stringify(session), { expirationTtl: SESSION_TTL });
+// Checkout sessions live in the ledger (strongly consistent), not in KV.
+const getSession = (env, ref) => ledger(env).getSession(ref);
+const putSession = (env, ref, session) => ledger(env).putSession(ref, session);
 
 const rateLimited = async (request, env, scope) => {
   if (!env.RATE_LIMITER) return false;

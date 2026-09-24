@@ -103,9 +103,12 @@ In order. Commands run in `workers/pay` after `npm ci`.
      (`openssl rand -base64 48`). Keep `ADMIN_TOKEN` in your password manager.
    - `OWNER_NAME`: your name as registered, e.g. `Julia Pavlov / יוליה פבלוב`
    - `BUSINESS_ID`: your עוסק פטור number
+   - `BUSINESS_ADDRESS`: the business address registered with the Tax
+     Authority (as on your אישור עוסק פטור); a secret because it may be your
+     home address and this repository is public
    - `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` (step 4)
    - `RESEND_API_KEY` (step 5)
-   Check `BUSINESS_ADDRESS`, `BUSINESS_PHONE` and the emails in `wrangler.toml`.
+   Check `BUSINESS_PHONE` and the emails in `wrangler.toml`.
 3. **Deploy:** `npx wrangler deploy`. Open `https://<worker>/admin`, unlock it
    with `ADMIN_TOKEN`, and in Settings set the **first receipt number** (the
    number after your last existing receipt). Optional but recommended: put

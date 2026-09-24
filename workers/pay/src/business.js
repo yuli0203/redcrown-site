@@ -46,13 +46,17 @@ const str = (v, max, name, required = false) => {
 };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// Single-line fields also go into email subjects: pasted line breaks and tabs
+// become spaces.
+const line = v => (typeof v === 'string' ? v.replace(/\s+/g, ' ') : v);
+
 export function client(c = {}, { requireEmail = false } = {}) {
   const out = {
-    name: str(c.name, 120, 'Client name', true),
-    company: str(c.company, 160, 'Company'),
-    taxId: str(c.taxId, 40, 'Tax ID'),
+    name: str(line(c.name), 120, 'Client name', true),
+    company: str(line(c.company), 160, 'Company'),
+    taxId: str(line(c.taxId), 40, 'Tax ID'),
     address: str(c.address, 240, 'Client address', true),
-    email: str(c.email, 254, 'Client email', requireEmail),
+    email: str(line(c.email), 254, 'Client email', requireEmail),
   };
   if (out.email && !EMAIL_RE.test(out.email)) throw bad('Client email is not valid');
   return out;

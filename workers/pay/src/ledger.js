@@ -29,7 +29,12 @@ const SCHEMA = [
      consent TEXT, payment TEXT, signed INTEGER NOT NULL DEFAULT 0, pdf BLOB)`,
   `CREATE TABLE IF NOT EXISTS claims (invoice TEXT PRIMARY KEY, ref TEXT NOT NULL, created INTEGER NOT NULL)`,
   `CREATE TABLE IF NOT EXISTS payments (ref TEXT PRIMARY KEY, invoice TEXT NOT NULL, status TEXT NOT NULL, data TEXT NOT NULL, created INTEGER NOT NULL)`,
+  // Checkout sessions (one per click on a pay button). Kept here rather than in
+  // KV because KV is eventually consistent: a client returning from PayPal
+  // through another Cloudflare location could otherwise miss their session.
+  `CREATE TABLE IF NOT EXISTS sessions (ref TEXT PRIMARY KEY, data TEXT NOT NULL, created INTEGER NOT NULL)`,
 ];
+const SESSION_TTL_MS = 7 * 86400 * 1000;   // a checkout reference lives a week
 
 const REQUEST_PREFIX = 'PR-';
 const json = v => JSON.stringify(v ?? null);
@@ -104,6 +109,19 @@ export class LedgerCore {
     if (this.db.all('SELECT 1 FROM claims WHERE invoice = ?', number).length) throw new Error('a payment is in progress');
     this.db.run(`UPDATE requests SET status = 'cancelled' WHERE number = ?`, number);
     return this.getRequest(number);
+  }
+
+  // ---- Checkout sessions.
+  putSession(ref, data) {
+    const now = this.now();
+    this.db.run('DELETE FROM sessions WHERE created < ?', now - SESSION_TTL_MS);
+    this.db.run(`INSERT INTO sessions (ref, data, created) VALUES (?, ?, ?)
+      ON CONFLICT(ref) DO UPDATE SET data = excluded.data`, ref, json(data), now);
+  }
+
+  getSession(ref) {
+    const row = this.db.all('SELECT data, created FROM sessions WHERE ref = ?', ref)[0];
+    return row && row.created >= this.now() - SESSION_TTL_MS ? parse(row.data) : null;
   }
 
   // ---- Payments: at most one per request.
