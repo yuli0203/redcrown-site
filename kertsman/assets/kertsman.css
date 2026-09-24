@@ -304,7 +304,7 @@ html[dir='ltr'] .hero::after {
 
 .hero-inner { padding-block: clamp(72px, 12vw, 148px); max-width: var(--maxw); }
 .hero-copy { max-width: min(700px, 100%); }
-.hero .eyebrow { color: var(--gold); }
+.hero .eyebrow { color: var(--gold); text-shadow: 0 1px 3px rgba(8, 0, 34, .75); }
 .hero .eyebrow::before { background: var(--gold); }
 
 /* סמל בית בזהב לצד הכותרת, שמוסיף חמימות ומשפחתיות
@@ -340,14 +340,20 @@ html[dir='ltr'] .hero::after {
 }
 @media (max-width: 520px) { .hero-title { gap: 12px; } }
 
-.hero h1 { font-size: clamp(2.375rem, 6.2vw, 4.5rem); line-height: 1.06; letter-spacing: -0.02em; color: #fff; text-shadow: 0 2px 24px rgba(10, 0, 40, .5); }
+/* צל טקסט בשתי שכבות: אחת צמודה שמפרידה את האות מהתמונה, ואחת רחבה
+   שמכהה את הרקע סביבה. כך הכיתוב נקרא גם מעל שמיים בהירים.
+   A two-layer text shadow: a tight one that separates the letter from the
+   photo, and a wide one that darkens the area around it, so the copy stays
+   readable even over a bright sky. */
+.hero h1 { font-size: clamp(2.375rem, 6.2vw, 4.5rem); line-height: 1.06; letter-spacing: -0.02em; color: #fff; text-shadow: 0 1px 3px rgba(8, 0, 34, .62), 0 4px 28px rgba(8, 0, 34, .7); }
 .hero h1 em { font-style: normal; color: var(--gold); }
-.hero-lede { max-width: 44ch; margin-block-start: 22px; font-size: clamp(1.0625rem, 1.8vw, 1.28125rem); color: rgba(255, 255, 255, .92); text-shadow: 0 1px 14px rgba(10, 0, 40, .55); }
+.hero-lede { max-width: 44ch; margin-block-start: 22px; font-size: clamp(1.0625rem, 1.8vw, 1.28125rem); color: #fff; text-shadow: 0 1px 2px rgba(8, 0, 34, .7), 0 2px 16px rgba(8, 0, 34, .68); }
 .hero-sign {
   margin-block-start: 18px;
   font-family: var(--display);
   font-size: 1.1875rem;
   color: var(--gold-soft);
+  text-shadow: 0 1px 3px rgba(8, 0, 34, .78), 0 2px 16px rgba(8, 0, 34, .7);
 }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-block-start: 30px; }
 .hero-cta .btn-ghost { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .45); color: #fff; }
@@ -360,7 +366,8 @@ html[dir='ltr'] .hero::after {
   margin-block-start: 34px;
   padding-block-start: 24px;
   border-block-start: 1px solid rgba(255, 255, 255, .25);
-  color: rgba(255, 255, 255, .85);
+  color: rgba(255, 255, 255, .92);
+  text-shadow: 0 1px 3px rgba(8, 0, 34, .72);
   font-size: 0.90625rem;
 }
 .hero-trust span { display: flex; align-items: center; gap: 8px; }
