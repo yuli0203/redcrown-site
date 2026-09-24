@@ -203,5 +203,11 @@
   document.addEventListener('visibilitychange', function () { if (!document.hidden && visible) req(); });
   window.addEventListener('pageshow', function (e) { if (e.persisted) req(); });  // bfcache restore
 
-  if (reduce) draw(1, 1, 0, 0, 0.02, 0.3); else req();
+  // Show a still frame at once, but start the animation only after the page has
+  // loaded and gone idle: a 60fps canvas during load competed with the first paint
+  // and first taps, which is what page-speed checks measure.
+  if (reduce) { draw(1, 1, 0, 0, 0.02, 0.3); return; }
+  if (SHAPES[idx].inplane) draw(1, 1, 0, 0, -0.28, spin * 0.32); else draw(1, 1, 0, spin * 0.40, -0.30, lean);
+  function start() { if ('requestIdleCallback' in window) requestIdleCallback(req, { timeout: 1500 }); else setTimeout(req, 300); }
+  if (document.readyState === 'complete') start(); else window.addEventListener('load', start, { once: true });
 })();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" data-page-lang="he" dir="rtl">
 <head>
-<script src="/shared/language.js"></script>
+<script src="/shared/language.js" defer></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
@@ -21,7 +21,9 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="stylesheet" href="../site.css?v=c881c7914b2a">
+<!-- The hero background is the largest paint; fetch it with the HTML instead of after the CSS. -->
+<link rel="preload" as="image" href="../assets/hero.webp" type="image/webp" fetchpriority="high">
+<link rel="stylesheet" href="../site.css?v=46d9d58f924a">
 <link rel="stylesheet" href="../vendor/swiper-14.2.0.min.css">
 <link rel="stylesheet" href="../project-carousel.css?v=10-warm-background">
 <link rel="canonical" href="https://redcrowninteractive.com/he/">
@@ -236,7 +238,7 @@
       <div class="lcell rv">
         <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.ar.title">מעבדת AR</span></span><span class="l-result" data-i18n="work.card.ar.result">חקירת מולקולות על השולחן באמצעות הידיים.</span></div>
         <button type="button" class="lcard" data-project="ar" aria-expanded="true" aria-controls="wd-ar">
-          <picture><source srcset="../assets/lioness/ar-angular-hires-v14.png" type="image/png"><img class="lart" src="../assets/lioness/ar-angular-hires-v14.png" alt="פרויקטים במציאות משולבת" width="1122" height="1402" loading="lazy"></picture>
+          <picture><source srcset="../assets/lioness/ar-angular-hires-v14.webp" type="image/webp"><img class="lart" src="../assets/lioness/ar-angular-hires-v14.webp" alt="פרויקטים במציאות משולבת" width="1122" height="1402" loading="lazy"></picture>
           <span class="l-cta" aria-hidden="true"><b class="l-arr">→</b></span>
         </button>
       </div>
@@ -257,7 +259,7 @@
       <div class="lcell rv">
         <div class="lcap"><span class="lcap-top"><span class="l-title" data-i18n="work.card.class.title">כיתת Meta Quest</span></span><span class="l-result" data-i18n="work.card.class.result">הקמה והטמעה של כיתת VR עם עד 12 משקפי Meta Quest.</span></div>
         <button type="button" class="lcard" data-project="class" aria-expanded="false" aria-controls="wd-class">
-          <picture><source srcset="../assets/lioness/classroom-cubs-v8.png" type="image/png"><img class="lart" src="../assets/lioness/classroom-cubs-v8.png" alt="לביאה מובילה שלושה גורי אריות עם משקפי VR" width="1122" height="1402" loading="lazy"></picture>
+          <picture><source srcset="../assets/lioness/classroom-cubs-v8.webp" type="image/webp"><img class="lart" src="../assets/lioness/classroom-cubs-v8.webp" alt="לביאה מובילה שלושה גורי אריות עם משקפי VR" width="1122" height="1402" loading="lazy"></picture>
           <span class="l-cta" aria-hidden="true"><b class="l-arr">→</b></span>
         </button>
       </div>
@@ -547,16 +549,16 @@
 
 <a class="wa-float" href="https://wa.me/972585760550?text=Hi%21%20I%27m%20interested%20in%20app%20development%20services" target="_blank" rel="noopener" aria-label="שיחה בוואטסאפ"><svg viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5z"/><path d="M9.2 8.8c-.3 3.1 2.9 6.3 6 6l.6-1.6-2-1.2-.9.7c-.7-.4-1.2-.9-1.6-1.6l.7-.9-1.2-2z"/></svg></a>
 
-<script src="../lenis.min.js"></script>
-<script src="../site.js?v=8863dcea7108"></script>
+<script src="../lenis.min.js" defer></script>
+<script src="../site.js?v=8863dcea7108" defer></script>
 <script src="../project-video.js?v=20260916" defer></script>
 <script src="../hero-gl.js" defer></script>
-<script src="../holo.js" defer></script>
+<script src="../holo.js?v=20260924-idle" defer></script>
 <script src="../crown-particles.js" defer></script>
 <script src="../float.js" defer></script>
-<script src="../model-cards.js?v=20260912-spinner" defer></script>
+<script src="../model-cards.js?v=20260924-near-work" defer></script>
 <script src="../vendor/swiper-14.2.0.min.js" defer></script>
-<script src="../project-carousel.js?v=9-a11y" defer></script>
+<script src="../project-carousel.js?v=11-lazy-models" defer></script>
 <script>
 /* The 3D model cards live in model-cards.js, shared with the case-study
    pages, so the loader, the zoom and Robi's eyes exist in one place. */

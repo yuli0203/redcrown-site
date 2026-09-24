@@ -57,11 +57,9 @@ def main():
                 pg.wait_for_timeout(1200)
 
                 if how == "cards":
-                    # the home page builds its cards when a work card is opened
-                    pg.evaluate("""() => {
-                        const b = document.querySelector('.wcard[data-project]');
-                        if (b) b.click();
-                    }""")
+                    # the home page warms its cards once the visitor nears #work
+                    # (nothing 3D loads while only the hero is on screen)
+                    pg.evaluate("document.getElementById('work').scrollIntoView()")
                 else:
                     pg.evaluate("document.querySelector('.pg-media, .pg-model').scrollIntoView()")
 

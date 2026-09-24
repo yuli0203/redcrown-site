@@ -218,6 +218,10 @@
      Keep loaded viewers for reuse; only one model is prepared at a time. */
   var modelTimer = 0, idleJob = 0, loadingModel = false, libraryJob = null;
   var quietUntil = 0, visibleModels = new Set();
+  // Start warming only once the visitor nears #work. Loading the library and the
+  // first model straight after page load kept the main thread busy while the hero
+  // was still the only thing on screen, which slowed first taps and page-speed scores.
+  var nearWork = !budgeted;
   var modelWraps = [];
   if (budgeted) document.querySelectorAll('#work .lcard[aria-controls]').forEach(function (card) {
     var panel = document.getElementById(card.getAttribute('aria-controls'));
@@ -278,7 +282,7 @@
     if (!budgeted) return;
     clearTimeout(modelTimer);
     if (idleJob) { cancelIdleCallback(idleJob); idleJob = 0; }
-    if (document.readyState !== 'complete' || document.hidden || loadingModel || !selectedModel()) return;
+    if (!nearWork || document.readyState !== 'complete' || document.hidden || loadingModel || !selectedModel()) return;
     modelTimer = setTimeout(function () {
       function ready() {
         idleJob = 0;
@@ -348,6 +352,14 @@
     document.addEventListener('visibilitychange',function () { syncModelMotion(); scheduleModel(); });
     modelMotion.addEventListener('change',syncModelMotion);
     window.addEventListener('load',scheduleModel,{once:true});
+    var work = document.getElementById('work');
+    if (work && 'IntersectionObserver' in window) {
+      var approach = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        approach.disconnect(); nearWork = true; scheduleModel();
+      }, { rootMargin: '800px 0px' });
+      approach.observe(work);
+    } else nearWork = true;
     scheduleModel();
   }
 
