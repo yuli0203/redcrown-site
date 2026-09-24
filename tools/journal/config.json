@@ -119,5 +119,12 @@
   },
   "import": {
     "soroEmbed": "https://app.trysoro.com/api/embed/231358a2-cbdb-4736-83c3-36facdda3e9c?theme=dark"
+  },
+  "dashboard": {
+    "siteId": "redcrowninteractive",
+    "apiOrigin": "",
+    "apiOriginNote": "כתובת ה-Worker אחרי wrangler deploy, למשל https://red-crown-journal-api.yuli0203.workers.dev",
+    "authConfig": "/calendar/auth-config.json",
+    "searchConsoleProperty": "sc-domain:redcrowninteractive.com"
   }
 }

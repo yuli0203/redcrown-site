@@ -67,6 +67,13 @@ jobs:
       - name: Refresh the dashboard at /seo/
         run: node tools/journal/publish-seo.js
 
+      # The private half of the dashboard goes to the API, never to the site.
+      - name: Push the dashboard state
+        if: env.JOURNAL_PUBLISH_KEY != ''
+        env:
+          JOURNAL_PUBLISH_KEY: ${{ secrets.JOURNAL_PUBLISH_KEY }}
+        run: node tools/journal/publish-state.js
+
       - name: Commit
         id: commit
         run: |

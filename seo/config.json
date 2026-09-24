@@ -1,0 +1,6 @@
+{
+  "siteId": "redcrowninteractive",
+  "apiOrigin": "",
+  "authConfig": "/calendar/auth-config.json",
+  "searchConsoleProperty": "sc-domain:redcrowninteractive.com"
+}

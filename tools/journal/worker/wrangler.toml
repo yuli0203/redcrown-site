@@ -1,0 +1,22 @@
+name = "red-crown-journal-api"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# Who may read the dashboard, and from where. Both are plain settings; the two
+# real credentials (PUBLISH_KEY and, on the site, nothing at all) are secrets.
+[vars]
+SITE_ID = "redcrowninteractive"
+ALLOWED_ORIGINS = "https://redcrowninteractive.com,https://www.redcrowninteractive.com"
+OWNER_EMAILS = "yuli0203@gmail.com"
+# The Firebase Web API key is public by design - it identifies the project, it
+# does not grant anything. The same key the calendar already ships.
+FIREBASE_API_KEY = "AIzaSyC7reNu2MWjjyURAhj7xI3OXNSIueOugg8"
+
+# The published snapshot lives here, keyed by site, so a second site can be
+# added later without touching this code.
+[[kv_namespaces]]
+binding = "JOURNAL"
+id = "replace-with-the-id-wrangler-prints"
+
+# Set once, never committed:
+#   npx wrangler secret put PUBLISH_KEY

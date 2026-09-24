@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E080A">
-<!-- This page reports on the blog; it is not blog content and must not compete
-     with it in search, so it stays out of the index and out of the sitemap. -->
+<!-- A control panel, not content: it must never compete with the blog in search. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Journal Engine · Red Crown Interactive</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -14,148 +13,636 @@
 @font-face{font-family:Michroma;src:url('/fonts/Michroma-Regular.woff2') format('woff2');font-display:swap}
 @font-face{font-family:'IBM Plex Sans';src:url('/fonts/IBMPlexSans-var.woff2') format('woff2');font-weight:100 700;font-display:swap}
 @font-face{font-family:'Chakra Petch';src:url('/fonts/ChakraPetch-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
-:root{color-scheme:dark;--bg:#0e080a;--panel:#1a1013;--line:rgba(240,234,228,.12);--bone:#f0eae4;--dim:#a89da0;--accent:#f03f5c;--red:#c8102e;--ok:#4ade80;--warn:#fbbf24}
+:root{color-scheme:dark;--bg:#0e080a;--panel:#1a1013;--panel2:#120c0e;--line:rgba(240,234,228,.12);--bone:#f0eae4;--dim:#a89da0;--accent:#f03f5c;--red:#c8102e;--ok:#4ade80;--warn:#fbbf24;--plan:#7c5cff}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at 70% 0,rgba(118,35,47,.26),transparent 48%) var(--bg);color:var(--bone);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.7}
 a{color:inherit}
-a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.wrap{width:min(1180px,calc(100% - 48px));margin-inline:auto}
-header.top{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:28px;border-bottom:1px solid var(--line)}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{width:min(1200px,calc(100% - 48px));margin-inline:auto}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
 .brand strong,.brand small{display:block;font-family:'Chakra Petch',sans-serif;font-weight:600}
-.brand strong{font-size:16px;letter-spacing:3px;line-height:20px}
+.brand strong{font-size:15px;letter-spacing:3px;line-height:19px}
 .brand small{font-size:9px;letter-spacing:4px;line-height:14px;color:var(--accent);margin-top:2px}
-header.top nav{display:flex;gap:20px;font-size:14px;color:var(--dim)}
-header.top nav a{text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-header.top nav a:hover{color:var(--bone)}
-h1{font-size:clamp(30px,4vw,44px);letter-spacing:-.5px;margin:44px 0 8px}
-.eyebrow{font-family:Michroma,sans-serif;font-size:11px;letter-spacing:3px;color:var(--accent);margin:0}
-.sub{color:var(--dim);margin:0 0 32px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
-.card{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--panel)}
-.card .k{color:var(--dim);font-size:13px;margin-bottom:10px}
-.card .v{font-size:34px;font-weight:700;line-height:1}
-.card .n{color:var(--dim);font-size:12px;margin-top:8px}
-h2{font-size:24px;margin:40px 0 16px}
-.post{display:block;border:1px solid var(--line);border-inline-start:3px solid #76232f;border-radius:16px;padding:22px 24px;margin-bottom:12px;background:var(--panel);text-decoration:none}
-.post:hover{border-inline-start-color:var(--red);box-shadow:0 12px 32px rgba(0,0,0,.2)}
-.post h3{margin:0 0 6px;font-size:19px}
-.post p{margin:0 0 12px;color:#c5b9bd;font-size:15px}
-.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:var(--dim);font-size:13px}
+.who{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--dim)}
+button{font:inherit;cursor:pointer}
+.btn{padding:10px 18px;border-radius:10px;border:0;background:var(--red);color:#fff;font-weight:600;min-height:42px}
+.btn:hover{background:#a80d26}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--bone)}
+.btn.ghost:hover{background:rgba(240,234,228,.06)}
+.btn.small{padding:7px 12px;min-height:36px;font-size:13px;font-weight:500}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* sign-in */
+#gate{max-width:440px;margin:12vh auto;padding:34px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+#gate h1{font-size:26px;margin:0 0 8px}
+#gate p{color:var(--dim);font-size:14px;margin:0 0 22px}
+#gate label{display:block;font-size:13px;margin:14px 0 6px}
+#gate input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--bone);font:inherit;font-size:16px}
+#gate .btn{width:100%;margin-top:18px}
+#gate-message{font-size:13px;color:var(--accent);min-height:22px;margin-top:12px}
+.divider{text-align:center;color:var(--dim);font-size:12px;margin:18px 0}
+/* app */
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:28px}
+nav.tabs button{padding:9px 16px;border-radius:999px;border:1px solid transparent;background:transparent;color:var(--dim);min-height:40px}
+nav.tabs button:hover{color:var(--bone);background:rgba(240,234,228,.06)}
+nav.tabs button[aria-current=true]{background:rgba(200,16,46,.2);border-color:#76232f;color:var(--bone);font-weight:600}
+h1.view{font-size:clamp(26px,3.4vw,38px);margin:0 0 4px;letter-spacing:-.5px}
+p.sub{color:var(--dim);margin:0 0 26px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:32px}
+.card{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--panel)}
+.card .k{color:var(--dim);font-size:13px;margin-bottom:8px}
+.card .v{font-size:32px;font-weight:700;line-height:1.05}
+.card .n{color:var(--dim);font-size:12px;margin-top:6px}
+.card .n.up{color:var(--ok)}.card .n.down{color:var(--warn)}
+.spark{display:block;width:100%;height:46px;margin-top:12px;overflow:visible}
+.row{border:1px solid var(--line);border-inline-start:3px solid #76232f;border-radius:14px;padding:18px 20px;margin-bottom:12px;background:var(--panel);display:block;text-decoration:none}
+.row h3{margin:0 0 6px;font-size:18px}
+.row p{margin:0 0 10px;color:#c5b9bd;font-size:14px}
+.meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--dim);font-size:13px}
 .badge{padding:3px 10px;border-radius:999px;font-size:12px;background:rgba(74,222,128,.14);color:var(--ok)}
 .badge.draft{background:rgba(251,191,36,.14);color:var(--warn)}
 .badge.muted{background:rgba(240,234,228,.08);color:var(--dim)}
-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin:0}
-dt{color:var(--dim);font-size:13px}
-dd{margin:4px 0 0;font-size:17px}
-.note{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--panel);margin:40px 0}
-.note h2{margin-top:0;font-size:20px}
+.badge.plan{background:rgba(124,92,255,.18);color:#bdaeff}
+.badge.easy{background:rgba(74,222,128,.14);color:var(--ok)}
+.badge.medium{background:rgba(251,191,36,.14);color:var(--warn)}
+.badge.hard{background:rgba(240,63,92,.16);color:#ff899b}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:12px;letter-spacing:.4px}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:end;font-variant-numeric:tabular-nums;white-space:nowrap}
+.score{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:rgba(200,16,46,.18);font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+/* content calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+.cal-head strong{font-size:18px}
+.weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.weekdays{font-size:12px;color:var(--dim);text-align:center;margin-bottom:8px}
+.day{min-height:104px;border:1px solid var(--line);border-radius:12px;padding:8px;background:var(--panel2);display:flex;flex-direction:column;gap:6px}
+.day.other{opacity:.35}
+.day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.day .n{font-size:12px;color:var(--dim)}
+.chip{display:block;width:100%;text-align:start;font-size:12px;line-height:1.4;padding:7px 8px;border-radius:8px;border:1px solid transparent;background:rgba(118,35,47,.35);color:var(--bone);text-decoration:none}
+.chip.planned{background:rgba(124,92,255,.16);border-color:rgba(124,92,255,.4)}
+.chip.slot{background:transparent;border:1px dashed rgba(240,234,228,.18);color:var(--dim)}
+.chip.slot:hover{border-color:var(--accent);color:var(--bone)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--dim);font-size:13px;margin-top:16px}
+.legend span::before{content:'';display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:8px;vertical-align:middle}
+.legend .pub::before{background:#76232f}
+.legend .pl::before{background:var(--plan)}
+.legend .sl::before{border:1px dashed var(--dim)}
+/* misc */
+.note{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--panel);margin-bottom:20px}
+.note h2{margin:0 0 10px;font-size:19px}
 .note p{color:#c5b9bd;margin:0 0 12px}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#120c0e;border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:14px;direction:ltr;display:inline-block}
-footer{border-top:1px solid var(--line);margin-top:56px;padding-block:28px;color:var(--dim);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
-#error{display:none;border:1px solid #76232f;background:#221519;border-radius:12px;padding:20px;margin:24px 0}
-@media(max-width:640px){.wrap{width:calc(100% - 32px)}h1{margin-top:28px}}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--panel2);border:1px solid var(--line);border-radius:10px;direction:ltr;text-align:left;font-size:13px}
+code{padding:2px 8px;display:inline-block}
+pre{padding:16px;overflow:auto;white-space:pre-wrap;line-height:1.6}
+.md{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;white-space:pre-wrap;font-size:14px;line-height:1.8}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin:0}
+.dl dt{color:var(--dim);font-size:13px}
+.dl dd{margin:4px 0 0;font-size:16px}
+.field{margin-bottom:18px}
+.field h3{margin:0 0 6px;font-size:15px;color:var(--dim);font-weight:600}
+.field p{margin:0;font-size:15px;line-height:1.8}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;background:var(--panel2)}
+.status{display:flex;align-items:center;gap:8px;font-size:14px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.dot.on{background:var(--ok)}.dot.off{background:#6b5560}
+.hint{color:var(--dim);font-size:13px}
+.err{border:1px solid #76232f;background:#221519;border-radius:12px;padding:16px 18px;margin-bottom:18px;color:#ffb3c0}
+.range{display:flex;gap:6px}
+.range button{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--dim);min-height:38px}
+.range button[aria-pressed=true]{background:rgba(200,16,46,.2);border-color:#76232f;color:var(--bone)}
+.tip{position:fixed;pointer-events:none;background:#241a1e;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;opacity:0;transition:opacity .12s;z-index:9;white-space:nowrap}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-block:24px;color:var(--dim);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+@media(max-width:820px){.wrap{width:calc(100% - 32px)}.grid2{grid-template-columns:1fr}.day{min-height:78px}.weekdays{font-size:10px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/he/" dir="ltr" aria-label="Red Crown Interactive">
-      <img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="42" height="42" alt="">
+      <img src="/assets/logo-kit/redcrown-primary-scarlet.svg" width="40" height="40" alt="">
       <span><strong>RED CROWN</strong><small>JOURNAL ENGINE</small></span>
     </a>
-    <nav>
-      <a href="/blog/">הבלוג</a>
-      <a href="/he/">האתר</a>
-    </nav>
+    <div class="who" id="who" hidden>
+      <span id="who-email"></span>
+      <button class="btn ghost small" id="signout">יציאה</button>
+    </div>
   </header>
 
-  <main>
-    <p class="eyebrow" dir="ltr">JOURNAL ENGINE</p>
-    <h1>מצב הבלוג</h1>
-    <p class="sub" id="generated">טוען…</p>
+  <section id="gate">
+    <h1>לוח הבקרה</h1>
+    <p>התחברות עם אותו חשבון של היומן. הגישה פתוחה רק לכתובות שהוגדרו כבעלים.</p>
+    <button class="btn ghost" id="google" style="width:100%">התחברות עם Google</button>
+    <div class="divider">או</div>
+    <form id="gate-form">
+      <label for="email">אימייל</label>
+      <input type="email" id="email" autocomplete="email" required>
+      <label for="password">סיסמה</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+      <button class="btn" type="submit" id="signin">התחברות</button>
+    </form>
+    <p id="gate-message" role="status"></p>
+  </section>
 
-    <div id="error">לא הצלחנו לטעון את הנתונים. ודאו ש-<code>/seo/data.json</code> פורסם.</div>
-
-    <div class="cards" id="cards"></div>
-
-    <h2>מאמרים</h2>
-    <div id="posts"></div>
-
-    <h2>איך המנוע מוגדר</h2>
-    <div class="card"><dl id="rules"></dl></div>
-
-    <div class="note">
-      <h2>מה לא מוצג כאן</h2>
-      <p>העמוד הזה מתארח ב-GitHub Pages, שמגיש קבצים סטטיים בלבד - אין לפניו מסך התחברות,
-        ולכן כל מי שמגיע לכתובת רואה את מה שכאן. משום כך הוא מציג רק מידע שכבר גלוי ממילא
-        בבלוג עצמו: אילו מאמרים פורסמו, מתי, ובאילו כללים.</p>
-      <p>תור מילות המפתח, ניתוח המתחרים ודוח האודיט הם מידע תחרותי, והם נשארים במחשב שלך.
-        להצגה שלהם, ולעריכת ההגדרות, מריצים את לוח הבקרה המקומי:</p>
-      <p><code>node tools/journal/dashboard.js</code></p>
-    </div>
+  <main id="app" hidden>
+    <nav class="tabs" id="tabs"></nav>
+    <div id="view"></div>
   </main>
 
   <footer>
     <span dir="ltr">© 2026 Red Crown Interactive</span>
-    <span><a href="/blog/feed.xml">RSS</a> · <a href="/blog/">כל המאמרים</a></span>
+    <span><a href="/blog/">הבלוג</a> · <a href="/blog/feed.xml">RSS</a></span>
   </footer>
 </div>
+<div class="tip" id="tip"></div>
 
-<script>
-(() => {
-  'use strict';
-  const el = id => document.getElementById(id);
-  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const he = iso => new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso));
+<script type="module">
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const he = iso => new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso));
+const dayKey = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+const num = value => new Intl.NumberFormat('he-IL').format(Math.round(value));
 
-  fetch('/seo/data.json', { credentials: 'omit' })
-    .then(response => { if (!response.ok) throw new Error('unavailable'); return response.json(); })
-    .then(data => {
-      el('generated').textContent = `${esc(data.site.url)} · עודכן ב-${he(data.generatedAt)}`;
+let settings = {}, auth = null, sdk = null, state = null, plan = { days: {} }, googleToken = null;
+let current = 'overview', error = '';
+const analytics = { range: 28, data: null, error: '', loading: false };
 
-      const published = data.posts.filter(post => post.rendered).length;
-      const shared = data.posts.filter(post => post.shared).length;
-      const missingFaq = data.posts.filter(post => !post.faq).length;
-      const cards = [
-        { k: 'מאמרים', v: data.posts.length, n: `${published} מפורסמים באתר` },
-        { k: 'מילות מפתח בתור', v: data.pipeline.queued, n: `${data.pipeline.used} כבר נכתבו` },
-        { k: 'שותפו לפייסבוק', v: shared, n: data.social.facebook ? 'שיתוף אוטומטי פעיל' : 'שיתוף אוטומטי כבוי' },
-        { k: 'ללא שאלות נפוצות', v: missingFaq, n: missingFaq ? 'FAQPage חסר בהם' : 'כל המאמרים מכוסים' },
-      ];
-      el('cards').innerHTML = cards.map(card =>
-        `<div class="card"><div class="k">${esc(card.k)}</div><div class="v">${card.v}</div><div class="n">${esc(card.n)}</div></div>`).join('');
+/* ---------- API ---------- */
+async function api(path, options = {}) {
+  const token = await auth.currentUser.getIdToken();
+  const response = await fetch(new URL(path, settings.apiOrigin), {
+    ...options,
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json', ...(options.headers || {}) },
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error || `שגיאה ${response.status}`);
+  return body;
+}
 
-      el('posts').innerHTML = data.posts.map(post => `
-        <a class="post" href="/blog/${esc(post.slug)}/">
-          <h3>${esc(post.title)}</h3>
-          <p>${esc(post.excerpt)}</p>
-          <div class="meta">
-            <span class="badge ${post.rendered ? '' : 'draft'}">${post.rendered ? 'published' : 'draft'}</span>
-            <span>${he(post.isoDate)}</span><span aria-hidden="true">·</span>
-            <span>${post.words} מילים</span><span aria-hidden="true">·</span>
-            <span>${post.keyword ? esc(post.keyword) : 'ללא מילת מפתח'}</span>
-            ${post.faq ? '' : '<span class="badge muted">ללא FAQ</span>'}
-            ${post.source === 'soro-import' ? '<span class="badge muted">יובא מ-Soro</span>' : ''}
-            ${post.shared ? '<span class="badge">שותף</span>' : ''}
-          </div>
-        </a>`).join('');
+/* ---------- sign-in: the same Firebase project the calendar uses ---------- */
+async function boot() {
+  settings = await fetch('/seo/config.json', { cache: 'no-store' }).then(r => r.json());
+  const firebase = await fetch(settings.authConfig, { cache: 'no-store' }).then(r => r.json());
+  const [app, authSdk] = await Promise.all([
+    import('https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js'),
+  ]);
+  sdk = authSdk;
+  auth = authSdk.getAuth(app.initializeApp(firebase.firebase));
+  authSdk.onAuthStateChanged(auth, user => { user && user.emailVerified ? signedIn(user) : signedOut(user); });
 
-      const rules = [
-        ['תזמון פרסום', data.schedule.note],
-        ['מאמרים בכל הרצה', data.schedule.articlesPerRun],
-        ['אורך מאמר', `${data.rules.wordsMin}-${data.rules.wordsMax} מילים`],
-        ['שאלות נפוצות', `${data.rules.faqMin} לפחות`],
-        ['קישורים פנימיים', `${data.rules.internalLinksMin} לפחות`],
-        ['אורך כותרת', `עד ${data.rules.titleMaxChars} תווים`],
-        ['אורך תיאור מטא', `עד ${data.rules.descriptionMaxChars} תווים`],
-        ['שוק היעד', data.rules.market],
-      ];
-      el('rules').innerHTML = rules.map(([term, value]) =>
-        `<div><dt>${esc(term)}</dt><dd>${esc(value)}</dd></div>`).join('');
-    })
-    .catch(() => { el('error').style.display = 'block'; el('generated').textContent = ''; });
-})();
+  $('gate-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    message('מתחבר…');
+    try {
+      await sdk.signInWithEmailAndPassword(auth, $('email').value.trim(), $('password').value);
+    } catch (failure) {
+      message(failure.code === 'auth/invalid-credential' ? 'האימייל או הסיסמה שגויים.' : failure.message);
+    }
+    $('password').value = '';
+  });
+  $('google').addEventListener('click', () => signInWithGoogle(false));
+  $('signout').addEventListener('click', () => sdk.signOut(auth));
+}
+
+const message = text => { $('gate-message').textContent = text; };
+
+/* Search Console needs its own consent, so the scope is requested only when the
+   analytics view asks for it - not on every sign-in. */
+async function signInWithGoogle(withSearchConsole) {
+  const provider = new sdk.GoogleAuthProvider();
+  if (withSearchConsole) provider.addScope('https://www.googleapis.com/auth/webmasters.readonly');
+  try {
+    const result = await sdk.signInWithPopup(auth, provider);
+    const credential = sdk.GoogleAuthProvider.credentialFromResult(result);
+    if (withSearchConsole && credential?.accessToken) {
+      googleToken = credential.accessToken;
+      loadAnalytics();
+    }
+  } catch (failure) {
+    if (failure.code !== 'auth/popup-closed-by-user') message(failure.message);
+  }
+}
+
+function signedOut(user) {
+  $('app').hidden = true; $('who').hidden = true; $('gate').hidden = false;
+  if (user && !user.emailVerified) message('החשבון קיים אך המייל לא אומת. פתחו את הקישור שנשלח אליכם.');
+}
+
+async function signedIn(user) {
+  $('gate').hidden = true; $('who').hidden = false; $('app').hidden = false;
+  $('who-email').textContent = user.email;
+  try {
+    state = await api('/seo/api/state');
+    error = '';
+  } catch (failure) {
+    error = failure.message;
+  }
+  try {
+    plan = await api('/seo/api/plan');
+  } catch { plan = { days: {} }; }
+  render();
+}
+
+/* ---------- analytics: Search Console, queried straight from the browser ---------- */
+const iso = date => date.toISOString().slice(0, 10);
+
+async function searchConsole(body) {
+  const property = encodeURIComponent(settings.searchConsoleProperty);
+  const response = await fetch(`https://searchconsole.googleapis.com/webmasters/v3/sites/${property}/searchAnalytics/query`, {
+    method: 'POST',
+    headers: { authorization: `Bearer ${googleToken}`, 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (response.status === 401 || response.status === 403) throw new Error('נדרשת הרשאה ל-Search Console. התחברו שוב עם Google.');
+  if (!response.ok) throw new Error(`Search Console החזיר ${response.status}. ודאו שהנכס מוגדר נכון.`);
+  return response.json();
+}
+
+async function loadAnalytics() {
+  if (!googleToken) return;
+  analytics.loading = true; analytics.error = ''; render();
+  const end = new Date(Date.now() - 2 * 86400000);   // Search Console lags ~2 days
+  const start = new Date(end.getTime() - analytics.range * 86400000);
+  const window = { startDate: iso(start), endDate: iso(end), searchType: 'web' };
+  try {
+    const [days, queries, pages] = await Promise.all([
+      searchConsole({ ...window, dimensions: ['date'], rowLimit: 200 }),
+      searchConsole({ ...window, dimensions: ['query'], rowLimit: 10 }),
+      searchConsole({ ...window, dimensions: ['page'], rowLimit: 10 }),
+    ]);
+    analytics.data = { days: days.rows || [], queries: queries.rows || [], pages: pages.rows || [] };
+  } catch (failure) {
+    analytics.error = failure.message;
+  }
+  analytics.loading = false;
+  render();
+}
+
+/* One metric per tile, one hue: identity comes from the tile's title, so the
+   line never has to carry it. Lower is better for position, hence the flag. */
+function sparkline(values, { invert = false, label = '' } = {}) {
+  if (values.length < 2) return '';
+  const width = 260, height = 46, pad = 3;
+  const min = Math.min(...values), max = Math.max(...values);
+  const span = max - min || 1;
+  const x = i => pad + (i * (width - pad * 2)) / (values.length - 1);
+  const y = value => {
+    const t = (value - min) / span;
+    return pad + (invert ? t : 1 - t) * (height - pad * 2);
+  };
+  const line = values.map((value, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(value).toFixed(1)}`).join(' ');
+  const area = `${line} L${x(values.length - 1).toFixed(1)},${height} L${x(0).toFixed(1)},${height} Z`;
+  return `<svg class="spark" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" role="img"
+      aria-label="${esc(label)}: מ-${num(values[0])} ל-${num(values.at(-1))}, טווח ${num(min)}-${num(max)}">
+      <path d="${area}" fill="rgba(240,63,92,.14)"></path>
+      <path d="${line}" fill="none" stroke="#f03f5c" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+        vector-effect="non-scaling-stroke"></path>
+      <circle cx="${x(values.length - 1).toFixed(1)}" cy="${y(values.at(-1)).toFixed(1)}" r="3" fill="#f03f5c"></circle>
+    </svg>`;
+}
+
+function tile(label, value, values, { note = '', invert = false, direction = 0 } = {}) {
+  const arrow = direction > 0 ? '↑' : direction < 0 ? '↓' : '';
+  const tone = direction === 0 ? '' : (invert ? (direction < 0 ? 'up' : 'down') : (direction > 0 ? 'up' : 'down'));
+  return `<div class="card"><div class="k">${esc(label)}</div><div class="v">${esc(value)}</div>
+    <div class="n ${tone}">${arrow} ${esc(note)}</div>${sparkline(values, { invert, label })}</div>`;
+}
+
+/* ---------- views ---------- */
+function overview() {
+  const published = state.posts.filter(post => post.rendered).length;
+  const queued = state.keywords.filter(entry => entry.status === 'queued').length;
+  const shared = state.posts.filter(post => post.shared).length;
+  const missingFaq = state.posts.filter(post => !post.faq).length;
+  return `<h1 class="view">סקירה</h1><p class="sub">${esc(state.site.url)} · עודכן ב-${he(state.generatedAt)}</p>
+  <div class="cards">
+    <div class="card"><div class="k">מאמרים</div><div class="v">${state.posts.length}</div><div class="n">${published} מפורסמים</div></div>
+    <div class="card"><div class="k">מילות מפתח בתור</div><div class="v">${queued}</div><div class="n">מוכנות לכתיבה</div></div>
+    <div class="card"><div class="k">שותפו לפייסבוק</div><div class="v">${shared}</div><div class="n">${state.social.facebook ? 'שיתוף אוטומטי פעיל' : 'שיתוף כבוי'}</div></div>
+    <div class="card"><div class="k">ללא שאלות נפוצות</div><div class="v">${missingFaq}</div><div class="n">${missingFaq ? 'חסר FAQPage' : 'כולם מכוסים'}</div></div>
+  </div>
+  <div class="note"><h2>לוח הזמנים</h2>
+    <p>${esc(state.schedule.cronNote)} · ${state.schedule.articlesPerRun} מאמרים בכל הרצה.</p>
+    <p class="hint">הכתיבה עצמה רצה ב-GitHub Actions. עריכת ההגדרות נעשית בלוח הבקרה המקומי: <code>node tools/journal/dashboard.js</code></p>
+  </div>`;
+}
+
+function articles() {
+  return `<h1 class="view">מאמרים</h1><p class="sub">${state.posts.length} מאמרים ב-/blog/</p>
+  ${state.posts.map(post => `<a class="row" href="${esc(state.site.url)}/blog/${esc(post.slug)}/" target="_blank" rel="noopener">
+    <h3>${esc(post.title)}</h3><p>${esc(post.excerpt)}</p>
+    <div class="meta">
+      <span class="badge ${post.rendered ? '' : 'draft'}">${post.rendered ? 'published' : 'draft'}</span>
+      <span>${he(post.isoDate)}</span><span aria-hidden="true">·</span><span>${post.words} מילים</span>
+      <span aria-hidden="true">·</span><span>${post.keyword ? esc(post.keyword) : 'ללא מילת מפתח'}</span>
+      ${post.faq ? '' : '<span class="badge muted">ללא FAQ</span>'}
+      ${post.source === 'soro-import' ? '<span class="badge muted">יובא מ-Soro</span>' : ''}
+      ${post.shared ? '<span class="badge">שותף</span>' : ''}
+    </div></a>`).join('')}`;
+}
+
+let calendarMonth = new Date();
+
+function contentCalendar() {
+  const cron = String(state.schedule.cron || '').split(' ');
+  // Only the day-of-week field is read; the engine's schedule is a weekly one.
+  const weekdays = new Set((cron[4] || '*').split(',').flatMap(part => {
+    if (part === '*') return [0, 1, 2, 3, 4, 5, 6];
+    if (part.includes('-')) {
+      const [from, to] = part.split('-').map(Number);
+      return Array.from({ length: to - from + 1 }, (_, i) => (from + i) % 7);
+    }
+    return [Number(part) % 7];
+  }));
+
+  const byDay = new Map();
+  for (const post of state.posts) byDay.set(post.isoDate.slice(0, 10), post);
+
+  const first = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+  const start = new Date(first);
+  start.setDate(1 - first.getDay());
+  const today = dayKey(new Date());
+  const queued = state.keywords.filter(entry => entry.status === 'queued');
+
+  const cells = Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(start);
+    date.setDate(start.getDate() + index);
+    const key = dayKey(date);
+    const post = byDay.get(key);
+    const planned = plan.days[key];
+    const classes = ['day'];
+    if (date.getMonth() !== calendarMonth.getMonth()) classes.push('other');
+    if (key === today) classes.push('today');
+    let body = '';
+    if (post) {
+      body = `<a class="chip" href="${esc(state.site.url)}/blog/${esc(post.slug)}/" target="_blank" rel="noopener">${esc(post.title)}</a>`;
+    } else if (planned) {
+      body = `<button class="chip planned" data-clear="${esc(key)}" title="הסרה מהלוח">${esc(planned)}</button>`;
+    } else if (key >= today && weekdays.has(date.getDay())) {
+      body = `<button class="chip slot" data-slot="${esc(key)}">+ שיבוץ מאמר</button>`;
+    }
+    return `<div class="${classes.join(' ')}"><span class="n">${date.getDate()}</span>${body}</div>`;
+  }).join('');
+
+  const monthName = new Intl.DateTimeFormat('he-IL', { month: 'long', year: 'numeric' }).format(calendarMonth);
+  return `<h1 class="view">לוח תוכן</h1><p class="sub">מה כבר פורסם, ומה המנוע יכתוב בימים הקרובים.</p>
+  ${queued.length ? '' : '<div class="note"><p class="hint">אין מילות מפתח בתור, אז אין מה לשבץ. הריצו מחקר בלוח הבקרה המקומי.</p></div>'}
+  <div class="cal-head">
+    <strong>${esc(monthName)}</strong>
+    <div class="range">
+      <button data-month="-1">הקודם</button><button data-month="0">היום</button><button data-month="1">הבא</button>
+    </div>
+  </div>
+  <div class="weekdays">${['א','ב','ג','ד','ה','ו','ש'].map(day => `<span>${day}</span>`).join('')}</div>
+  <div class="days">${cells}</div>
+  <div class="legend"><span class="pub">פורסם</span><span class="pl">משובץ</span><span class="sl">יום פרסום פנוי</span></div>
+  <p class="hint" style="margin-top:14px">שיבוץ נשמר מיד. ההרצה המתוזמנת של אותו יום כותבת את מילת המפתח המשובצת במקום את ראש התור.</p>`;
+}
+
+function ideas() {
+  const queued = state.keywords.filter(entry => entry.status === 'queued');
+  const used = state.keywords.filter(entry => entry.status !== 'queued');
+  if (!state.keywords.length) {
+    return `<h1 class="view">רעיונות</h1><p class="sub">התור ריק.</p>
+      <div class="note"><p>המחקר סורק את התוצאות בגוגל, מוצא מי מדורג ואיפה הפער, ומכניס לכאן שאילתות שכדאי לכתוב עליהן.</p>
+      <p class="hint">להרצה: <code>node tools/journal/research.js</code></p></div>`;
+  }
+  const difficulty = { low: 'easy', medium: 'medium', high: 'hard' };
+  return `<h1 class="view">רעיונות</h1><p class="sub">${queued.length} שאילתות ממתינות, כל אחת נבדקה מול התוצאות שמדורגות בפועל.</p>
+  ${queued.map(entry => `<div class="row">
+    <div class="meta" style="margin-bottom:8px">
+      <span class="score">${entry.opportunityScore ?? '—'}</span>
+      <span class="badge ${difficulty[entry.difficulty] || 'muted'}">${esc(entry.difficulty || 'לא ידוע')}</span>
+      <span class="badge muted">${esc(entry.intent || '')}</span>
+    </div>
+    <h3>${esc(entry.keyword)}</h3>
+    <p>${esc(entry.suggestedTitle || '')}</p>
+    ${(entry.gaps || []).length ? `<p class="hint">הפער: ${esc(entry.gaps[0])}</p>` : ''}
+    ${(entry.competitors || []).length ? `<p class="hint">מדורגים היום: ${entry.competitors.map(c => esc(c.domain)).join(' · ')}</p>` : ''}
+    <button class="btn small" data-schedule="${esc(entry.keyword)}">שיבוץ ליום הפרסום הבא</button>
+  </div>`).join('')}
+  ${used.length ? `<h2 style="margin-top:32px">כבר נכתבו</h2>
+    <table><tbody>${used.map(entry => `<tr><td>${esc(entry.keyword)}</td><td class="num">${esc(entry.usedBy || entry.status)}</td></tr>`).join('')}</tbody></table>` : ''}`;
+}
+
+function analyticsView() {
+  if (!googleToken) {
+    return `<h1 class="view">אנליטיקס</h1><p class="sub">נתוני החיפוש מגיעים מ-Google Search Console.</p>
+    <div class="note">
+      <h2>חיבור ל-Search Console</h2>
+      <p>הנתונים נקראים ישירות מהדפדפן שלך מול הנכס <code>${esc(settings.searchConsoleProperty || '')}</code>.
+         הם לא עוברים דרך שום שרת שלנו ולא נשמרים בשום מקום.</p>
+      <button class="btn" id="connect-gsc">חיבור עם Google</button>
+      <p class="hint" style="margin-top:12px">נדרשת הרשאת קריאה לנכס, והאתר צריך להיות מאומת ב-Search Console.</p>
+    </div>`;
+  }
+  if (analytics.loading) return `<h1 class="view">אנליטיקס</h1><p class="sub">טוען נתונים…</p>`;
+  if (analytics.error) return `<h1 class="view">אנליטיקס</h1><div class="err">${esc(analytics.error)}</div>
+    <button class="btn ghost" id="connect-gsc">חיבור מחדש</button>`;
+
+  const rows = analytics.data.days;
+  if (!rows.length) return `<h1 class="view">אנליטיקס</h1><p class="sub">אין עדיין נתונים לתקופה הזו.</p>`;
+
+  const clicks = rows.map(row => row.clicks);
+  const impressions = rows.map(row => row.impressions);
+  const ctr = rows.map(row => row.ctr * 100);
+  const position = rows.map(row => row.position);
+  const total = key => rows.reduce((sum, row) => sum + row[key], 0);
+  const half = Math.floor(rows.length / 2);
+  const trend = values => {
+    const before = values.slice(0, half).reduce((a, b) => a + b, 0) / Math.max(1, half);
+    const after = values.slice(half).reduce((a, b) => a + b, 0) / Math.max(1, values.length - half);
+    if (!before) return 0;
+    return Math.round(((after - before) / before) * 100);
+  };
+  const averagePosition = position.reduce((a, b) => a + b, 0) / position.length;
+  const overallCtr = total('impressions') ? (total('clicks') / total('impressions')) * 100 : 0;
+
+  return `<h1 class="view">אנליטיקס</h1>
+  <p class="sub">Google Search Console · ${analytics.range} הימים האחרונים (הנתונים מתעדכנים בעיכוב של יומיים)</p>
+  <div class="range" style="margin-bottom:22px">
+    ${[7, 28, 90].map(days => `<button data-range="${days}" aria-pressed="${analytics.range === days}">${days} ימים</button>`).join('')}
+  </div>
+  <div class="cards">
+    ${tile('כניסות מחיפוש', num(total('clicks')), clicks, { note: `${Math.abs(trend(clicks))}% מול התקופה הקודמת`, direction: trend(clicks) })}
+    ${tile('חשיפות', num(total('impressions')), impressions, { note: `${Math.abs(trend(impressions))}% מול התקופה הקודמת`, direction: trend(impressions) })}
+    ${tile('שיעור הקלקה', overallCtr.toFixed(1) + '%', ctr, { note: 'כמה מהחשיפות הפכו לכניסה', direction: trend(ctr) })}
+    ${tile('מיקום ממוצע', '#' + averagePosition.toFixed(1), position, { note: 'נמוך = טוב יותר', invert: true, direction: trend(position) })}
+  </div>
+  <div class="grid2">
+    <div><h2>שאילתות מובילות</h2>
+      <table><thead><tr><th>שאילתה</th><th class="num">כניסות</th><th class="num">חשיפות</th><th class="num">מיקום</th></tr></thead>
+      <tbody>${analytics.data.queries.map(row => `<tr><td>${esc(row.keys[0])}</td><td class="num">${num(row.clicks)}</td><td class="num">${num(row.impressions)}</td><td class="num">${row.position.toFixed(1)}</td></tr>`).join('') || '<tr><td>אין נתונים</td></tr>'}</tbody></table></div>
+    <div><h2>עמודים מובילים</h2>
+      <table><thead><tr><th>עמוד</th><th class="num">כניסות</th><th class="num">חשיפות</th></tr></thead>
+      <tbody>${analytics.data.pages.map(row => `<tr><td dir="ltr">${esc(row.keys[0].replace(state.site.url, '') || '/')}</td><td class="num">${num(row.clicks)}</td><td class="num">${num(row.impressions)}</td></tr>`).join('') || '<tr><td>אין נתונים</td></tr>'}</tbody></table></div>
+  </div>`;
+}
+
+function connect() {
+  const origin = state.site.url;
+  return `<h1 class="view">חיבור האתר</h1><p class="sub">איך המאמרים מגיעים לאתר.</p>
+  <div class="note">
+    <h2><span class="dot on"></span> מחובר</h2>
+    <p>המאמרים נכתבים בריפו, מרונדרים לעמודים סטטיים ב-<code>/blog/</code> ועולים לאוויר עם כל push ל-main.
+       אין סקריפט של צד שלישי, אין תלות ב-JavaScript אצל הגולש, וכל מאמר הוא כתובת אמיתית שגוגל סורק.</p>
+    <dl class="dl">
+      <div><dt>מצב פרסום</dt><dd>אוטומטי - עולה מיד</dd></div>
+      <div><dt>תדירות</dt><dd>${esc(state.schedule.cronNote)}</dd></div>
+      <div><dt>הזנה לדף הבית</dt><dd><code dir="ltr">/blog/articles.json</code></dd></div>
+      <div><dt>RSS</dt><dd><code dir="ltr">/blog/feed.xml</code></dd></div>
+    </dl>
+  </div>
+  <div class="note">
+    <h2>הטמעה באתר אחר</h2>
+    <p>אותו רעיון של Soro, מהצד השני: שתי שורות שמציגות את המאמרים בכל אתר.
+       שימושי לאתר לקוח, לדף נחיתה נפרד, או כבסיס למוצר בהמשך.</p>
+    <pre dir="ltr">&lt;div id="redcrown-journal"&gt;&lt;/div&gt;
+&lt;script src="${esc(origin)}/blog/embed.js" defer&gt;&lt;/script&gt;</pre>
+    <button class="btn ghost small" id="copy-embed">העתקת הקוד</button>
+    <p class="hint" style="margin-top:12px">הווידג'ט קורא את <code dir="ltr">/blog/articles.json</code>, מרנדר את הכרטיסים ומקשר לעמוד המלא.</p>
+  </div>`;
+}
+
+function brandDna() {
+  const dna = state.brandDna;
+  const field = (label, value) => `<div class="field"><h3>${esc(label)}</h3><p>${esc(value)}</p></div>`;
+  return `<h1 class="view">Brand DNA</h1><p class="sub">מה שהמנוע יודע על העסק. עריכה נעשית בלוח הבקרה המקומי.</p>
+  ${field('שפת התוכן', dna.contentLanguage)}
+  ${field('סוג העסק', dna.businessType)}
+  ${field('קול וטון', dna.brandVoiceAndTone)}
+  ${field('קהל יעד', dna.targetAudience)}
+  ${field('אזור שירות', dna.serviceArea)}
+  ${field('נושאים להימנע מהם', dna.topicsToAvoid)}
+  <div class="field"><h3>נושאי ליבה</h3><div class="chips">${dna.keyThemes.map(theme => `<span>${esc(theme)}</span>`).join('')}</div></div>
+  <div class="field"><h3>כללי כתיבה</h3><dl class="dl">
+    <div><dt>אורך</dt><dd>${state.content.wordsMin}-${state.content.wordsMax} מילים</dd></div>
+    <div><dt>שאלות נפוצות</dt><dd>${state.content.faqMin} לפחות</dd></div>
+    <div><dt>קישורים פנימיים</dt><dd>${state.content.internalLinksMin} לפחות</dd></div>
+    <div><dt>מודל</dt><dd dir="ltr">${esc(state.models.write)}</dd></div>
+  </dl></div>`;
+}
+
+const auditView = () => `<h1 class="view">אודיט SEO</h1><p class="sub">נוצר בכל הרצה מתוזמנת.</p>
+  <div class="md">${esc(state.audit || 'עוד לא הורץ אודיט.')}</div>`;
+
+const VIEWS = [
+  { id: 'overview', label: 'סקירה', render: overview },
+  { id: 'articles', label: 'מאמרים', render: articles },
+  { id: 'calendar', label: 'לוח תוכן', render: contentCalendar },
+  { id: 'ideas', label: 'רעיונות', render: ideas },
+  { id: 'analytics', label: 'אנליטיקס', render: analyticsView },
+  { id: 'audit', label: 'אודיט', render: auditView },
+  { id: 'connect', label: 'חיבור האתר', render: connect },
+  { id: 'brand', label: 'Brand DNA', render: brandDna },
+];
+
+/* ---------- plan editing ---------- */
+async function savePlan(next) {
+  plan = { days: next };
+  render();
+  try {
+    await api('/seo/api/plan', { method: 'PUT', body: JSON.stringify({ days: next }) });
+  } catch (failure) {
+    error = failure.message;
+    render();
+  }
+}
+
+function nextOpenSlot() {
+  const cron = String(state.schedule.cron || '').split(' ');
+  const weekdays = (cron[4] || '*') === '*' ? [0, 1, 2, 3, 4, 5, 6] : (cron[4]).split(',').map(Number);
+  const taken = new Set([...Object.keys(plan.days), ...state.posts.map(post => post.isoDate.slice(0, 10))]);
+  for (let offset = 1; offset <= 120; offset++) {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+    if (weekdays.includes(date.getDay()) && !taken.has(dayKey(date))) return dayKey(date);
+  }
+  return null;
+}
+
+/* ---------- render ---------- */
+function render() {
+  $('tabs').innerHTML = VIEWS.map(view =>
+    `<button data-view="${view.id}" aria-current="${current === view.id}">${view.label}</button>`).join('');
+  $('tabs').querySelectorAll('button').forEach(button => {
+    button.onclick = () => { current = button.dataset.view; render(); };
+  });
+
+  if (!state) {
+    $('view').innerHTML = `<div class="err">${esc(error || 'טוען…')}</div>`;
+    return;
+  }
+  const view = VIEWS.find(entry => entry.id === current);
+  $('view').innerHTML = (error ? `<div class="err">${esc(error)}</div>` : '') + view.render();
+  wire();
+}
+
+function wire() {
+  const connectButton = $('connect-gsc');
+  if (connectButton) connectButton.onclick = () => signInWithGoogle(true);
+
+  document.querySelectorAll('[data-range]').forEach(button => {
+    button.onclick = () => { analytics.range = Number(button.dataset.range); loadAnalytics(); };
+  });
+  document.querySelectorAll('[data-month]').forEach(button => {
+    button.onclick = () => {
+      const step = Number(button.dataset.month);
+      calendarMonth = step === 0 ? new Date() : new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + step, 1);
+      render();
+    };
+  });
+  document.querySelectorAll('[data-slot]').forEach(button => {
+    button.onclick = () => {
+      const queued = state.keywords.filter(entry => entry.status === 'queued');
+      if (!queued.length) return;
+      const choice = prompt(`איזו מילת מפתח לשבץ ל-${button.dataset.slot}?\n\n` +
+        queued.map((entry, index) => `${index + 1}. ${entry.keyword}`).join('\n'), '1');
+      const entry = queued[Number(choice) - 1];
+      if (entry) savePlan({ ...plan.days, [button.dataset.slot]: entry.keyword });
+    };
+  });
+  document.querySelectorAll('[data-clear]').forEach(button => {
+    button.onclick = () => {
+      const days = { ...plan.days };
+      delete days[button.dataset.clear];
+      savePlan(days);
+    };
+  });
+  document.querySelectorAll('[data-schedule]').forEach(button => {
+    button.onclick = () => {
+      const day = nextOpenSlot();
+      if (!day) return;
+      savePlan({ ...plan.days, [day]: button.dataset.schedule });
+      current = 'calendar';
+      render();
+    };
+  });
+  const copy = $('copy-embed');
+  if (copy) copy.onclick = async () => {
+    await navigator.clipboard.writeText(document.querySelector('pre').textContent);
+    copy.textContent = 'הועתק ✓';
+  };
+
+  // A sparkline is a chart, so it answers the pointer like one.
+  document.querySelectorAll('.spark').forEach(svg => {
+    const tip = $('tip');
+    svg.addEventListener('pointermove', event => {
+      tip.textContent = svg.getAttribute('aria-label');
+      tip.style.opacity = '1';
+      tip.style.insetInlineStart = `${event.clientX + 14}px`;
+      tip.style.top = `${event.clientY - 34}px`;
+    });
+    svg.addEventListener('pointerleave', () => { tip.style.opacity = '0'; });
+  });
+}
+
+boot().catch(failure => { message(`טעינה נכשלה: ${failure.message}`); });
 </script>
 </body>
 </html>

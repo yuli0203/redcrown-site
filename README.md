@@ -42,21 +42,38 @@ brief, which is why an article argues against the current results rather than
 restating them. `write.js` refuses a draft that breaks the rules in
 `config.json` - length, keyword placement, or a link outside the approved list.
 
-### /seo - the published dashboard
+### /seo - the dashboard on the site
 
-`node tools/journal/publish-seo.js` writes `/seo/`, a read-only report that
-ships with the site at `redcrowninteractive.com/seo`. GitHub Pages has no login
-to put in front of it, so it carries only what the blog already reveals: which
-articles exist, when they went out, how long they are, and the rules the engine
-runs under. The keyword queue, the competitor analysis and the audit findings
-are competitive information and stay in the repository - the local dashboard
-shows those. `robots.txt` disallows the path and the page sends `noindex`, so it
-does not compete with the blog in search, and `tools/test_journal.js` fails if
-anything sensitive ever reaches the payload.
+`redcrowninteractive.com/seo` is the control room: article inventory, the
+content calendar, keyword ideas from the research, the audit, Search Console
+analytics, and the Brand DNA the engine writes from.
 
-To put the full dashboard behind a real login, the site has to move off GitHub
-Pages to a host with access control in front of it (the repository already keeps
-a Cloudflare `_redirects` file for that move).
+It signs in with the same Firebase account as the calendar
+(`calendar/auth-config.json`), and only an address on the Worker's owners list
+gets data. Nothing about the journal is published with the site - the page and
+four public settings are all that ship; everything else comes from
+`tools/journal/worker`, a Cloudflare Worker that checks the token on each
+request. `tools/test_journal.js` fails if anything else ever reaches `/seo/`.
+
+    node tools/journal/publish-seo.js     the page and its settings (--check in CI)
+    node tools/journal/publish-state.js   the private data, to the Worker
+
+Analytics is read straight from Google Search Console in your browser, with a
+scope requested only when you open that view; those numbers never pass through
+the Worker or this repository. The content calendar writes back a plan - which
+keyword to write on which day - which the scheduled run reads before it drafts.
+
+Deploying the Worker and the credentials it needs: `tools/journal/worker/README.md`.
+
+### Embedding the journal elsewhere
+
+`blog/embed.js` renders the articles into any page, the way the Soro widget
+used to render them here:
+
+    <div id="redcrown-journal"></div>
+    <script src="https://redcrowninteractive.com/blog/embed.js" defer></script>
+
+It reads `articles.json`, so it stays current on its own.
 
 ### Configuration
 

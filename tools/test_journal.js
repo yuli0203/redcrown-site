@@ -84,15 +84,25 @@ test('the rendered blog on disk matches the posts', () => {
   execFileSync(process.execPath, [path.join(ROOT, 'tools/journal/build.js'), '--check'], { stdio: 'pipe' });
 });
 
-test('the /seo snapshot carries no secrets and no unpublished strategy', () => {
-  const { snapshot } = require('./journal/publish-seo.js');
-  const data = snapshot();
-  const serialised = JSON.stringify(data);
-  assert.ok(!/keywords"\s*:\s*\[/.test(serialised), 'the keyword queue must not be published');
-  assert.ok(!/audit/i.test(serialised), 'the audit report must not be published');
-  for (const name of ['ANTHROPIC_API_KEY', 'FACEBOOK_PAGE_TOKEN', 'apiKey', 'token', 'passphrase']) {
-    assert.ok(!serialised.includes(name), `${name} must not appear in the published payload`);
+test('/seo publishes the page and its settings, and no journal data', () => {
+  const { pageSettings } = require('./journal/publish-seo.js');
+  const settings = pageSettings();
+  const serialised = JSON.stringify(settings);
+  for (const name of ['ANTHROPIC_API_KEY', 'FACEBOOK_PAGE_TOKEN', 'PUBLISH_KEY', 'token', 'secret', 'password']) {
+    assert.ok(!serialised.toLowerCase().includes(name.toLowerCase()), `${name} must not reach /seo/config.json`);
   }
+  const published = fs.readdirSync(path.join(ROOT, 'seo')).sort();
+  assert.deepStrictEqual(published, ['config.json', 'index.html'],
+    'the dashboard must publish nothing but the page and its settings');
+});
+
+test('the private snapshot goes only to the gated API', () => {
+  const { snapshot } = require('./journal/publish-state.js');
+  const data = snapshot();
+  // These are the things the API protects; they must exist there and nowhere else.
+  assert.ok(Array.isArray(data.keywords), 'the keyword queue belongs in the API payload');
+  assert.strictEqual(typeof data.audit, 'string');
   assert.strictEqual(data.posts.length, posts.all().length);
-  assert.strictEqual(typeof data.pipeline.queued, 'number');
+  const publicFiles = fs.readFileSync(path.join(ROOT, 'seo', 'config.json'), 'utf8');
+  assert.ok(!publicFiles.includes('keyword'), 'nothing about the keyword plan may be published');
 });
