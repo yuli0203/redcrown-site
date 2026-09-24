@@ -1313,3 +1313,7 @@ html[dir="rtl"] .gal-next svg { transform: rotate(0deg); }
   .gal-prev { inset-inline-start: 8px; }
   .gal-next { inset-inline-end: 8px; }
 }
+
+/* כפתור הכניסה לניהול יושב בצד, בשורה של קישורי המדיניות, ולא יורד לשורה משלו
+   the admin link sits to the side, on the policy links' row, not on a line of its own */
+.foot-links { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
