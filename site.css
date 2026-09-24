@@ -206,7 +206,7 @@ html[lang="he"] .work-kicker{margin-bottom:26px}
 html[lang="he"] .services-intro p{max-width:900px;line-height:1.85}
 html[lang="he"] .services-intro p>strong{display:block;margin-bottom:12px}
 .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
-@media(min-width:901px){html[lang="he"] .services-five{grid-template-columns:repeat(6,minmax(0,1fr))}html[lang="he"] .services-five>.pcard{grid-column:span 2}html[lang="he"] .services-five>.pcard:nth-child(4){grid-column:2 / span 2}html[lang="he"] .services-five>.pcard:nth-child(5){grid-column:4 / span 2}}
+@media(min-width:901px){.services-five{grid-template-columns:repeat(6,minmax(0,1fr))}.services-five>.pcard{grid-column:span 2}.services-five>.pcard:nth-child(4){grid-column:2 / span 2}.services-five>.pcard:nth-child(5){grid-column:4 / span 2}}
 .pcard{padding:34px 30px;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;align-items:flex-start}
 .pcard:hover{border-color:rgba(200,16,46,.55);transform:translateY(-3px)}
 .pcard .icon{font-size:2.2rem;display:block;margin-bottom:18px}
