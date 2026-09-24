@@ -402,6 +402,24 @@ test('bidi: Hebrew with numbers and Latin text in visual order', () => {
   assert.equal(visual('PR-0001: סימולציית VR, שלב 1'), '1 בלש ,VR תייצלומיס :PR-0001');
 });
 
+// Expected strings are what Chromium displays for the same text in a
+// right-to-left paragraph (bilingual sections as <bdi>), read left to right.
+test('bidi: numbers stay with Latin words, brackets pair up, each language keeps its punctuation', () => {
+  // "3D" stays one word (a number followed by Latin text is left-to-right).
+  assert.equal(visual('עיצוב תלת-ממד / 3D design'), '3D design / דממ-תלת בוציע');
+  // Both brackets stay with the English they enclose.
+  assert.equal(visual('פיתוח אפליקציית VR / VR app development, milestone 2 (Unity, Meta Quest 3)'),
+    'VR app development, milestone 2 (Unity, Meta Quest 3) / VR תייצקילפא חותיפ');
+  // Each "!" and ":" ends its own language.
+  assert.equal(visual('תודה! / Thank you!'), 'Thank you! / !הדות');
+  assert.equal(visual('לתשלום מאובטח בכרטיס אשראי או PayPal / Pay securely by card or PayPal:'),
+    'Pay securely by card or PayPal: / PayPal וא יארשא סיטרכב חטבואמ םולשתל');
+  // Brackets around Hebrew in an English line: left-to-right, not mirrored.
+  assert.equal(visual('Order #123 (שלב ב׳) done', 'ltr'), 'Order #123 (׳ב בלש) done');
+  // Brackets resolved right-to-left are mirrored.
+  assert.equal(visual('(שלום)'), '(םולש)');
+});
+
 test('payplus: webhook signature check and amount parsing', async () => {
   const env = { PAYPLUS_SECRET_KEY: 'pp-secret' };
   const raw = JSON.stringify({ transaction: { more_info: 'r', status_code: '000', amount: '1250.5', currency: 'usd', uid: 'u1' } });

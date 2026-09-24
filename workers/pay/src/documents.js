@@ -34,15 +34,20 @@ export const METHODS = {
   other: 'אחר / Other',
 };
 
+// Formatters are costly to create, so each is made once per isolate.
+const formatters = new Map();
+const formatter = (key, make) => formatters.get(key) ?? formatters.set(key, make()).get(key);
+
 // "₪1,250.00", "$1,250.00": symbol first, always left-to-right.
 export const money = (minor, currency) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(minor / 100);
+  formatter('money:' + currency, () => new Intl.NumberFormat('en-US', { style: 'currency', currency })).format(minor / 100);
 
 export const date = (value, withTime = false) => {
   const d = value instanceof Date ? value : new Date(value);
-  const opts = { timeZone: TZ, day: '2-digit', month: '2-digit', year: 'numeric' };
-  if (withTime) Object.assign(opts, { hour: '2-digit', minute: '2-digit', hour12: false });
-  return new Intl.DateTimeFormat('en-GB', opts).format(d).replace(',', '');
+  return formatter(withTime ? 'datetime' : 'date', () => new Intl.DateTimeFormat('en-GB', {
+    timeZone: TZ, day: '2-digit', month: '2-digit', year: 'numeric',
+    ...(withTime ? { hour: '2-digit', minute: '2-digit', hour12: false } : {}),
+  })).format(d).replace(',', '');
 };
 
 // Text details of a payment method, one line each.
