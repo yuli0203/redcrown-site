@@ -57,7 +57,9 @@ export function client(c = {}, { requireEmail = false } = {}) {
     taxId: str(line(c.taxId), 40, 'Tax ID'),
     address: str(c.address, 240, 'Client address', true),
     email: str(line(c.email), 254, 'Client email', requireEmail),
+    phone: str(line(c.phone), 30, 'Client phone'),
   };
+  if (out.phone && !/^\+?[\d\s().-]{7,30}$/.test(out.phone)) throw bad('Client phone is not valid');
   if (out.email && !EMAIL_RE.test(out.email)) throw bad('Client email is not valid');
   return out;
 }

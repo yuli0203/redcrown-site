@@ -15,6 +15,7 @@ import { visual } from '../src/bidi.js';
 import mock from '../src/providers/mock.js';
 import payplus from '../src/providers/payplus.js';
 import paypal from '../src/providers/paypal.js';
+import grow, { clean, israeliMobile } from '../src/providers/grow.js';
 
 const SECRET = 'test-secret-that-is-at-least-32-characters-long';
 const ADMIN = 'admin-token-that-is-at-least-32-characters';
@@ -483,4 +484,169 @@ test('paypal: order creation, capture and webhook verification', async () => {
   } finally {
     globalThis.fetch = outer;
   }
+});
+
+// ---- Grow: a fake Grow server with the Light API's request and response shapes.
+const GROW_API = 'https://sandbox.meshulam.co.il/api/light/server/1.0';
+const growServer = () => {
+  const state = { calls: [], paid: false, sum: '1250', processes: 0 };
+  const handler = async (url, init = {}) => {
+    const u = new URL(url);
+    if (u.hostname !== 'sandbox.meshulam.co.il') return null;
+    const method = u.pathname.split('/').pop();
+    const fields = init.body instanceof FormData ? Object.fromEntries(init.body.entries()) : {};
+    state.calls.push({ method, fields });
+    const ok = data => new Response(JSON.stringify({ status: 1, err: '', data }), { status: 200 });
+    if (method === 'createPaymentProcess') {
+      state.processes++;
+      return ok({ processId: String(734753 + state.processes), processToken: 'tok' + state.processes, url: `https://sandbox.meshulam.co.il/far?l=p${state.processes}` });
+    }
+    if (method === 'getPaymentProcessInfo') {
+      const tx = { asmachta: '0289199', cardSuffix: '4580', cardType: 'Foreign', cardTypeCode: '2', cardBrand: 'Visa', cardBrandCode: '3', cardExp: '0130',
+        firstPaymentSum: '0', periodicalPaymentSum: '0', statusCode: '2', transactionTypeId: '1', paymentType: '2', sum: state.sum, paymentsNum: '0',
+        allPaymentsNum: '1', paymentDate: '24/9/26', description: 'x', fullName: 'Dana Levi', payerPhone: '0501234567', payerEmail: 'dana@acme.test',
+        transactionId: 'T' + fields.processId, transactionToken: 'tt' + fields.processId };
+      const paid = state.paid === true || state.paid === fields.processId;
+      return ok({ processId: fields.processId, processToken: fields.processToken, transactions: paid ? [tx] : [] });
+    }
+    if (method === 'approveTransaction') return ok({});
+    return new Response(JSON.stringify({ status: 0, err: { id: 12, message: 'x' }, data: '' }), { status: 200 });
+  };
+  return { state, handler };
+};
+const withGrow = async fn => {
+  const server = growServer();
+  const outer = globalThis.fetch;
+  globalThis.fetch = async (url, init) => (await server.handler(url, init)) ?? outer(url, init);
+  try { await fn(server.state); } finally { globalThis.fetch = outer; }
+};
+const growEnv = () => envFor({ PROVIDER: 'grow', GROW_API_URL: GROW_API, GROW_USER_ID: 'user-1', GROW_PAGE_CODE: 'pc-card', GROW_PAGE_CODE_BIT: 'pc-bit' });
+// Grow's server update: form fields, as Grow sends them.
+const growUpdate = (env, ref, fields = {}) => call(env, new Request(`${API}/webhook/grow?ref=${ref}`, {
+  method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams({ status: '1', 'data[statusCode]': '2', 'data[sum]': '1250', ...fields }).toString(),
+}));
+const growCheckout = async (env, link, method = 'card') => {
+  const res = await checkout(env, { link, method, consent: true });
+  assert.equal(res.status, 200, await res.clone().text());
+  return res.json();
+};
+
+test('grow: shekels only; checkout opens Grow\'s page with the request\'s details', async () => withGrow(async grow => {
+  const env = growEnv();
+  const usd = await adminCall(env, 'requests', { lang: 'en', currency: 'USD', client, items: [{ description: 'x', quantity: 1, unitPrice: '10' }] });
+  assert.equal(usd.status, 400);
+  assert.match((await usd.json()).error, /Grow charges only in ILS/);
+
+  const { link } = await newRequest(env, { currency: 'ILS', client: { ...client, phone: '+972 50-123-4567' } });
+  assert.equal((await checkout(env, { link, method: 'applepay', consent: true })).status, 400);   // no page code
+  assert.equal((await checkout(env, { link, method: 'card' })).status, 422);                       // no consent
+  const { url, ref } = await growCheckout(env, link);
+  assert.equal(url, 'https://sandbox.meshulam.co.il/far?l=p1');
+
+  const f = grow.calls.find(c => c.method === 'createPaymentProcess').fields;
+  assert.equal(f.pageCode, 'pc-card');
+  assert.equal(f.userId, 'user-1');
+  assert.equal(f.sum, '1250.00');
+  assert.equal(f.cField1, ref);
+  assert.equal(f.successUrl, `${API}/return/grow?ref=${ref}`);
+  assert.equal(f.notifyUrl, `${API}/webhook/grow?ref=${ref}`);
+  assert.equal(f.invoiceNotifyUrl, `${API}/webhook/grow?ref=${ref}&document=1`);
+  assert.equal(f['pageField[phone]'], '0501234567');
+  assert.equal(f['pageField[email]'], 'dana@acme.test');
+  assert.equal(f['pageField[invoiceName]'], 'Acme Labs');
+  assert.equal(f['pageField[invoiceLicenseNumber]'], '514000000');
+  assert.doesNotMatch(f['pageField[fullName]'] + f.description, /["<>&]/);
+  // The receipt lines add up to the sum exactly.
+  const lines = Object.keys(f).filter(k => /^productData\[\d+\]\[price\]$/.test(k)).map(k => Number(f[k]));
+  assert.deepEqual(lines, [1000, 250]);
+  assert.match(f['productData[1][itemDescription]'], /QA hours \(10 x 25\.00\)/);
+
+  // Grow's page for Bit uses Bit's page code.
+  await growCheckout(env, link, 'bit');
+  assert.equal(grow.calls.filter(c => c.method === 'createPaymentProcess')[1].fields.pageCode, 'pc-bit');
+}));
+
+test('grow: a payment counts only when Grow confirms it; Grow issues the receipt, not us', async () => withGrow(async grow => {
+  mailbox = [];
+  const env = growEnv();
+  const { link, number } = await newRequest(env, { currency: 'ILS' });
+  const { ref } = await growCheckout(env, link);
+
+  // A forged update before anything was paid: Grow says unpaid, nothing recorded.
+  assert.equal((await growUpdate(env, ref)).status, 200);
+  assert.equal(await statusOf(env, ref), 'pending');
+  assert.equal(grow.calls.filter(c => c.method === 'approveTransaction').length, 0);
+  // Unknown checkout, or another process's id: refused.
+  assert.equal((await growUpdate(env, crypto.randomUUID())).status, 401);
+  assert.equal((await growUpdate(env, ref, { 'data[processId]': '1' })).status, 401);
+  // Grow reports a different amount: not recorded.
+  grow.paid = true; grow.sum = '10';
+  await growUpdate(env, ref);
+  assert.equal(await statusOf(env, ref), 'pending');
+
+  grow.sum = '1250';
+  mailbox = [];
+  assert.equal((await growUpdate(env, ref, { 'data[processId]': '734754' })).status, 200);
+  assert.equal(await statusOf(env, ref), 'paid');
+  // Every update Grow confirms is acknowledged, as Grow asks (the mismatched one too).
+  const approve = grow.calls.filter(c => c.method === 'approveTransaction').at(-1);
+  assert.equal(approve.fields.pageCode, 'pc-card');
+  assert.equal(approve.fields.transactionId, 'T734754');
+  assert.equal(approve.fields.processToken, 'tok1');
+
+  // The client comes back and Grow resends the update: still one payment.
+  assert.equal((await call(env, new Request(`${API}/return/grow?ref=${ref}&response=success`))).headers.get('Location'), `${ORIGIN}/pay/success/?ref=${ref}`);
+  await growUpdate(env, ref);
+  assert.equal(env.LEDGER_CORE.getRequest(number).status, 'paid');
+  assert.equal(env.LEDGER_CORE.list().receipts.length, 0);          // Grow's receipt, not ours
+  assert.equal(mailbox.length, 1);
+  assert.deepEqual(mailbox[0].to, ['hello@redcrowninteractive.com']);
+  assert.match(mailbox[0].subject, new RegExp(`Payment received: ${number}, ₪1,250.00`));
+  assert.match(mailbox[0].text, /Grow issues the receipt/);
+  assert.equal(env.LEDGER_CORE.payment(ref).method, 'card');
+
+  // Grow's receipt notice is kept with the request.
+  const doc = await call(env, new Request(`${API}/webhook/grow?ref=${ref}&document=1`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify([{ transactionId: 'T734754', processId: '734754', invoiceNumber: '4111', invoiceUrl: 'https://meshulam.co.il/s/abc' }]),
+  }));
+  assert.equal(doc.status, 200);
+  const list = await (await adminCall(env, 'list')).json();
+  assert.deepEqual(list.requests[0].providerReceipt, { number: '4111', url: 'https://meshulam.co.il/s/abc' });
+  assert.equal(list.receiptsBy, 'Grow');
+  assert.deepEqual(list.currencies, ['ILS']);
+
+  // Receipts are issued in Grow only: one numbered series.
+  assert.equal((await adminCall(env, `requests/${number}/receipt`, {})).status, 400);
+  const manual = await adminCall(env, 'receipts', { lang: 'he', client, description: 'x', currency: 'ILS', amount: '100', paidOn: '24/09/2026', method: 'bank_transfer' });
+  assert.equal(manual.status, 400);
+  assert.match((await manual.json()).error, /issued by Grow/);
+}));
+
+test('grow: the return alone records the payment; a second payment is a duplicate to refund', async () => withGrow(async grow => {
+  mailbox = [];
+  const env = growEnv();
+  const { link } = await newRequest(env, { currency: 'ILS' });
+  const a = await growCheckout(env, link);
+  const b = await growCheckout(env, link);            // a second tab
+  grow.paid = '734754';                               // tab a paid; the update is late
+  await call(env, new Request(`${API}/return/grow?ref=${a.ref}&response=success`));
+  assert.equal(await statusOf(env, a.ref), 'paid');
+  grow.paid = true;                                   // tab b paid too
+  mailbox = [];
+  await growUpdate(env, b.ref);
+  assert.equal(await statusOf(env, b.ref), 'duplicate');
+  assert.match(mailbox[0].subject, /ACTION: duplicate payment/);
+  assert.match(mailbox[0].text, /Refund it in Grow's dashboard/);
+  assert.equal((await checkout(env, { link, method: 'card', consent: true })).status, 409);
+}));
+
+test('grow: field cleaning and phone numbers', () => {
+  assert.equal(clean('ד"ר דנה <לוי> & Co.'), 'ד ר דנה לוי Co.');
+  assert.equal(israeliMobile('+972 50-123-4567'), '0501234567');
+  assert.equal(israeliMobile('054 1234567'), '0541234567');
+  assert.equal(israeliMobile('+1 415 555 0100'), '');
+  assert.deepEqual(grow.checkoutHosts({ GROW_API_URL: GROW_API }), ['sandbox.meshulam.co.il']);
+  assert.deepEqual(grow.methods({ GROW_PAGE_CODE: 'a', GROW_PAGE_CODE_GOOGLEPAY: 'b' }), ['card', 'googlepay']);
 });

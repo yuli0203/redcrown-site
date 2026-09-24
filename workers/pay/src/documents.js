@@ -258,7 +258,7 @@ export async function buildRequestPdf({ business, request, payUrl }) {
   if (payUrl) {
     l.ensure(90);
     const boxTop = l.y + 12;
-    l.text('לתשלום מאובטח בכרטיס אשראי או PayPal / Pay securely by card or PayPal:', { size: 10, bold: true });
+    l.text('לתשלום מאובטח אונליין / Pay securely online:', { size: 10, bold: true });
     l.y -= 16;
     const lines = l.wrap(payUrl, WIDTH - 20, 8.5);
     const linkTop = l.y + 10;

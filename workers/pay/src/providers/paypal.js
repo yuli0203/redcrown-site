@@ -65,6 +65,7 @@ const firstCapture = order => order?.purchase_units?.[0]?.payments?.captures?.[0
 const fromOrder = order => fromCapture(firstCapture(order), order?.payer);
 
 export default {
+  label: 'PayPal',
   checkoutHosts: env => (String(env.PAYPAL_API_URL).includes('sandbox') ? ['www.sandbox.paypal.com'] : ['www.paypal.com']),
 
   async createCheckout(s, env) {

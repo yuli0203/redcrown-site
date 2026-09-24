@@ -158,6 +158,14 @@ export class LedgerCore {
     return { status, first: true };
   }
 
+  // The provider's own receipt for a payment (Grow): its number and link.
+  attachPaymentDocument(ref, document) {
+    const p = this.db.all('SELECT data FROM payments WHERE ref = ?', ref)[0];
+    if (!p) return false;
+    this.db.run('UPDATE payments SET data = ? WHERE ref = ?', json({ ...parse(p.data), document }), ref);
+    return true;
+  }
+
   paymentStatus(ref) {
     const p = this.db.all('SELECT invoice, status FROM payments WHERE ref = ?', ref)[0];
     return p ? p.status : null;
@@ -212,7 +220,12 @@ export class LedgerCore {
   }
 
   list(limit = 200) {
-    const requests = this.db.all('SELECT *, pdf IS NOT NULL AS has_pdf FROM requests ORDER BY created DESC LIMIT ?', limit).map(requestRow);
+    const requests = this.db.all('SELECT *, pdf IS NOT NULL AS has_pdf FROM requests ORDER BY created DESC LIMIT ?', limit).map(requestRow)
+      .map(r => {
+        // A receipt the provider issued (Grow) is shown with the request.
+        const doc = r.paidRef && parse(this.db.all('SELECT data FROM payments WHERE ref = ?', r.paidRef)[0]?.data)?.document;
+        return doc ? { ...r, providerReceipt: doc } : r;
+      });
     const receipts = this.db.all('SELECT *, pdf IS NOT NULL AS has_pdf FROM receipts ORDER BY number DESC LIMIT ?', limit).map(receiptRow);
     const duplicates = this.db.all(`SELECT ref, invoice, data, created FROM payments WHERE status = 'duplicate' ORDER BY created DESC`)
       .map(d => ({ ref: d.ref, invoice: d.invoice, created: d.created, ...parse(d.data) }));

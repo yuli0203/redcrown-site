@@ -123,12 +123,36 @@ function ownerReceiptEmail(env, b, r, amount, { digital, signed, input, attachme
   };
 }
 
-export async function duplicateAlert(env, invoice, ref, data) {
+export async function duplicateAlert(env, invoice, ref, data, label = 'PayPal') {
   const amount = data.amountMinor != null ? money(data.amountMinor, data.currency) : '';
+  const how = label === 'PayPal' ? 'Refund it in PayPal: Activity > the transaction > Issue a refund. No receipt was issued for it.'
+    : `Refund it in ${label}'s dashboard (the transaction > refund); ${label} issues the matching credit document.`;
   await send(env, {
     to: [env.NOTIFY_TO || env.BUSINESS_EMAIL],
     subject: `ACTION: duplicate payment for ${invoice}, refund it`,
-    text: `Payment request ${invoice} was already paid, and a second payment went through (${amount}, transaction ${data.transactionId || 'unknown'}, checkout ${ref}).\nRefund it in PayPal: Activity > the transaction > Issue a refund. No receipt was issued for it.`,
+    text: `Payment request ${invoice} was already paid, and a second payment went through (${amount}, transaction ${data.transactionId || 'unknown'}, checkout ${ref}).\n${how}`,
+  });
+}
+
+// A payment whose receipt the provider issues (Grow): the owner's notice.
+export async function paymentNotice(env, invoice, payment, label) {
+  const pr = await ledger(env).getRequest(invoice);
+  const amount = money(payment.amountMinor, payment.currency);
+  const c = pr?.client || {};
+  await send(env, {
+    to: [env.NOTIFY_TO || env.BUSINESS_EMAIL],
+    subject: `Payment received: ${invoice}, ${amount}, ${c.name || payment.payerName || ''}`.trim(),
+    text: [
+      `Payment request ${invoice} was paid.`,
+      '',
+      `Client: ${c.name || ''}${c.company ? `, ${c.company}` : ''}${c.email ? ` <${c.email}>` : ''}`,
+      `Amount: ${amount}`,
+      `Paid with: ${payment.method}${payment.cardSuffix ? ` (card ending ${payment.cardSuffix})` : ''}`,
+      payment.payerName || payment.payerEmail ? `Payer: ${[payment.payerName, payment.payerEmail].filter(Boolean).join(', ')}` : '',
+      payment.transactionId ? `Transaction: ${payment.transactionId}${payment.asmachta ? `, approval ${payment.asmachta}` : ''}` : '',
+      '',
+      `${label} issues the receipt and emails it to the client; it is in ${label}'s dashboard with your other documents.`,
+    ].filter(l => l !== '').join('\n'),
   });
 }
 
@@ -155,11 +179,11 @@ export function requestEmail(env, b, request, url, pdf) {
   return he(request) ? {
     to: [request.client.email], bcc, dir: 'rtl', attachments,
     subject: `חשבון עסקה ${request.number} מ-${b.tradingName}: ${amount}`,
-    text: `שלום ${request.client.name},\n\nמצורף חשבון עסקה ${request.number} על סך ${amount}.\nלתשלום מאובטח בכרטיס אשראי או PayPal (בתוקף עד ${until}):\n${url}\n\nלהעברה בנקאית, השיבו למייל זה.\n\n${b.tradingName}\n${b.email}`,
+    text: `שלום ${request.client.name},\n\nמצורף חשבון עסקה ${request.number} על סך ${amount}.\nלתשלום מאובטח אונליין (בתוקף עד ${until}):\n${url}\n\nלהעברה בנקאית, השיבו למייל זה.\n\n${b.tradingName}\n${b.email}`,
   } : {
     to: [request.client.email], bcc, attachments,
     subject: `Payment request ${request.number} from ${b.tradingName}: ${amount}`,
-    text: `Hello ${request.client.name},\n\nAttached is payment request ${request.number} for ${amount}.\nPay securely by card or PayPal (link valid until ${until}):\n${url}\n\nFor bank transfer, reply to this email.\n\n${b.tradingName}\n${b.email}`,
+    text: `Hello ${request.client.name},\n\nAttached is payment request ${request.number} for ${amount}.\nPay securely online (link valid until ${until}):\n${url}\n\nFor bank transfer, reply to this email.\n\n${b.tradingName}\n${b.email}`,
   };
 }
 

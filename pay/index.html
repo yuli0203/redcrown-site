@@ -16,9 +16,9 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/site.css?v=80359f6ea233">
-<link rel="stylesheet" href="/pay/pay.css?v=95f3954bbb64">
-<script src="/pay/config.js?v=696eef1320b8" defer></script>
-<script src="/pay/pay.js?v=cff5335016d4" defer></script>
+<link rel="stylesheet" href="/pay/pay.css?v=2ff356441b45">
+<script src="/pay/config.js?v=68926848940a" defer></script>
+<script src="/pay/pay.js?v=7001fec7eb3a" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to payment form</a>
@@ -43,19 +43,21 @@
 
     <div class="py-grid" id="pay-grid">
       <section class="py-card" aria-labelledby="pay-h">
-        <!-- PayPal's standard vertical buttons. Both open PayPal's secure checkout;
-             "Debit or Credit Card" opens it on the card form, so no PayPal account
-             is needed. Card details are entered only at PayPal. -->
+        <!-- One button per payment method, each opening Grow's secure payment page
+             for that method. Apple Pay shows only on Apple devices, Google Pay only
+             on Android (as Grow requires). Card details are entered only at Grow. -->
         <h2 id="pay-h" class="py-sec">Choose how to pay</h2>
-        <label class="py-consent"><input type="checkbox" id="consent" required aria-describedby="consent-note"><span>I agree to receive my receipt and other tax documents from Red Crown Interactive digitally, by email. <small id="consent-note">Required for paying online; your digitally signed receipt is emailed as soon as you pay.</small></span></label>
+        <label class="py-consent"><input type="checkbox" id="consent" required aria-describedby="consent-note"><span>I agree to the <a href="/legal/#terms" target="_blank" rel="noopener">terms</a> and <a href="/legal/#privacy" target="_blank" rel="noopener">privacy policy</a>, and to receive my receipt and other tax documents from Red Crown Interactive digitally, by email. <small id="consent-note">Required for paying online; your digitally signed receipt is emailed as soon as you pay.</small></span></label>
         <div class="py-buttons">
-          <button type="button" class="py-wallet" data-wallet="paypal"><span class="py-sr">Pay with </span><img src="/pay/icons/paypal-monogram.svg" alt="" width="17" height="20"><b>PayPal</b></button>
-          <button type="button" class="py-wallet py-cardbtn" data-wallet="card"><svg class="py-cardicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19M6 15h4"/></svg>Debit or Credit Card</button>
+          <button type="button" class="py-wallet py-applepay" data-wallet="applepay" hidden><span class="py-sr">Pay with </span><img src="/pay/icons/apple-pay.svg" alt="Apple Pay" width="50" height="32"></button>
+          <button type="button" class="py-wallet py-googlepay" data-wallet="googlepay" hidden><span class="py-sr">Pay with </span><img src="/pay/icons/google-pay.svg" alt="Google Pay" width="50" height="32"></button>
+          <button type="button" class="py-wallet py-cardbtn" data-wallet="card" hidden><svg class="py-cardicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19M6 15h4"/></svg>Debit or Credit Card</button>
+          <button type="button" class="py-wallet py-bit" data-wallet="bit" hidden><span class="py-sr">Pay with </span><b lang="en">bit</b><small>Israeli bank app</small></button>
         </div>
-        <p class="py-accepts"><span class="py-marks" aria-hidden="true"><img src="/pay/icons/visa.svg" alt="" width="30" height="19"><img src="/pay/icons/mastercard.svg" alt="" width="30" height="19"><img src="/pay/icons/amex.svg" alt="" width="30" height="19"></span><span>Visa, Mastercard and Amex. PayPal usually lets you pay by card without an account; if it asks you to log in instead, you can create one there or email <a href="mailto:julia@redcrowninteractive.com">julia@redcrowninteractive.com</a> for bank transfer details.</span></p>
+        <p class="py-accepts"><span class="py-marks" aria-hidden="true"><img src="/pay/icons/visa.svg" alt="" width="30" height="19"><img src="/pay/icons/mastercard.svg" alt="" width="30" height="19"><img src="/pay/icons/amex.svg" alt="" width="30" height="19"></span><span>Visa, Mastercard, Amex and Israeli cards, charged in shekels (₪); cards from abroad are welcome. For bank transfer details, email <a href="mailto:julia@redcrowninteractive.com">julia@redcrowninteractive.com</a>.</span></p>
 
         <p id="form-status" class="py-status" role="status" aria-live="polite"></p>
-        <p class="py-legal">By paying, you agree to our <a href="/legal/#terms" target="_blank" rel="noopener">terms</a> and <a href="/legal/#privacy" target="_blank" rel="noopener">privacy policy</a>. Payments are processed securely by PayPal; Red Crown Interactive never sees your card or PayPal login.</p>
+        <p class="py-legal">Payments are processed securely by Grow (Grow Payments Ltd., Israel), which also issues your receipt. Red Crown Interactive never sees your card details.</p>
       </section>
 
       <aside class="py-card py-summary" aria-labelledby="summary-h">

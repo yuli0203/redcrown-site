@@ -32,7 +32,7 @@ export const PAGE = `<!DOCTYPE html>
 
     <section class="card" data-panel="request">
       <h2>New payment request <small>חשבון עסקה</small></h2>
-      <p class="hint">The client gets the PDF and a secure pay link (card or PayPal). A receipt is issued automatically when they pay.</p>
+      <p class="hint">The client gets the PDF and a secure pay link. A receipt is issued automatically when they pay.</p>
       <form id="request-form">
         <fieldset class="client"><legend>Client</legend></fieldset>
         <div class="row">
@@ -209,7 +209,7 @@ export const SCRIPT = `'use strict';
   }));
 
   // Client fields, shared by both forms.
-  const clientFields = [['name', 'Name *', true], ['company', 'Company'], ['taxId', 'Tax ID (ח.פ. / ע.מ.)'], ['address', 'Address *', true], ['email', 'Email']];
+  const clientFields = [['name', 'Name *', true], ['company', 'Company'], ['taxId', 'Tax ID (ח.פ. / ע.מ.)'], ['address', 'Address *', true], ['email', 'Email'], ['phone', 'Phone (Israeli mobile, for Grow)']];
   $$('fieldset.client').forEach(fs => fs.append(h('div', { class: 'row' }, clientFields.map(([n, label, req]) =>
     h('label', {}, label, h('input', { name: 'client.' + n, maxlength: n === 'address' ? 240 : 160, required: !!req, type: n === 'email' ? 'email' : 'text' }))))));
   const readClient = form => Object.fromEntries(clientFields.map(([n]) => [n, form.elements['client.' + n].value]));
@@ -332,21 +332,25 @@ export const SCRIPT = `'use strict';
     const pills = [
       [s.configured, s.configured ? 'Business details set' : 'Business details missing: ' + s.configError],
       [s.email, s.email ? 'Email on' : 'Email off (RESEND_API_KEY)'],
-      [s.signing, s.signing ? 'Digital signature on' : 'No signing certificate: clients get payment confirmations, you deliver receipts on paper'],
+      s.receiptsBy
+        ? [true, 'Receipts are issued and signed by ' + s.receiptsBy + ' (record direct payments there too)']
+        : [s.signing, s.signing ? 'Digital signature on' : 'No signing certificate: clients get payment confirmations, you deliver receipts on paper'],
     ];
+    // A provider that charges one currency only (Grow: ILS).
+    if (s.currencies) $$('select[name=currency]').forEach(sel => [...sel.options].forEach(o => { o.disabled = !s.currencies.includes(o.value); if (o.disabled && o.selected) sel.value = s.currencies[0]; }));
     $('#status').replaceChildren(...pills.map(([ok, t]) => h('span', { class: 'pill ' + (ok ? 'ok' : 'warn') }, t)));
 
     $('#duplicates').replaceChildren(...s.duplicates.map(d => h('p', { class: 'alert' },
-      'Duplicate payment for ' + d.invoice + ' (' + money(d.amountMinor, d.currency) + ', transaction ' + (d.transactionId || '?') + '): refund it in PayPal.')));
+      'Duplicate payment for ' + d.invoice + ' (' + money(d.amountMinor, d.currency) + ', transaction ' + (d.transactionId || '?') + '): refund it in ' + s.provider + '.')));
 
     $('#requests tbody').replaceChildren(...s.requests.map(r => h('tr', {},
       h('td', {}, r.number), h('td', {}, day(r.created)), h('td', {}, r.client.name), h('td', {}, money(r.amountMinor, r.currency)),
-      h('td', {}, r.status + (r.receiptNumber ? ' · receipt ' + r.receiptNumber : '')),
+      h('td', {}, r.status + (r.receiptNumber ? ' · receipt ' + r.receiptNumber : '') + (r.providerReceipt ? ' · ' + s.provider + ' receipt ' + r.providerReceipt.number : '')),
       h('td', {},
         action('PDF', async () => openPdf(await api('requests/' + r.number + '/pdf', { raw: true }))),
         r.status === 'open' && action('Resend', async () => { const o = await api('requests/' + r.number + '/resend', { method: 'POST' }); alert(o.emailed ? 'Sent.' : 'Not sent: check email settings.'); }),
         r.status === 'open' && action('Cancel', async () => { if (confirm('Cancel ' + r.number + '? Its pay link stops working.')) { await api('requests/' + r.number + '/cancel', { method: 'POST' }); await load(); } }),
-        r.status === 'paid' && !r.receiptNumber && action('Issue receipt', async () => { await api('requests/' + r.number + '/receipt', { method: 'POST' }); await load(); })))));
+        r.status === 'paid' && !r.receiptNumber && !s.receiptsBy && action('Issue receipt', async () => { await api('requests/' + r.number + '/receipt', { method: 'POST' }); await load(); })))));
 
     $('#receipts tbody').replaceChildren(...s.receipts.map(r => h('tr', {},
       h('td', {}, String(r.number)), h('td', {}, day(r.created)), h('td', {}, r.client.name), h('td', {}, money(r.amountMinor, r.currency)),

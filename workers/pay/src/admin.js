@@ -19,7 +19,7 @@ import { issueReceipt, requestDocument, requestEmail, today } from './receipts.j
 import { send } from './mail.js';
 import { loadSigner, signPdf } from './sign.js';
 import { json, baseHeaders, readBody, MAX_BODY } from './http.js';
-import { receiptFor } from './index.js';
+import { receiptFor, providerInfo as provider } from './index.js';
 import { PAGE, SCRIPT, STYLE } from './admin-ui.js';
 
 const enc = new TextEncoder();
@@ -55,6 +55,8 @@ async function createRequest(env, body, preview) {
   const lang = vLang(body.lang);
   const cl = vClient(body.client, { requireEmail: body.send !== false && !preview });
   const cur = vCurrency(body.currency);
+  const p = provider(env);
+  if (p.currencies && !p.currencies.includes(cur)) throw bad(`${p.label} charges only in ${p.currencies.join(', ')}; create the request in ${p.currencies[0]}`);
   const its = vItems(body.items);
   const amountMinor = vTotal(its.reduce((a, it) => a + it.totalMinor, 0));
   const days = Math.min(Math.max(Number(body.validDays) || 30, 1), 365);
@@ -95,7 +97,15 @@ function manualReceiptInput(body) {
   };
 }
 
+// With a provider that issues the receipts (Grow), every receipt comes from it,
+// so there is one numbered series: none are issued here.
+const receiptsElsewhere = env => {
+  const p = provider(env);
+  if (p.issuesReceipts) throw bad(`Receipts are issued by ${p.label}. Issue this one in ${p.label}'s dashboard, so all your receipts stay in one numbered series.`);
+};
+
 async function createReceipt(env, body, preview) {
+  if (!preview) receiptsElsewhere(env);
   const input = manualReceiptInput(body);
   const b = business(env);                 // fail before touching the ledger
   const l = ledger(env);
@@ -173,7 +183,9 @@ export async function admin(request, env) {
       const list = await l.list();
       let configured = true, configError = '';
       try { business(env); } catch (e) { configured = false; configError = e.message; }
-      return json({ ...list, configured, configError, signing: !!(await loadSigner(env)), email: !!env.RESEND_API_KEY, methods: METHODS, receiptStart: Number(env.RECEIPT_START) || 1 });
+      const p = provider(env);
+      return json({ ...list, configured, configError, signing: !!(await loadSigner(env)), email: !!env.RESEND_API_KEY, methods: METHODS, receiptStart: Number(env.RECEIPT_START) || 1,
+        provider: p.label || env.PROVIDER, receiptsBy: p.issuesReceipts ? p.label : null, currencies: p.currencies || null });
     }
     if (request.method === 'GET' && path === '/admin/api/export.csv') return await exportCsv(env);
     if (request.method === 'POST' && path === '/admin/api/requests') {
@@ -202,6 +214,7 @@ export async function admin(request, env) {
         return json({ emailed: await send(env, requestEmail(env, business(env), pr, link, pdf)) });
       }
       if (action === 'receipt') {
+        receiptsElsewhere(env);
         if (pr.receiptNumber) throw bad(`Already has receipt ${pr.receiptNumber}`);
         const payment = pr.paidRef && await l.payment(pr.paidRef);
         if (!payment) throw bad('No online payment is recorded for this request; use "Record a payment"');

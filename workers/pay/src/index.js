@@ -1,9 +1,9 @@
 // Red Crown payment API (Cloudflare Worker).
 //
-//   POST /checkout          signed link + method + consent -> PayPal checkout URL
-//   GET  /return/<name>     PayPal sends the client back; claim, capture,
-//                           issue the receipt, redirect to the success page
-//   POST /webhook/<name>    PayPal's signed payment notification (backup)
+//   POST /checkout          signed link + method + consent -> the provider's checkout URL
+//   GET  /return/<name>     the provider sends the client back; confirm the
+//                           payment, record it, redirect to the success page
+//   POST /webhook/<name>    the provider's payment notification
 //   GET  /status?ref=...    paid / duplicate / already_paid / pending
 //   GET  /request?<link>    the payment request's details, for the pay page
 //   GET  /request.pdf?<link> the payment request PDF (stored when it was issued)
@@ -12,23 +12,31 @@
 // Trust rules:
 // - The amount charged is the amount of a payment request in the ledger, via a
 //   link we signed (links.js), never a number the browser chose.
-// - An invoice counts as paid only when PayPal says so server-to-server (our
-//   capture call, or a verified webhook) and amount and currency match.
-// - One payment per request: before capturing, the checkout claims the request
-//   in the ledger (a Durable Object, so claims cannot race). A second checkout
-//   for a paid request is never captured, so the client is not charged.
+// - An invoice counts as paid only when the provider says so server-to-server
+//   (our capture or status call, or a verified webhook) and amount and
+//   currency match.
+// - One payment per request. PayPal: before capturing, the checkout claims the
+//   request in the ledger (a Durable Object, so claims cannot race), and a
+//   second checkout for a paid request is never captured. Grow charges on its
+//   own page, so a second payment cannot be held back: it is recorded as a
+//   duplicate and you are alerted to refund it.
+// - Receipts: issued here (PayPal), or by the provider itself (Grow), never both.
 // - Secrets come from Worker secrets (wrangler secret put). None are in this
 //   public repository.
 import { verify } from './links.js';
 import { providers } from './providers/index.js';
 import { ledger } from './business.js';
-import { issueReceipt, duplicateAlert, receiptFailedAlert, today } from './receipts.js';
+import { issueReceipt, duplicateAlert, receiptFailedAlert, paymentNotice, today } from './receipts.js';
 import { admin } from './admin.js';
 import { json, baseHeaders, cors, readBody } from './http.js';
 
-const METHODS = ['card', 'paypal'];
 const REF_RE = /^[0-9a-f-]{36}$/;
-export const CONSENT_TEXT = 'I agree to receive my receipt and other tax documents from Red Crown Interactive digitally, by email.';
+export const CONSENT_TEXT = 'I agree to the terms and privacy policy, and to receive my receipt and other tax documents from Red Crown Interactive digitally, by email.';
+
+export const methodsOf = (p, env) => (p.methods ? p.methods(env) : ['card', 'paypal']);
+
+// The configured provider's settings, for the admin page (never throws).
+export const providerInfo = env => providers[env.PROVIDER] || {};
 
 const provider = env => {
   const p = providers[env.PROVIDER];
@@ -110,8 +118,9 @@ async function checkout(request, env) {
   if (!link) return json({ error: 'invalid link' }, 400, headers);
   if (link.expired) return json({ error: 'link expired' }, 410, headers);
 
+  const p = provider(env);
   const method = body.method;
-  if (!METHODS.includes(method)) return json({ error: 'invalid method' }, 400, headers);
+  if (!methodsOf(p, env).includes(method)) return json({ error: 'invalid method' }, 400, headers);
 
   // The link must match a payment request we issued, still open.
   const l = ledger(env);
@@ -119,6 +128,7 @@ async function checkout(request, env) {
   if (!pr || pr.amountMinor !== link.amountMinor || pr.currency !== link.currency) return json({ error: 'invalid link' }, 400, headers);
   if (pr.status === 'paid' || await l.invoiceHolder(link.invoice)) return json({ error: 'already paid' }, 409, headers);
   if (pr.status !== 'open') return json({ error: 'link expired' }, 410, headers);
+  if (p.currencies && !p.currencies.includes(pr.currency)) return json({ error: 'currency not supported' }, 422, headers);
 
   // Receipts are emailed as signed computerized documents, which needs the
   // client's agreement (סעיף 18ב); the pay page requires the checkbox.
@@ -129,24 +139,24 @@ async function checkout(request, env) {
   const session = { invoice: link.invoice, amountMinor: link.amountMinor, currency: link.currency, method, consent, created: Date.now() };
   await putSession(env, ref, session);
 
-  const p = provider(env);
   const workerOrigin = new URL(request.url).origin;
-  let url, providerRef;
+  let url, providerRef, providerToken, pageCode;
   try {
     const result = await p.createCheckout({
-      ...session, ref, email: pr.client.email || '', name: pr.client.name,
+      ...session, ref, email: pr.client.email || '', name: pr.client.name, client: pr.client,
+      items: pr.items, description: receiptDescription(pr),
       successUrl: `${env.SITE_URL}/pay/success/?ref=${ref}`,
       returnUrl: `${workerOrigin}/return/${env.PROVIDER}?ref=${ref}`,
       // Cancelling returns the client to the same payment link.
       cancelUrl: `${env.SITE_URL}/pay/?${linkQuery(body.link)}`,
-      callbackUrl: `${workerOrigin}/webhook/${env.PROVIDER}`,
+      callbackUrl: `${workerOrigin}/webhook/${env.PROVIDER}?ref=${ref}`,
     }, env);
-    ({ url, providerRef } = typeof result === 'string' ? { url: result } : result);
+    ({ url, providerRef, providerToken, pageCode } = typeof result === 'string' ? { url: result } : result);
   } catch (e) {
     console.error('createCheckout failed', e.message);
     return json({ error: 'provider error' }, 502, headers);
   }
-  if (providerRef) await putSession(env, ref, { ...session, providerRef });
+  if (providerRef) await putSession(env, ref, { ...session, providerRef, providerToken, pageCode });
   // Only ever send the browser to the provider's own pages.
   let target;
   try { target = new URL(url); } catch { return json({ error: 'provider error' }, 502, headers); }
@@ -167,15 +177,22 @@ async function markPaid(env, event, defer) {
     return null;
   }
   const l = ledger(env);
+  const p = provider(env);
   const payment = {
     amountMinor: event.amountMinor, currency: event.currency, transactionId: event.transactionId,
     payerName: event.payerName, payerEmail: event.payerEmail, feeMinor: event.feeMinor, netMinor: event.netMinor,
-    method: session.method, consent: session.consent, paidOn: today(),
+    asmachta: event.asmachta, cardSuffix: event.cardSuffix, document: session.document,
+    method: event.paidWith || session.method, provider: env.PROVIDER, consent: session.consent, paidOn: today(),
   };
   const { status, first } = await l.recordPayment(session.invoice, event.ref, payment);
   if (!first) return status;
   if (status === 'duplicate') {
-    defer(duplicateAlert(env, session.invoice, event.ref, payment));
+    defer(duplicateAlert(env, session.invoice, event.ref, payment, p.label));
+    return status;
+  }
+  // The provider issues the receipt (Grow): tell the owner the money arrived.
+  if (p.issuesReceipts) {
+    defer(paymentNotice(env, session.invoice, payment, p.label));
     return status;
   }
   // The receipt is built and emailed after the response, so the client is not
@@ -218,14 +235,32 @@ async function webhook(request, env, name, defer) {
   const p = provider(env);
   let raw;
   try { raw = await readBody(request); } catch { return json({ error: 'bad request' }, 400); }
-  const event = await p.verifyWebhook(request, raw, env);
+  // Unsigned notifications (Grow) name their checkout in the URL we gave the
+  // provider, and are then confirmed with the provider directly.
+  const ref = new URL(request.url).searchParams.get('ref') || '';
+  const session = p.chargesOnPage && REF_RE.test(ref) ? await getSession(env, ref) : null;
+  let event;
+  try {
+    event = await p.verifyWebhook(request, raw, env, session);
+  } catch (e) {
+    console.error('webhook check failed', e.message);
+    return json({ error: 'try again' }, 503);
+  }
   if (!event) return json({ error: 'invalid signature' }, 401);
+  if (session) event = { ...event, ref };
+  // The provider's receipt for this payment (Grow's invoiceNotifyUrl).
+  if (event.status === 'document') {
+    await putSession(env, ref, { ...session, document: event.document });
+    await ledger(env).attachPaymentDocument(ref, event.document);
+    return json({ ok: true });
+  }
   return json({ ok: true, recorded: await markPaid(env, event, defer) });
 }
 
-// PayPal sends the client here after they approve. We claim the request,
-// capture with our own credentials, record the payment and issue the receipt,
-// then send them to the success page, which reads /status.
+// The provider sends the client here after paying (Grow) or approving
+// (PayPal). Grow: ask Grow whether it was paid and record it. PayPal: claim the
+// request, capture with our own credentials, record the payment and issue the
+// receipt. Then on to the success page, which reads /status.
 async function providerReturn(request, env, name, defer) {
   const url = new URL(request.url);
   const ref = url.searchParams.get('ref') || '';
@@ -234,6 +269,16 @@ async function providerReturn(request, env, name, defer) {
   const p = provider(env);
   if (!p.capture) return done;
   const session = await getSession(env, ref);
+  if (p.chargesOnPage) {
+    if (!session?.providerRef || await ledger(env).paymentStatus(ref)) return done;
+    try {
+      const event = await p.capture(session, env);
+      if (event?.status === 'paid') await markPaid(env, { ...event, ref }, defer);
+    } catch (e) {
+      console.error('payment check failed', e.message);   // the server update will record it
+    }
+    return done;
+  }
   // The provider's order id comes back in the URL; it must be the one we created.
   const returned = url.searchParams.get('token') || url.searchParams.get('order_id') || '';
   if (!session || !session.providerRef || returned !== session.providerRef || session.status) return done;

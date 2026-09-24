@@ -2,21 +2,29 @@
 # in this file. Secrets are set once with `npx wrangler secret put <NAME>`:
 #   PAY_LINK_SECRET        32+ random characters (signs pay links)
 #   ADMIN_TOKEN            32+ random characters (opens /admin)
-#   PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET
+#   GROW_USER_ID, GROW_PAGE_CODE   from Grow (sandbox first, then production)
+#   GROW_PAGE_CODE_BIT, GROW_PAGE_CODE_APPLEPAY, GROW_PAGE_CODE_GOOGLEPAY  (optional,
+#                          one per extra payment method Grow enables for you)
+#   PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET   only with PROVIDER = "paypal"
 #   OWNER_NAME             your name as registered, e.g. "Julia Pavlov / יוליה פבלוב"
 #   BUSINESS_ID            your עוסק פטור number (printed on documents)
 #   BUSINESS_ADDRESS       the address registered for your business with the Tax
 #                          Authority (printed on documents; a secret because this
 #                          repository is public and it may be your home address)
 #   RESEND_API_KEY         email
-#   SIGNING_KEY            your signing key, from tools/import-certificate.mjs (see pay/README.md)
+#   SIGNING_KEY            only with PROVIDER = "paypal": your receipt signing key (see pay/README.md)
 name = "red-crown-pay-api"
 main = "src/worker.js"
 compatibility_date = "2026-09-01"
 
 [vars]
 ENVIRONMENT = "production"
-PROVIDER = "paypal"
+# "grow": Grow's payment page, and Grow issues the receipts.
+# "paypal": PayPal, with receipts issued (and signed) here.
+PROVIDER = "grow"
+# Sandbox until Grow approves the integration; live is
+# https://secure.meshulam.co.il/api/light/server/1.0
+GROW_API_URL = "https://sandbox.meshulam.co.il/api/light/server/1.0"
 ALLOWED_ORIGIN = "https://redcrowninteractive.com"
 SITE_URL = "https://redcrowninteractive.com"
 # Sandbox until tested end to end; live is https://api-m.paypal.com

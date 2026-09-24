@@ -1,18 +1,17 @@
 // Payment request page. Hands off to the payment API (workers/pay), which
-// verifies the signed link and returns PayPal's checkout URL.
+// verifies the signed link and returns the payment provider's page (Grow).
 //
 // Security model (see pay/README.md):
-// - Card data never enters this page. Clients pay in PayPal's own checkout,
-//   by PayPal or as a guest by card.
+// - Card data never enters this page. Clients pay on the provider's own page.
 // - Everything here is client-side and therefore untrusted. The Worker checks
-//   the link's signature, so an edited amount is rejected, and only PayPal's
-//   server-side confirmation marks a request paid.
+//   the link's signature, so an edited amount is rejected, and only the
+//   provider's server-side confirmation marks a request paid.
 'use strict';
 
 (() => {
   // Settings live in config.js. With no API origin, every button shows a
   // "not enabled yet" notice and nothing is sent.
-  const { apiOrigin: API_ORIGIN, checkoutHosts: CHECKOUT_HOSTS } = self.RC_PAY_CONFIG || {};
+  const { apiOrigin: API_ORIGIN, checkoutHosts: CHECKOUT_HOSTS, methods: METHODS = ['card'] } = self.RC_PAY_CONFIG || {};
 
   const CURRENCIES = { ILS: 'he-IL', USD: 'en-US', EUR: 'de-DE', GBP: 'en-GB' };
   const INVOICE_RE = /^[A-Z0-9][A-Z0-9-]{2,31}$/;
@@ -74,7 +73,19 @@
   $('sum-valid').textContent = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jerusalem' }).format(new Date(Number(link.x) * 1000));
   $('sum-valid-row').hidden = false;
 
-  const buttons = [...document.querySelectorAll('.py-wallet')];
+  // Only the methods that work here: Apple Pay on Apple devices with Apple Pay,
+  // Google Pay on Android (Grow supports it only in Chrome on Android).
+  const canUse = {
+    card: () => true,
+    bit: () => true,
+    applepay: () => { try { return !!window.ApplePaySession && ApplePaySession.canMakePayments(); } catch { return false; } },
+    googlepay: () => /Android/i.test(navigator.userAgent) && /Chrome\//.test(navigator.userAgent),
+  };
+  const buttons = [...document.querySelectorAll('.py-wallet')].filter(b => {
+    const on = METHODS.includes(b.dataset.wallet) && (canUse[b.dataset.wallet] || (() => false))();
+    b.hidden = !on;
+    return on;
+  });
   const status = $('form-status');
   let busy = false;
   const setBusy = on => {
@@ -90,7 +101,8 @@
     400: 'This payment link is not valid. Please use the link from your invoice email.',
     409: 'This payment request has already been paid. Thank you!',
     410: 'This payment link has expired or was cancelled. Email us and we will send a new one.',
-    422: 'Please tick the box to agree to receive your receipt by email, then try again.',
+    422: 'Please tick the box to agree to the terms and to receive your receipt by email, then try again.',
+    currency: 'This payment request is not in shekels, so it cannot be paid online. Email julia@redcrowninteractive.com and we will send a new one.',
     429: 'Too many attempts. Please wait a minute and try again.',
   };
 
@@ -104,7 +116,7 @@
     // Receipts are emailed as signed documents, which needs the client's agreement.
     if (!consentBox.checked) {
       consentBox.closest('.py-consent').classList.add('is-missing');
-      notice('Please tick the box above to agree to receive your receipt by email, then choose how to pay. ' +
+      notice('Please tick the box above to agree to the terms and to receive your receipt by email, then choose how to pay. ' +
         'If you need a paper receipt, email julia@redcrowninteractive.com to pay by bank transfer instead.');
       consentBox.focus();
       return;
@@ -115,7 +127,7 @@
       return;
     }
     setBusy(true);
-    status.textContent = 'Opening PayPal secure checkout…';
+    status.textContent = 'Opening the secure payment page…';
     try {
       const res = await fetch(API_ORIGIN + '/checkout', {
         method: 'POST',
@@ -125,7 +137,7 @@
         referrerPolicy: 'no-referrer',
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw Object.assign(new Error('checkout failed'), { status: res.status });
+      if (!res.ok) throw Object.assign(new Error('checkout failed'), { status: data.error === 'currency not supported' ? 'currency' : res.status });
       const target = new URL(data.url);
       if (target.protocol !== 'https:' || !CHECKOUT_HOSTS.includes(target.hostname)) throw new Error('unexpected checkout host');
       location.assign(target.href);
@@ -195,10 +207,10 @@
   };
   loadDetails();
 
-  // One click starts checkout: PayPal login, or PayPal's guest card form.
+  // One click opens the payment page for that method.
   buttons.forEach(b => b.addEventListener('click', () => start(b.dataset.wallet)));
 
-  // Returning via the back button from PayPal restores a page with disabled
+  // Returning via the back button from the payment page restores a page with disabled
   // buttons; re-enable them.
   window.addEventListener('pageshow', e => {
     if (e.persisted) {

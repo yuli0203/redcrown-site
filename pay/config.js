@@ -5,6 +5,8 @@
 'use strict';
 self.RC_PAY_CONFIG = Object.freeze({
   apiOrigin: '',
-  // The only hosts the browser may be sent to: PayPal's checkout (live, sandbox).
-  checkoutHosts: Object.freeze(['www.paypal.com', 'www.sandbox.paypal.com']),
+  // Payment buttons shown (each also needs its Grow page code on the Worker).
+  methods: Object.freeze(['card', 'bit', 'applepay', 'googlepay']),
+  // The only hosts the browser may be sent to: Grow's payment pages (sandbox, live).
+  checkoutHosts: Object.freeze(['sandbox.meshulam.co.il', 'secure.meshulam.co.il', 'meshulam.co.il']),
 });

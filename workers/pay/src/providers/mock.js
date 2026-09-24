@@ -10,6 +10,7 @@ const hmacHex = async (secret, body) => {
 
 export default {
   testOnly: true,
+  label: 'Test',
   checkoutHosts: () => ['checkout.mock.test'],
   async createCheckout(s) {
     const providerRef = 'ORDER-' + s.ref.slice(0, 8);
